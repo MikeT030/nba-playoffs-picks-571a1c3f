@@ -112,11 +112,7 @@ const Scoreboard = () => {
               <TableRow>
                 <TableHead className="w-12">#</TableHead>
                 <TableHead>Player</TableHead>
-                <TableHead className="text-center w-16">3pt</TableHead>
-                <TableHead className="text-center w-16">2pt</TableHead>
-                <TableHead className="text-center w-16">1pt</TableHead>
-                <TableHead className="text-center w-16">🏆</TableHead>
-                <TableHead className="text-right w-20">Total</TableHead>
+                <TableHead className="text-right">Points</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -128,12 +124,6 @@ const Scoreboard = () => {
                       <span className="text-lg">{player.avatar}</span>
                       <span className="font-body font-medium text-foreground">{player.name}</span>
                     </div>
-                  </TableCell>
-                  <TableCell className="text-center font-body text-muted-foreground">{player.perfectPicks}</TableCell>
-                  <TableCell className="text-center font-body text-muted-foreground">{player.winnerPicks}</TableCell>
-                  <TableCell className="text-center font-body text-muted-foreground">{player.loosePicks}</TableCell>
-                  <TableCell className="text-center font-body text-muted-foreground">
-                    {player.championBonus ? "✅" : "—"}
                   </TableCell>
                   <TableCell className="text-right font-display text-lg text-foreground">{player.totalPoints}</TableCell>
                 </TableRow>

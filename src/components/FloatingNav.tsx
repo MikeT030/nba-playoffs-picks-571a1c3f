@@ -12,7 +12,7 @@ const FloatingNav = () => {
 
   return (
     <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-      <div className="flex items-center gap-1 px-2 py-2 rounded-full bg-card/80 backdrop-blur-xl border border-border/60 shadow-lg shadow-background/40 w-64 justify-center">
+      <div className="flex items-center gap-1 px-2 py-2 rounded-full bg-card/80 backdrop-blur-xl border border-border/60 shadow-lg shadow-background/40">
         {navItems.map((item) => {
           const isActive = location.pathname === item.to;
           return (

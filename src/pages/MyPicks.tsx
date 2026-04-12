@@ -117,6 +117,9 @@ const PickCard = ({
 };
 
 const MyPicks = () => {
+  const [betsOpen, setBetsOpen] = useState(false);
+  const [betsSaved, setBetsSaved] = useState(false);
+
   const saved = useMemo<SavedBets | null>(() => {
     try {
       const raw = localStorage.getItem("nba-bets");
@@ -125,25 +128,52 @@ const MyPicks = () => {
     } catch {
       return null;
     }
-  }, []);
+  }, [betsSaved]);
 
   const picks: Record<string, string> = {};
   if (saved) {
     for (const bet of saved.bets) picks[bet.seriesId] = bet.winner;
   }
 
+  const makePicksButton = (
+    <button
+      onClick={() => setBetsOpen(true)}
+      className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 mb-6 ${
+        betsSaved
+          ? "bg-primary/15 text-primary border border-primary/40"
+          : "bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
+      }`}
+    >
+      {betsSaved ? (
+        <>
+          <CheckCircle size={18} />
+          You have made your picks
+        </>
+      ) : (
+        <>
+          <PenLine size={18} />
+          Make Your Picks
+        </>
+      )}
+    </button>
+  );
+
   if (!saved || saved.bets.length === 0) {
     return (
       <div className="min-h-screen bg-background">
         <HeroBanner title="MY PICKS" subtitle="NBA Playoffs 2026" />
-        <div className="container py-16 flex items-center justify-center">
-          <div className="text-center">
-            <p className="font-display text-2xl tracking-wider mb-2">NO PICKS YET</p>
-            <p className="text-muted-foreground font-body text-sm">
-              Head to the home page and make your bets first.
-            </p>
+        <section className="container py-10">
+          {makePicksButton}
+          <div className="flex items-center justify-center py-8">
+            <div className="text-center">
+              <p className="font-display text-2xl tracking-wider mb-2">NO PICKS YET</p>
+              <p className="text-muted-foreground font-body text-sm">
+                Make your picks to see them here.
+              </p>
+            </div>
           </div>
-        </div>
+        </section>
+        <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setBetsSaved(true)} />
       </div>
     );
   }

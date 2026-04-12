@@ -145,35 +145,34 @@ const SeriesCard = ({
   );
 };
 
-const rounds = [
-  { value: "all", label: "All Rounds" },
-  { value: "First Round", label: "First Round" },
-  { value: "Conference Semifinals", label: "Conference Semifinals" },
-  { value: "Conference Finals", label: "Conference Finals" },
-  { value: "Finals", label: "Finals" },
+const roundOrder = [
+  "First Round",
+  "Conference Semifinals",
+  "Conference Finals",
+  "Finals",
 ];
 
 const MakeYourBets = () => {
   const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
-  const [selectedRound, setSelectedRound] = useState("all");
   const [bets, setBets] = useState<BetSelection[]>([]);
   const { data: matches, isLoading } = usePlayoffGames();
 
-  const handleBet = (matchId: string, winner: string, games: number) => {
-    setBets((prev) => {
-      const filtered = prev.filter((b) => b.matchId !== matchId);
-      return [...filtered, { matchId, winner, gamesInSeries: games }];
-    });
+  // Determine which rounds are unlocked based on completed bets
+  const getUnlockedRounds = () => {
+    const unlocked: string[] = [];
+    for (const round of roundOrder) {
+      unlocked.push(round);
+      const roundMatches = matches?.filter((m) => m.round === round) ?? [];
+      const allBet = roundMatches.length > 0 && roundMatches.every((m) => bets.some((b) => b.matchId === m.id && b.winner));
+      if (!allBet) break;
+    }
+    return unlocked;
   };
 
-  if (!selectedProfile) {
-    return <ProfileSelect onSelect={setSelectedProfile} />;
-  }
+  const unlockedRounds = matches ? getUnlockedRounds() : [roundOrder[0]];
+  const [selectedRound, setSelectedRound] = useState(roundOrder[0]);
 
-  const filteredMatches =
-    selectedRound === "all"
-      ? matches
-      : matches?.filter((m) => m.round === selectedRound);
+  const filteredMatches = matches?.filter((m) => m.round === selectedRound);
 
   const participant = participants.find((p) => p.name === selectedProfile);
   const totalMatches = matches?.length ?? 0;

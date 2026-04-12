@@ -18,7 +18,7 @@ const HeroBanner = ({ title = "NBA PLAYOFFS, BABY!", subtitle = "2026" }: HeroBa
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
       <div className="absolute inset-0 flex items-end">
         <div className="container pb-10">
-          <p className="text-primary font-body font-semibold text-sm tracking-widest uppercase mb-2">
+          <p className="text-primary font-body text-sm tracking-widest uppercase mb-2 font-extrabold">
             {subtitle}
           </p>
           <h1 className="text-6xl md:text-8xl font-display tracking-wider leading-none">

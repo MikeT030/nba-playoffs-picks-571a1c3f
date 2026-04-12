@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getPlayoffGames, teamMeta, type NbaGame } from "@/lib/nbaApi";
-import { type Match, type Team, makeTips, fallbackMatches } from "@/data/playoffsData";
+import { type Match, type Team, makeTips, fallbackMatches, getConference } from "@/data/playoffsData";
 
 function gameStatusToLocal(status: string): "upcoming" | "live" | "final" {
   if (status === "Final") return "final";
@@ -63,6 +63,7 @@ function groupIntoSeries(games: NbaGame[]): Match[] {
     matches.push({
       id: key.toLowerCase(),
       round: "First Round",
+      conference: getConference(homeAbbr, awayAbbr),
       gameNumber: seriesGames.length,
       date: dateStr,
       time: latestGame.status === "Final" ? "Final" : latestGame.time || "TBD",

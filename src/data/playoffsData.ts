@@ -71,14 +71,31 @@ const fallbackTeams: Record<string, Team> = {
   DAL: makeTeam("DAL", "Dallas Mavericks"),
 };
 
-const matchups: [string, string][] = [
-  ["BOS", "ORL"], ["CLE", "MIA"], ["OKC", "DEN"], ["LAL", "MIN"],
-  ["GSW", "HOU"], ["NYK", "DET"], ["MIL", "IND"], ["LAC", "DAL"],
+const eastTeams = new Set(["BOS", "ORL", "CLE", "MIA", "NYK", "DET", "MIL", "IND", "ATL", "CHI", "BKN", "CHA", "TOR", "WAS", "PHI"]);
+
+export function getConference(team1: string, team2: string): "East" | "West" | "Finals" {
+  const t1East = eastTeams.has(team1);
+  const t2East = eastTeams.has(team2);
+  if (t1East && t2East) return "East";
+  if (!t1East && !t2East) return "West";
+  return "Finals";
+}
+
+const matchups: { teams: [string, string]; conference: "East" | "West" }[] = [
+  { teams: ["BOS", "ORL"], conference: "East" },
+  { teams: ["CLE", "MIA"], conference: "East" },
+  { teams: ["NYK", "DET"], conference: "East" },
+  { teams: ["MIL", "IND"], conference: "East" },
+  { teams: ["OKC", "DEN"], conference: "West" },
+  { teams: ["LAL", "MIN"], conference: "West" },
+  { teams: ["GSW", "HOU"], conference: "West" },
+  { teams: ["LAC", "DAL"], conference: "West" },
 ];
 
-export const fallbackMatches: Match[] = matchups.map(([home, away], i) => ({
+export const fallbackMatches: Match[] = matchups.map(({ teams: [home, away], conference }, i) => ({
   id: `${home.toLowerCase()}-${away.toLowerCase()}`,
   round: "First Round",
+  conference,
   gameNumber: 1,
   date: i < 3 ? "Apr 19" : "Apr 20",
   time: ["7:00 PM", "8:00 PM", "9:30 PM", "3:30 PM", "6:00 PM", "7:00 PM", "8:30 PM", "10:00 PM"][i] + " ET",

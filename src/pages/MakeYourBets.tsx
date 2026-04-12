@@ -5,6 +5,13 @@ import { Button } from "@/components/ui/button";
 import TeamLogo from "@/components/TeamLogo";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 import type { Match } from "@/data/playoffsData";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const participants = [
   { name: "Erik", avatar: "🎣" },
@@ -138,8 +145,17 @@ const SeriesCard = ({
   );
 };
 
+const rounds = [
+  { value: "all", label: "All Rounds" },
+  { value: "First Round", label: "First Round" },
+  { value: "Conference Semifinals", label: "Conference Semifinals" },
+  { value: "Conference Finals", label: "Conference Finals" },
+  { value: "Finals", label: "Finals" },
+];
+
 const MakeYourBets = () => {
   const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
+  const [selectedRound, setSelectedRound] = useState("all");
   const [bets, setBets] = useState<BetSelection[]>([]);
   const { data: matches, isLoading } = usePlayoffGames();
 
@@ -153,6 +169,11 @@ const MakeYourBets = () => {
   if (!selectedProfile) {
     return <ProfileSelect onSelect={setSelectedProfile} />;
   }
+
+  const filteredMatches =
+    selectedRound === "all"
+      ? matches
+      : matches?.filter((m) => m.round === selectedRound);
 
   const participant = participants.find((p) => p.name === selectedProfile);
   const totalMatches = matches?.length ?? 0;
@@ -186,6 +207,19 @@ const MakeYourBets = () => {
 
       {/* Bets grid */}
       <section className="container py-8">
+        <Select value={selectedRound} onValueChange={setSelectedRound}>
+          <SelectTrigger className="w-[220px] mb-6">
+            <SelectValue placeholder="Select round" />
+          </SelectTrigger>
+          <SelectContent>
+            {rounds.map((r) => (
+              <SelectItem key={r.value} value={r.value}>
+                {r.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
         {isLoading ? (
           <div className="grid gap-4 md:grid-cols-2">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -194,7 +228,7 @@ const MakeYourBets = () => {
           </div>
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
-            {matches?.map((match) => (
+            {filteredMatches?.map((match) => (
               <SeriesCard
                 key={match.id}
                 match={match}

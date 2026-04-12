@@ -141,9 +141,12 @@ const SeriesCard = ({
 };
 
 const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpenChange: (open: boolean) => void; onBetsSaved?: () => void }) => {
-  const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [profileName, setProfileName] = useState("");
   const [bets, setBets] = useState<BetSelection[]>([]);
   const [selectedRound, setSelectedRound] = useState(roundOrder[0]);
+  const [saving, setSaving] = useState(false);
 
   const picks: Record<string, string> = {};
   for (const bet of bets) picks[bet.seriesId] = bet.winner;
@@ -196,7 +199,6 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpen
 
   const currentRoundIndex = roundOrder.indexOf(selectedRound);
   const isLastRound = currentRoundIndex === roundOrder.length - 1;
-  const participant = participants.find((profile) => profile.name === selectedProfile);
   const totalSeries = bracketSeries.length;
   const betCount = bets.length;
 
@@ -206,7 +208,46 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpen
     }
   };
 
-  if (!selectedProfile) {
+  const handleSaveBets = async () => {
+    if (!user) {
+      navigate("/auth");
+      onOpenChange(false);
+      return;
+    }
+
+    if (!profileName.trim()) {
+      toast.error("Enter your name first");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      // Delete existing picks for this user
+      await supabase.from("picks").delete().eq("user_id", user.id);
+
+      // Insert all new picks
+      const rows = bets.map((bet) => ({
+        user_id: user.id,
+        profile_name: profileName.trim(),
+        series_id: bet.seriesId,
+        winner: bet.winner,
+        games_in_series: bet.gamesInSeries,
+      }));
+
+      const { error } = await supabase.from("picks").insert(rows);
+      if (error) throw error;
+
+      toast.success("Picks saved!");
+      onBetsSaved?.();
+      onOpenChange(false);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to save picks");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (!user) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
         <DrawerContent className="max-h-[92vh]">
@@ -215,18 +256,47 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpen
               <DrawerTitle className="font-display text-4xl tracking-wider text-center">
                 MAKE YOUR BETS
               </DrawerTitle>
-              <p className="text-muted-foreground font-body text-center text-sm">Who are you?</p>
+              <p className="text-muted-foreground font-body text-center text-sm">Sign in to make your picks</p>
             </DrawerHeader>
-            <div className="grid grid-cols-3 gap-3 max-w-md mx-auto">
-              {participants.map((profile) => (
-                <button
-                  key={profile.name}
-                  onClick={() => setSelectedProfile(profile.name)}
-                  className="flex items-center justify-center p-3 rounded-lg bg-card border border-transparent hover:border-primary/60 hover:bg-muted transition-all duration-200"
-                >
-                  <span className="font-body text-sm font-medium text-foreground">{profile.name}</span>
-                </button>
-              ))}
+            <div className="flex justify-center">
+              <Button
+                className="font-display tracking-wider"
+                onClick={() => {
+                  onOpenChange(false);
+                  navigate("/auth");
+                }}
+              >
+                SIGN IN
+              </Button>
+            </div>
+          </div>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
+  if (!profileName) {
+    return (
+      <Drawer open={open} onOpenChange={onOpenChange}>
+        <DrawerContent className="max-h-[92vh]">
+          <div className="overflow-y-auto px-4 pb-8">
+            <DrawerHeader className="pt-4 pb-2">
+              <DrawerTitle className="font-display text-4xl tracking-wider text-center">
+                MAKE YOUR BETS
+              </DrawerTitle>
+              <p className="text-muted-foreground font-body text-center text-sm">What's your name?</p>
+            </DrawerHeader>
+            <div className="max-w-xs mx-auto space-y-4">
+              <Input
+                placeholder="Your name"
+                className="font-body text-center"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && (e.target as HTMLInputElement).value.trim()) {
+                    setProfileName((e.target as HTMLInputElement).value.trim());
+                  }
+                }}
+              />
+              <p className="text-xs text-muted-foreground font-body text-center">Press Enter to continue</p>
             </div>
           </div>
         </DrawerContent>
@@ -242,7 +312,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpen
             <div className="flex items-center gap-2">
               <div>
                 <h2 className="font-display text-xl tracking-wider">MAKE YOUR BETS</h2>
-                <p className="text-xs text-muted-foreground font-body">{selectedProfile}'s picks</p>
+                <p className="text-xs text-muted-foreground font-body">{profileName}'s picks</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -317,12 +387,13 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpen
 
             {currentRoundComplete && isLastRound && (
               <div className="mt-8 text-center">
-                <Button size="lg" className="font-display text-lg tracking-wider" onClick={() => {
-                  localStorage.setItem("nba-bets", JSON.stringify({ profile: selectedProfile, bets }));
-                  onBetsSaved?.();
-                  onOpenChange(false);
-                }}>
-                  SAVE BETS ✅
+                <Button
+                  size="lg"
+                  className="font-display text-lg tracking-wider"
+                  onClick={handleSaveBets}
+                  disabled={saving}
+                >
+                  {saving ? "SAVING..." : "SAVE BETS ✅"}
                 </Button>
               </div>
             )}

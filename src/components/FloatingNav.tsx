@@ -21,7 +21,7 @@ const FloatingNav = () => {
               key={item.to}
               to={item.to}
               className={cn(
-                "flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200",
+                "flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 whitespace-nowrap",
                 isActive
                   ? "bg-primary/15 text-primary border border-primary/40"
                   : "text-muted-foreground hover:text-foreground"

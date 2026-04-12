@@ -76,7 +76,6 @@ const SeriesCard = ({
 
   const handlePickWinner = (abbr: string) => {
     if (locked || !teamsReady) return;
-    setSelectedWinner(abbr);
     onBet(series.id, abbr, selectedGames);
   };
 

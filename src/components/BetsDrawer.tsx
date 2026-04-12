@@ -290,9 +290,16 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpen
               <Input
                 placeholder="Your name"
                 className="font-body text-center"
-                onKeyDown={(e) => {
+                onKeyDown={async (e) => {
                   if (e.key === "Enter" && (e.target as HTMLInputElement).value.trim()) {
-                    setProfileName((e.target as HTMLInputElement).value.trim());
+                    const name = (e.target as HTMLInputElement).value.trim();
+                    setProfileName(name);
+                    // Persist name to profiles table immediately
+                    if (user) {
+                      await supabase
+                        .from("profiles")
+                        .upsert({ user_id: user.id, display_name: name }, { onConflict: "user_id" });
+                    }
                   }
                 }}
               />

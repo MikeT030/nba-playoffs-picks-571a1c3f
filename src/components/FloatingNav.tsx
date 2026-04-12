@@ -1,6 +1,7 @@
 import { useLocation, Link } from "react-router-dom";
-import { Home, Trophy, ClipboardList } from "lucide-react";
+import { Home, Trophy, ClipboardList, LogIn, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
   { to: "/", label: "Home", icon: Home },
@@ -10,6 +11,7 @@ const navItems = [
 
 const FloatingNav = () => {
   const location = useLocation();
+  const { user, signOut } = useAuth();
 
   return (
     <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
@@ -32,6 +34,27 @@ const FloatingNav = () => {
             </Link>
           );
         })}
+        {user ? (
+          <button
+            onClick={() => signOut()}
+            className="flex items-center gap-2 px-3 py-2.5 rounded-full text-sm font-body font-medium text-muted-foreground hover:text-foreground transition-all duration-200"
+            title="Sign out"
+          >
+            <LogOut size={18} />
+          </button>
+        ) : (
+          <Link
+            to="/auth"
+            className={cn(
+              "flex items-center gap-2 px-3 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200",
+              location.pathname === "/auth"
+                ? "bg-primary/15 text-primary border border-primary/40"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <LogIn size={18} />
+          </Link>
+        )}
       </div>
     </nav>
   );

@@ -1,12 +1,47 @@
 import { Link } from "react-router-dom";
 import type { Match } from "@/data/playoffsData";
 import TeamLogo from "@/components/TeamLogo";
+import { useMemo } from "react";
+
+interface BetSelection {
+  seriesId: string;
+  winner: string;
+  gamesInSeries: number;
+}
+
+interface SavedBets {
+  profile: string;
+  bets: BetSelection[];
+}
+
+const useUserBet = (matchId: string) => {
+  return useMemo(() => {
+    try {
+      const raw = localStorage.getItem("nba-bets");
+      if (!raw) return null;
+      const saved: SavedBets = JSON.parse(raw);
+      return saved.bets.find((b) => b.seriesId === matchId) ?? null;
+    } catch {
+      return null;
+    }
+  }, [matchId]);
+};
 
 interface MatchCardProps {
   match: Match;
 }
 
 const MatchCard = ({ match }: MatchCardProps) => {
+  const bet = useUserBet(match.id);
+
+  const betTeamName = bet
+    ? match.homeTeam.abbreviation === bet.winner
+      ? match.homeTeam.name
+      : match.awayTeam.abbreviation === bet.winner
+        ? match.awayTeam.name
+        : bet.winner
+    : null;
+
   return (
     <Link
       to={`/match/${match.id}`}
@@ -71,6 +106,13 @@ const MatchCard = ({ match }: MatchCardProps) => {
         </div>
       </div>
 
+      {bet && betTeamName && (
+        <div className="px-4 pb-3 -mt-1">
+          <p className="text-xs font-body text-primary">
+            Your bet: <span className="font-medium">{betTeamName}</span> in <span className="font-medium">{bet.gamesInSeries}</span>
+          </p>
+        </div>
+      )}
     </Link>
   );
 };

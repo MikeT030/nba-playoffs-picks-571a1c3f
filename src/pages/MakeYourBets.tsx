@@ -145,17 +145,15 @@ const SeriesCard = ({
   );
 };
 
-const rounds = [
-  { value: "all", label: "All Rounds" },
-  { value: "First Round", label: "First Round" },
-  { value: "Conference Semifinals", label: "Conference Semifinals" },
-  { value: "Conference Finals", label: "Conference Finals" },
-  { value: "Finals", label: "Finals" },
+const roundOrder = [
+  "First Round",
+  "Conference Semifinals",
+  "Conference Finals",
+  "Finals",
 ];
 
 const MakeYourBets = () => {
   const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
-  const [selectedRound, setSelectedRound] = useState("all");
   const [bets, setBets] = useState<BetSelection[]>([]);
   const { data: matches, isLoading } = usePlayoffGames();
 
@@ -166,18 +164,30 @@ const MakeYourBets = () => {
     });
   };
 
-  if (!selectedProfile) {
-    return <ProfileSelect onSelect={setSelectedProfile} />;
-  }
+  // Determine which rounds are unlocked based on completed bets
+  const getUnlockedRounds = () => {
+    const unlocked: string[] = [];
+    for (const round of roundOrder) {
+      unlocked.push(round);
+      const roundMatches = matches?.filter((m) => m.round === round) ?? [];
+      const allBet = roundMatches.length > 0 && roundMatches.every((m) => bets.some((b) => b.matchId === m.id && b.winner));
+      if (!allBet) break;
+    }
+    return unlocked;
+  };
 
-  const filteredMatches =
-    selectedRound === "all"
-      ? matches
-      : matches?.filter((m) => m.round === selectedRound);
+  const unlockedRounds = matches ? getUnlockedRounds() : [roundOrder[0]];
+  const [selectedRound, setSelectedRound] = useState(roundOrder[0]);
+
+  const filteredMatches = matches?.filter((m) => m.round === selectedRound);
 
   const participant = participants.find((p) => p.name === selectedProfile);
   const totalMatches = matches?.length ?? 0;
   const betCount = bets.filter((b) => b.winner).length;
+
+  if (!selectedProfile) {
+    return <ProfileSelect onSelect={setSelectedProfile} />;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -207,18 +217,34 @@ const MakeYourBets = () => {
 
       {/* Bets grid */}
       <section className="container py-8">
-        <Select value={selectedRound} onValueChange={setSelectedRound}>
-          <SelectTrigger className="w-[220px] mb-6">
-            <SelectValue placeholder="Select round" />
-          </SelectTrigger>
-          <SelectContent>
-            {rounds.map((r) => (
-              <SelectItem key={r.value} value={r.value}>
-                {r.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {/* Round tabs */}
+        <div className="flex gap-2 mb-6 flex-wrap">
+          {roundOrder.map((round) => {
+            const isUnlocked = unlockedRounds.includes(round);
+            const roundMatches = matches?.filter((m) => m.round === round) ?? [];
+            const roundBets = roundMatches.filter((m) => bets.some((b) => b.matchId === m.id && b.winner)).length;
+            const isComplete = roundMatches.length > 0 && roundBets === roundMatches.length;
+
+            return (
+              <button
+                key={round}
+                onClick={() => isUnlocked && setSelectedRound(round)}
+                disabled={!isUnlocked}
+                className={`px-4 py-2 rounded-lg font-body text-sm transition-all duration-200 flex items-center gap-2 ${
+                  selectedRound === round
+                    ? "bg-primary text-primary-foreground"
+                    : isUnlocked
+                    ? "bg-card border border-border text-foreground hover:border-primary/60"
+                    : "bg-muted/50 text-muted-foreground/50 cursor-not-allowed border border-border/30"
+                }`}
+              >
+                {round}
+                {isComplete && <Check size={14} />}
+                {!isUnlocked && <span className="text-xs">🔒</span>}
+              </button>
+            );
+          })}
+        </div>
 
         {isLoading ? (
           <div className="grid gap-4 md:grid-cols-2">

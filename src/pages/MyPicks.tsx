@@ -1,4 +1,6 @@
 import { useMemo } from "react";
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import TeamLogo from "@/components/TeamLogo";
 import {
   bracketSeries,
@@ -144,14 +146,22 @@ const MyPicks = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <section className="container py-10 pb-24">
-        <div className="mb-8">
-          <h1 className="font-display text-4xl tracking-wider">MY PICKS</h1>
-          <p className="text-muted-foreground font-body text-sm mt-1">
-            {saved.profile}'s predictions · {saved.bets.length} picks
-          </p>
+      {/* Header */}
+      <div className="border-b border-border">
+        <div className="container py-4 flex items-center gap-3">
+          <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft size={20} />
+          </Link>
+          <div>
+            <h1 className="font-display text-2xl tracking-wider">MY PICKS</h1>
+            <p className="text-xs text-muted-foreground font-body">
+              {saved.profile}'s predictions · {saved.bets.length} picks
+            </p>
+          </div>
         </div>
+      </div>
 
+      <section className="container py-8 pb-24">
         {roundOrder.map((round) => {
           const roundSeries = bracketSeries.filter((s) => s.round === round);
           const conferences = round === "Finals" ? ["Finals"] : ["West", "East"];

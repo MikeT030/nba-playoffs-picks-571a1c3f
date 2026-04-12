@@ -1,6 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const TopRightAuth = () => {
+  const location = useLocation();
+
+  if (location.pathname.startsWith("/match/")) return null;
+
   return (
     <div className="fixed top-4 right-4 z-50">
       <Link

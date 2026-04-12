@@ -39,7 +39,17 @@ Deno.serve(async (req) => {
       },
     });
 
-    const data = await response.json();
+    const text = await response.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      console.error("Non-JSON response:", text);
+      return new Response(
+        JSON.stringify({ error: `API returned non-JSON: ${text.substring(0, 200)}` }),
+        { status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     if (!response.ok) {
       console.error("BallDontLie API error:", data);

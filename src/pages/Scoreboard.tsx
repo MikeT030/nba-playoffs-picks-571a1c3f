@@ -72,7 +72,7 @@ const Scoreboard = () => {
           </Link>
           <div>
             <h1 className="font-display text-2xl tracking-wider">SCOREBOARD</h1>
-            <p className="text-xs text-muted-foreground font-body">NBA Playoffs 2025</p>
+            <p className="text-xs text-muted-foreground font-body">NBA Playoffs 2026</p>
           </div>
         </div>
       </div>

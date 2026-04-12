@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { to: "/", label: "Home", icon: Home },
-  { to: "/my-picks", label: "My Picks", icon: ClipboardList },
   { to: "/scoreboard", label: "Scoreboard", icon: Trophy },
+  { to: "/my-picks", label: "My Picks", icon: ClipboardList },
 ];
 
 const FloatingNav = () => {

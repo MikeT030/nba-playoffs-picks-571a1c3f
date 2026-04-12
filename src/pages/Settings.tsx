@@ -29,6 +29,14 @@ const Settings = () => {
 
         <h1 className="font-display text-3xl tracking-wider">SETTINGS</h1>
 
+        <button
+          onClick={() => setBetsOpen(true)}
+          className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 w-full"
+        >
+          <PenLine size={18} />
+          Make Your Picks
+        </button>
+
         {loading ? null : user ? (
           <>
             <Card>
@@ -84,14 +92,6 @@ const Settings = () => {
             </CardContent>
           </Card>
         )}
-
-        <button
-          onClick={() => setBetsOpen(true)}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 w-full"
-        >
-          <PenLine size={18} />
-          Make Your Picks
-        </button>
       </div>
 
       <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} />

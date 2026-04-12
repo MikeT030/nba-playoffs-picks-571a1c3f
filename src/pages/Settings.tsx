@@ -14,6 +14,7 @@ const Settings = () => {
   const navigate = useNavigate();
   const [betsOpen, setBetsOpen] = useState(false);
   const [displayName, setDisplayName] = useState("");
+  const [hasPicks, setHasPicks] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState("");
   const [savingName, setSavingName] = useState(false);

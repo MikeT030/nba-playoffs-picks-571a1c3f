@@ -34,18 +34,17 @@ const Index = () => {
       <HeroBanner />
 
       <section className="container py-10">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-display text-3xl tracking-wider">
-            Upcoming Matchups
-          </h2>
-          <Link
-            to="/bets"
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-body text-sm font-semibold hover:bg-primary/90 transition-colors"
-          >
-            <PenLine size={16} />
-            Make Your Bets
-          </Link>
-        </div>
+        <Link
+          to="/bets"
+          className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-primary text-primary-foreground font-body text-sm font-semibold hover:bg-primary/90 transition-colors mb-6"
+        >
+          <PenLine size={16} />
+          Make Your Bets
+        </Link>
+
+        <h2 className="font-display text-3xl tracking-wider mb-4">
+          Upcoming Matchups
+        </h2>
 
         <Select value={selectedRound} onValueChange={setSelectedRound}>
           <SelectTrigger className="w-[220px] mb-6">

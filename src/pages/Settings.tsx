@@ -68,7 +68,7 @@ const Settings = () => {
 
         <h1 className="font-display text-3xl tracking-wider">SETTINGS</h1>
 
-        {!loading && user && hasPicks && (
+        {!loading && user && displayName && (
           <div className="flex items-center gap-2">
             {editingName ? (
               <>

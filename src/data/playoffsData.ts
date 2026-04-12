@@ -53,32 +53,30 @@ function makeTeam(abbr: string, fullName: string): Team {
   return { name: fullName, abbreviation: abbr, color: meta.color, logo: meta.logo };
 }
 
-// Regular season seeds for 2025 playoffs
+// Regular season seeds for 2026 playoffs
 export const teamSeeds: Record<string, number> = {
-  CLE: 1, BOS: 2, NYK: 3, IND: 4, MIL: 5, DET: 6, ORL: 7, MIA: 8,
-  OKC: 1, HOU: 2, LAL: 3, DEN: 4, LAC: 5, MIN: 6, GSW: 7, DAL: 8,
+  // East
+  DET: 1, BOS: 2, NYK: 3, CLE: 4, ATL: 5, TOR: 6,
+  // West
+  OKC: 1, SAS: 2, DEN: 3, LAL: 4, HOU: 5, MIN: 6,
 };
 
 const fallbackTeams: Record<string, Team> = {
-  BOS: { ...makeTeam("BOS", "Boston Celtics"), seed: teamSeeds["BOS"] },
-  ORL: { ...makeTeam("ORL", "Orlando Magic"), seed: teamSeeds["ORL"] },
-  CLE: { ...makeTeam("CLE", "Cleveland Cavaliers"), seed: teamSeeds["CLE"] },
-  MIA: { ...makeTeam("MIA", "Miami Heat"), seed: teamSeeds["MIA"] },
   OKC: { ...makeTeam("OKC", "Oklahoma City Thunder"), seed: teamSeeds["OKC"] },
+  SAS: { ...makeTeam("SAS", "San Antonio Spurs"), seed: teamSeeds["SAS"] },
   DEN: { ...makeTeam("DEN", "Denver Nuggets"), seed: teamSeeds["DEN"] },
   LAL: { ...makeTeam("LAL", "Los Angeles Lakers"), seed: teamSeeds["LAL"] },
-  MIN: { ...makeTeam("MIN", "Minnesota Timberwolves"), seed: teamSeeds["MIN"] },
-  GSW: { ...makeTeam("GSW", "Golden State Warriors"), seed: teamSeeds["GSW"] },
   HOU: { ...makeTeam("HOU", "Houston Rockets"), seed: teamSeeds["HOU"] },
-  NYK: { ...makeTeam("NYK", "New York Knicks"), seed: teamSeeds["NYK"] },
+  MIN: { ...makeTeam("MIN", "Minnesota Timberwolves"), seed: teamSeeds["MIN"] },
   DET: { ...makeTeam("DET", "Detroit Pistons"), seed: teamSeeds["DET"] },
-  MIL: { ...makeTeam("MIL", "Milwaukee Bucks"), seed: teamSeeds["MIL"] },
-  IND: { ...makeTeam("IND", "Indiana Pacers"), seed: teamSeeds["IND"] },
-  LAC: { ...makeTeam("LAC", "Los Angeles Clippers"), seed: teamSeeds["LAC"] },
-  DAL: { ...makeTeam("DAL", "Dallas Mavericks"), seed: teamSeeds["DAL"] },
+  BOS: { ...makeTeam("BOS", "Boston Celtics"), seed: teamSeeds["BOS"] },
+  NYK: { ...makeTeam("NYK", "New York Knicks"), seed: teamSeeds["NYK"] },
+  CLE: { ...makeTeam("CLE", "Cleveland Cavaliers"), seed: teamSeeds["CLE"] },
+  ATL: { ...makeTeam("ATL", "Atlanta Hawks"), seed: teamSeeds["ATL"] },
+  TOR: { ...makeTeam("TOR", "Toronto Raptors"), seed: teamSeeds["TOR"] },
 };
 
-const eastTeams = new Set(["BOS", "ORL", "CLE", "MIA", "NYK", "DET", "MIL", "IND", "ATL", "CHI", "BKN", "CHA", "TOR", "WAS", "PHI"]);
+const eastTeams = new Set(["BOS", "NYK", "DET", "CLE", "ATL", "TOR", "ORL", "MIA", "MIL", "IND", "CHI", "BKN", "CHA", "WAS", "PHI"]);
 
 export function getConference(team1: string, team2: string): "East" | "West" | "Finals" {
   const t1East = eastTeams.has(team1);
@@ -89,14 +87,12 @@ export function getConference(team1: string, team2: string): "East" | "West" | "
 }
 
 const matchups: { teams: [string, string]; conference: "East" | "West" }[] = [
-  { teams: ["BOS", "ORL"], conference: "East" },
-  { teams: ["CLE", "MIA"], conference: "East" },
-  { teams: ["NYK", "DET"], conference: "East" },
-  { teams: ["MIL", "IND"], conference: "East" },
-  { teams: ["OKC", "DEN"], conference: "West" },
-  { teams: ["LAL", "MIN"], conference: "West" },
-  { teams: ["GSW", "HOU"], conference: "West" },
-  { teams: ["LAC", "DAL"], conference: "West" },
+  // East
+  { teams: ["CLE", "ATL"], conference: "East" },
+  { teams: ["NYK", "TOR"], conference: "East" },
+  // West
+  { teams: ["LAL", "HOU"], conference: "West" },
+  { teams: ["DEN", "MIN"], conference: "West" },
 ];
 
 export const fallbackMatches: Match[] = matchups.map(({ teams: [home, away], conference }, i) => ({

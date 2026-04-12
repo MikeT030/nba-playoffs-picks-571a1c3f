@@ -157,6 +157,13 @@ const MakeYourBets = () => {
   const [bets, setBets] = useState<BetSelection[]>([]);
   const { data: matches, isLoading } = usePlayoffGames();
 
+  const handleBet = (matchId: string, winner: string, games: number) => {
+    setBets((prev) => {
+      const filtered = prev.filter((b) => b.matchId !== matchId);
+      return [...filtered, { matchId, winner, gamesInSeries: games }];
+    });
+  };
+
   // Determine which rounds are unlocked based on completed bets
   const getUnlockedRounds = () => {
     const unlocked: string[] = [];
@@ -177,6 +184,10 @@ const MakeYourBets = () => {
   const participant = participants.find((p) => p.name === selectedProfile);
   const totalMatches = matches?.length ?? 0;
   const betCount = bets.filter((b) => b.winner).length;
+
+  if (!selectedProfile) {
+    return <ProfileSelect onSelect={setSelectedProfile} />;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -206,18 +217,34 @@ const MakeYourBets = () => {
 
       {/* Bets grid */}
       <section className="container py-8">
-        <Select value={selectedRound} onValueChange={setSelectedRound}>
-          <SelectTrigger className="w-[220px] mb-6">
-            <SelectValue placeholder="Select round" />
-          </SelectTrigger>
-          <SelectContent>
-            {rounds.map((r) => (
-              <SelectItem key={r.value} value={r.value}>
-                {r.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {/* Round tabs */}
+        <div className="flex gap-2 mb-6 flex-wrap">
+          {roundOrder.map((round) => {
+            const isUnlocked = unlockedRounds.includes(round);
+            const roundMatches = matches?.filter((m) => m.round === round) ?? [];
+            const roundBets = roundMatches.filter((m) => bets.some((b) => b.matchId === m.id && b.winner)).length;
+            const isComplete = roundMatches.length > 0 && roundBets === roundMatches.length;
+
+            return (
+              <button
+                key={round}
+                onClick={() => isUnlocked && setSelectedRound(round)}
+                disabled={!isUnlocked}
+                className={`px-4 py-2 rounded-lg font-body text-sm transition-all duration-200 flex items-center gap-2 ${
+                  selectedRound === round
+                    ? "bg-primary text-primary-foreground"
+                    : isUnlocked
+                    ? "bg-card border border-border text-foreground hover:border-primary/60"
+                    : "bg-muted/50 text-muted-foreground/50 cursor-not-allowed border border-border/30"
+                }`}
+              >
+                {round}
+                {isComplete && <Check size={14} />}
+                {!isUnlocked && <span className="text-xs">🔒</span>}
+              </button>
+            );
+          })}
+        </div>
 
         {isLoading ? (
           <div className="grid gap-4 md:grid-cols-2">

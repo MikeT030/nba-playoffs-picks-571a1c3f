@@ -109,7 +109,7 @@ const Index = () => {
         )}
       </section>
 
-      <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} />
+      <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setBetsSaved(true)} />
     </div>
   );
 };

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { PenLine } from "lucide-react";
 import HeroBanner from "@/components/HeroBanner";
 import MatchCard from "@/components/MatchCard";
+import BetsDrawer from "@/components/BetsDrawer";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 import {
   Select,
@@ -23,6 +23,7 @@ const rounds = [
 const Index = () => {
   const { data: matches, isLoading } = usePlayoffGames();
   const [selectedRound, setSelectedRound] = useState("all");
+  const [betsOpen, setBetsOpen] = useState(true);
 
   const filteredMatches =
     selectedRound === "all"
@@ -34,13 +35,13 @@ const Index = () => {
       <HeroBanner />
 
       <section className="container py-10">
-        <Link
-          to="/bets"
+        <button
+          onClick={() => setBetsOpen(true)}
           className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-primary text-primary-foreground font-body text-sm font-semibold hover:bg-primary/90 transition-colors mb-6"
         >
           <PenLine size={16} />
           Make Your Bets
-        </Link>
+        </button>
 
         <h2 className="font-display text-3xl tracking-wider mb-4">
           Upcoming Matchups
@@ -88,6 +89,8 @@ const Index = () => {
           </>
         )}
       </section>
+
+      <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} />
     </div>
   );
 };

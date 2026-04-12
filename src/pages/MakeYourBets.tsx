@@ -155,6 +155,7 @@ const roundOrder = [
 const MakeYourBets = () => {
   const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
   const [bets, setBets] = useState<BetSelection[]>([]);
+  const [manuallyUnlocked, setManuallyUnlocked] = useState<string[]>([]);
   const { data: matches, isLoading } = usePlayoffGames();
 
   const handleBet = (matchId: string, winner: string, games: number) => {
@@ -164,26 +165,40 @@ const MakeYourBets = () => {
     });
   };
 
-  // Determine which rounds are unlocked based on completed bets
+  const [selectedRound, setSelectedRound] = useState(roundOrder[0]);
+
   const getUnlockedRounds = () => {
     const unlocked: string[] = [];
     for (const round of roundOrder) {
       unlocked.push(round);
-      const roundMatches = matches?.filter((m) => m.round === round) ?? [];
-      const allBet = roundMatches.length > 0 && roundMatches.every((m) => bets.some((b) => b.matchId === m.id && b.winner));
-      if (!allBet) break;
+      if (!manuallyUnlocked.includes(round)) {
+        break;
+      }
     }
     return unlocked;
   };
 
   const unlockedRounds = matches ? getUnlockedRounds() : [roundOrder[0]];
-  const [selectedRound, setSelectedRound] = useState(roundOrder[0]);
 
   const filteredMatches = matches?.filter((m) => m.round === selectedRound);
 
   const participant = participants.find((p) => p.name === selectedProfile);
   const totalMatches = matches?.length ?? 0;
   const betCount = bets.filter((b) => b.winner).length;
+
+  // Check if current round is fully bet on
+  const currentRoundMatches = matches?.filter((m) => m.round === selectedRound) ?? [];
+  const currentRoundComplete = currentRoundMatches.length > 0 && currentRoundMatches.every((m) => bets.some((b) => b.matchId === m.id && b.winner));
+  const currentRoundIndex = roundOrder.indexOf(selectedRound);
+  const isLastRound = currentRoundIndex === roundOrder.length - 1;
+
+  const handleNextRound = () => {
+    if (currentRoundComplete && !isLastRound) {
+      setManuallyUnlocked((prev) => [...prev, selectedRound]);
+      setSelectedRound(roundOrder[currentRoundIndex + 1]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   if (!selectedProfile) {
     return <ProfileSelect onSelect={setSelectedProfile} />;
@@ -221,9 +236,7 @@ const MakeYourBets = () => {
         <div className="flex gap-2 mb-6 flex-wrap">
           {roundOrder.map((round) => {
             const isUnlocked = unlockedRounds.includes(round);
-            const roundMatches = matches?.filter((m) => m.round === round) ?? [];
-            const roundBets = roundMatches.filter((m) => bets.some((b) => b.matchId === m.id && b.winner)).length;
-            const isComplete = roundMatches.length > 0 && roundBets === roundMatches.length;
+            const isCompleteAndUnlocked = manuallyUnlocked.includes(round);
 
             return (
               <button
@@ -239,7 +252,7 @@ const MakeYourBets = () => {
                 }`}
               >
                 {round}
-                {isComplete && <Check size={14} />}
+                {isCompleteAndUnlocked && <Check size={14} />}
                 {!isUnlocked && <span className="text-xs">🔒</span>}
               </button>
             );
@@ -265,10 +278,10 @@ const MakeYourBets = () => {
           </div>
         )}
 
-        {betCount === totalMatches && totalMatches > 0 && (
+        {currentRoundComplete && !isLastRound && (
           <div className="mt-8 text-center">
-            <Button size="lg" className="font-display text-lg tracking-wider">
-              SUBMIT BETS
+            <Button size="lg" className="font-display text-lg tracking-wider" onClick={handleNextRound}>
+              NEXT ROUND →
             </Button>
           </div>
         )}

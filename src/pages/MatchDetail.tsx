@@ -106,7 +106,7 @@ const MatchDetail = () => {
                 key={tip.user}
                 className="flex items-center gap-4 bg-card rounded-lg border border-border p-4"
               >
-                <span className="text-2xl">{tip.avatar}</span>
+                
                 <div className="flex-1">
                   <p className="font-body font-semibold">{tip.user}</p>
                   <p className="text-sm text-muted-foreground font-body">

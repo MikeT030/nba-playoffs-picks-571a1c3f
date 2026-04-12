@@ -12,6 +12,7 @@ Deno.serve(async (req) => {
 
   try {
     const apiKey = Deno.env.get("BALLDONTLIE_API_KEY");
+    console.log("API key present:", !!apiKey, "length:", apiKey?.length);
     if (!apiKey) {
       return new Response(
         JSON.stringify({ error: "BALLDONTLIE_API_KEY not configured" }),
@@ -35,7 +36,9 @@ Deno.serve(async (req) => {
 
     const response = await fetch(apiUrl, {
       headers: {
-        Authorization: apiKey,
+        "Authorization": apiKey,
+        "x-access-token": apiKey,
+        "Content-Type": "application/json",
       },
     });
 

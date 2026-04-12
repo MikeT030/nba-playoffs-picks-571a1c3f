@@ -24,6 +24,7 @@ const Index = () => {
   const { data: matches, isLoading } = usePlayoffGames();
   const [selectedRound, setSelectedRound] = useState("all");
   const [betsOpen, setBetsOpen] = useState(false);
+  const [betsSaved, setBetsSaved] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setBetsOpen(true), 800);

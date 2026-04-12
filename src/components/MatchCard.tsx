@@ -65,15 +65,6 @@ const MatchCard = ({ match }: MatchCardProps) => {
         </div>
       </div>
 
-      {/* Tips preview */}
-      <div className="px-5 pb-4 flex items-center gap-1">
-        <span className="text-xs text-muted-foreground font-body mr-2">Tips:</span>
-        {match.tips.map((tip) => (
-          <span key={tip.user} className="text-sm" title={`${tip.user}: ${tip.pick} in ${tip.gamesInSeries}`}>
-            {tip.avatar}
-          </span>
-        ))}
-      </div>
     </Link>
   );
 };

@@ -231,9 +231,8 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpen
                 <button
                   key={profile.name}
                   onClick={() => setSelectedProfile(profile.name)}
-                  className="flex flex-col items-center gap-2 p-4 rounded-lg bg-card border border-transparent hover:border-primary/60 hover:bg-muted transition-all duration-200 group"
+                  className="flex items-center justify-center p-3 rounded-lg bg-card border border-transparent hover:border-primary/60 hover:bg-muted transition-all duration-200"
                 >
-                  <span className="text-3xl group-hover:scale-110 transition-transform">{profile.avatar}</span>
                   <span className="font-body text-sm font-medium text-foreground">{profile.name}</span>
                 </button>
               ))}

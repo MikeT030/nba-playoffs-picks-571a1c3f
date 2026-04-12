@@ -1,9 +1,10 @@
 import { useLocation, Link } from "react-router-dom";
-import { Home, Trophy } from "lucide-react";
+import { Home, Trophy, ClipboardList } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { to: "/", label: "Home", icon: Home },
+  { to: "/my-picks", label: "My Picks", icon: ClipboardList },
   { to: "/scoreboard", label: "Scoreboard", icon: Trophy },
 ];
 

@@ -8,6 +8,7 @@ import Index from "./pages/Index.tsx";
 import MatchDetail from "./pages/MatchDetail.tsx";
 import Scoreboard from "./pages/Scoreboard.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import MyPicks from "./pages/MyPicks.tsx";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/match/:id" element={<MatchDetail />} />
           
+          <Route path="/my-picks" element={<MyPicks />} />
           <Route path="/scoreboard" element={<Scoreboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

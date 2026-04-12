@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Check, Lock, Trophy } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Drawer,
   DrawerContent,
@@ -14,20 +16,9 @@ import {
   type BracketSeries,
   type Team,
 } from "@/data/playoffsData";
-
-const participants = [
-  { name: "Erik", avatar: "🎣" },
-  { name: "Alexander", avatar: "😎" },
-  { name: "David", avatar: "🎬" },
-  { name: "Fabian", avatar: "🏔️" },
-  { name: "Hannes", avatar: "🌄" },
-  { name: "Jörn", avatar: "🎿" },
-  { name: "Larsn", avatar: "🐕" },
-  { name: "Michi", avatar: "🎸" },
-  { name: "Momentum", avatar: "🚀" },
-  { name: "Simon", avatar: "📡" },
-  { name: "Sven", avatar: "🐶" },
-];
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface BetSelection {
   seriesId: string;

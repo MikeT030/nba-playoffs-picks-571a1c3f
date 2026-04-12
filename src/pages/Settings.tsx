@@ -1,19 +1,12 @@
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LogOut, Mail, ArrowLeft } from "lucide-react";
-import { useEffect } from "react";
+import { LogOut, Mail, ArrowLeft, LogIn } from "lucide-react";
 
 const Settings = () => {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!loading && !user) navigate("/auth", { replace: true });
-  }, [user, loading, navigate]);
-
-  if (loading || !user) return null;
 
   const handleSignOut = async () => {
     await signOut();
@@ -33,43 +26,61 @@ const Settings = () => {
 
         <h1 className="font-display text-3xl tracking-wider">SETTINGS</h1>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="font-display text-lg tracking-wider">ACCOUNT</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-3">
-              <Mail size={18} className="text-muted-foreground" />
-              <div>
-                <p className="text-xs text-muted-foreground font-body">Email</p>
-                <p className="font-body text-sm">{user.email}</p>
-              </div>
-            </div>
+        {loading ? null : user ? (
+          <>
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-display text-lg tracking-wider">ACCOUNT</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <Mail size={18} className="text-muted-foreground" />
+                  <div>
+                    <p className="text-xs text-muted-foreground font-body">Email</p>
+                    <p className="font-body text-sm">{user.email}</p>
+                  </div>
+                </div>
 
-            <div className="flex items-center gap-3">
-              <div className="w-[18px]" />
-              <div>
-                <p className="text-xs text-muted-foreground font-body">Member since</p>
-                <p className="font-body text-sm">
-                  {new Date(user.created_at).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+                <div className="flex items-center gap-3">
+                  <div className="w-[18px]" />
+                  <div>
+                    <p className="text-xs text-muted-foreground font-body">Member since</p>
+                    <p className="font-body text-sm">
+                      {new Date(user.created_at).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-        <Button
-          variant="destructive"
-          className="w-full font-display tracking-wider"
-          onClick={handleSignOut}
-        >
-          <LogOut size={18} />
-          SIGN OUT
-        </Button>
+            <Button
+              variant="destructive"
+              className="w-full font-display tracking-wider"
+              onClick={handleSignOut}
+            >
+              <LogOut size={18} />
+              SIGN OUT
+            </Button>
+          </>
+        ) : (
+          <Card>
+            <CardContent className="pt-6 text-center space-y-4">
+              <p className="text-muted-foreground font-body text-sm">
+                Sign in to manage your account and view your picks.
+              </p>
+              <Button asChild className="w-full font-display tracking-wider">
+                <Link to="/auth">
+                  <LogIn size={18} />
+                  SIGN IN / SIGN UP
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );

@@ -1,15 +1,25 @@
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { matches } from "@/data/playoffsData";
+import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 
 const MatchDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const match = matches.find((m) => m.id === id);
+  const { data: matches, isLoading } = usePlayoffGames();
+  const match = matches?.find((m) => m.id === id);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   if (!match) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center flex-col gap-4">
         <p className="text-muted-foreground">Match not found.</p>
+        <Link to="/" className="text-primary font-body text-sm hover:underline">← Back to Matchups</Link>
       </div>
     );
   }
@@ -27,7 +37,6 @@ const MatchDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <div className="relative overflow-hidden">
         <div
           className="absolute inset-0"
@@ -49,7 +58,6 @@ const MatchDetail = () => {
           </p>
 
           <div className="flex items-center justify-between gap-6">
-            {/* Away */}
             <div className="flex-1 text-center">
               <span className="text-5xl md:text-6xl block mb-2">{match.awayTeam.logo}</span>
               <h2 className="font-display text-3xl md:text-4xl tracking-wider">
@@ -61,7 +69,6 @@ const MatchDetail = () => {
               </div>
             </div>
 
-            {/* Score */}
             <div className="text-center">
               <div className="flex items-center gap-4">
                 <span className="font-display text-5xl md:text-7xl">{match.awayWins}</span>
@@ -73,7 +80,6 @@ const MatchDetail = () => {
               </p>
             </div>
 
-            {/* Home */}
             <div className="flex-1 text-center">
               <span className="text-5xl md:text-6xl block mb-2">{match.homeTeam.logo}</span>
               <h2 className="font-display text-3xl md:text-4xl tracking-wider">
@@ -88,7 +94,6 @@ const MatchDetail = () => {
         </div>
       </div>
 
-      {/* Tips Section */}
       <section className="container py-10">
         <h3 className="font-display text-2xl tracking-wider mb-6">
           The Crew's Picks
@@ -107,10 +112,7 @@ const MatchDetail = () => {
                   <p className="font-body font-semibold">{tip.user}</p>
                   <p className="text-sm text-muted-foreground font-body">
                     Picks{" "}
-                    <span
-                      className="font-semibold"
-                      style={{ color: pickedTeam.color }}
-                    >
+                    <span className="font-semibold" style={{ color: pickedTeam.color }}>
                       {pickedTeam.abbreviation}
                     </span>{" "}
                     in {tip.gamesInSeries}

@@ -1,6 +1,8 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { PenLine, CheckCircle } from "lucide-react";
 import TeamLogo from "@/components/TeamLogo";
 import HeroBanner from "@/components/HeroBanner";
+import BetsDrawer from "@/components/BetsDrawer";
 import {
   bracketSeries,
   resolveSeriesTeams,

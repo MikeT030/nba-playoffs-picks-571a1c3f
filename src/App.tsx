@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import FloatingNav from "@/components/FloatingNav";
+import TopRightAuth from "@/components/TopRightAuth";
 import Index from "./pages/Index.tsx";
 import MatchDetail from "./pages/MatchDetail.tsx";
 import Scoreboard from "./pages/Scoreboard.tsx";

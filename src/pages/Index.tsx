@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { PenLine } from "lucide-react";
+import { PenLine, CheckCircle } from "lucide-react";
 import HeroBanner from "@/components/HeroBanner";
 import MatchCard from "@/components/MatchCard";
 import BetsDrawer from "@/components/BetsDrawer";
@@ -24,6 +24,7 @@ const Index = () => {
   const { data: matches, isLoading } = usePlayoffGames();
   const [selectedRound, setSelectedRound] = useState("all");
   const [betsOpen, setBetsOpen] = useState(false);
+  const [betsSaved, setBetsSaved] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setBetsOpen(true), 800);
@@ -42,10 +43,23 @@ const Index = () => {
       <section className="container py-10">
         <button
           onClick={() => setBetsOpen(true)}
-          className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-primary text-primary-foreground font-body text-sm font-semibold hover:bg-primary/90 transition-colors mb-6"
+          className={`flex items-center justify-center gap-2 w-full py-3 rounded-lg font-body text-sm font-semibold transition-colors mb-6 ${
+            betsSaved
+              ? "bg-muted text-foreground border border-border"
+              : "bg-primary text-primary-foreground hover:bg-primary/90"
+          }`}
         >
-          <PenLine size={16} />
-          Make Your Bets
+          {betsSaved ? (
+            <>
+              <CheckCircle size={16} className="text-primary" />
+              You have made your bets
+            </>
+          ) : (
+            <>
+              <PenLine size={16} />
+              Make Your Bets
+            </>
+          )}
         </button>
 
         <h2 className="font-display text-3xl tracking-wider mb-4">
@@ -95,7 +109,7 @@ const Index = () => {
         )}
       </section>
 
-      <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} />
+      <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setBetsSaved(true)} />
     </div>
   );
 };

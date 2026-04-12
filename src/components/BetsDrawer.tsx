@@ -149,7 +149,7 @@ const SeriesCard = ({
   );
 };
 
-const BetsDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) => {
+const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpenChange: (open: boolean) => void; onBetsSaved?: () => void }) => {
   const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
   const [bets, setBets] = useState<BetSelection[]>([]);
   const [selectedRound, setSelectedRound] = useState(roundOrder[0]);
@@ -328,7 +328,7 @@ const BetsDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open
 
             {currentRoundComplete && isLastRound && (
               <div className="mt-8 text-center">
-                <Button size="lg" className="font-display text-lg tracking-wider" onClick={() => onOpenChange(false)}>
+                <Button size="lg" className="font-display text-lg tracking-wider" onClick={() => { onBetsSaved?.(); onOpenChange(false); }}>
                   SAVE BETS ✅
                 </Button>
               </div>

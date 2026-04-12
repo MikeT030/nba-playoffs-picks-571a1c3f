@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
+import TeamLogo from "@/components/TeamLogo";
 
 const MatchDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,9 +30,7 @@ const MatchDetail = () => {
       <div
         key={i}
         className="w-3 h-3 rounded-full border border-border"
-        style={{
-          backgroundColor: i < wins ? color : "transparent",
-        }}
+        style={{ backgroundColor: i < wins ? color : "transparent" }}
       />
     ));
 
@@ -58,9 +57,9 @@ const MatchDetail = () => {
           </p>
 
           <div className="flex items-center justify-between gap-6">
-            <div className="flex-1 text-center">
-              <span className="text-5xl md:text-6xl block mb-2">{match.awayTeam.logo}</span>
-              <h2 className="font-display text-3xl md:text-4xl tracking-wider">
+            <div className="flex-1 text-center flex flex-col items-center">
+              <TeamLogo src={match.awayTeam.logo} alt={match.awayTeam.name} className="w-16 h-16 md:w-20 md:h-20" />
+              <h2 className="font-display text-3xl md:text-4xl tracking-wider mt-2">
                 {match.awayTeam.abbreviation}
               </h2>
               <p className="text-sm text-muted-foreground font-body mt-1">{match.awayTeam.name}</p>
@@ -80,9 +79,9 @@ const MatchDetail = () => {
               </p>
             </div>
 
-            <div className="flex-1 text-center">
-              <span className="text-5xl md:text-6xl block mb-2">{match.homeTeam.logo}</span>
-              <h2 className="font-display text-3xl md:text-4xl tracking-wider">
+            <div className="flex-1 text-center flex flex-col items-center">
+              <TeamLogo src={match.homeTeam.logo} alt={match.homeTeam.name} className="w-16 h-16 md:w-20 md:h-20" />
+              <h2 className="font-display text-3xl md:text-4xl tracking-wider mt-2">
                 {match.homeTeam.abbreviation}
               </h2>
               <p className="text-sm text-muted-foreground font-body mt-1">{match.homeTeam.name}</p>
@@ -118,9 +117,7 @@ const MatchDetail = () => {
                     in {tip.gamesInSeries}
                   </p>
                 </div>
-                <div className="text-right">
-                  <span className="text-2xl">{pickedTeam.logo}</span>
-                </div>
+                <TeamLogo src={pickedTeam.logo} alt={pickedTeam.name} className="w-8 h-8" />
               </div>
             );
           })}

@@ -25,10 +25,10 @@ const Index = () => {
   const [selectedRound, setSelectedRound] = useState("all");
   const [betsOpen, setBetsOpen] = useState(false);
 
-  useState(() => {
+  useEffect(() => {
     const timer = setTimeout(() => setBetsOpen(true), 800);
     return () => clearTimeout(timer);
-  });
+  }, []);
 
   const filteredMatches =
     selectedRound === "all"

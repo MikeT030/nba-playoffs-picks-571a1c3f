@@ -1,18 +1,54 @@
+import { useState } from "react";
 import HeroBanner from "@/components/HeroBanner";
 import MatchCard from "@/components/MatchCard";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const rounds = [
+  { value: "all", label: "All Rounds" },
+  { value: "First Round", label: "First Round" },
+  { value: "Conference Semifinals", label: "Conference Semifinals" },
+  { value: "Conference Finals", label: "Conference Finals" },
+  { value: "Finals", label: "Finals" },
+];
 
 const Index = () => {
   const { data: matches, isLoading } = usePlayoffGames();
+  const [selectedRound, setSelectedRound] = useState("all");
+
+  const filteredMatches =
+    selectedRound === "all"
+      ? matches
+      : matches?.filter((m) => m.round === selectedRound);
 
   return (
     <div className="min-h-screen bg-background">
       <HeroBanner />
 
       <section className="container py-10">
-        <h2 className="font-display text-3xl tracking-wider mb-6">
+        <h2 className="font-display text-3xl tracking-wider mb-4">
           Upcoming Matchups
         </h2>
+
+        <Select value={selectedRound} onValueChange={setSelectedRound}>
+          <SelectTrigger className="w-[220px] mb-6">
+            <SelectValue placeholder="Select round" />
+          </SelectTrigger>
+          <SelectContent>
+            {rounds.map((r) => (
+              <SelectItem key={r.value} value={r.value}>
+                {r.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
         {isLoading ? (
           <div className="grid gap-4 md:grid-cols-2">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -21,7 +57,7 @@ const Index = () => {
           </div>
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
-            {matches?.map((match) => (
+            {filteredMatches?.map((match) => (
               <MatchCard key={match.id} match={match} />
             ))}
           </div>

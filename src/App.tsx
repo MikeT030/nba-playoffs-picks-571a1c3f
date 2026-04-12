@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import FloatingNav from "@/components/FloatingNav";
 import Index from "./pages/Index.tsx";
 import MatchDetail from "./pages/MatchDetail.tsx";
 import MakeYourBets from "./pages/MakeYourBets.tsx";
@@ -17,6 +18,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <FloatingNav />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/match/:id" element={<MatchDetail />} />

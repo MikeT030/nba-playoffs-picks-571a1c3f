@@ -273,8 +273,8 @@ const MakeYourBets = () => {
               return (
                 <div key={conf} className="mb-8">
                   {conf !== "Finals" && (
-                    <h3 className="font-display text-lg tracking-wider text-muted-foreground mb-3">
-                      {conf === "East" ? "🏀 Eastern Conference" : "🏀 Western Conference"}
+                    <h3 className="font-display text-lg tracking-wider text-foreground mb-3">
+                      {conf === "East" ? "Eastern Conference" : "Western Conference"}
                     </h3>
                   )}
                   <div className="grid gap-4 md:grid-cols-2">

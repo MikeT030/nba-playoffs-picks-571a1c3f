@@ -35,7 +35,9 @@ Deno.serve(async (req) => {
 
     const response = await fetch(apiUrl, {
       headers: {
-        Authorization: apiKey,
+        "Authorization": apiKey,
+        "x-access-token": apiKey,
+        "Content-Type": "application/json",
       },
     });
 

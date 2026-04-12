@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { Match } from "@/data/playoffsData";
+import TeamLogo from "@/components/TeamLogo";
 
 interface MatchCardProps {
   match: Match;
@@ -23,7 +24,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
       <div className="p-5 flex items-center gap-4">
         {/* Away Team */}
         <div className="flex-1 flex items-center gap-3">
-          <span className="text-3xl">{match.awayTeam.logo}</span>
+          <TeamLogo src={match.awayTeam.logo} alt={match.awayTeam.name} className="w-10 h-10" />
           <div>
             <p className="font-display text-xl tracking-wide">{match.awayTeam.abbreviation}</p>
             <p className="text-xs text-muted-foreground font-body hidden sm:block">{match.awayTeam.name}</p>
@@ -47,6 +48,11 @@ const MatchCard = ({ match }: MatchCardProps) => {
               Live
             </span>
           )}
+          {match.status === "final" && (
+            <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest">
+              Final
+            </span>
+          )}
         </div>
 
         {/* Home Team */}
@@ -55,7 +61,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
             <p className="font-display text-xl tracking-wide">{match.homeTeam.abbreviation}</p>
             <p className="text-xs text-muted-foreground font-body hidden sm:block">{match.homeTeam.name}</p>
           </div>
-          <span className="text-3xl">{match.homeTeam.logo}</span>
+          <TeamLogo src={match.homeTeam.logo} alt={match.homeTeam.name} className="w-10 h-10" />
         </div>
       </div>
 

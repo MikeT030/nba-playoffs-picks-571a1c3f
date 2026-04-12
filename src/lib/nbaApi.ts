@@ -71,36 +71,52 @@ export async function getTeams(): Promise<NbaTeam[]> {
   return result.data;
 }
 
-// Team colors and emojis for display
+// Official NBA logo URL pattern
+const nbaLogoUrl = (abbr: string) =>
+  `https://cdn.nba.com/logos/nba/${nbaTeamIds[abbr]}/primary/L/logo.svg`;
+
+// NBA team IDs for logo URLs
+const nbaTeamIds: Record<string, number> = {
+  ATL: 1610612737, BOS: 1610612738, BKN: 1610612751, CHA: 1610612766,
+  CHI: 1610612741, CLE: 1610612739, DAL: 1610612742, DEN: 1610612743,
+  DET: 1610612765, GSW: 1610612744, HOU: 1610612745, IND: 1610612754,
+  LAC: 1610612746, LAL: 1610612747, MEM: 1610612763, MIA: 1610612748,
+  MIL: 1610612749, MIN: 1610612750, NOP: 1610612740, NYK: 1610612752,
+  OKC: 1610612760, ORL: 1610612753, PHI: 1610612755, PHX: 1610612756,
+  POR: 1610612757, SAC: 1610612758, SAS: 1610612759, TOR: 1610612761,
+  UTA: 1610612762, WAS: 1610612764,
+};
+
+// Team colors and logo URLs
 export const teamMeta: Record<string, { color: string; logo: string }> = {
-  ATL: { color: "#E03A3E", logo: "🦅" },
-  BOS: { color: "#007A33", logo: "🍀" },
-  BKN: { color: "#000000", logo: "🏙️" },
-  CHA: { color: "#1D1160", logo: "🐝" },
-  CHI: { color: "#CE1141", logo: "🐂" },
-  CLE: { color: "#860038", logo: "⚔️" },
-  DAL: { color: "#00538C", logo: "🐴" },
-  DEN: { color: "#0E2240", logo: "⛏️" },
-  DET: { color: "#C8102E", logo: "🏭" },
-  GSW: { color: "#1D428A", logo: "🌉" },
-  HOU: { color: "#CE1141", logo: "🚀" },
-  IND: { color: "#002D62", logo: "🏎️" },
-  LAC: { color: "#C8102E", logo: "⛵" },
-  LAL: { color: "#552583", logo: "👑" },
-  MEM: { color: "#5D76A9", logo: "🐻" },
-  MIA: { color: "#98002E", logo: "🔥" },
-  MIL: { color: "#00471B", logo: "🦌" },
-  MIN: { color: "#0C2340", logo: "🐺" },
-  NOP: { color: "#0C2340", logo: "⚜️" },
-  NYK: { color: "#006BB6", logo: "🗽" },
-  OKC: { color: "#007AC1", logo: "⚡" },
-  ORL: { color: "#0077C0", logo: "✨" },
-  PHI: { color: "#006BB6", logo: "🔔" },
-  PHX: { color: "#1D1160", logo: "☀️" },
-  POR: { color: "#E03A3E", logo: "🌹" },
-  SAC: { color: "#5A2D81", logo: "👑" },
-  SAS: { color: "#C4CED4", logo: "🤠" },
-  TOR: { color: "#CE1141", logo: "🦖" },
-  UTA: { color: "#002B5C", logo: "🎵" },
-  WAS: { color: "#002B5C", logo: "🧙" },
+  ATL: { color: "#E03A3E", logo: nbaLogoUrl("ATL") },
+  BOS: { color: "#007A33", logo: nbaLogoUrl("BOS") },
+  BKN: { color: "#000000", logo: nbaLogoUrl("BKN") },
+  CHA: { color: "#1D1160", logo: nbaLogoUrl("CHA") },
+  CHI: { color: "#CE1141", logo: nbaLogoUrl("CHI") },
+  CLE: { color: "#860038", logo: nbaLogoUrl("CLE") },
+  DAL: { color: "#00538C", logo: nbaLogoUrl("DAL") },
+  DEN: { color: "#0E2240", logo: nbaLogoUrl("DEN") },
+  DET: { color: "#C8102E", logo: nbaLogoUrl("DET") },
+  GSW: { color: "#1D428A", logo: nbaLogoUrl("GSW") },
+  HOU: { color: "#CE1141", logo: nbaLogoUrl("HOU") },
+  IND: { color: "#002D62", logo: nbaLogoUrl("IND") },
+  LAC: { color: "#C8102E", logo: nbaLogoUrl("LAC") },
+  LAL: { color: "#552583", logo: nbaLogoUrl("LAL") },
+  MEM: { color: "#5D76A9", logo: nbaLogoUrl("MEM") },
+  MIA: { color: "#98002E", logo: nbaLogoUrl("MIA") },
+  MIL: { color: "#00471B", logo: nbaLogoUrl("MIL") },
+  MIN: { color: "#0C2340", logo: nbaLogoUrl("MIN") },
+  NOP: { color: "#0C2340", logo: nbaLogoUrl("NOP") },
+  NYK: { color: "#006BB6", logo: nbaLogoUrl("NYK") },
+  OKC: { color: "#007AC1", logo: nbaLogoUrl("OKC") },
+  ORL: { color: "#0077C0", logo: nbaLogoUrl("ORL") },
+  PHI: { color: "#006BB6", logo: nbaLogoUrl("PHI") },
+  PHX: { color: "#1D1160", logo: nbaLogoUrl("PHX") },
+  POR: { color: "#E03A3E", logo: nbaLogoUrl("POR") },
+  SAC: { color: "#5A2D81", logo: nbaLogoUrl("SAC") },
+  SAS: { color: "#C4CED4", logo: nbaLogoUrl("SAS") },
+  TOR: { color: "#CE1141", logo: nbaLogoUrl("TOR") },
+  UTA: { color: "#002B5C", logo: nbaLogoUrl("UTA") },
+  WAS: { color: "#002B5C", logo: nbaLogoUrl("WAS") },
 };

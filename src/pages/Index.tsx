@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { PenLine } from "lucide-react";
+import { PenLine, Trophy } from "lucide-react";
 import HeroBanner from "@/components/HeroBanner";
 import MatchCard from "@/components/MatchCard";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
@@ -38,13 +38,22 @@ const Index = () => {
           <h2 className="font-display text-3xl tracking-wider">
             Upcoming Matchups
           </h2>
-          <Link
-            to="/bets"
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-body text-sm font-semibold hover:bg-primary/90 transition-colors"
-          >
-            <PenLine size={16} />
-            Make Your Bets
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/scoreboard"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm font-semibold hover:border-primary/60 transition-colors"
+            >
+              <Trophy size={16} />
+              Scoreboard
+            </Link>
+            <Link
+              to="/bets"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-body text-sm font-semibold hover:bg-primary/90 transition-colors"
+            >
+              <PenLine size={16} />
+              Make Your Bets
+            </Link>
+          </div>
         </div>
 
         <Select value={selectedRound} onValueChange={setSelectedRound}>

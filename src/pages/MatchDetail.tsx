@@ -104,7 +104,7 @@ const MatchDetail = () => {
             return (
               <div
                 key={tip.user}
-                className="flex items-center gap-4 bg-card rounded-lg border border-border p-4"
+                className="flex items-center gap-4 bg-card rounded-lg p-4"
               >
                 
                 <div className="flex-1">

@@ -23,7 +23,10 @@ const MatchCard = ({ match }: MatchCardProps) => {
 
       <div className="p-5 flex items-center gap-4">
         {/* Away Team */}
-        <div className="flex-1 flex items-center gap-3">
+        <div className="flex-1 flex items-center gap-2">
+          {match.awayTeam.seed && (
+            <span className="text-xs text-muted-foreground font-body font-semibold w-4 text-center shrink-0">{match.awayTeam.seed}</span>
+          )}
           <TeamLogo src={match.awayTeam.logo} alt={match.awayTeam.name} className="w-10 h-10" />
           <div>
             <p className="font-display text-xl tracking-wide">{match.awayTeam.abbreviation}</p>
@@ -56,12 +59,15 @@ const MatchCard = ({ match }: MatchCardProps) => {
         </div>
 
         {/* Home Team */}
-        <div className="flex-1 flex items-center gap-3 justify-end text-right">
+        <div className="flex-1 flex items-center gap-2 justify-end text-right">
           <div>
             <p className="font-display text-xl tracking-wide">{match.homeTeam.abbreviation}</p>
             <p className="text-xs text-muted-foreground font-body hidden sm:block">{match.homeTeam.name}</p>
           </div>
           <TeamLogo src={match.homeTeam.logo} alt={match.homeTeam.name} className="w-10 h-10" />
+          {match.homeTeam.seed && (
+            <span className="text-xs text-muted-foreground font-body font-semibold w-4 text-center shrink-0">{match.homeTeam.seed}</span>
+          )}
         </div>
       </div>
 

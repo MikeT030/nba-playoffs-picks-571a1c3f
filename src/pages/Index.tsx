@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { PenLine } from "lucide-react";
+import { PenLine, CheckCircle } from "lucide-react";
 import HeroBanner from "@/components/HeroBanner";
 import MatchCard from "@/components/MatchCard";
 import BetsDrawer from "@/components/BetsDrawer";

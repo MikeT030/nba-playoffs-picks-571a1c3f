@@ -23,7 +23,12 @@ const rounds = [
 const Index = () => {
   const { data: matches, isLoading } = usePlayoffGames();
   const [selectedRound, setSelectedRound] = useState("all");
-  const [betsOpen, setBetsOpen] = useState(true);
+  const [betsOpen, setBetsOpen] = useState(false);
+
+  useState(() => {
+    const timer = setTimeout(() => setBetsOpen(true), 800);
+    return () => clearTimeout(timer);
+  });
 
   const filteredMatches =
     selectedRound === "all"

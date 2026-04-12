@@ -328,7 +328,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpen
 
             {currentRoundComplete && isLastRound && (
               <div className="mt-8 text-center">
-                <Button size="lg" className="font-display text-lg tracking-wider" onClick={() => onOpenChange(false)}>
+                <Button size="lg" className="font-display text-lg tracking-wider" onClick={() => { onBetsSaved?.(); onOpenChange(false); }}>
                   SAVE BETS ✅
                 </Button>
               </div>

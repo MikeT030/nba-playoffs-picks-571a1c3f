@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
 
   try {
     const apiKey = Deno.env.get("BALLDONTLIE_API_KEY");
-    if (!apiKey) {
+    console.log("API key length:", apiKey.length, "first 4 chars:", apiKey.substring(0, 4));
       return new Response(
         JSON.stringify({ error: "BALLDONTLIE_API_KEY not configured" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }

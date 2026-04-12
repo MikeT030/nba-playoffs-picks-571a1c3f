@@ -27,6 +27,7 @@ const App = () => (
             <Route path="/match/:id" element={<MatchDetail />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/my-picks" element={<MyPicks />} />
+            <Route path="/make-your-bets" element={<MakeYourBets />} />
             <Route path="/scoreboard" element={<Scoreboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

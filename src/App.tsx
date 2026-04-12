@@ -8,6 +8,7 @@ import FloatingNav from "@/components/FloatingNav";
 import Index from "./pages/Index.tsx";
 import MatchDetail from "./pages/MatchDetail.tsx";
 import Scoreboard from "./pages/Scoreboard.tsx";
+import MakeYourBets from "./pages/MakeYourBets.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import MyPicks from "./pages/MyPicks.tsx";
 import Auth from "./pages/Auth.tsx";

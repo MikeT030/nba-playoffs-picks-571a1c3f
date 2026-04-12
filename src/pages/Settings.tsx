@@ -21,17 +21,19 @@ const Settings = () => {
 
   useEffect(() => {
     if (!user) return;
-    const fetchProfile = async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("display_name")
-        .eq("user_id", user.id)
-        .maybeSingle();
-      if (data?.display_name) {
-        setDisplayName(data.display_name);
+    const fetchData = async () => {
+      const [profileRes, picksRes] = await Promise.all([
+        supabase.from("profiles").select("display_name").eq("user_id", user.id).maybeSingle(),
+        supabase.from("picks").select("profile_name").eq("user_id", user.id).limit(1),
+      ]);
+      if (profileRes.data?.display_name) {
+        setDisplayName(profileRes.data.display_name);
+      } else if (picksRes.data?.[0]?.profile_name) {
+        setDisplayName(picksRes.data[0].profile_name);
       }
+      setHasPicks((picksRes.data?.length ?? 0) > 0);
     };
-    fetchProfile();
+    fetchData();
   }, [user]);
 
   const handleSaveName = async () => {

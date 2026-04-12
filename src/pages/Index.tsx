@@ -56,7 +56,7 @@ const Index = () => {
           <SelectTrigger className="w-[220px] mb-6">
             <SelectValue placeholder="Select round" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent position="popper" sideOffset={4}>
             {rounds.map((r) => (
               <SelectItem key={r.value} value={r.value}>
                 {r.label}

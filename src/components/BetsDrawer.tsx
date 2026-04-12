@@ -149,7 +149,7 @@ const SeriesCard = ({
   );
 };
 
-const BetsDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) => {
+const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpenChange: (open: boolean) => void; onBetsSaved?: () => void }) => {
   const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
   const [bets, setBets] = useState<BetSelection[]>([]);
   const [selectedRound, setSelectedRound] = useState(roundOrder[0]);

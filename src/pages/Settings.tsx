@@ -1,15 +1,53 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LogOut, Mail, ArrowLeft, LogIn, PenLine } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { LogOut, Mail, ArrowLeft, LogIn, PenLine, Pencil, Check } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import BetsDrawer from "@/components/BetsDrawer";
 
 const Settings = () => {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const [betsOpen, setBetsOpen] = useState(false);
+  const [displayName, setDisplayName] = useState("");
+  const [editingName, setEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState("");
+  const [savingName, setSavingName] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchProfile = async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("display_name")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (data?.display_name) {
+        setDisplayName(data.display_name);
+      }
+    };
+    fetchProfile();
+  }, [user]);
+
+  const handleSaveName = async () => {
+    if (!user || !nameInput.trim()) return;
+    setSavingName(true);
+    const { error } = await supabase
+      .from("profiles")
+      .upsert({ user_id: user.id, display_name: nameInput.trim() }, { onConflict: "user_id" });
+    setSavingName(false);
+    if (error) {
+      toast.error("Failed to save name");
+    } else {
+      setDisplayName(nameInput.trim());
+      setEditingName(false);
+      toast.success("Name updated");
+    }
+  };
 
   const handleSignOut = async () => {
     await signOut();
@@ -28,6 +66,38 @@ const Settings = () => {
         </button>
 
         <h1 className="font-display text-3xl tracking-wider">SETTINGS</h1>
+
+        {!loading && user && (
+          <div className="flex items-center gap-2">
+            {editingName ? (
+              <>
+                <Input
+                  value={nameInput}
+                  onChange={(e) => setNameInput(e.target.value)}
+                  placeholder="Enter your name"
+                  className="font-body text-lg"
+                  autoFocus
+                  onKeyDown={(e) => e.key === "Enter" && handleSaveName()}
+                />
+                <Button size="icon" variant="ghost" onClick={handleSaveName} disabled={savingName}>
+                  <Check size={18} />
+                </Button>
+              </>
+            ) : (
+              <>
+                <p className="font-display text-xl tracking-wider">
+                  {displayName || "Set your name"}
+                </p>
+                <button
+                  onClick={() => { setNameInput(displayName); setEditingName(true); }}
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <Pencil size={16} />
+                </button>
+              </>
+            )}
+          </div>
+        )}
 
         <button
           onClick={() => setBetsOpen(true)}

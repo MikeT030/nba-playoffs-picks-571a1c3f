@@ -2,7 +2,7 @@ import heroImage from "@/assets/hero-playoffs.jpg";
 
 const HeroBanner = () => {
   return (
-    <div className="relative w-full h-[50vh] min-h-[360px] overflow-hidden">
+    <div className="relative w-full h-[27.5vh] min-h-[198px] overflow-hidden">
       <img
         src={heroImage}
         alt="NBA Playoffs Arena"

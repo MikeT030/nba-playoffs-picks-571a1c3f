@@ -52,12 +52,12 @@ const Index = () => {
           {betsSaved ? (
             <>
               <CheckCircle size={18} />
-              You have made your bets
+              You have made your picks
             </>
           ) : (
             <>
               <PenLine size={18} />
-              Make Your Bets
+              Make Your Picks
             </>
           )}
         </button>

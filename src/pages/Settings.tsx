@@ -165,7 +165,7 @@ const Settings = () => {
         )}
       </div>
 
-      <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} />
+      <BetsDrawer open={betsOpen} onOpenChange={(open) => { setBetsOpen(open); if (!open) fetchDisplayName(); }} />
     </div>
   );
 };

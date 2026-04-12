@@ -202,18 +202,28 @@ const MakeYourBets = () => {
 
   const seriesForRound = bracketSeries.filter((s) => s.round === selectedRound);
 
-  // Check if previous round is fully bet
+  // A series is bettable if both teams are known (not TBD)
+  const isBettable = (series: BracketSeries): boolean => {
+    const { topTeam, bottomTeam } = resolveSeriesTeams(series.id, picks);
+    const top = topTeam ?? series.topTeam;
+    const bottom = bottomTeam ?? series.bottomTeam;
+    return !!top && !!bottom && top.abbreviation !== "TBD" && bottom.abbreviation !== "TBD";
+  };
+
+  // Check if previous round is fully bet (only bettable series count)
   const isRoundUnlocked = (round: string): boolean => {
     const idx = roundOrder.indexOf(round);
     if (idx === 0) return true;
     const prevRound = roundOrder[idx - 1];
     const prevSeries = bracketSeries.filter((s) => s.round === prevRound);
-    return prevSeries.every((s) => picks[s.id]);
+    const bettablePrev = prevSeries.filter(isBettable);
+    return bettablePrev.length > 0 && bettablePrev.every((s) => picks[s.id]);
   };
 
   // Check if current round is complete
   const currentRoundSeries = bracketSeries.filter((s) => s.round === selectedRound);
-  const currentRoundComplete = currentRoundSeries.length > 0 && currentRoundSeries.every((s) => picks[s.id]);
+  const bettableCurrent = currentRoundSeries.filter(isBettable);
+  const currentRoundComplete = bettableCurrent.length > 0 && bettableCurrent.every((s) => picks[s.id]);
   const currentRoundIndex = roundOrder.indexOf(selectedRound);
   const isLastRound = currentRoundIndex === roundOrder.length - 1;
 

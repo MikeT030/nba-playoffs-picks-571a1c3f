@@ -132,12 +132,15 @@ const MyPicks = () => {
 
   if (!saved || saved.bets.length === 0) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <p className="font-display text-2xl tracking-wider mb-2">NO PICKS YET</p>
-          <p className="text-muted-foreground font-body text-sm">
-            Head to the home page and make your bets first.
-          </p>
+      <div className="min-h-screen bg-background">
+        <HeroBanner title="MY PICKS" subtitle="NBA Playoffs 2026" />
+        <div className="container py-16 flex items-center justify-center">
+          <div className="text-center">
+            <p className="font-display text-2xl tracking-wider mb-2">NO PICKS YET</p>
+            <p className="text-muted-foreground font-body text-sm">
+              Head to the home page and make your bets first.
+            </p>
+          </div>
         </div>
       </div>
     );

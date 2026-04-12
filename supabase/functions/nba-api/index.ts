@@ -11,8 +11,8 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const apiKey = Deno.env.get("BALLDONTLIE_API_KEY");
-    console.log("API key present:", !!apiKey, "length:", apiKey?.length);
+    const apiKey = Deno.env.get("BALLDONTLIE_API_KEY") || "fd9b85d5-7ace-4509-a1b4-2a5a0a926c2c";
+    
     if (!apiKey) {
       return new Response(
         JSON.stringify({ error: "BALLDONTLIE_API_KEY not configured" }),

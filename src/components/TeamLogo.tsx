@@ -1,27 +1,41 @@
-interface TeamLogoProps {
+import * as React from "react";
+import { cn } from "@/lib/utils";
+
+interface TeamLogoProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
   alt: string;
-  className?: string;
 }
 
-const TeamLogo = ({ src, alt, className = "w-10 h-10" }: TeamLogoProps) => {
-  return (
-    <img
-      src={src}
-      alt={alt}
-      className={`${className} object-contain`}
-      loading="lazy"
-      onError={(e) => {
-        // Fallback to a basketball emoji if logo fails to load
-        const target = e.target as HTMLImageElement;
-        target.style.display = "none";
-        const span = document.createElement("span");
-        span.textContent = "🏀";
-        span.className = "text-3xl";
-        target.parentNode?.appendChild(span);
-      }}
-    />
-  );
-};
+const TeamLogo = React.forwardRef<HTMLImageElement, TeamLogoProps>(
+  ({ src, alt, className = "w-10 h-10", ...props }, ref) => {
+    const [hasError, setHasError] = React.useState(false);
+
+    if (hasError || !src) {
+      return (
+        <span
+          aria-label={alt}
+          role="img"
+          className={cn("inline-flex items-center justify-center text-3xl", className)}
+        >
+          🏀
+        </span>
+      );
+    }
+
+    return (
+      <img
+        ref={ref}
+        src={src}
+        alt={alt}
+        className={cn(className, "object-contain")}
+        loading="lazy"
+        onError={() => setHasError(true)}
+        {...props}
+      />
+    );
+  }
+);
+
+TeamLogo.displayName = "TeamLogo";
 
 export default TeamLogo;

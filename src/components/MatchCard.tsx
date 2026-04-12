@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import type { Match } from "@/data/playoffsData";
 import TeamLogo from "@/components/TeamLogo";
 import { useMemo } from "react";
-import { ChevronRight } from "lucide-react";
 
 interface BetSelection {
   seriesId: string;
@@ -46,13 +45,13 @@ const MatchCard = ({ match }: MatchCardProps) => {
   return (
     <Link
       to={`/match/${match.id}`}
-      className="block bg-card border-b border-border transition-all duration-200 hover:bg-muted/50 group"
+      className="block bg-card rounded-lg border border-transparent hover:border-primary/40 transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 group"
     >
-      <div className="px-4 py-2 flex items-center justify-between">
-        <span className="text-xs text-muted-foreground font-body font-bold uppercase tracking-wider">
+      <div className="px-4 py-2 flex items-center justify-between border-b border-transparent">
+        <span className="text-xs text-muted-foreground font-body font-medium uppercase tracking-wider">
           {match.round} · Game {match.gameNumber}
         </span>
-        <span className="text-xs text-muted-foreground font-body font-bold">
+        <span className="text-xs text-muted-foreground font-body">
           {match.date} · {match.time}
         </span>
       </div>
@@ -61,34 +60,34 @@ const MatchCard = ({ match }: MatchCardProps) => {
         {/* Away Team */}
         <div className="flex-1 flex items-center gap-2">
           {match.awayTeam.seed && (
-            <span className="text-xs text-muted-foreground font-body font-bold w-4 text-center shrink-0">{match.awayTeam.seed}</span>
+            <span className="text-xs text-muted-foreground font-body font-semibold w-4 text-center shrink-0">{match.awayTeam.seed}</span>
           )}
           <TeamLogo src={match.awayTeam.logo} alt={match.awayTeam.name} className="w-10 h-10" />
           <div>
-            <p className="font-display text-xl tracking-wide font-bold">{match.awayTeam.abbreviation}</p>
-            <p className="text-xs text-muted-foreground font-body font-bold hidden sm:block">{match.awayTeam.name}</p>
+            <p className="font-display text-xl tracking-wide">{match.awayTeam.abbreviation}</p>
+            <p className="text-xs text-muted-foreground font-body hidden sm:block">{match.awayTeam.name}</p>
           </div>
         </div>
 
         {/* Series Score */}
         <div className="text-center px-4">
           <div className="flex items-center gap-3">
-            <span className="font-display text-3xl font-bold">{match.awayWins}</span>
-            <span className="text-muted-foreground font-body text-sm font-bold">—</span>
-            <span className="font-display text-3xl font-bold">{match.homeWins}</span>
+            <span className="font-display text-3xl">{match.awayWins}</span>
+            <span className="text-muted-foreground font-body text-sm">—</span>
+            <span className="font-display text-3xl">{match.homeWins}</span>
           </div>
           {match.status === "upcoming" && (
-            <span className="text-[10px] text-primary font-body font-bold uppercase tracking-widest">
+            <span className="text-[10px] text-primary font-body font-semibold uppercase tracking-widest">
               Upcoming
             </span>
           )}
           {match.status === "live" && (
-            <span className="text-[10px] text-loss font-body font-bold uppercase tracking-widest animate-pulse">
+            <span className="text-[10px] text-loss font-body font-semibold uppercase tracking-widest animate-pulse">
               Live
             </span>
           )}
           {match.status === "final" && (
-            <span className="text-[10px] text-muted-foreground font-body font-bold uppercase tracking-widest">
+            <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest">
               Final
             </span>
           )}
@@ -97,23 +96,20 @@ const MatchCard = ({ match }: MatchCardProps) => {
         {/* Home Team */}
         <div className="flex-1 flex items-center gap-2 justify-end text-right">
           <div>
-            <p className="font-display text-xl tracking-wide font-bold">{match.homeTeam.abbreviation}</p>
-            <p className="text-xs text-muted-foreground font-body font-bold hidden sm:block">{match.homeTeam.name}</p>
+            <p className="font-display text-xl tracking-wide">{match.homeTeam.abbreviation}</p>
+            <p className="text-xs text-muted-foreground font-body hidden sm:block">{match.homeTeam.name}</p>
           </div>
           <TeamLogo src={match.homeTeam.logo} alt={match.homeTeam.name} className="w-10 h-10" />
           {match.homeTeam.seed && (
-            <span className="text-xs text-muted-foreground font-body font-bold w-4 text-center shrink-0">{match.homeTeam.seed}</span>
+            <span className="text-xs text-muted-foreground font-body font-semibold w-4 text-center shrink-0">{match.homeTeam.seed}</span>
           )}
         </div>
-
-        {/* Chevron */}
-        <ChevronRight className="w-6 h-6 text-muted-foreground group-hover:text-foreground transition-colors" strokeWidth={3} />
       </div>
 
       {bet && betTeamName && (
         <div className="px-4 pb-3 -mt-1">
-          <p className="text-xs font-body text-primary font-bold">
-            Your bet: <span className="font-bold">{betTeamName}</span> in <span className="font-bold">{bet.gamesInSeries}</span>
+          <p className="text-xs font-body text-primary">
+            Your bet: <span className="font-medium">{betTeamName}</span> in <span className="font-medium">{bet.gamesInSeries}</span>
           </p>
         </div>
       )}

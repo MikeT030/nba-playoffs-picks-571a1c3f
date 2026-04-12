@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { PenLine } from "lucide-react";
 import HeroBanner from "@/components/HeroBanner";
 import MatchCard from "@/components/MatchCard";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
@@ -32,9 +34,18 @@ const Index = () => {
       <HeroBanner />
 
       <section className="container py-10">
-        <h2 className="font-display text-3xl tracking-wider mb-4">
-          Upcoming Matchups
-        </h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-display text-3xl tracking-wider">
+            Upcoming Matchups
+          </h2>
+          <Link
+            to="/bets"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-body text-sm font-semibold hover:bg-primary/90 transition-colors"
+          >
+            <PenLine size={16} />
+            Make Your Bets
+          </Link>
+        </div>
 
         <Select value={selectedRound} onValueChange={setSelectedRound}>
           <SelectTrigger className="w-[220px] mb-6">

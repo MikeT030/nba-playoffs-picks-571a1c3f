@@ -147,6 +147,36 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpen
   const [bets, setBets] = useState<BetSelection[]>([]);
   const [selectedRound, setSelectedRound] = useState(roundOrder[0]);
   const [saving, setSaving] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  // Load existing profile name and picks when drawer opens
+  useEffect(() => {
+    if (!open || !user || loaded) return;
+    const loadData = async () => {
+      const [profileRes, picksRes] = await Promise.all([
+        supabase.from("profiles").select("display_name").eq("user_id", user.id).maybeSingle(),
+        supabase.from("picks").select("series_id, winner, games_in_series").eq("user_id", user.id),
+      ]);
+      if (profileRes.data?.display_name) {
+        setProfileName(profileRes.data.display_name);
+      }
+      if (picksRes.data && picksRes.data.length > 0) {
+        const loadedBets: BetSelection[] = picksRes.data.map((p) => ({
+          seriesId: p.series_id,
+          winner: p.winner,
+          gamesInSeries: p.games_in_series,
+        }));
+        setBets(loadedBets);
+      }
+      setLoaded(true);
+    };
+    loadData();
+  }, [open, user, loaded]);
+
+  // Reset loaded state when drawer closes so it reloads next time
+  useEffect(() => {
+    if (!open) setLoaded(false);
+  }, [open]);
 
   const picks: Record<string, string> = {};
   for (const bet of bets) picks[bet.seriesId] = bet.winner;

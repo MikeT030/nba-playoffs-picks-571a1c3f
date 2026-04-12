@@ -30,8 +30,8 @@ export interface Match {
   tips: Tip[];
 }
 
-const buddies = ["Max", "Leon", "Nik", "Jonas", "Alex"];
-const avatars = ["😎", "🧢", "🏀", "💪", "🎯"];
+const buddies = ["Erik", "Alexander", "David", "Fabian", "Hannes", "Jörn", "Larsn", "Simon", "Sven"];
+const avatars = ["🎣", "😎", "🎬", "🏔️", "🌄", "🎿", "🐕", "📡", "🐶"];
 
 export function makeTips(team1: string, team2: string): Tip[] {
   return buddies.map((name, i) => {

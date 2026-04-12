@@ -96,10 +96,7 @@ const Scoreboard = () => {
                 <TableRow key={player.name}>
                   <TableCell>{getRankIcon(i)}</TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg">{player.avatar}</span>
-                      <span className="font-body font-medium text-foreground">{player.name}</span>
-                    </div>
+                    <span className="font-body font-medium text-foreground">{player.name}</span>
                   </TableCell>
                   <TableCell className="text-right font-display text-lg text-foreground">{player.totalPoints}</TableCell>
                 </TableRow>

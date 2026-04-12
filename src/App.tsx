@@ -12,6 +12,7 @@ import MakeYourBets from "./pages/MakeYourBets.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import MyPicks from "./pages/MyPicks.tsx";
 import Auth from "./pages/Auth.tsx";
+import Settings from "./pages/Settings.tsx";
 
 const queryClient = new QueryClient();
 
@@ -23,10 +24,12 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <FloatingNav />
+          <TopRightAuth />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/match/:id" element={<MatchDetail />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="/my-picks" element={<MyPicks />} />
             <Route path="/make-your-bets" element={<MakeYourBets />} />
             <Route path="/scoreboard" element={<Scoreboard />} />

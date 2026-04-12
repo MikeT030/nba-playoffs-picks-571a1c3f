@@ -1,6 +1,11 @@
 import heroImage from "@/assets/hero-playoffs.jpg";
 
-const HeroBanner = () => {
+interface HeroBannerProps {
+  title?: string;
+  subtitle?: string;
+}
+
+const HeroBanner = ({ title = "NBA PLAYOFFS, BABY!", subtitle = "2026" }: HeroBannerProps) => {
   return (
     <div className="relative w-full h-[27.5vh] min-h-[198px] overflow-hidden">
       <img
@@ -14,10 +19,10 @@ const HeroBanner = () => {
       <div className="absolute inset-0 flex items-end">
         <div className="container pb-10">
           <p className="text-primary font-body font-semibold text-sm tracking-widest uppercase mb-2">
-            2026
+            {subtitle}
           </p>
           <h1 className="text-6xl md:text-8xl font-display tracking-wider leading-none">
-            NBA PLAYOFFS, BABY!
+            {title}
           </h1>
         </div>
       </div>

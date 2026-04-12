@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { ArrowLeft, Trophy, Medal, Award, Star } from "lucide-react";
+import { Trophy, Star } from "lucide-react";
+import HeroBanner from "@/components/HeroBanner";
 import {
   Table,
   TableBody,
@@ -64,18 +64,7 @@ const Scoreboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b border-border">
-        <div className="container py-4 flex items-center gap-3">
-          <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft size={20} />
-          </Link>
-          <div>
-            <h1 className="font-display text-2xl tracking-wider">SCOREBOARD</h1>
-            <p className="text-xs text-muted-foreground font-body">NBA Playoffs 2026</p>
-          </div>
-        </div>
-      </div>
+      <HeroBanner title="SCOREBOARD" subtitle="NBA Playoffs 2026" />
 
       <section className="container py-8">
 

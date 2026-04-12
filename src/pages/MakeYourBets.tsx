@@ -14,6 +14,7 @@ const participants = [
   { name: "Hannes", avatar: "🌄" },
   { name: "Jörn", avatar: "🎿" },
   { name: "Larsn", avatar: "🐕" },
+  { name: "Michi", avatar: "🎸" },
   { name: "Simon", avatar: "📡" },
   { name: "Sven", avatar: "🐶" },
 ];

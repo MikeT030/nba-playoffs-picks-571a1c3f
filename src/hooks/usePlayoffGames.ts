@@ -80,7 +80,7 @@ function groupIntoSeries(games: NbaGame[]): Match[] {
   return matches;
 }
 
-export function usePlayoffGames(season: number = 2024) {
+export function usePlayoffGames(season: number = 2025) {
   return useQuery({
     queryKey: ["playoff-games", season],
     queryFn: async () => {

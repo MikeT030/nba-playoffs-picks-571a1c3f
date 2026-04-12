@@ -9,12 +9,6 @@ const Settings = () => {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!loading && !user) navigate("/auth", { replace: true });
-  }, [user, loading, navigate]);
-
-  if (loading || !user) return null;
-
   const handleSignOut = async () => {
     await signOut();
     navigate("/");

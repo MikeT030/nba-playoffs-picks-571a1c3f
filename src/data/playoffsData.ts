@@ -17,6 +17,7 @@ export interface Tip {
 export interface Match {
   id: string;
   round: string;
+  conference: "East" | "West" | "Finals";
   gameNumber: number;
   date: string;
   time: string;

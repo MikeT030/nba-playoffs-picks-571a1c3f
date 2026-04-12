@@ -181,18 +181,17 @@ export function resolveSeriesTeams(
 const firstRoundMatchups = bracketSeries.filter((s) => s.round === "First Round" && s.topTeam && s.bottomTeam);
 
 export const fallbackMatches: Match[] = firstRoundMatchups
-  .filter((s) => s.topTeam!.abbreviation !== "TBD" && s.bottomTeam!.abbreviation !== "TBD")
   .map((s, i) => ({
     id: s.id,
     round: "First Round",
     conference: s.conference,
     gameNumber: 1,
-    date: i < 3 ? "Apr 19" : "Apr 20",
-    time: ["7:00 PM", "8:00 PM", "9:30 PM", "3:30 PM"][i] + " ET",
+    date: s.bottomTeam!.abbreviation === "TBD" ? "TBD" : (i < 3 ? "Apr 19" : "Apr 20"),
+    time: s.bottomTeam!.abbreviation === "TBD" ? "TBD" : (["7:00 PM", "8:00 PM", "9:30 PM", "3:30 PM"][i] + " ET"),
     homeTeam: s.topTeam!,
     awayTeam: s.bottomTeam!,
     homeWins: 0,
     awayWins: 0,
     status: "upcoming" as const,
-    tips: makeTips(s.topTeam!.abbreviation, s.bottomTeam!.abbreviation),
+    tips: s.bottomTeam!.abbreviation === "TBD" ? [] : makeTips(s.topTeam!.abbreviation, s.bottomTeam!.abbreviation),
   }));

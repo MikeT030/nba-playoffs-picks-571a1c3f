@@ -56,8 +56,6 @@ const getScoreboard = (): ParticipantScore[] => {
 
 const getRankIcon = (index: number) => {
   if (index === 0) return <Trophy size={18} className="text-primary" />;
-  if (index === 1) return <Medal size={18} className="text-muted-foreground" />;
-  if (index === 2) return <Award size={18} className="text-accent-foreground" />;
   return <span className="text-muted-foreground font-body text-sm w-[18px] text-center inline-block">{index + 1}</span>;
 };
 

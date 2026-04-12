@@ -1,8 +1,12 @@
-import { useMemo, useState } from "react";
-import { PenLine, CheckCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { PenLine, CheckCircle, LogIn } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import TeamLogo from "@/components/TeamLogo";
 import HeroBanner from "@/components/HeroBanner";
 import BetsDrawer from "@/components/BetsDrawer";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
 import {
   bracketSeries,
   resolveSeriesTeams,
@@ -13,11 +17,6 @@ interface BetSelection {
   seriesId: string;
   winner: string;
   gamesInSeries: number;
-}
-
-interface SavedBets {
-  profile: string;
-  bets: BetSelection[];
 }
 
 const roundOrder = [
@@ -47,9 +46,6 @@ const PickCard = ({
         ? bottomTeam
         : null;
 
-  const loserTeam =
-    winnerTeam === topTeam ? bottomTeam : topTeam;
-
   return (
     <div className="bg-card rounded-lg p-5">
       <p className="text-xs text-muted-foreground font-body font-medium uppercase tracking-wider mb-4">
@@ -57,7 +53,6 @@ const PickCard = ({
       </p>
 
       <div className="flex items-center gap-4 mb-3">
-        {/* Top team */}
         <div
           className={`flex-1 flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all ${
             bet?.winner === topTeam?.abbreviation
@@ -80,7 +75,6 @@ const PickCard = ({
 
         <span className="text-muted-foreground font-body text-sm">VS</span>
 
-        {/* Bottom team */}
         <div
           className={`flex-1 flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all ${
             bet?.winner === bottomTeam?.abbreviation
@@ -117,37 +111,97 @@ const PickCard = ({
 };
 
 const MyPicks = () => {
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [betsOpen, setBetsOpen] = useState(false);
-  const [betsSaved, setBetsSaved] = useState(false);
+  const [profileName, setProfileName] = useState<string | null>(null);
+  const [bets, setBets] = useState<BetSelection[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  const saved = useMemo<SavedBets | null>(() => {
-    try {
-      const raw = localStorage.getItem("nba-bets");
-      if (!raw) return null;
-      return JSON.parse(raw);
-    } catch {
-      return null;
+  useEffect(() => {
+    if (authLoading) return;
+    if (!user) {
+      setLoading(false);
+      return;
     }
-  }, [betsSaved]);
+
+    const fetchPicks = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("picks")
+        .select("*")
+        .eq("user_id", user.id);
+
+      if (!error && data && data.length > 0) {
+        setProfileName(data[0].profile_name);
+        setBets(
+          data.map((row: any) => ({
+            seriesId: row.series_id,
+            winner: row.winner,
+            gamesInSeries: row.games_in_series,
+          }))
+        );
+      } else {
+        setProfileName(null);
+        setBets([]);
+      }
+      setLoading(false);
+    };
+
+    fetchPicks();
+  }, [user, authLoading, refreshKey]);
 
   const picks: Record<string, string> = {};
-  if (saved) {
-    for (const bet of saved.bets) picks[bet.seriesId] = bet.winner;
+  for (const bet of bets) picks[bet.seriesId] = bet.winner;
+
+  if (authLoading || loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <HeroBanner title="MY PICKS" subtitle="NBA Playoffs 2026" />
+        <section className="container py-10 text-center">
+          <p className="text-muted-foreground font-body">Loading...</p>
+        </section>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-background">
+        <HeroBanner title="MY PICKS" subtitle="NBA Playoffs 2026" />
+        <section className="container py-10">
+          <div className="flex flex-col items-center justify-center py-8 gap-4">
+            <p className="font-display text-2xl tracking-wider">SIGN IN TO VIEW PICKS</p>
+            <p className="text-muted-foreground font-body text-sm">
+              Create an account to save and view your playoff predictions.
+            </p>
+            <Button
+              className="font-display tracking-wider"
+              onClick={() => navigate("/auth")}
+            >
+              <LogIn size={18} className="mr-2" />
+              SIGN IN
+            </Button>
+          </div>
+        </section>
+      </div>
+    );
   }
 
   const makePicksButton = (
     <button
       onClick={() => setBetsOpen(true)}
       className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 mb-6 ${
-        betsSaved
+        bets.length > 0
           ? "bg-primary/15 text-primary border border-primary/40"
           : "bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
       }`}
     >
-      {betsSaved ? (
+      {bets.length > 0 ? (
         <>
           <CheckCircle size={18} />
-          You have made your picks
+          Edit Your Picks
         </>
       ) : (
         <>
@@ -158,7 +212,7 @@ const MyPicks = () => {
     </button>
   );
 
-  if (!saved || saved.bets.length === 0) {
+  if (bets.length === 0) {
     return (
       <div className="min-h-screen bg-background">
         <HeroBanner title="MY PICKS" subtitle="NBA Playoffs 2026" />
@@ -173,14 +227,14 @@ const MyPicks = () => {
             </div>
           </div>
         </section>
-        <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setBetsSaved(true)} />
+        <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setRefreshKey((k) => k + 1)} />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-background">
-      <HeroBanner title="MY PICKS" subtitle={`${saved.profile}'s predictions · ${saved.bets.length} picks`} />
+      <HeroBanner title="MY PICKS" subtitle={`${profileName}'s predictions · ${bets.length} picks`} />
 
       <section className="container py-8 pb-24">
         {makePicksButton}
@@ -211,7 +265,7 @@ const MyPicks = () => {
                             key={series.id}
                             topTeam={resolved.topTeam ?? series.topTeam}
                             bottomTeam={resolved.bottomTeam ?? series.bottomTeam}
-                            bet={saved.bets.find((b) => b.seriesId === series.id)}
+                            bet={bets.find((b) => b.seriesId === series.id)}
                             round={series.round}
                             conference={series.conference}
                           />
@@ -226,7 +280,7 @@ const MyPicks = () => {
         })}
       </section>
 
-      <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setBetsSaved(true)} />
+      <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setRefreshKey((k) => k + 1)} />
     </div>
   );
 };

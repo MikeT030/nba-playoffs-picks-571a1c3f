@@ -69,7 +69,7 @@ const SeriesCard = ({
   onBet: (seriesId: string, winner: string, games: number) => void;
   locked: boolean;
 }) => {
-  const [selectedWinner, setSelectedWinner] = useState<string | null>(bet?.winner ?? null);
+  const selectedWinner = bet?.winner ?? null;
   const [selectedGames, setSelectedGames] = useState<number>(bet?.gamesInSeries ?? 4);
 
   const teamsReady = topTeam && bottomTeam && topTeam.abbreviation !== "TBD" && bottomTeam.abbreviation !== "TBD";

@@ -266,16 +266,31 @@ const MakeYourBets = () => {
             ))}
           </div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2">
-            {filteredMatches?.map((match) => (
-              <SeriesCard
-                key={match.id}
-                match={match}
-                bet={bets.find((b) => b.matchId === match.id)}
-                onBet={handleBet}
-              />
-            ))}
-          </div>
+          <>
+            {(selectedRound !== "Finals" ? ["East", "West"] : ["Finals"]).map((conf) => {
+              const confMatches = filteredMatches?.filter((m) => m.conference === conf);
+              if (!confMatches?.length) return null;
+              return (
+                <div key={conf} className="mb-8">
+                  {conf !== "Finals" && (
+                    <h3 className="font-display text-lg tracking-wider text-muted-foreground mb-3">
+                      {conf === "East" ? "🏀 Eastern Conference" : "🏀 Western Conference"}
+                    </h3>
+                  )}
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {confMatches.map((match) => (
+                      <SeriesCard
+                        key={match.id}
+                        match={match}
+                        bet={bets.find((b) => b.matchId === match.id)}
+                        onBet={handleBet}
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </>
         )}
 
         {currentRoundComplete && !isLastRound && (

@@ -43,20 +43,20 @@ const Index = () => {
       <section className="container py-10">
         <button
           onClick={() => setBetsOpen(true)}
-          className={`flex items-center justify-center gap-2 w-full py-3 rounded-lg font-body text-sm font-semibold transition-colors mb-6 ${
+          className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 mb-6 ${
             betsSaved
-              ? "bg-muted text-foreground border border-border"
-              : "bg-primary text-primary-foreground hover:bg-primary/90"
+              ? "bg-primary/15 text-primary border border-primary/40"
+              : "bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
           }`}
         >
           {betsSaved ? (
             <>
-              <CheckCircle size={16} className="text-primary" />
+              <CheckCircle size={18} />
               You have made your bets
             </>
           ) : (
             <>
-              <PenLine size={16} />
+              <PenLine size={18} />
               Make Your Bets
             </>
           )}

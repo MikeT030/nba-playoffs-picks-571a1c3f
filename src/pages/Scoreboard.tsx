@@ -82,7 +82,7 @@ const Scoreboard = () => {
       <section className="container py-8">
 
         {/* Leaderboard */}
-        <div className="bg-card border border-border rounded-lg overflow-hidden">
+        <div className="bg-card rounded-lg overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>

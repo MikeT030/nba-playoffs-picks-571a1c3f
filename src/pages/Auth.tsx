@@ -47,7 +47,7 @@ const Auth = () => {
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center">
-          <h1 className="font-display text-4xl tracking-wider">SIGN IN</h1>
+          <h1 className="font-display text-4xl tracking-wider">{isSignUp ? "SIGN UP" : "SIGN IN"}</h1>
           <p className="text-muted-foreground font-body text-sm mt-2">
             to save your playoff picks
           </p>

@@ -14,10 +14,10 @@ const HeroBanner = () => {
       <div className="absolute inset-0 flex items-end">
         <div className="container pb-10">
           <p className="text-primary font-body font-semibold text-sm tracking-widest uppercase mb-2">
-            2025 Season
+            2026
           </p>
           <h1 className="text-6xl md:text-8xl font-display tracking-wider leading-none">
-            NBA PLAYOFF, BABY!
+            NBA PLAYOFFS, BABY!
           </h1>
         </div>
       </div>

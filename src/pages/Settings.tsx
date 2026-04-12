@@ -94,7 +94,7 @@ const Settings = () => {
         </button>
       </div>
 
-      <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onSaved={() => {}} />
+      <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} />
     </div>
   );
 };

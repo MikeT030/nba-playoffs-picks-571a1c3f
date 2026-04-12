@@ -2,14 +2,14 @@ export interface Team {
   name: string;
   abbreviation: string;
   color: string;
-  logo: string; // emoji as placeholder
+  logo: string;
 }
 
 export interface Tip {
   user: string;
   avatar: string;
-  pick: string; // team abbreviation
-  gamesInSeries: number; // e.g. "in 5"
+  pick: string;
+  gamesInSeries: number;
 }
 
 export interface Match {
@@ -28,7 +28,26 @@ export interface Match {
   tips: Tip[];
 }
 
-const teams: Record<string, Team> = {
+// Hardcoded buddies tips (will be replaced by DB later)
+const buddies = ["Max", "Leon", "Nik", "Jonas", "Alex"];
+const avatars = ["😎", "🧢", "🏀", "💪", "🎯"];
+
+export function makeTips(team1: string, team2: string): Tip[] {
+  // Deterministic based on team names so it doesn't change on re-render
+  return buddies.map((name, i) => {
+    const seed = (name.charCodeAt(0) + team1.charCodeAt(0) + team2.charCodeAt(0)) % 2;
+    const pick = (i + seed) % 2 === 0 ? team1 : team2;
+    return {
+      user: name,
+      avatar: avatars[i],
+      pick,
+      gamesInSeries: 4 + ((i + seed) % 3), // 4, 5, or 6
+    };
+  });
+}
+
+// Fallback static matches (used when API is unavailable)
+const fallbackTeams: Record<string, Team> = {
   BOS: { name: "Boston Celtics", abbreviation: "BOS", color: "#007A33", logo: "🍀" },
   ORL: { name: "Orlando Magic", abbreviation: "ORL", color: "#0077C0", logo: "✨" },
   CLE: { name: "Cleveland Cavaliers", abbreviation: "CLE", color: "#860038", logo: "⚔️" },
@@ -47,124 +66,21 @@ const teams: Record<string, Team> = {
   DAL: { name: "Dallas Mavericks", abbreviation: "DAL", color: "#00538C", logo: "🐴" },
 };
 
-const buddies = ["Max", "Leon", "Nik", "Jonas", "Alex"];
-const avatars = ["😎", "🧢", "🏀", "💪", "🎯"];
-
-function makeTips(teams: [string, string]): Tip[] {
-  return buddies.map((name, i) => {
-    const pick = Math.random() > 0.5 ? teams[0] : teams[1];
-    return {
-      user: name,
-      avatar: avatars[i],
-      pick,
-      gamesInSeries: Math.floor(Math.random() * 3) + 4, // 4-6
-    };
-  });
-}
-
-export const matches: Match[] = [
-  {
-    id: "bos-orl",
-    round: "First Round",
-    gameNumber: 1,
-    date: "Apr 19",
-    time: "7:00 PM ET",
-    homeTeam: teams.BOS,
-    awayTeam: teams.ORL,
-    homeWins: 0,
-    awayWins: 0,
-    status: "upcoming",
-    tips: makeTips(["BOS", "ORL"]),
-  },
-  {
-    id: "cle-mia",
-    round: "First Round",
-    gameNumber: 1,
-    date: "Apr 19",
-    time: "8:00 PM ET",
-    homeTeam: teams.CLE,
-    awayTeam: teams.MIA,
-    homeWins: 0,
-    awayWins: 0,
-    status: "upcoming",
-    tips: makeTips(["CLE", "MIA"]),
-  },
-  {
-    id: "okc-den",
-    round: "First Round",
-    gameNumber: 1,
-    date: "Apr 19",
-    time: "9:30 PM ET",
-    homeTeam: teams.OKC,
-    awayTeam: teams.DEN,
-    homeWins: 0,
-    awayWins: 0,
-    status: "upcoming",
-    tips: makeTips(["OKC", "DEN"]),
-  },
-  {
-    id: "lal-min",
-    round: "First Round",
-    gameNumber: 1,
-    date: "Apr 20",
-    time: "3:30 PM ET",
-    homeTeam: teams.LAL,
-    awayTeam: teams.MIN,
-    homeWins: 0,
-    awayWins: 0,
-    status: "upcoming",
-    tips: makeTips(["LAL", "MIN"]),
-  },
-  {
-    id: "gsw-hou",
-    round: "First Round",
-    gameNumber: 1,
-    date: "Apr 20",
-    time: "6:00 PM ET",
-    homeTeam: teams.GSW,
-    awayTeam: teams.HOU,
-    homeWins: 0,
-    awayWins: 0,
-    status: "upcoming",
-    tips: makeTips(["GSW", "HOU"]),
-  },
-  {
-    id: "nyk-det",
-    round: "First Round",
-    gameNumber: 1,
-    date: "Apr 20",
-    time: "7:00 PM ET",
-    homeTeam: teams.NYK,
-    awayTeam: teams.DET,
-    homeWins: 0,
-    awayWins: 0,
-    status: "upcoming",
-    tips: makeTips(["NYK", "DET"]),
-  },
-  {
-    id: "mil-ind",
-    round: "First Round",
-    gameNumber: 1,
-    date: "Apr 20",
-    time: "8:30 PM ET",
-    homeTeam: teams.MIL,
-    awayTeam: teams.IND,
-    homeWins: 0,
-    awayWins: 0,
-    status: "upcoming",
-    tips: makeTips(["MIL", "IND"]),
-  },
-  {
-    id: "lac-dal",
-    round: "First Round",
-    gameNumber: 1,
-    date: "Apr 20",
-    time: "10:00 PM ET",
-    homeTeam: teams.LAC,
-    awayTeam: teams.DAL,
-    homeWins: 0,
-    awayWins: 0,
-    status: "upcoming",
-    tips: makeTips(["LAC", "DAL"]),
-  },
+const matchups: [string, string][] = [
+  ["BOS", "ORL"], ["CLE", "MIA"], ["OKC", "DEN"], ["LAL", "MIN"],
+  ["GSW", "HOU"], ["NYK", "DET"], ["MIL", "IND"], ["LAC", "DAL"],
 ];
+
+export const fallbackMatches: Match[] = matchups.map(([home, away], i) => ({
+  id: `${home.toLowerCase()}-${away.toLowerCase()}`,
+  round: "First Round",
+  gameNumber: 1,
+  date: i < 3 ? "Apr 19" : "Apr 20",
+  time: ["7:00 PM", "8:00 PM", "9:30 PM", "3:30 PM", "6:00 PM", "7:00 PM", "8:30 PM", "10:00 PM"][i] + " ET",
+  homeTeam: fallbackTeams[home],
+  awayTeam: fallbackTeams[away],
+  homeWins: 0,
+  awayWins: 0,
+  status: "upcoming" as const,
+  tips: makeTips(home, away),
+}));

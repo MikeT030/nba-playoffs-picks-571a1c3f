@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getPlayoffGames, teamMeta, type NbaGame } from "@/lib/nbaApi";
-import { type Match, type Team, makeTips, fallbackMatches, getConference } from "@/data/playoffsData";
+import { type Match, type Team, makeTips, fallbackMatches, getConference, teamSeeds } from "@/data/playoffsData";
 
 function gameStatusToLocal(status: string): "upcoming" | "live" | "final" {
   if (status === "Final") return "final";
@@ -15,6 +15,7 @@ function nbaTeamToTeam(t: { full_name: string; abbreviation: string }): Team {
     abbreviation: t.abbreviation,
     color: meta.color,
     logo: meta.logo,
+    seed: teamSeeds[t.abbreviation],
   };
 }
 

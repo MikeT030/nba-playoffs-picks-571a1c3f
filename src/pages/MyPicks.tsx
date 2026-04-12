@@ -183,6 +183,7 @@ const MyPicks = () => {
       <HeroBanner title="MY PICKS" subtitle={`${saved.profile}'s predictions · ${saved.bets.length} picks`} />
 
       <section className="container py-8 pb-24">
+        {makePicksButton}
         {roundOrder.map((round) => {
           const roundSeries = bracketSeries.filter((s) => s.round === round);
           const conferences = round === "Finals" ? ["Finals"] : ["West", "East"];
@@ -224,6 +225,8 @@ const MyPicks = () => {
           );
         })}
       </section>
+
+      <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setBetsSaved(true)} />
     </div>
   );
 };

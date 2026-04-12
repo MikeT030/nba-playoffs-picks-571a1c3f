@@ -20,14 +20,14 @@ const FloatingNav = () => {
               key={item.to}
               to={item.to}
               className={cn(
-                "flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 whitespace-nowrap",
+                "flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-body font-medium transition-colors duration-200 whitespace-nowrap",
                 isActive
                   ? "bg-primary/15 text-primary border border-primary/40"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
               <item.icon size={18} />
-              {isActive && <span>{item.label}</span>}
+              <span>{item.label}</span>
             </Link>
           );
         })}

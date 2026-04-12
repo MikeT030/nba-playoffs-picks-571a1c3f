@@ -17,11 +17,8 @@ const HeroBanner = () => {
             2025 Season
           </p>
           <h1 className="text-6xl md:text-8xl font-display tracking-wider leading-none">
-            NBA PLAYOFFS
+            NBA PLAYOFF, BABY!
           </h1>
-          <p className="text-muted-foreground font-body text-lg mt-2">
-            Betting game — pick your winners, brag to your buddies.
-          </p>
         </div>
       </div>
     </div>

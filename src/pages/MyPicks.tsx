@@ -162,6 +162,7 @@ const MyPicks = () => {
       </div>
 
       <section className="container py-8 pb-24">
+        {roundOrder.map((round) => {
           const roundSeries = bracketSeries.filter((s) => s.round === round);
           const conferences = round === "Finals" ? ["Finals"] : ["West", "East"];
 

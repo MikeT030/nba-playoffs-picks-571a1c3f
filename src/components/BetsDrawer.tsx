@@ -249,7 +249,6 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpen
         <div className="overflow-y-auto">
           <div className="border-b border-border px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-2xl">{participant?.avatar}</span>
               <div>
                 <h2 className="font-display text-xl tracking-wider">MAKE YOUR BETS</h2>
                 <p className="text-xs text-muted-foreground font-body">{selectedProfile}'s picks</p>

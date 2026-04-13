@@ -1,8 +1,14 @@
 import { useLocation, Link } from "react-router-dom";
-import { Home, Trophy, ClipboardList } from "lucide-react";
+import { Trophy, ClipboardList } from "lucide-react";
 import { cn } from "@/lib/utils";
+import BasketballIcon from "@/assets/basketball-icon.svg";
+
+const BasketballSvg = ({ size = 20 }: { size?: number }) => (
+  <img src={BasketballIcon} alt="" width={size} height={size} className="dark:invert" />
+);
+
 const navItems = [
-  { to: "/", label: "Home", icon: Home },
+  { to: "/", label: "Home", icon: BasketballSvg },
   { to: "/scoreboard", label: "Scoreboard", icon: Trophy },
   { to: "/my-picks", label: "My Picks", icon: ClipboardList },
 ];

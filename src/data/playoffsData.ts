@@ -103,23 +103,23 @@ export function isPlayInPlaceholder(abbr: string): boolean {
 export const bracketSeries: BracketSeries[] = [
   // ===== WEST FIRST ROUND =====
   { id: "west-r1-1v8", round: "First Round", conference: "West",
-    topTeam: makeTeam("OKC", "Oklahoma City Thunder", 1), bottomTeam: tbdTeam(8) },
+    topTeam: makeTeam("OKC", "Oklahoma City Thunder", 1), bottomTeam: playInPlaceholders["PIW8"] },
   { id: "west-r1-4v5", round: "First Round", conference: "West",
     topTeam: makeTeam("LAL", "Los Angeles Lakers", 4), bottomTeam: makeTeam("HOU", "Houston Rockets", 5) },
   { id: "west-r1-3v6", round: "First Round", conference: "West",
     topTeam: makeTeam("DEN", "Denver Nuggets", 3), bottomTeam: makeTeam("MIN", "Minnesota Timberwolves", 6) },
   { id: "west-r1-2v7", round: "First Round", conference: "West",
-    topTeam: makeTeam("SAS", "San Antonio Spurs", 2), bottomTeam: tbdTeam(7) },
+    topTeam: makeTeam("SAS", "San Antonio Spurs", 2), bottomTeam: playInPlaceholders["PIW7"] },
 
   // ===== EAST FIRST ROUND =====
   { id: "east-r1-1v8", round: "First Round", conference: "East",
-    topTeam: makeTeam("DET", "Detroit Pistons", 1), bottomTeam: tbdTeam(8) },
+    topTeam: makeTeam("DET", "Detroit Pistons", 1), bottomTeam: playInPlaceholders["PIE8"] },
   { id: "east-r1-4v5", round: "First Round", conference: "East",
     topTeam: makeTeam("CLE", "Cleveland Cavaliers", 4), bottomTeam: makeTeam("ATL", "Atlanta Hawks", 5) },
   { id: "east-r1-3v6", round: "First Round", conference: "East",
     topTeam: makeTeam("NYK", "New York Knicks", 3), bottomTeam: makeTeam("TOR", "Toronto Raptors", 6) },
   { id: "east-r1-2v7", round: "First Round", conference: "East",
-    topTeam: makeTeam("BOS", "Boston Celtics", 2), bottomTeam: tbdTeam(7) },
+    topTeam: makeTeam("BOS", "Boston Celtics", 2), bottomTeam: playInPlaceholders["PIE7"] },
 
   // ===== WEST CONFERENCE SEMIFINALS =====
   { id: "west-semi-top", round: "Conference Semifinals", conference: "West",
@@ -240,12 +240,12 @@ export const fallbackMatches: Match[] = firstRoundMatchups
     round: "First Round",
     conference: s.conference,
     gameNumber: 1,
-    date: s.bottomTeam!.abbreviation === "TBD" ? "TBD" : (i < 3 ? "Apr 19" : "Apr 20"),
-    time: s.bottomTeam!.abbreviation === "TBD" ? "TBD" : (["7:00 PM", "8:00 PM", "9:30 PM", "3:30 PM"][i] + " ET"),
+    date: isPlayInPlaceholder(s.bottomTeam!.abbreviation) ? "TBD" : (i < 3 ? "Apr 19" : "Apr 20"),
+    time: isPlayInPlaceholder(s.bottomTeam!.abbreviation) ? "TBD" : (["7:00 PM", "8:00 PM", "9:30 PM", "3:30 PM"][i] + " ET"),
     homeTeam: s.topTeam!,
     awayTeam: s.bottomTeam!,
     homeWins: 0,
     awayWins: 0,
     status: "upcoming" as const,
-    tips: s.bottomTeam!.abbreviation === "TBD" ? [] : makeTips(s.topTeam!.abbreviation, s.bottomTeam!.abbreviation),
+    tips: makeTips(s.topTeam!.abbreviation, s.bottomTeam!.abbreviation),
   }));

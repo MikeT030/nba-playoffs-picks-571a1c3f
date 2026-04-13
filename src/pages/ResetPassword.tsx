@@ -12,25 +12,31 @@ const ResetPassword = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check URL hash for recovery token
-    const hash = window.location.hash;
-    if (hash.includes("type=recovery") || hash.includes("access_token")) {
-      setReady(true);
-    }
-
-    // Also listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+    // Listen for auth events FIRST, before any async calls
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") {
+        setReady(true);
+      }
+      // Also handle INITIAL_SESSION — if a session exists, user arrived via recovery link
+      if (event === "INITIAL_SESSION" && session) {
         setReady(true);
       }
     });
 
-    // Check if already signed in (link was already processed)
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) setReady(true);
-    });
+    // Fallback timeout: if nothing fires within 3s but hash has tokens, force ready
+    const timeout = setTimeout(() => {
+      const hash = window.location.hash;
+      if (hash.includes("access_token") || hash.includes("type=recovery")) {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (session) setReady(true);
+        });
+      }
+    }, 3000);
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timeout);
+    };
   }, []);
 
   const handleReset = async (e: React.FormEvent) => {

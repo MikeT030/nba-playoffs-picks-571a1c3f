@@ -134,6 +134,7 @@ const MyPicks = () => {
   const [bets, setBets] = useState<BetSelection[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [selectedRound, setSelectedRound] = useState("all");
 
   useEffect(() => {
     if (authLoading) return;

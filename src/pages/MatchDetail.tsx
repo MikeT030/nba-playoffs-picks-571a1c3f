@@ -75,14 +75,6 @@ const MatchDetail = () => {
     );
   }
 
-  const seriesDots = (wins: number, color: string) =>
-    Array.from({ length: 4 }).map((_, i) => (
-      <div
-        key={i}
-        className="w-3 h-3 rounded-full border border-border"
-        style={{ backgroundColor: i < wins ? color : "transparent" }}
-      />
-    ));
 
   return (
     <div className="min-h-screen bg-background pb-24">

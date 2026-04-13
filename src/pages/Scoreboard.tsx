@@ -139,17 +139,20 @@ function getSeriesRound(seriesId: string): string {
 
 const AllPicksMatrix = () => {
   const [picks, setPicks] = useState<PickRow[]>([]);
+  const [results, setResults] = useState<SeriesResult[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetch = async () => {
-      const { data } = await supabase
-        .from("picks")
-        .select("profile_name, series_id, winner, games_in_series");
-      if (data) setPicks(data);
+    const fetchData = async () => {
+      const [picksRes, resultsRes] = await Promise.all([
+        supabase.from("picks").select("profile_name, series_id, winner, games_in_series"),
+        supabase.from("series_results").select("series_id, winner, games_played"),
+      ]);
+      if (picksRes.data) setPicks(picksRes.data);
+      if (resultsRes.data) setResults(resultsRes.data as SeriesResult[]);
       setLoading(false);
     };
-    fetch();
+    fetchData();
   }, []);
 
   if (loading) {
@@ -174,7 +177,14 @@ const AllPicksMatrix = () => {
     return a.localeCompare(b);
   });
 
-  // Build lookup: player+series -> pick
+  // Compute per-player scores
+  const playerScores = new Map<string, number>();
+  const scoreboardData = computeScoreboard(picks, results);
+  for (const s of scoreboardData) {
+    playerScores.set(s.name, s.totalPoints);
+  }
+
+
   const pickMap = new Map<string, PickRow>();
   for (const p of picks) {
     pickMap.set(`${p.profile_name}::${p.series_id}`, p);
@@ -234,6 +244,18 @@ const AllPicksMatrix = () => {
                 </tr>
               );
             })}
+            {/* Score row */}
+            <tr className="border-t-2 border-primary/30 bg-muted/30">
+              <td className="sticky left-0 z-10 bg-muted/30 p-3 align-middle font-body text-xs text-muted-foreground min-w-[100px]"></td>
+              <td className="sticky left-[100px] z-10 bg-muted/30 p-3 align-middle font-display tracking-wide whitespace-nowrap text-sm text-primary">
+                Score
+              </td>
+              {players.map((player) => (
+                <td key={player} className="p-3 align-middle text-center font-display text-base text-primary">
+                  {playerScores.get(player) ?? 0}
+                </td>
+              ))}
+            </tr>
           </tbody>
         </table>
     </div>

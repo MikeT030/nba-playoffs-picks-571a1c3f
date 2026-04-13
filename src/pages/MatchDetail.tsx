@@ -76,6 +76,8 @@ const MatchDetail = () => {
     );
   }
 
+  const hasTBD = isPlayInPlaceholder(match.homeTeam.abbreviation) || isPlayInPlaceholder(match.awayTeam.abbreviation);
+
   const seriesDots = (wins: number, color: string) =>
     Array.from({ length: 4 }).map((_, i) => (
       <div

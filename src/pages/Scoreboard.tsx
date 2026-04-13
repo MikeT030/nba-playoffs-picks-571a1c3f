@@ -232,7 +232,7 @@ const AllPicksMatrix = () => {
                       <td key={player} className="p-3 align-middle text-center font-body text-xs whitespace-nowrap">
                         {pick ? (
                           <span>
-                            <span className="font-medium text-foreground">{pick.winner}</span>
+                            <span className="font-bold text-foreground">{pick.winner}</span>
                             <span className="ml-1 text-white">in {pick.games_in_series}</span>
                           </span>
                         ) : (

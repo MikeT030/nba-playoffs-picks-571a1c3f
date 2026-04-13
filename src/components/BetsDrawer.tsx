@@ -285,9 +285,69 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpen
             <DrawerHeader className="pt-4 pb-2">
               <DrawerTitle className="font-display text-4xl tracking-wider text-center">
                 MAKE YOUR PICKS
-...
+              </DrawerTitle>
+              <p className="text-muted-foreground font-body text-center text-sm">Sign in to make your picks</p>
+            </DrawerHeader>
+            <div className="flex justify-center">
+              <Button
+                className="font-display tracking-wider"
+                onClick={() => {
+                  onOpenChange(false);
+                  navigate("/auth");
+                }}
+              >
+                SIGN IN
+              </Button>
+            </div>
+          </div>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
+  if (!profileName) {
+    return (
+      <Drawer open={open} onOpenChange={onOpenChange}>
+        <DrawerContent className="max-h-[92vh]">
+          <div className="overflow-y-auto px-4 pb-8">
+            <DrawerHeader className="pt-4 pb-2">
+              <DrawerTitle className="font-display text-4xl tracking-wider text-center">
                 MAKE YOUR PICKS
-...
+              </DrawerTitle>
+              <p className="text-muted-foreground font-body text-center text-sm">What's your name?</p>
+            </DrawerHeader>
+            <div className="max-w-xs mx-auto space-y-4">
+              <Input
+                placeholder="Your name"
+                className="font-body text-center"
+                onKeyDown={async (e) => {
+                  if (e.key === "Enter" && (e.target as HTMLInputElement).value.trim()) {
+                    const name = (e.target as HTMLInputElement).value.trim();
+                    setProfileName(name);
+                    // Persist name to profiles table immediately
+                    if (user) {
+                      await supabase
+                        .from("profiles")
+                        .upsert({ user_id: user.id, display_name: name }, { onConflict: "user_id" });
+                    }
+                  }
+                }}
+              />
+              <p className="text-xs text-muted-foreground font-body text-center">Press Enter to continue</p>
+            </div>
+          </div>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
+  return (
+    <Drawer open={open} onOpenChange={onOpenChange}>
+      <DrawerContent className="max-h-[92vh]">
+        <div className="overflow-y-auto">
+          <div className="px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div>
                 <h2 className="font-display text-xl tracking-wider">MAKE YOUR PICKS</h2>
                 <p className="text-xs text-muted-foreground font-body">{profileName}'s picks</p>
               </div>

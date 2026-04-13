@@ -133,7 +133,7 @@ const MatchDetail = () => {
               <div className="items-center justify-center gap-3 bg-transparent rounded-lg px-4 py-3 flex flex-row mt-[18px]">
                 <span className="text-xs font-body uppercase tracking-wider text-primary-foreground">Your Pick</span>
                 <TeamLogo src={pickedTeam.logo} alt={pickedTeam.name} className="w-4 h-4" />
-                <span className="font-body font-semibold text-sm" style={{ color: pickedTeam.color }}>
+                <span className="font-body font-semibold text-sm text-white">
                   {pickedTeam.abbreviation}
                 </span>
                 <span className="text-xs font-body text-primary-foreground">in {userPick.games_in_series}</span>

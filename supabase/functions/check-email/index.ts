@@ -25,49 +25,24 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Use the admin API to look up user by email directly
-    const { data: usersData } = await supabaseAdmin.auth.admin.listUsers({
-      page: 1,
-      perPage: 1,
-    });
+    const { data, error } = await supabaseAdmin.auth.admin.listUsers();
 
-    // Since listUsers doesn't support email filter directly,
-    // query the auth schema via the service role
-    const { data, error } = await supabaseAdmin.rpc("", {}).maybeSingle();
-
-    // Best approach: use raw fetch against the GoTrue admin endpoint
-    const res = await fetch(
-      `${Deno.env.get("SUPABASE_URL")}/auth/v1/admin/users?filter=${encodeURIComponent(email)}`,
-      {
-        headers: {
-          Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
-          apikey: Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-        },
-      }
-    );
-
-    if (!res.ok) {
-      // Fallback: list all and filter (works for small user bases)
-      const { data: allUsers } = await supabaseAdmin.auth.admin.listUsers();
-      const exists = allUsers?.users?.some(
-        (u) => u.email?.toLowerCase() === email.toLowerCase()
-      ) ?? false;
+    if (error) {
       return new Response(
-        JSON.stringify({ exists }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: "Failed to check" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const result = await res.json();
-    const exists = result.users?.some(
-      (u: any) => u.email?.toLowerCase() === email.toLowerCase()
-    ) ?? false;
+    const exists = data.users.some(
+      (u) => u.email?.toLowerCase() === email.toLowerCase()
+    );
 
     return new Response(
       JSON.stringify({ exists }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
-  } catch (err) {
+  } catch {
     return new Response(
       JSON.stringify({ error: "Internal server error" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }

@@ -179,7 +179,7 @@ const AllPicksMatrix = () => {
               );
             })}
           </TableBody>
-        </Table>
+        </table>
       </div>
       <ScrollBar orientation="horizontal" />
     </ScrollArea>

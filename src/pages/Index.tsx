@@ -5,6 +5,8 @@ import MatchCard from "@/components/MatchCard";
 import BetsDrawer from "@/components/BetsDrawer";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 import { useBracketData } from "@/hooks/useBracketData";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Select,
   SelectContent,
@@ -24,14 +26,29 @@ const rounds = [
 const Index = () => {
   const { data: matches, isLoading } = usePlayoffGames();
   const { data: resolvedBracket } = useBracketData();
+  const { user } = useAuth();
   const [selectedRound, setSelectedRound] = useState("all");
   const [betsOpen, setBetsOpen] = useState(false);
   const [betsSaved, setBetsSaved] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setBetsOpen(true), 800);
-    return () => clearTimeout(timer);
-  }, []);
+    const checkPicks = async () => {
+      if (user) {
+        const { data } = await supabase
+          .from("picks")
+          .select("id")
+          .eq("user_id", user.id);
+        if (data && data.length > 0) {
+          setBetsSaved(true);
+          return; // Don't auto-open if picks exist
+        }
+      }
+      // Auto-open drawer if no picks saved
+      const timer = setTimeout(() => setBetsOpen(true), 800);
+      return () => clearTimeout(timer);
+    };
+    checkPicks();
+  }, [user]);
 
   const filteredMatches =
     selectedRound === "all"

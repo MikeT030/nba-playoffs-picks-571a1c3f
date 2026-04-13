@@ -2,11 +2,30 @@ import { useParams, Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 import TeamLogo from "@/components/TeamLogo";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 
 const MatchDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
   const { data: matches, isLoading } = usePlayoffGames();
   const match = matches?.find((m) => m.id === id);
+
+  const { data: userPick } = useQuery({
+    queryKey: ["user-pick", id, user?.id],
+    queryFn: async () => {
+      if (!user || !id) return null;
+      const { data } = await supabase
+        .from("picks")
+        .select("winner, games_in_series")
+        .eq("user_id", user.id)
+        .eq("series_id", id)
+        .maybeSingle();
+      return data;
+    },
+    enabled: !!user && !!id,
+  });
 
   if (isLoading) {
     return (
@@ -90,6 +109,20 @@ const MatchDetail = () => {
               </div>
             </div>
           </div>
+
+          {user && userPick && (() => {
+            const pickedTeam = userPick.winner === match.homeTeam.abbreviation ? match.homeTeam : match.awayTeam;
+            return (
+              <div className="mt-6 flex items-center justify-center gap-3 bg-card/60 backdrop-blur rounded-lg px-4 py-3">
+                <span className="text-xs text-muted-foreground font-body uppercase tracking-wider">Your Pick</span>
+                <TeamLogo src={pickedTeam.logo} alt={pickedTeam.name} className="w-5 h-5" />
+                <span className="font-body font-semibold text-sm" style={{ color: pickedTeam.color }}>
+                  {pickedTeam.abbreviation}
+                </span>
+                <span className="text-xs text-muted-foreground font-body">in {userPick.games_in_series}</span>
+              </div>
+            );
+          })()}
         </div>
       </div>
 

@@ -90,7 +90,7 @@ const MatchDetail = () => {
         <div
           className="absolute inset-0"
           style={{
-            background: `linear-gradient(135deg, ${match.awayTeam.color}66 0%, transparent 50%, ${match.homeTeam.color}66 100%)`,
+            background: `linear-gradient(135deg, ${match.awayTeam.color}33 0%, transparent 50%, ${match.homeTeam.color}33 100%)`,
           }}
         />
         <div className="relative container py-6">

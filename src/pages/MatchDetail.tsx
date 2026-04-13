@@ -104,7 +104,7 @@ const MatchDetail = () => {
               <h2 className="font-display text-3xl md:text-4xl tracking-wider mt-2">
                 {match.awayTeam.abbreviation}
               </h2>
-              <p className="text-sm text-muted-foreground font-body mt-1">{match.awayTeam.name}</p>
+              
             </div>
 
             <div className="text-center">
@@ -123,7 +123,7 @@ const MatchDetail = () => {
               <h2 className="font-display text-3xl md:text-4xl tracking-wider mt-2">
                 {match.homeTeam.abbreviation}
               </h2>
-              <p className="text-sm text-muted-foreground font-body mt-1">{match.homeTeam.name}</p>
+              
             </div>
           </div>
 

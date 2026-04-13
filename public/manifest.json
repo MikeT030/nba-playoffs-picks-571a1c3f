@@ -1,0 +1,16 @@
+{
+  "name": "NBA Playoffs Picks",
+  "short_name": "NBA Picks",
+  "icons": [
+    {
+      "src": "/app-icon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#f97316"
+}

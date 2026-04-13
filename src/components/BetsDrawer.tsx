@@ -364,6 +364,31 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
             </div>
           </div>
 
+          {bets.length === 0 && profileName && (
+            <div className="px-4 pb-2">
+              <div className="flex items-center gap-2 max-w-xs">
+                <Input
+                  value={profileName}
+                  onChange={(e) => setProfileName(e.target.value)}
+                  placeholder="Your name"
+                  className="font-body text-sm"
+                  onBlur={async () => {
+                    if (user && profileName.trim()) {
+                      await supabase
+                        .from("profiles")
+                        .upsert({ user_id: user.id, display_name: profileName.trim() }, { onConflict: "user_id" });
+                    }
+                  }}
+                  onKeyDown={async (e) => {
+                    if (e.key === "Enter" && profileName.trim()) {
+                      (e.target as HTMLInputElement).blur();
+                    }
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
           <div className="px-4 py-6">
             <div className="flex gap-2 mb-6 flex-wrap">
               {roundOrder.map((round) => {

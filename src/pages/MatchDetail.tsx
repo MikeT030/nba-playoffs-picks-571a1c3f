@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useEffect } from "react";
+import { isPlayInPlaceholder } from "@/data/playoffsData";
 
 const MatchDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -87,12 +88,17 @@ const MatchDetail = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       <div className="relative overflow-hidden">
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `linear-gradient(135deg, ${match.awayTeam.color}33 0%, transparent 50%, ${match.homeTeam.color}33 100%)`,
-          }}
-        />
+        {hasTBD && (
+          <div className="absolute inset-0 bg-muted/30" />
+        )}
+        {!hasTBD && (
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(135deg, ${match.awayTeam.color}33 0%, transparent 50%, ${match.homeTeam.color}33 100%)`,
+            }}
+          />
+        )}
         <div className="relative container py-6">
           <Link
             to="/"

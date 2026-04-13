@@ -67,7 +67,7 @@ const MatchDetail = () => {
     ));
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-24">
       <div className="relative overflow-hidden">
         <div
           className="absolute inset-0"

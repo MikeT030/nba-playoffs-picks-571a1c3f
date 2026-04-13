@@ -145,7 +145,8 @@ const SeriesCard = ({
   );
 };
 
-const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpenChange: (open: boolean) => void; onBetsSaved?: () => void }) => {
+const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open: boolean; onOpenChange: (open: boolean) => void; onBetsSaved?: () => void; resolvedBracket?: BracketSeries[] }) => {
+  const bracketSeries = resolvedBracket ?? defaultBracketSeries;
   const { user } = useAuth();
   const navigate = useNavigate();
   const [profileName, setProfileName] = useState("");

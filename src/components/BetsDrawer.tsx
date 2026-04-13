@@ -123,10 +123,10 @@ const SeriesCard = ({
             <button
               key={games}
               onClick={() => handlePickGames(games)}
-              className={`w-9 h-9 rounded-md font-display text-sm transition-all duration-200 ${
+              className={`w-9 h-9 rounded-full font-display text-sm transition-all duration-200 ${
                 selectedGames === games
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:text-foreground"
+                  ? "bg-primary/15 text-primary border border-primary/40"
+                  : "bg-muted text-muted-foreground hover:text-foreground border border-transparent"
               }`}
             >
               {games}

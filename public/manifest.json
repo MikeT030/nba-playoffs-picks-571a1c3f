@@ -3,9 +3,9 @@
   "short_name": "NBA Picks",
   "icons": [
     {
-      "src": "/app-icon.jpg",
+      "src": "/app-icon.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any"
     }
   ],

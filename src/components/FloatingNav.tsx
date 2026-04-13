@@ -1,7 +1,6 @@
 import { useLocation, Link } from "react-router-dom";
 import { Trophy, ClipboardList } from "lucide-react";
 import { cn } from "@/lib/utils";
-import BasketballIcon from "@/assets/basketball-icon.svg";
 
 const BasketballSvg = ({ size = 20 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 84 84" fill="none" xmlns="http://www.w3.org/2000/svg">

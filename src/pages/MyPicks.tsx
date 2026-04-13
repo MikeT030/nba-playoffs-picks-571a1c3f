@@ -174,7 +174,7 @@ const MyPicks = () => {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pb-28">
         <HeroBanner title="MY PICKS" subtitle="NBA Playoffs 2026" />
         <section className="container py-10 text-center">
           <p className="text-muted-foreground font-body">Loading...</p>
@@ -185,7 +185,7 @@ const MyPicks = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pb-28">
         <HeroBanner title="MY PICKS" subtitle="NBA Playoffs 2026" />
         <section className="container py-10">
           <div className="flex flex-col items-center justify-center py-8 gap-4">
@@ -231,7 +231,7 @@ const MyPicks = () => {
 
   if (bets.length === 0) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pb-28">
         <HeroBanner title="MY PICKS" subtitle="NBA Playoffs 2026" />
         <section className="container py-10">
           {makePicksButton}
@@ -250,7 +250,7 @@ const MyPicks = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-28">
       <HeroBanner title="MY PICKS" subtitle={`${profileName}'s predictions · ${bets.length} picks`} />
 
       <section className="container py-8 pb-24">

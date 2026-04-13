@@ -41,8 +41,6 @@ const FloatingNav = () => {
                   : "text-[#F9F9FA] hover:text-foreground",
                 "pt-[16px] pb-[16px]"
               )}
-                  : "text-[#F9F9FA] hover:text-foreground"
-              )}
             >
               <item.icon size={20} />
               <span className="text-sm font-semibold">{item.label}</span>

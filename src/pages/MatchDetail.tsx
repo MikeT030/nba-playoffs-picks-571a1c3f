@@ -159,32 +159,39 @@ const MatchDetail = () => {
 
       <section className="container py-10">
         <h3 className="font-display text-2xl tracking-wider mb-6">
-          Picks from the others
+          All Picks
         </h3>
         <div className="grid gap-3">
-          {match.tips.map((tip) => {
-            const pickedTeam =
-              tip.pick === match.homeTeam.abbreviation ? match.homeTeam : match.awayTeam;
-            return (
-              <div
-                key={tip.user}
-                className="flex items-center gap-4 bg-card rounded-lg p-4"
-              >
-                
-                <div className="flex-1">
-                  <p className="font-body font-semibold">{tip.user}</p>
-                  <p className="text-sm text-muted-foreground font-body">
-                    Picks{" "}
-                    <span className="font-semibold" style={{ color: pickedTeam.color }}>
-                      {pickedTeam.abbreviation}
-                    </span>{" "}
-                    in {tip.gamesInSeries}
-                  </p>
+          {allPicks && allPicks.length > 0 ? (
+            allPicks.map((pick) => {
+              const pickedTeam =
+                pick.winner === match.homeTeam.abbreviation ? match.homeTeam : match.awayTeam;
+              const isCurrentUser = user && pick.user_id === user.id;
+              return (
+                <div
+                  key={pick.user_id}
+                  className="flex items-center gap-4 bg-card rounded-lg p-4"
+                >
+                  <div className="flex-1">
+                    <p className="font-body font-semibold">
+                      {pick.profile_name || "Anonymous"}
+                      {isCurrentUser && <span className="text-xs text-primary ml-2">(You)</span>}
+                    </p>
+                    <p className="text-sm text-muted-foreground font-body">
+                      Picks{" "}
+                      <span className="font-semibold" style={{ color: pickedTeam.color }}>
+                        {pickedTeam.abbreviation}
+                      </span>{" "}
+                      in {pick.games_in_series}
+                    </p>
+                  </div>
+                  <TeamLogo src={pickedTeam.logo} alt={pickedTeam.name} className="w-8 h-8" />
                 </div>
-                <TeamLogo src={pickedTeam.logo} alt={pickedTeam.name} className="w-8 h-8" />
-              </div>
-            );
-          })}
+              );
+            })
+          ) : (
+            <p className="text-muted-foreground font-body text-sm">No picks yet for this series.</p>
+          )}
         </div>
       </section>
     </div>

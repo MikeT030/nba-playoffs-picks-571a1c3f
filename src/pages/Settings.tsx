@@ -139,14 +139,13 @@ const Settings = () => {
               </CardContent>
             </Card>
 
-            <Button
-              variant="destructive"
-              className="w-full font-display tracking-wider"
+            <button
+              className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-destructive/15 text-destructive border border-destructive/40 hover:bg-destructive/20"
               onClick={handleSignOut}
             >
               <LogOut size={18} />
               SIGN OUT
-            </Button>
+            </button>
           </>
         ) : (
           <Card>
@@ -154,12 +153,13 @@ const Settings = () => {
               <p className="text-muted-foreground font-body text-sm">
                 Sign in to manage your account and view your picks.
               </p>
-              <Button asChild className="w-full font-display tracking-wider">
-                <Link to="/auth">
-                  <LogIn size={18} />
-                  SIGN IN / SIGN UP
-                </Link>
-              </Button>
+              <Link
+                to="/auth"
+                className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
+              >
+                <LogIn size={18} />
+                SIGN IN / SIGN UP
+              </Link>
             </CardContent>
           </Card>
         )}

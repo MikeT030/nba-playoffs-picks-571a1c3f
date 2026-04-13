@@ -47,9 +47,12 @@ const ResetPassword = () => {
           <p className="text-muted-foreground font-body text-sm">
             This password reset link is invalid or has expired.
           </p>
-          <Button onClick={() => navigate("/auth")} className="w-full font-display tracking-wider">
+          <button
+            onClick={() => navigate("/auth")}
+            className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
+          >
             BACK TO SIGN IN
-          </Button>
+          </button>
         </div>
       </div>
     );
@@ -75,9 +78,13 @@ const ResetPassword = () => {
             minLength={6}
             className="font-body"
           />
-          <Button type="submit" className="w-full font-display tracking-wider" disabled={loading}>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 disabled:opacity-50"
+          >
             {loading ? "..." : "SAVE NEW PASSWORD"}
-          </Button>
+          </button>
         </form>
       </div>
     </div>

@@ -281,12 +281,12 @@ const MakeYourBets = () => {
                 key={round}
                 onClick={() => unlocked && setSelectedRound(round)}
                 disabled={!unlocked}
-                className={`px-4 py-2 rounded-lg font-body text-sm transition-all duration-200 flex items-center gap-2 ${
+                className={`px-4 py-2 rounded-full font-body text-sm transition-all duration-200 flex items-center gap-2 ${
                   selectedRound === round
-                    ? "bg-primary text-primary-foreground"
+                    ? "bg-primary/20 text-primary border border-primary/60"
                     : unlocked
-                    ? "bg-card text-foreground hover:border-primary/60"
-                    : "bg-muted/50 text-muted-foreground/50 cursor-not-allowed"
+                    ? "bg-primary/10 text-primary border border-primary/30 hover:bg-primary/15"
+                    : "bg-muted/50 text-muted-foreground/50 border border-transparent cursor-not-allowed"
                 }`}
               >
                 {round}
@@ -332,9 +332,12 @@ const MakeYourBets = () => {
 
         {currentRoundComplete && !isLastRound && (
           <div className="mt-8 text-center">
-            <Button size="lg" className="font-display text-lg tracking-wider" onClick={handleNextRound}>
+            <button
+              className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
+              onClick={handleNextRound}
+            >
               NEXT ROUND →
-            </Button>
+            </button>
           </div>
         )}
 

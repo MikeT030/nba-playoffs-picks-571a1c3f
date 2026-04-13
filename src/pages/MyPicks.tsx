@@ -177,13 +177,13 @@ const MyPicks = () => {
             <p className="text-muted-foreground font-body text-sm">
               Create an account to save and view your playoff predictions.
             </p>
-            <Button
-              className="font-display tracking-wider"
+            <button
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
               onClick={() => navigate("/auth")}
             >
-              <LogIn size={18} className="mr-2" />
+              <LogIn size={18} />
               SIGN IN
-            </Button>
+            </button>
           </div>
         </section>
       </div>

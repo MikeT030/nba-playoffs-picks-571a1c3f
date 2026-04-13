@@ -39,6 +39,7 @@ const Settings = () => {
 
   useEffect(() => {
     fetchDisplayName();
+    fetchHasPicks();
   }, [user]);
 
   const handleSaveName = async () => {

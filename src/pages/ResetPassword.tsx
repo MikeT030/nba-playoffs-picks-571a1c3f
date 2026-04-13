@@ -7,21 +7,27 @@ import { toast } from "sonner";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isRecovery, setIsRecovery] = useState(false);
+  const [ready, setReady] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    if (hashParams.get("type") === "recovery") {
-      setIsRecovery(true);
+    // Check URL hash for recovery token
+    const hash = window.location.hash;
+    if (hash.includes("type=recovery") || hash.includes("access_token")) {
+      setReady(true);
     }
 
+    // Also listen for auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") {
-        setIsRecovery(true);
+      if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") {
+        setReady(true);
       }
+    });
+
+    // Check if already signed in (link was already processed)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) setReady(true);
     });
 
     return () => subscription.unsubscribe();
@@ -29,10 +35,6 @@ const ResetPassword = () => {
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
-      return;
-    }
     if (password.length < 6) {
       toast.error("Password must be at least 6 characters");
       return;
@@ -50,17 +52,11 @@ const ResetPassword = () => {
     }
   };
 
-  if (!isRecovery) {
+  if (!ready) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-4">
         <div className="w-full max-w-sm space-y-8 text-center">
-          <h1 className="font-display text-4xl tracking-wider">INVALID LINK</h1>
-          <p className="text-muted-foreground font-body text-sm">
-            This password reset link is invalid or has expired.
-          </p>
-          <Button onClick={() => navigate("/auth")} className="w-full font-display tracking-wider">
-            BACK TO SIGN IN
-          </Button>
+          <div className="animate-pulse text-muted-foreground font-body text-sm">Loading…</div>
         </div>
       </div>
     );
@@ -86,17 +82,8 @@ const ResetPassword = () => {
             minLength={6}
             className="font-body"
           />
-          <Input
-            type="password"
-            placeholder="Confirm new password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-            minLength={6}
-            className="font-body"
-          />
           <Button type="submit" className="w-full font-display tracking-wider" disabled={loading}>
-            {loading ? "..." : "UPDATE PASSWORD"}
+            {loading ? "..." : "SAVE NEW PASSWORD"}
           </Button>
         </form>
       </div>

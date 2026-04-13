@@ -323,13 +323,13 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
             </DrawerHeader>
             <div className="max-w-xs mx-auto space-y-4">
               <Input
+                id="picks-name-input"
                 placeholder="Your name"
                 className="font-body text-center"
                 onKeyDown={async (e) => {
                   if (e.key === "Enter" && (e.target as HTMLInputElement).value.trim()) {
                     const name = (e.target as HTMLInputElement).value.trim();
                     setProfileName(name);
-                    // Persist name to profiles table immediately
                     if (user) {
                       await supabase
                         .from("profiles")
@@ -338,7 +338,22 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
                   }
                 }}
               />
-              <p className="text-xs text-muted-foreground font-body text-center">Press Enter to continue</p>
+              <Button
+                className="w-full font-display tracking-wider"
+                onClick={async () => {
+                  const input = document.getElementById("picks-name-input") as HTMLInputElement | null;
+                  const name = input?.value.trim();
+                  if (!name) return;
+                  setProfileName(name);
+                  if (user) {
+                    await supabase
+                      .from("profiles")
+                      .upsert({ user_id: user.id, display_name: name }, { onConflict: "user_id" });
+                  }
+                }}
+              >
+                Continue
+              </Button>
             </div>
           </div>
         </DrawerContent>

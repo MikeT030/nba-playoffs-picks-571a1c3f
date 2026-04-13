@@ -8,11 +8,26 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   bracketSeries,
   resolveSeriesTeams,
   isPlayInPlaceholder,
   type Team,
 } from "@/data/playoffsData";
+
+const rounds = [
+  { value: "all", label: "All Rounds" },
+  { value: "First Round", label: "First Round" },
+  { value: "Conference Semifinals", label: "Conference Semifinals" },
+  { value: "Conference Finals", label: "Conference Finals" },
+  { value: "Finals", label: "Finals" },
+];
 
 interface BetSelection {
   seriesId: string;
@@ -119,6 +134,7 @@ const MyPicks = () => {
   const [bets, setBets] = useState<BetSelection[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [selectedRound, setSelectedRound] = useState("all");
 
   useEffect(() => {
     if (authLoading) return;
@@ -239,7 +255,21 @@ const MyPicks = () => {
 
       <section className="container py-8 pb-24">
         {makePicksButton}
-        {roundOrder.map((round) => {
+
+        <Select value={selectedRound} onValueChange={setSelectedRound}>
+          <SelectTrigger className="w-[220px] mb-6">
+            <SelectValue placeholder="Select round" />
+          </SelectTrigger>
+          <SelectContent position="popper" sideOffset={4}>
+            {rounds.map((r) => (
+              <SelectItem key={r.value} value={r.value}>
+                {r.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {(selectedRound === "all" ? roundOrder : [selectedRound]).map((round) => {
           const roundSeries = bracketSeries.filter((s) => s.round === round);
           const conferences = round === "Finals" ? ["Finals"] : ["West", "East"];
 

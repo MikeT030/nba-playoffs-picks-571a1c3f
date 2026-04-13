@@ -205,8 +205,13 @@ const AllPicksMatrix = () => {
 
               return (
                 <tr key={seriesId} className="border-b transition-colors hover:bg-muted/50">
-                  <td className="sticky left-0 z-10 bg-card p-3 align-middle font-body text-xs text-muted-foreground whitespace-nowrap">
-                    {showRound ? round : ""}
+                  <td className="sticky left-0 z-10 bg-card p-3 align-middle font-body text-xs text-muted-foreground min-w-[100px]">
+                    {showRound ? (() => {
+                      const words = round.split(" ");
+                      return words.length > 1 ? (
+                        <span>{words[0]}<br />{words.slice(1).join(" ")}</span>
+                      ) : <span>{round}</span>;
+                    })() : ""}
                   </td>
                   <td className="sticky left-[100px] z-10 bg-card p-3 align-middle font-display tracking-wide whitespace-nowrap text-sm">
                     {getSeriesLabel(seriesId)}

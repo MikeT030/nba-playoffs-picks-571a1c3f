@@ -115,9 +115,9 @@ export const bracketSeries: BracketSeries[] = [
   { id: "east-r1-1v8", round: "First Round", conference: "East",
     topTeam: makeTeam("DET", "Detroit Pistons", 1), bottomTeam: playInPlaceholders["PIE8"] },
   { id: "east-r1-4v5", round: "First Round", conference: "East",
-    topTeam: makeTeam("CLE", "Cleveland Cavaliers", 4), bottomTeam: makeTeam("ATL", "Atlanta Hawks", 5) },
+    topTeam: makeTeam("CLE", "Cleveland Cavaliers", 4), bottomTeam: makeTeam("TOR", "Toronto Raptors", 5) },
   { id: "east-r1-3v6", round: "First Round", conference: "East",
-    topTeam: makeTeam("NYK", "New York Knicks", 3), bottomTeam: makeTeam("TOR", "Toronto Raptors", 6) },
+    topTeam: makeTeam("NYK", "New York Knicks", 3), bottomTeam: makeTeam("ATL", "Atlanta Hawks", 6) },
   { id: "east-r1-2v7", round: "First Round", conference: "East",
     topTeam: makeTeam("BOS", "Boston Celtics", 2), bottomTeam: playInPlaceholders["PIE7"] },
 

@@ -461,9 +461,9 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
 
             {currentRoundComplete && !isLastRound && (
               <div className="mt-8 text-center">
-                <Button size="lg" className="font-display text-lg tracking-wider" onClick={handleNextRound}>
+                <button className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20" onClick={handleNextRound}>
                   NEXT ROUND →
-                </Button>
+                </button>
               </div>
             )}
 

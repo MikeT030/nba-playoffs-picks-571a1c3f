@@ -13,9 +13,9 @@ Deno.serve(async (req) => {
 
   try {
     const { email } = await req.json();
-    if (!email || typeof email !== "string") {
+    if (!email || typeof email !== "string" || email.length > 255) {
       return new Response(
-        JSON.stringify({ error: "Email is required" }),
+        JSON.stringify({ error: "Valid email is required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -25,35 +25,46 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // List users filtered by email
-    const { data, error } = await supabaseAdmin.auth.admin.listUsers({
+    // Use the admin API to look up user by email directly
+    const { data: usersData } = await supabaseAdmin.auth.admin.listUsers({
       page: 1,
       perPage: 1,
     });
 
-    if (error) {
+    // Since listUsers doesn't support email filter directly,
+    // query the auth schema via the service role
+    const { data, error } = await supabaseAdmin.rpc("", {}).maybeSingle();
+
+    // Best approach: use raw fetch against the GoTrue admin endpoint
+    const res = await fetch(
+      `${Deno.env.get("SUPABASE_URL")}/auth/v1/admin/users?filter=${encodeURIComponent(email)}`,
+      {
+        headers: {
+          Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+          apikey: Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      // Fallback: list all and filter (works for small user bases)
+      const { data: allUsers } = await supabaseAdmin.auth.admin.listUsers();
+      const exists = allUsers?.users?.some(
+        (u) => u.email?.toLowerCase() === email.toLowerCase()
+      ) ?? false;
       return new Response(
-        JSON.stringify({ error: "Failed to check email" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ exists }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Check if any user matches the email
-    const exists = data.users.some(
-      (u) => u.email?.toLowerCase() === email.toLowerCase()
-    );
-
-    // More reliable: use getUserByEmail if available
-    // Fallback: query with filter
-    const { data: userData, error: userError } =
-      await supabaseAdmin.auth.admin.listUsers();
-
-    const userExists = userData?.users?.some(
-      (u) => u.email?.toLowerCase() === email.toLowerCase()
-    );
+    const result = await res.json();
+    const exists = result.users?.some(
+      (u: any) => u.email?.toLowerCase() === email.toLowerCase()
+    ) ?? false;
 
     return new Response(
-      JSON.stringify({ exists: !!userExists }),
+      JSON.stringify({ exists }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {

@@ -75,14 +75,6 @@ const MatchDetail = () => {
     );
   }
 
-  const seriesDots = (wins: number, color: string) =>
-    Array.from({ length: 4 }).map((_, i) => (
-      <div
-        key={i}
-        className="w-3 h-3 rounded-full border border-border"
-        style={{ backgroundColor: i < wins ? color : "transparent" }}
-      />
-    ));
 
   return (
     <div className="min-h-screen bg-background pb-24">
@@ -113,9 +105,6 @@ const MatchDetail = () => {
                 {match.awayTeam.abbreviation}
               </h2>
               <p className="text-sm text-muted-foreground font-body mt-1">{match.awayTeam.name}</p>
-              <div className="flex gap-1.5 justify-center mt-3">
-                {seriesDots(match.awayWins, match.awayTeam.color)}
-              </div>
             </div>
 
             <div className="text-center">
@@ -135,9 +124,6 @@ const MatchDetail = () => {
                 {match.homeTeam.abbreviation}
               </h2>
               <p className="text-sm text-muted-foreground font-body mt-1">{match.homeTeam.name}</p>
-              <div className="flex gap-1.5 justify-center mt-3">
-                {seriesDots(match.homeWins, match.homeTeam.color)}
-              </div>
             </div>
           </div>
 

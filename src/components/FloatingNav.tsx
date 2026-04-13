@@ -42,7 +42,7 @@ const FloatingNav = () => {
                 "pt-[16px] pb-[16px]"
               )}
             >
-              <item.icon size={20} />
+              <item.icon size={20} className={item.to === "/my-picks" ? "rotate-90" : ""} />
               <span className="text-sm font-semibold">{item.label}</span>
             </Link>
           );

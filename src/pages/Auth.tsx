@@ -64,6 +64,44 @@ const Auth = () => {
     }
   };
 
+  if (isForgotPassword) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+        <div className="w-full max-w-sm space-y-8">
+          <div className="text-center">
+            <h1 className="font-display text-4xl tracking-wider">RESET PASSWORD</h1>
+            <p className="text-muted-foreground font-body text-sm mt-2">
+              Enter your email to receive a reset link
+            </p>
+          </div>
+
+          <form onSubmit={handleForgotPassword} className="space-y-4">
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="font-body"
+            />
+            <Button type="submit" className="w-full font-display tracking-wider" disabled={loading}>
+              {loading ? "..." : "SEND RESET LINK"}
+            </Button>
+          </form>
+
+          <p className="text-center text-sm text-muted-foreground font-body">
+            <button
+              onClick={() => setIsForgotPassword(false)}
+              className="text-primary underline"
+            >
+              Back to sign in
+            </button>
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-sm space-y-8">
@@ -96,6 +134,17 @@ const Auth = () => {
             {loading ? "..." : isSignUp ? "SIGN UP" : "SIGN IN"}
           </Button>
         </form>
+
+        {!isSignUp && (
+          <p className="text-center text-sm text-muted-foreground font-body">
+            <button
+              onClick={() => setIsForgotPassword(true)}
+              className="text-primary underline"
+            >
+              Forgot password?
+            </button>
+          </p>
+        )}
 
         <p className="text-center text-sm text-muted-foreground font-body">
           {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}

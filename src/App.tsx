@@ -13,6 +13,7 @@ import MakeYourBets from "./pages/MakeYourBets.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import MyPicks from "./pages/MyPicks.tsx";
 import Auth from "./pages/Auth.tsx";
+import ResetPassword from "./pages/ResetPassword.tsx";
 import Settings from "./pages/Settings.tsx";
 
 const queryClient = new QueryClient();

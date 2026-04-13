@@ -8,11 +8,26 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   bracketSeries,
   resolveSeriesTeams,
   isPlayInPlaceholder,
   type Team,
 } from "@/data/playoffsData";
+
+const rounds = [
+  { value: "all", label: "All Rounds" },
+  { value: "First Round", label: "First Round" },
+  { value: "Conference Semifinals", label: "Conference Semifinals" },
+  { value: "Conference Finals", label: "Conference Finals" },
+  { value: "Finals", label: "Finals" },
+];
 
 interface BetSelection {
   seriesId: string;

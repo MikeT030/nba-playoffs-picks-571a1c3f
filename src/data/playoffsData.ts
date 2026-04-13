@@ -144,9 +144,10 @@ export const bracketSeries: BracketSeries[] = [
 // Helper: resolve teams for a series given a map of picks (seriesId -> winner abbreviation)
 export function resolveSeriesTeams(
   seriesId: string,
-  picks: Record<string, string>
+  picks: Record<string, string>,
+  seriesList: BracketSeries[] = bracketSeries
 ): { topTeam?: Team; bottomTeam?: Team } {
-  const series = bracketSeries.find((s) => s.id === seriesId);
+  const series = seriesList.find((s) => s.id === seriesId);
   if (!series) return {};
 
   let topTeam = series.topTeam;
@@ -155,9 +156,9 @@ export function resolveSeriesTeams(
   if (series.topParentSeriesId) {
     const parentWinner = picks[series.topParentSeriesId];
     if (parentWinner) {
-      const parentSeries = bracketSeries.find((s) => s.id === series.topParentSeriesId);
+      const parentSeries = seriesList.find((s) => s.id === series.topParentSeriesId);
       if (parentSeries) {
-        const { topTeam: pTop, bottomTeam: pBottom } = resolveSeriesTeams(series.topParentSeriesId, picks);
+        const { topTeam: pTop, bottomTeam: pBottom } = resolveSeriesTeams(series.topParentSeriesId, picks, seriesList);
         topTeam = parentWinner === pTop?.abbreviation ? pTop : pBottom;
       }
     }
@@ -166,9 +167,9 @@ export function resolveSeriesTeams(
   if (series.bottomParentSeriesId) {
     const parentWinner = picks[series.bottomParentSeriesId];
     if (parentWinner) {
-      const parentSeries = bracketSeries.find((s) => s.id === series.bottomParentSeriesId);
+      const parentSeries = seriesList.find((s) => s.id === series.bottomParentSeriesId);
       if (parentSeries) {
-        const { topTeam: pTop, bottomTeam: pBottom } = resolveSeriesTeams(series.bottomParentSeriesId, picks);
+        const { topTeam: pTop, bottomTeam: pBottom } = resolveSeriesTeams(series.bottomParentSeriesId, picks, seriesList);
         bottomTeam = parentWinner === pTop?.abbreviation ? pTop : pBottom;
       }
     }

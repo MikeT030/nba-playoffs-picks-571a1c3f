@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { Match } from "@/data/playoffsData";
+import { isPlayInPlaceholder } from "@/data/playoffsData";
 import TeamLogo from "@/components/TeamLogo";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -73,10 +74,20 @@ const MatchCard = ({ match }: MatchCardProps) => {
           {match.awayTeam.seed && (
             <span className="text-xs text-muted-foreground font-body font-semibold w-4 text-center shrink-0">{match.awayTeam.seed}</span>
           )}
-          <TeamLogo src={match.awayTeam.logo} alt={match.awayTeam.name} className="w-10 h-10" />
+          {isPlayInPlaceholder(match.awayTeam.abbreviation) ? (
+            <div className="w-10 h-10 rounded-full bg-muted/50 flex items-center justify-center text-sm">🏀</div>
+          ) : (
+            <TeamLogo src={match.awayTeam.logo} alt={match.awayTeam.name} className="w-10 h-10" />
+          )}
           <div>
-            <p className="font-display text-xl tracking-wide">{match.awayTeam.abbreviation}</p>
-            <p className="text-xs text-muted-foreground font-body hidden sm:block">{match.awayTeam.name}</p>
+            <p className="font-display text-xl tracking-wide">
+              {isPlayInPlaceholder(match.awayTeam.abbreviation) ? (
+                <span className="text-sm px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-body font-semibold">TBD</span>
+              ) : match.awayTeam.abbreviation}
+            </p>
+            <p className="text-xs text-muted-foreground font-body hidden sm:block">
+              {isPlayInPlaceholder(match.awayTeam.abbreviation) ? "Play-In Winner" : match.awayTeam.name}
+            </p>
           </div>
         </div>
 
@@ -107,10 +118,20 @@ const MatchCard = ({ match }: MatchCardProps) => {
         {/* Home Team */}
         <div className="flex-1 flex items-center gap-2 justify-end text-right">
           <div>
-            <p className="font-display text-xl tracking-wide">{match.homeTeam.abbreviation}</p>
-            <p className="text-xs text-muted-foreground font-body hidden sm:block">{match.homeTeam.name}</p>
+            <p className="font-display text-xl tracking-wide">
+              {isPlayInPlaceholder(match.homeTeam.abbreviation) ? (
+                <span className="text-sm px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-body font-semibold">TBD</span>
+              ) : match.homeTeam.abbreviation}
+            </p>
+            <p className="text-xs text-muted-foreground font-body hidden sm:block">
+              {isPlayInPlaceholder(match.homeTeam.abbreviation) ? "Play-In Winner" : match.homeTeam.name}
+            </p>
           </div>
-          <TeamLogo src={match.homeTeam.logo} alt={match.homeTeam.name} className="w-10 h-10" />
+          {isPlayInPlaceholder(match.homeTeam.abbreviation) ? (
+            <div className="w-10 h-10 rounded-full bg-muted/50 flex items-center justify-center text-sm">🏀</div>
+          ) : (
+            <TeamLogo src={match.homeTeam.logo} alt={match.homeTeam.name} className="w-10 h-10" />
+          )}
           {match.homeTeam.seed && (
             <span className="text-xs text-muted-foreground font-body font-semibold w-4 text-center shrink-0">{match.homeTeam.seed}</span>
           )}

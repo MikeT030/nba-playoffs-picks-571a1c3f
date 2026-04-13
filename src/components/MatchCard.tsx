@@ -59,10 +59,10 @@ const MatchCard = ({ match }: MatchCardProps) => {
       className="block bg-card rounded-lg border border-transparent hover:border-primary/40 transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 group"
     >
       <div className="px-4 py-2 flex items-center justify-between border-b border-transparent">
-        <span className="text-xs text-muted-foreground font-body font-medium uppercase tracking-wider">
+        <span className="text-xs font-body font-medium uppercase tracking-wider" style={{ color: '#D9D9D9' }}>
           {match.round} · Game {match.gameNumber}
         </span>
-        <span className="text-xs text-muted-foreground font-body">
+        <span className="text-xs font-body" style={{ color: '#D9D9D9' }}>
           {match.date} · {match.time}
         </span>
       </div>

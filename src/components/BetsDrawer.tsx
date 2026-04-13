@@ -210,7 +210,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
   };
 
   const isBettable = (series: BracketSeries): boolean => {
-    const { topTeam, bottomTeam } = resolveSeriesTeams(series.id, picks);
+    const { topTeam, bottomTeam } = resolveSeriesTeams(series.id, picks, bracketSeries);
     const top = topTeam ?? series.topTeam;
     const bottom = bottomTeam ?? series.bottomTeam;
     return !!top && !!bottom && top.abbreviation !== "TBD" && bottom.abbreviation !== "TBD";

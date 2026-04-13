@@ -249,8 +249,23 @@ const AllPicksMatrix = () => {
 };
 
 const Scoreboard = () => {
-  const scoreboard = getScoreboard();
   const [showAllPicks, setShowAllPicks] = useState(false);
+  const [scoreboard, setScoreboard] = useState<ParticipantScore[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchScores = async () => {
+      const [picksRes, resultsRes] = await Promise.all([
+        supabase.from("picks").select("profile_name, series_id, winner, games_in_series"),
+        supabase.from("series_results").select("series_id, winner, games_played"),
+      ]);
+      const picks = (picksRes.data || []) as PickRow[];
+      const results = (resultsRes.data || []) as SeriesResult[];
+      setScoreboard(computeScoreboard(picks, results));
+      setLoading(false);
+    };
+    fetchScores();
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">

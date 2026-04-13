@@ -208,7 +208,7 @@ const AllPicksMatrix = () => {
                   <td className="sticky left-0 z-10 bg-card p-3 align-middle font-body text-xs text-muted-foreground whitespace-nowrap">
                     {showRound ? round : ""}
                   </td>
-                  <td className="sticky left-[100px] z-10 bg-card p-3 align-middle font-display text-xs tracking-wide whitespace-nowrap">
+                  <td className="sticky left-[100px] z-10 bg-card p-3 align-middle font-display tracking-wide whitespace-nowrap text-sm">
                     {getSeriesLabel(seriesId)}
                   </td>
                   {players.map((player) => {
@@ -218,7 +218,7 @@ const AllPicksMatrix = () => {
                         {pick ? (
                           <span>
                             <span className="font-medium text-foreground">{pick.winner}</span>
-                            <span className="text-muted-foreground ml-1">{pick.games_in_series}g</span>
+                            <span className="text-muted-foreground ml-1">{pick.games_in_series}G</span>
                           </span>
                         ) : (
                           <span className="text-muted-foreground/40">—</span>

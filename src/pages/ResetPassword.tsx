@@ -1,37 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [ready, setReady] = useState(false);
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Check URL hash for recovery token
-    const hash = window.location.hash;
-    if (hash.includes("type=recovery") || hash.includes("access_token")) {
-      setReady(true);
-    }
-
-    // Also listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") {
-        setReady(true);
-      }
-    });
-
-    // Check if already signed in (link was already processed)
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) setReady(true);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,11 +31,25 @@ const ResetPassword = () => {
     }
   };
 
-  if (!ready) {
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+        <div className="animate-pulse text-muted-foreground font-body text-sm">Loading…</div>
+      </div>
+    );
+  }
+
+  if (!user) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-4">
         <div className="w-full max-w-sm space-y-8 text-center">
-          <div className="animate-pulse text-muted-foreground font-body text-sm">Loading…</div>
+          <h1 className="font-display text-4xl tracking-wider">INVALID LINK</h1>
+          <p className="text-muted-foreground font-body text-sm">
+            This password reset link is invalid or has expired.
+          </p>
+          <Button onClick={() => navigate("/auth")} className="w-full font-display tracking-wider">
+            BACK TO SIGN IN
+          </Button>
         </div>
       </div>
     );

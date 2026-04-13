@@ -127,12 +127,12 @@ const MatchDetail = () => {
             const pickedTeam = userPick.winner === match.homeTeam.abbreviation ? match.homeTeam : match.awayTeam;
             return (
               <div className="mt-6 items-center justify-center gap-3 bg-transparent rounded-lg px-4 py-3 flex flex-row">
-                <span className="text-xs text-muted-foreground font-body uppercase tracking-wider">Your Pick</span>
+                <span className="text-xs font-body uppercase tracking-wider text-primary-foreground">Your Pick</span>
                 <TeamLogo src={pickedTeam.logo} alt={pickedTeam.name} className="w-4 h-4" />
                 <span className="font-body font-semibold text-sm" style={{ color: pickedTeam.color }}>
                   {pickedTeam.abbreviation}
                 </span>
-                <span className="text-xs text-muted-foreground font-body">in {userPick.games_in_series}</span>
+                <span className="text-xs font-body text-primary-foreground">in {userPick.games_in_series}</span>
               </div>
             );
           })()}

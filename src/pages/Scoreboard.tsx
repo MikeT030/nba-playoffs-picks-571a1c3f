@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
 import { bracketSeries } from "@/data/playoffsData";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+
 
 const participants = [
   { name: "Erik", avatar: "🎣" },
@@ -132,38 +132,37 @@ const AllPicksMatrix = () => {
   let lastRound = "";
 
   return (
-    <ScrollArea className="w-full max-h-[60vh]" type="always">
-      <div className="min-w-max">
-        <table className="w-full caption-bottom text-sm">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="sticky left-0 z-20 bg-card min-w-[100px]">Round</TableHead>
-              <TableHead className="sticky left-[100px] z-20 bg-card min-w-[100px]">Series</TableHead>
+    <div className="w-full max-h-[60vh] overflow-auto">
+      <table className="min-w-max text-sm border-collapse">
+          <thead className="[&_tr]:border-b">
+            <tr className="border-b">
+              <th className="sticky top-0 left-0 z-30 bg-card h-12 px-3 text-left align-middle font-medium text-muted-foreground min-w-[100px]">Round</th>
+              <th className="sticky top-0 left-[100px] z-30 bg-card h-12 px-3 text-left align-middle font-medium text-muted-foreground min-w-[100px]">Series</th>
               {players.map((player) => (
-                <TableHead key={player} className="text-center min-w-[90px] whitespace-nowrap">
+                <th key={player} className="sticky top-0 z-20 bg-card h-12 px-3 text-center align-middle font-medium text-muted-foreground min-w-[90px] whitespace-nowrap">
                   {player}
-                </TableHead>
+                </th>
               ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+            </tr>
+          </thead>
+          <tbody>
             {orderedSeries.map((seriesId) => {
               const round = getSeriesRound(seriesId);
               const showRound = round !== lastRound;
               lastRound = round;
 
               return (
-                <TableRow key={seriesId}>
-                  <TableCell className="sticky left-0 z-10 bg-card font-body text-xs text-muted-foreground whitespace-nowrap">
+                <tr key={seriesId} className="border-b transition-colors hover:bg-muted/50">
+                  <td className="sticky left-0 z-10 bg-card p-3 align-middle font-body text-xs text-muted-foreground whitespace-nowrap">
                     {showRound ? round : ""}
-                  </TableCell>
-                  <TableCell className="sticky left-[100px] z-10 bg-card font-display text-xs tracking-wide whitespace-nowrap">
+                  </td>
+                  <td className="sticky left-[100px] z-10 bg-card p-3 align-middle font-display text-xs tracking-wide whitespace-nowrap">
                     {getSeriesLabel(seriesId)}
-                  </TableCell>
+                  </td>
                   {players.map((player) => {
                     const pick = pickMap.get(`${player}::${seriesId}`);
                     return (
-                      <TableCell key={player} className="text-center font-body text-xs whitespace-nowrap">
+                      <td key={player} className="p-3 align-middle text-center font-body text-xs whitespace-nowrap">
                         {pick ? (
                           <span>
                             <span className="font-medium text-foreground">{pick.winner}</span>
@@ -172,17 +171,15 @@ const AllPicksMatrix = () => {
                         ) : (
                           <span className="text-muted-foreground/40">—</span>
                         )}
-                      </TableCell>
+                      </td>
                     );
                   })}
-                </TableRow>
+                </tr>
               );
             })}
-          </TableBody>
+          </tbody>
         </table>
-      </div>
-      <ScrollBar orientation="horizontal" />
-    </ScrollArea>
+    </div>
   );
 };
 

@@ -6,7 +6,7 @@ import TeamLogo from "@/components/TeamLogo";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 
 const MatchDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,6 +14,10 @@ const MatchDetail = () => {
   const { data: matches, isLoading } = usePlayoffGames();
   const { data: bracketData } = useBracketData();
   const match = matches?.find((m) => m.id === id);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
 
   // Map the API match id (e.g. "atl-nyk") to the bracket series_id (e.g. "east-r1-3v6")
   const bracketSeriesId = useMemo(() => {

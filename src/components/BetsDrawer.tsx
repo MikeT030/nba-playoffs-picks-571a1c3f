@@ -338,8 +338,8 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
                   }
                 }}
               />
-              <Button
-                className="w-full font-display tracking-wider"
+              <button
+                className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
                 onClick={async () => {
                   const input = document.getElementById("picks-name-input") as HTMLInputElement | null;
                   const name = input?.value.trim();
@@ -353,7 +353,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
                 }}
               >
                 Continue
-              </Button>
+              </button>
             </div>
           </div>
         </DrawerContent>

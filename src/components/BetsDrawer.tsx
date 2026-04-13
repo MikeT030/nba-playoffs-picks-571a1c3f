@@ -469,14 +469,13 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
 
             {currentRoundComplete && isLastRound && (
               <div className="mt-8 text-center">
-                <Button
-                  size="lg"
-                  className="font-display text-lg tracking-wider"
+                <button
+                  className="mx-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 disabled:opacity-50"
                   onClick={handleSaveBets}
                   disabled={saving}
                 >
-                  {saving ? "SAVING..." : "SAVE BETS ✅"}
-                </Button>
+                  {saving ? "SAVING..." : "SAVE BETS"}
+                </button>
               </div>
             )}
           </div>

@@ -4,23 +4,35 @@ import TeamLogo from "@/components/TeamLogo";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
+import { useBracketData } from "@/hooks/useBracketData";
+import { useMemo } from "react";
 
-const useUserBet = (matchId: string) => {
+const useUserBet = (match: Match) => {
   const { user } = useAuth();
+  const { data: bracketData } = useBracketData();
+
+  const bracketSeriesId = useMemo(() => {
+    if (!bracketData) return null;
+    const teamSet = new Set([match.homeTeam.abbreviation, match.awayTeam.abbreviation]);
+    const found = bracketData.find(
+      (s) => s.topTeam && s.bottomTeam && teamSet.has(s.topTeam.abbreviation) && teamSet.has(s.bottomTeam.abbreviation)
+    );
+    return found?.id ?? null;
+  }, [match, bracketData]);
 
   const { data: dbPick } = useQuery({
-    queryKey: ["user-pick", matchId, user?.id],
+    queryKey: ["user-pick", bracketSeriesId, user?.id],
     queryFn: async () => {
-      if (!user) return null;
+      if (!user || !bracketSeriesId) return null;
       const { data } = await supabase
         .from("picks")
         .select("winner, games_in_series")
         .eq("user_id", user.id)
-        .eq("series_id", matchId)
+        .eq("series_id", bracketSeriesId)
         .maybeSingle();
-      return data ? { seriesId: matchId, winner: data.winner, gamesInSeries: data.games_in_series } : null;
+      return data ? { seriesId: bracketSeriesId, winner: data.winner, gamesInSeries: data.games_in_series } : null;
     },
-    enabled: !!user,
+    enabled: !!user && !!bracketSeriesId,
   });
 
   return dbPick ?? null;
@@ -31,7 +43,7 @@ interface MatchCardProps {
 }
 
 const MatchCard = ({ match }: MatchCardProps) => {
-  const bet = useUserBet(match.id);
+  const bet = useUserBet(match);
 
   const betTeamName = bet
     ? match.homeTeam.abbreviation === bet.winner

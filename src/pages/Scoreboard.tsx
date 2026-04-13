@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Trophy, Star, List, ChevronLeft } from "lucide-react";
 import HeroBanner from "@/components/HeroBanner";
 import {

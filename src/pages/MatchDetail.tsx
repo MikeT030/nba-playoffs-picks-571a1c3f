@@ -165,10 +165,10 @@ const MatchDetail = () => {
                     </p>
                     <p className="text-sm text-muted-foreground font-body">
                       Picks{" "}
-                      <span className="font-semibold" style={{ color: pickedTeam.color }}>
+                      <span className="font-semibold text-white">
                         {pickedTeam.abbreviation}
                       </span>{" "}
-                      in {pick.games_in_series}
+                      in <span className="font-bold">{pick.games_in_series}</span>
                     </p>
                   </div>
                   <TeamLogo src={pickedTeam.logo} alt={pickedTeam.name} className="w-8 h-8" />

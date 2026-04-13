@@ -1,5 +1,5 @@
 import { useLocation, Link } from "react-router-dom";
-import { ClipboardList } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 
 const BasketballSvg = ({ size = 20 }: { size?: number }) => (

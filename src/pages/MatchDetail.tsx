@@ -15,6 +15,10 @@ const MatchDetail = () => {
   const { data: bracketData } = useBracketData();
   const match = matches?.find((m) => m.id === id);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
   // Map the API match id (e.g. "atl-nyk") to the bracket series_id (e.g. "east-r1-3v6")
   const bracketSeriesId = useMemo(() => {
     if (!match || !bracketData) return null;

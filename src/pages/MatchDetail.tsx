@@ -95,7 +95,7 @@ const MatchDetail = () => {
 
       <section className="container py-10">
         <h3 className="font-display text-2xl tracking-wider mb-6">
-          The Crew's Picks
+          Picks from the others
         </h3>
         <div className="grid gap-3">
           {match.tips.map((tip) => {

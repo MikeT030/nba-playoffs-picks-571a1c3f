@@ -373,12 +373,12 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
                     key={round}
                     onClick={() => unlocked && setSelectedRound(round)}
                     disabled={!unlocked}
-                    className={`px-4 py-2 rounded-lg font-body text-sm transition-all duration-200 flex items-center gap-2 ${
+                    className={`px-4 py-2 rounded-full font-body text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
                       selectedRound === round
-                        ? "bg-primary text-primary-foreground"
+                        ? "bg-primary/15 text-primary border border-primary/40"
                         : unlocked
-                          ? "bg-card text-foreground"
-                          : "bg-muted/50 text-muted-foreground/50 cursor-not-allowed"
+                          ? "bg-card text-foreground border border-transparent"
+                          : "bg-muted/50 text-muted-foreground/50 cursor-not-allowed border border-transparent"
                     }`}
                   >
                     {round}

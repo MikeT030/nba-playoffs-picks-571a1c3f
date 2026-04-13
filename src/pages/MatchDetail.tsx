@@ -126,9 +126,9 @@ const MatchDetail = () => {
           {user && userPick && (() => {
             const pickedTeam = userPick.winner === match.homeTeam.abbreviation ? match.homeTeam : match.awayTeam;
             return (
-              <div className="mt-6 items-center justify-center gap-3 bg-card/60 backdrop-blur rounded-lg px-4 py-3 flex flex-row">
+              <div className="mt-6 items-center justify-center gap-3 bg-transparent rounded-lg px-4 py-3 flex flex-row">
                 <span className="text-xs text-muted-foreground font-body uppercase tracking-wider">Your Pick</span>
-                <TeamLogo src={pickedTeam.logo} alt={pickedTeam.name} className="w-5 h-5" />
+                <TeamLogo src={pickedTeam.logo} alt={pickedTeam.name} className="w-4 h-4" />
                 <span className="font-body font-semibold text-sm" style={{ color: pickedTeam.color }}>
                   {pickedTeam.abbreviation}
                 </span>

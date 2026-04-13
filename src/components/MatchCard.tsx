@@ -43,7 +43,7 @@ interface MatchCardProps {
 }
 
 const MatchCard = ({ match }: MatchCardProps) => {
-  const bet = useUserBet(match.id);
+  const bet = useUserBet(match);
 
   const betTeamName = bet
     ? match.homeTeam.abbreviation === bet.winner

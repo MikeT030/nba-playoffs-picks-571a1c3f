@@ -6,19 +6,6 @@ import { Input } from "@/components/ui/input";
 import TeamLogo from "@/components/TeamLogo";
 import { bracketSeries, resolveSeriesTeams, type BracketSeries, type Team } from "@/data/playoffsData";
 
-const participants = [
-  { name: "Erik", avatar: "🎣" },
-  { name: "Alexander", avatar: "😎" },
-  { name: "David", avatar: "🎬" },
-  { name: "Fabian", avatar: "🏔️" },
-  { name: "Hannes", avatar: "🌄" },
-  { name: "Jörn", avatar: "🎿" },
-  { name: "Larsn", avatar: "🐕" },
-  { name: "Michi", avatar: "🎸" },
-  { name: "Momentum", avatar: "🚀" },
-  { name: "Simon", avatar: "📡" },
-  { name: "Sven", avatar: "🐶" },
-];
 
 interface BetSelection {
   seriesId: string;
@@ -246,7 +233,7 @@ const MakeYourBets = () => {
     }
   };
 
-  const participant = participants.find((p) => p.name === selectedProfile);
+  
   const totalSeries = bracketSeries.length;
   const betCount = bets.length;
 
@@ -264,7 +251,7 @@ const MakeYourBets = () => {
               <ArrowLeft size={20} />
             </Link>
             <div className="flex items-center gap-2">
-              <span className="text-2xl">{participant?.avatar}</span>
+              <span className="text-2xl">🏀</span>
               <div>
                 <h1 className="font-display text-2xl tracking-wider">MAKE YOUR BETS</h1>
                 <p className="text-xs text-muted-foreground font-body">{selectedProfile}'s picks</p>

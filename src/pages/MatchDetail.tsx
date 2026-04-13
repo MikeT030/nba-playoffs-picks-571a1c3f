@@ -7,7 +7,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useEffect } from "react";
-import { isPlayInPlaceholder } from "@/data/playoffsData";
 
 const MatchDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -76,8 +75,6 @@ const MatchDetail = () => {
     );
   }
 
-  const hasTBD = isPlayInPlaceholder(match.homeTeam.abbreviation) || isPlayInPlaceholder(match.awayTeam.abbreviation);
-
   const seriesDots = (wins: number, color: string) =>
     Array.from({ length: 4 }).map((_, i) => (
       <div
@@ -90,17 +87,12 @@ const MatchDetail = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       <div className="relative overflow-hidden">
-        {hasTBD && (
-          <div className="absolute inset-0 bg-muted/30" />
-        )}
-        {!hasTBD && (
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `linear-gradient(135deg, ${match.awayTeam.color}33 0%, transparent 50%, ${match.homeTeam.color}33 100%)`,
-            }}
-          />
-        )}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(135deg, ${match.awayTeam.color}66 0%, transparent 50%, ${match.homeTeam.color}66 100%)`,
+          }}
+        />
         <div className="relative container py-6">
           <Link
             to="/"
@@ -116,26 +108,14 @@ const MatchDetail = () => {
 
           <div className="flex items-center justify-between gap-6">
             <div className="flex-1 text-center flex flex-col items-center">
-              {isPlayInPlaceholder(match.awayTeam.abbreviation) ? (
-                <>
-                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-muted/50 flex items-center justify-center">
-                    <span className="text-2xl">🏀</span>
-                  </div>
-                  <span className="mt-2 px-2 py-0.5 rounded bg-muted text-muted-foreground text-xs font-body font-semibold uppercase tracking-wider">TBD</span>
-                  <p className="text-sm text-muted-foreground font-body mt-1">Play-In Winner</p>
-                </>
-              ) : (
-                <>
-                  <TeamLogo src={match.awayTeam.logo} alt={match.awayTeam.name} className="w-16 h-16 md:w-20 md:h-20" />
-                  <h2 className="font-display text-3xl md:text-4xl tracking-wider mt-2">
-                    {match.awayTeam.abbreviation}
-                  </h2>
-                  <p className="text-sm text-muted-foreground font-body mt-1">{match.awayTeam.name}</p>
-                  <div className="flex gap-1.5 justify-center mt-3">
-                    {seriesDots(match.awayWins, match.awayTeam.color)}
-                  </div>
-                </>
-              )}
+              <TeamLogo src={match.awayTeam.logo} alt={match.awayTeam.name} className="w-16 h-16 md:w-20 md:h-20" />
+              <h2 className="font-display text-3xl md:text-4xl tracking-wider mt-2">
+                {match.awayTeam.abbreviation}
+              </h2>
+              <p className="text-sm text-muted-foreground font-body mt-1">{match.awayTeam.name}</p>
+              <div className="flex gap-1.5 justify-center mt-3">
+                {seriesDots(match.awayWins, match.awayTeam.color)}
+              </div>
             </div>
 
             <div className="text-center">
@@ -150,26 +130,14 @@ const MatchDetail = () => {
             </div>
 
             <div className="flex-1 text-center flex flex-col items-center">
-              {isPlayInPlaceholder(match.homeTeam.abbreviation) ? (
-                <>
-                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-muted/50 flex items-center justify-center">
-                    <span className="text-2xl">🏀</span>
-                  </div>
-                  <span className="mt-2 px-2 py-0.5 rounded bg-muted text-muted-foreground text-xs font-body font-semibold uppercase tracking-wider">TBD</span>
-                  <p className="text-sm text-muted-foreground font-body mt-1">Play-In Winner</p>
-                </>
-              ) : (
-                <>
-                  <TeamLogo src={match.homeTeam.logo} alt={match.homeTeam.name} className="w-16 h-16 md:w-20 md:h-20" />
-                  <h2 className="font-display text-3xl md:text-4xl tracking-wider mt-2">
-                    {match.homeTeam.abbreviation}
-                  </h2>
-                  <p className="text-sm text-muted-foreground font-body mt-1">{match.homeTeam.name}</p>
-                  <div className="flex gap-1.5 justify-center mt-3">
-                    {seriesDots(match.homeWins, match.homeTeam.color)}
-                  </div>
-                </>
-              )}
+              <TeamLogo src={match.homeTeam.logo} alt={match.homeTeam.name} className="w-16 h-16 md:w-20 md:h-20" />
+              <h2 className="font-display text-3xl md:text-4xl tracking-wider mt-2">
+                {match.homeTeam.abbreviation}
+              </h2>
+              <p className="text-sm text-muted-foreground font-body mt-1">{match.homeTeam.name}</p>
+              <div className="flex gap-1.5 justify-center mt-3">
+                {seriesDots(match.homeWins, match.homeTeam.color)}
+              </div>
             </div>
           </div>
 

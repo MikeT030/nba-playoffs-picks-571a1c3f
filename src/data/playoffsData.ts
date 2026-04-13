@@ -177,6 +177,56 @@ export function resolveSeriesTeams(
   return { topTeam, bottomTeam };
 }
 
+/**
+ * Given real playoff games from the API, detect which teams fill the TBD (7/8 seed)
+ * slots by looking at who the known 1-seed and 2-seed teams are playing against.
+ */
+export function resolveBracketWithApiGames(
+  games: { home_team: { abbreviation: string; full_name: string }; visitor_team: { abbreviation: string; full_name: string } }[]
+): BracketSeries[] {
+  if (!games.length) return bracketSeries;
+
+  // Known seeds whose opponents reveal the play-in winners
+  const knownSeeds: Record<string, { seriesId: string; slot: "bottom" }> = {
+    OKC: { seriesId: "west-r1-1v8", slot: "bottom" },  // 1-seed West → opponent is 8-seed
+    SAS: { seriesId: "west-r1-2v7", slot: "bottom" },  // 2-seed West → opponent is 7-seed
+    DET: { seriesId: "east-r1-1v8", slot: "bottom" },  // 1-seed East → opponent is 8-seed
+    BOS: { seriesId: "east-r1-2v7", slot: "bottom" },  // 2-seed East → opponent is 7-seed
+  };
+
+  const resolved: Record<string, Team> = {};
+
+  for (const game of games) {
+    for (const knownAbbr of Object.keys(knownSeeds)) {
+      const info = knownSeeds[knownAbbr];
+      let opponentAbbr: string | null = null;
+      let opponentName: string | null = null;
+
+      if (game.home_team.abbreviation === knownAbbr) {
+        opponentAbbr = game.visitor_team.abbreviation;
+        opponentName = game.visitor_team.full_name;
+      } else if (game.visitor_team.abbreviation === knownAbbr) {
+        opponentAbbr = game.home_team.abbreviation;
+        opponentName = game.home_team.full_name;
+      }
+
+      if (opponentAbbr && opponentName && !resolved[info.seriesId]) {
+        const seed = info.seriesId.includes("1v8") ? 8 : 7;
+        resolved[info.seriesId] = makeTeam(opponentAbbr, opponentName, seed);
+      }
+    }
+  }
+
+  if (Object.keys(resolved).length === 0) return bracketSeries;
+
+  return bracketSeries.map((s) => {
+    if (resolved[s.id]) {
+      return { ...s, bottomTeam: resolved[s.id] };
+    }
+    return s;
+  });
+}
+
 // Convert bracket series to Match format for the home page (first round only)
 const firstRoundMatchups = bracketSeries.filter((s) => s.round === "First Round" && s.topTeam && s.bottomTeam);
 

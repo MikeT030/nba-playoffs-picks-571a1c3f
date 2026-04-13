@@ -4,6 +4,7 @@ import HeroBanner from "@/components/HeroBanner";
 import MatchCard from "@/components/MatchCard";
 import BetsDrawer from "@/components/BetsDrawer";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
+import { useBracketData } from "@/hooks/useBracketData";
 import {
   Select,
   SelectContent,

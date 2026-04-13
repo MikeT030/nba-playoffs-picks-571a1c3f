@@ -31,6 +31,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/match/:id" element={<MatchDetail />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/my-picks" element={<MyPicks />} />
             <Route path="/make-your-bets" element={<MakeYourBets />} />

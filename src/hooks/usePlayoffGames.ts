@@ -89,7 +89,20 @@ export function usePlayoffGames(season: number = 2025) {
       try {
         const games = await getPlayoffGames(season);
         if (games.length === 0) return fallbackMatches;
-        return groupIntoSeries(games);
+        const apiMatches = groupIntoSeries(games);
+
+        // Merge in TBD fallback matchups that aren't covered by API data
+        const apiTeamKeys = new Set(
+          apiMatches.map((m) =>
+            [m.homeTeam.abbreviation, m.awayTeam.abbreviation].sort().join("-")
+          )
+        );
+        const tbdMatches = fallbackMatches.filter((fb) => {
+          const key = [fb.homeTeam.abbreviation, fb.awayTeam.abbreviation].sort().join("-");
+          return !apiTeamKeys.has(key);
+        });
+
+        return [...apiMatches, ...tbdMatches];
       } catch (error) {
         console.warn("Failed to fetch NBA data, using fallback:", error);
         return fallbackMatches;

@@ -333,7 +333,7 @@ const MakeYourBets = () => {
         {currentRoundComplete && !isLastRound && (
           <div className="mt-8 text-center">
             <button
-              className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
+              className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
               onClick={handleNextRound}
             >
               NEXT ROUND →

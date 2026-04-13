@@ -4,6 +4,7 @@ import HeroBanner from "@/components/HeroBanner";
 import MatchCard from "@/components/MatchCard";
 import BetsDrawer from "@/components/BetsDrawer";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
+import { useBracketData } from "@/hooks/useBracketData";
 import {
   Select,
   SelectContent,
@@ -22,6 +23,7 @@ const rounds = [
 
 const Index = () => {
   const { data: matches, isLoading } = usePlayoffGames();
+  const { data: resolvedBracket } = useBracketData();
   const [selectedRound, setSelectedRound] = useState("all");
   const [betsOpen, setBetsOpen] = useState(false);
   const [betsSaved, setBetsSaved] = useState(false);
@@ -109,7 +111,7 @@ const Index = () => {
         )}
       </section>
 
-      <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setBetsSaved(true)} />
+      <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setBetsSaved(true)} resolvedBracket={resolvedBracket} />
     </div>
   );
 };

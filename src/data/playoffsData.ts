@@ -144,9 +144,10 @@ export const bracketSeries: BracketSeries[] = [
 // Helper: resolve teams for a series given a map of picks (seriesId -> winner abbreviation)
 export function resolveSeriesTeams(
   seriesId: string,
-  picks: Record<string, string>
+  picks: Record<string, string>,
+  seriesList: BracketSeries[] = bracketSeries
 ): { topTeam?: Team; bottomTeam?: Team } {
-  const series = bracketSeries.find((s) => s.id === seriesId);
+  const series = seriesList.find((s) => s.id === seriesId);
   if (!series) return {};
 
   let topTeam = series.topTeam;
@@ -155,9 +156,9 @@ export function resolveSeriesTeams(
   if (series.topParentSeriesId) {
     const parentWinner = picks[series.topParentSeriesId];
     if (parentWinner) {
-      const parentSeries = bracketSeries.find((s) => s.id === series.topParentSeriesId);
+      const parentSeries = seriesList.find((s) => s.id === series.topParentSeriesId);
       if (parentSeries) {
-        const { topTeam: pTop, bottomTeam: pBottom } = resolveSeriesTeams(series.topParentSeriesId, picks);
+        const { topTeam: pTop, bottomTeam: pBottom } = resolveSeriesTeams(series.topParentSeriesId, picks, seriesList);
         topTeam = parentWinner === pTop?.abbreviation ? pTop : pBottom;
       }
     }
@@ -166,15 +167,65 @@ export function resolveSeriesTeams(
   if (series.bottomParentSeriesId) {
     const parentWinner = picks[series.bottomParentSeriesId];
     if (parentWinner) {
-      const parentSeries = bracketSeries.find((s) => s.id === series.bottomParentSeriesId);
+      const parentSeries = seriesList.find((s) => s.id === series.bottomParentSeriesId);
       if (parentSeries) {
-        const { topTeam: pTop, bottomTeam: pBottom } = resolveSeriesTeams(series.bottomParentSeriesId, picks);
+        const { topTeam: pTop, bottomTeam: pBottom } = resolveSeriesTeams(series.bottomParentSeriesId, picks, seriesList);
         bottomTeam = parentWinner === pTop?.abbreviation ? pTop : pBottom;
       }
     }
   }
 
   return { topTeam, bottomTeam };
+}
+
+/**
+ * Given real playoff games from the API, detect which teams fill the TBD (7/8 seed)
+ * slots by looking at who the known 1-seed and 2-seed teams are playing against.
+ */
+export function resolveBracketWithApiGames(
+  games: { home_team: { abbreviation: string; full_name: string }; visitor_team: { abbreviation: string; full_name: string } }[]
+): BracketSeries[] {
+  if (!games.length) return bracketSeries;
+
+  // Known seeds whose opponents reveal the play-in winners
+  const knownSeeds: Record<string, { seriesId: string; slot: "bottom" }> = {
+    OKC: { seriesId: "west-r1-1v8", slot: "bottom" },  // 1-seed West → opponent is 8-seed
+    SAS: { seriesId: "west-r1-2v7", slot: "bottom" },  // 2-seed West → opponent is 7-seed
+    DET: { seriesId: "east-r1-1v8", slot: "bottom" },  // 1-seed East → opponent is 8-seed
+    BOS: { seriesId: "east-r1-2v7", slot: "bottom" },  // 2-seed East → opponent is 7-seed
+  };
+
+  const resolved: Record<string, Team> = {};
+
+  for (const game of games) {
+    for (const knownAbbr of Object.keys(knownSeeds)) {
+      const info = knownSeeds[knownAbbr];
+      let opponentAbbr: string | null = null;
+      let opponentName: string | null = null;
+
+      if (game.home_team.abbreviation === knownAbbr) {
+        opponentAbbr = game.visitor_team.abbreviation;
+        opponentName = game.visitor_team.full_name;
+      } else if (game.visitor_team.abbreviation === knownAbbr) {
+        opponentAbbr = game.home_team.abbreviation;
+        opponentName = game.home_team.full_name;
+      }
+
+      if (opponentAbbr && opponentName && !resolved[info.seriesId]) {
+        const seed = info.seriesId.includes("1v8") ? 8 : 7;
+        resolved[info.seriesId] = makeTeam(opponentAbbr, opponentName, seed);
+      }
+    }
+  }
+
+  if (Object.keys(resolved).length === 0) return bracketSeries;
+
+  return bracketSeries.map((s) => {
+    if (resolved[s.id]) {
+      return { ...s, bottomTeam: resolved[s.id] };
+    }
+    return s;
+  });
 }
 
 // Convert bracket series to Match format for the home page (first round only)

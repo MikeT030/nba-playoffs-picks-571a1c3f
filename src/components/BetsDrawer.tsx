@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/drawer";
 import TeamLogo from "@/components/TeamLogo";
 import {
-  bracketSeries,
+  bracketSeries as defaultBracketSeries,
   resolveSeriesTeams,
   type BracketSeries,
   type Team,
@@ -145,7 +145,8 @@ const SeriesCard = ({
   );
 };
 
-const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpenChange: (open: boolean) => void; onBetsSaved?: () => void }) => {
+const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open: boolean; onOpenChange: (open: boolean) => void; onBetsSaved?: () => void; resolvedBracket?: BracketSeries[] }) => {
+  const bracketSeries = resolvedBracket ?? defaultBracketSeries;
   const { user } = useAuth();
   const navigate = useNavigate();
   const [profileName, setProfileName] = useState("");
@@ -209,7 +210,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpen
   };
 
   const isBettable = (series: BracketSeries): boolean => {
-    const { topTeam, bottomTeam } = resolveSeriesTeams(series.id, picks);
+    const { topTeam, bottomTeam } = resolveSeriesTeams(series.id, picks, bracketSeries);
     const top = topTeam ?? series.topTeam;
     const bottom = bottomTeam ?? series.bottomTeam;
     return !!top && !!bottom && top.abbreviation !== "TBD" && bottom.abbreviation !== "TBD";
@@ -401,7 +402,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpen
                   )}
                   <div className="grid gap-4 md:grid-cols-2">
                     {conferenceSeries.map((series) => {
-                      const resolvedTeams = resolveSeriesTeams(series.id, picks);
+                      const resolvedTeams = resolveSeriesTeams(series.id, picks, bracketSeries);
                       return (
                         <SeriesCard
                           key={series.id}

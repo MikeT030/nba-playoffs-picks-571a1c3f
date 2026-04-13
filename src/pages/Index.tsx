@@ -56,7 +56,7 @@ const Index = () => {
       : matches?.filter((m) => m.round === selectedRound);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-28">
       <HeroBanner />
 
       <section className="container py-10">

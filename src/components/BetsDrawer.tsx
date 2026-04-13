@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/drawer";
 import TeamLogo from "@/components/TeamLogo";
 import {
-  bracketSeries,
+  bracketSeries as defaultBracketSeries,
   resolveSeriesTeams,
   type BracketSeries,
   type Team,

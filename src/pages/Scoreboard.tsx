@@ -339,29 +339,35 @@ const Scoreboard = () => {
         )}
 
         {/* Scoring legend */}
-        <div className="mt-8 bg-card border border-border rounded-lg p-5">
-          <h2 className="font-display text-sm tracking-wider text-foreground mb-3 flex items-center gap-2">
-            <Star size={14} className="text-primary" /> SCORING SYSTEM
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-body text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <span className="font-display text-primary text-base w-6 text-right">3</span>
-              <span>Correct winner + correct game count on the right series</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="font-display text-primary text-base w-6 text-right">2</span>
-              <span>Correct winner on the right series (wrong game count)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="font-display text-primary text-base w-6 text-right">1</span>
-              <span>Picked a team that won, but assigned to the wrong series</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="font-display text-primary text-base w-6 text-right">+4</span>
-              <span>Correctly predicted the NBA Finals champion</span>
-            </div>
-          </div>
-        </div>
+        <Accordion type="single" collapsible className="mt-8">
+          <AccordionItem value="scoring" className="bg-card border border-border rounded-lg px-5 py-0 border-b-0">
+            <AccordionTrigger className="font-display text-sm tracking-wider text-foreground flex items-center gap-2 hover:no-underline py-4">
+              <span className="flex items-center gap-2">
+                <Star size={14} className="text-primary" /> SCORING SYSTEM
+              </span>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-body text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <span className="font-display text-primary text-base w-6 text-right">3</span>
+                  <span>Correct winner + correct game count on the right series</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-display text-primary text-base w-6 text-right">2</span>
+                  <span>Correct winner on the right series (wrong game count)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-display text-primary text-base w-6 text-right">1</span>
+                  <span>Picked a team that won, but assigned to the wrong series</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-display text-primary text-base w-6 text-right">+4</span>
+                  <span>Correctly predicted the NBA Finals champion</span>
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
 
         <p className="text-center text-xs text-muted-foreground font-body mt-6">
           Scores update as playoff results come in

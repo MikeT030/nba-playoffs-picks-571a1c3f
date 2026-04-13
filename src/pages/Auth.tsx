@@ -81,7 +81,7 @@ const Auth = () => {
 
   const headline =
     step === "email"
-      ? "Log-in, alter"
+      ? "Log-in / sign up"
       : step === "forgot"
         ? "RESET PASSWORD"
         : isExistingUser

@@ -71,8 +71,10 @@ const SeriesCard = ({
       return (
         <div className="flex-1 flex flex-col items-center gap-2 p-3 rounded-lg border-2 border-dashed border-muted-foreground/20">
           <span className="text-3xl opacity-30">🏀</span>
-          <span className="font-display text-lg tracking-wide text-muted-foreground/50">TBD</span>
-          {team?.seed && <span className="text-[10px] text-muted-foreground/50 font-body">Seed {team.seed}</span>}
+          <div className="flex items-center gap-1">
+            {team?.seed && <span className="text-xs text-muted-foreground/50 font-body font-semibold">{team.seed}</span>}
+            <span className="font-display text-lg tracking-wide text-muted-foreground/50">TBD</span>
+          </div>
         </div>
       );
     }
@@ -90,8 +92,10 @@ const SeriesCard = ({
         }`}
       >
         <TeamLogo src={team.logo} alt={team.name} className="w-12 h-12" />
-        <span className="font-display text-lg tracking-wide">{team.abbreviation}</span>
-        {team.seed && <span className="text-[10px] text-muted-foreground font-body">#{team.seed} seed</span>}
+        <div className="flex items-center gap-1">
+          {team.seed && <span className="text-xs text-muted-foreground font-body font-semibold">{team.seed}</span>}
+          <span className="font-display text-lg tracking-wide">{team.abbreviation}</span>
+        </div>
         {isSelected && <Check size={16} className="text-primary" />}
       </button>
     );

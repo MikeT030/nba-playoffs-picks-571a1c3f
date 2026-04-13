@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import {
   bracketSeries,
   resolveSeriesTeams,
+  isPlayInPlaceholder,
   type Team,
 } from "@/data/playoffsData";
 
@@ -60,10 +61,10 @@ const PickCard = ({
               : "border-transparent opacity-50"
           }`}
         >
-          {topTeam && topTeam.abbreviation !== "TBD" ? (
+          {topTeam ? (
             <>
               <TeamLogo src={topTeam.logo} alt={topTeam.name} className="w-12 h-12" />
-              <span className="font-display text-lg tracking-wide">{topTeam.abbreviation}</span>
+              <span className="font-display text-lg tracking-wide">{isPlayInPlaceholder(topTeam.abbreviation) ? topTeam.name : topTeam.abbreviation}</span>
             </>
           ) : (
             <>
@@ -82,10 +83,10 @@ const PickCard = ({
               : "border-transparent opacity-50"
           }`}
         >
-          {bottomTeam && bottomTeam.abbreviation !== "TBD" ? (
+          {bottomTeam ? (
             <>
               <TeamLogo src={bottomTeam.logo} alt={bottomTeam.name} className="w-12 h-12" />
-              <span className="font-display text-lg tracking-wide">{bottomTeam.abbreviation}</span>
+              <span className="font-display text-lg tracking-wide">{isPlayInPlaceholder(bottomTeam.abbreviation) ? bottomTeam.name : bottomTeam.abbreviation}</span>
             </>
           ) : (
             <>

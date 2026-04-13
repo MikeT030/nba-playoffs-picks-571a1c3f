@@ -72,7 +72,7 @@ const SeriesCard = ({
   const selectedWinner = bet?.winner ?? null;
   const [selectedGames, setSelectedGames] = useState<number>(bet?.gamesInSeries ?? 4);
 
-  const teamsReady = topTeam && bottomTeam && topTeam.abbreviation !== "TBD" && bottomTeam.abbreviation !== "TBD";
+  const teamsReady = topTeam && bottomTeam;
 
   const handlePickWinner = (abbr: string) => {
     if (locked || !teamsReady) return;
@@ -88,14 +88,11 @@ const SeriesCard = ({
   };
 
   const renderTeamSlot = (team: Team | undefined, isSelected: boolean) => {
-    if (!team || team.abbreviation === "TBD") {
+    if (!team) {
       return (
         <div className="flex-1 flex flex-col items-center gap-2 p-3 rounded-lg border-2 border-dashed border-muted-foreground/20">
           <span className="text-3xl opacity-30">🏀</span>
           <span className="font-display text-lg tracking-wide text-muted-foreground/50">TBD</span>
-          {team?.seed && (
-            <span className="text-[10px] text-muted-foreground/50 font-body">Seed {team.seed}</span>
-          )}
         </div>
       );
     }
@@ -206,7 +203,7 @@ const MakeYourBets = () => {
     const { topTeam, bottomTeam } = resolveSeriesTeams(series.id, picks);
     const top = topTeam ?? series.topTeam;
     const bottom = bottomTeam ?? series.bottomTeam;
-    return !!top && !!bottom && top.abbreviation !== "TBD" && bottom.abbreviation !== "TBD";
+    return !!top && !!bottom;
   };
 
   // Check if previous round is fully bet (only bettable series count)

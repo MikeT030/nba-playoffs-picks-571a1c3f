@@ -284,7 +284,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpen
           <div className="overflow-y-auto px-4 pb-8">
             <DrawerHeader className="pt-4 pb-2">
               <DrawerTitle className="font-display text-4xl tracking-wider text-center">
-                MAKE YOUR BETS
+                MAKE YOUR PICKS
               </DrawerTitle>
               <p className="text-muted-foreground font-body text-center text-sm">Sign in to make your picks</p>
             </DrawerHeader>
@@ -312,7 +312,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpen
           <div className="overflow-y-auto px-4 pb-8">
             <DrawerHeader className="pt-4 pb-2">
               <DrawerTitle className="font-display text-4xl tracking-wider text-center">
-                MAKE YOUR BETS
+                MAKE YOUR PICKS
               </DrawerTitle>
               <p className="text-muted-foreground font-body text-center text-sm">What's your name?</p>
             </DrawerHeader>
@@ -348,7 +348,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpen
           <div className="px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div>
-                <h2 className="font-display text-xl tracking-wider">MAKE YOUR BETS</h2>
+                <h2 className="font-display text-xl tracking-wider">MAKE YOUR PICKS</h2>
                 <p className="text-xs text-muted-foreground font-body">{profileName}'s picks</p>
               </div>
             </div>

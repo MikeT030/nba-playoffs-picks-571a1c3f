@@ -184,7 +184,7 @@ const AllPicksMatrix = () => {
   let lastRound = "";
 
   return (
-    <div className="w-full max-h-[60vh] overflow-auto">
+    <div className="w-full max-h-[75vh] overflow-auto">
       <table className="min-w-max text-sm border-collapse">
           <thead className="[&_tr]:border-b">
             <tr className="border-b">

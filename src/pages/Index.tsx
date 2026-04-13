@@ -71,7 +71,7 @@ const Index = () => {
           {betsSaved ? (
             <>
               <CheckCircle size={18} />
-              You have made your picks
+              Edit Your Picks
             </>
           ) : (
             <>

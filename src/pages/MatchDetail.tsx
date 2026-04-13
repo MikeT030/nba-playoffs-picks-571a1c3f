@@ -44,6 +44,20 @@ const MatchDetail = () => {
     enabled: !!user && !!bracketSeriesId,
   });
 
+  // Fetch ALL picks for this series from all users
+  const { data: allPicks } = useQuery({
+    queryKey: ["series-picks", bracketSeriesId],
+    queryFn: async () => {
+      if (!bracketSeriesId) return [];
+      const { data } = await supabase
+        .from("picks")
+        .select("winner, games_in_series, profile_name, user_id")
+        .eq("series_id", bracketSeriesId);
+      return data ?? [];
+    },
+    enabled: !!bracketSeriesId,
+  });
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">

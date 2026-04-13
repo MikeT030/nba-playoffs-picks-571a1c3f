@@ -114,9 +114,13 @@ const Auth = () => {
               required
               className="font-body"
             />
-            <Button type="submit" className="w-full font-display tracking-wider" disabled={loading}>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 disabled:opacity-50"
+            >
               {loading ? "..." : "SEND RESET LINK"}
-            </Button>
+            </button>
           </form>
           <p className="text-center text-sm text-muted-foreground font-body">
             <button onClick={() => setStep("password")} className="text-primary underline">
@@ -147,9 +151,13 @@ const Auth = () => {
               className="font-body"
               autoFocus
             />
-            <Button type="submit" className="w-full font-display tracking-wider" disabled={loading}>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 disabled:opacity-50"
+            >
               {loading ? "..." : "CONTINUE"}
-            </Button>
+            </button>
           </form>
         ) : (
           <form onSubmit={handlePasswordSubmit} className="space-y-4">
@@ -173,9 +181,13 @@ const Auth = () => {
               className="font-body"
               autoFocus
             />
-            <Button type="submit" className="w-full font-display tracking-wider" disabled={loading}>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 disabled:opacity-50"
+            >
               {loading ? "..." : isExistingUser ? "SIGN IN" : "SIGN UP"}
-            </Button>
+            </button>
             {isExistingUser && (
               <p className="text-center text-sm text-muted-foreground font-body">
                 <button

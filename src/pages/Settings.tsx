@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { LogOut, Mail, ArrowLeft, LogIn, PenLine, Pencil, Check } from "lucide-react";
+import { LogOut, Mail, ArrowLeft, LogIn, PenLine, CheckCircle, Pencil, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import BetsDrawer from "@/components/BetsDrawer";
@@ -13,10 +13,17 @@ const Settings = () => {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const [betsOpen, setBetsOpen] = useState(false);
+  const [hasPicks, setHasPicks] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState("");
   const [savingName, setSavingName] = useState(false);
+
+  const fetchHasPicks = async () => {
+    if (!user) return;
+    const { data } = await supabase.from("picks").select("id").eq("user_id", user.id);
+    setHasPicks(!!(data && data.length > 0));
+  };
 
   const fetchDisplayName = async () => {
     if (!user) return;
@@ -32,6 +39,7 @@ const Settings = () => {
 
   useEffect(() => {
     fetchDisplayName();
+    fetchHasPicks();
   }, [user]);
 
   const handleSaveName = async () => {
@@ -104,8 +112,17 @@ const Settings = () => {
           onClick={() => setBetsOpen(true)}
           className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 w-full"
         >
-          <PenLine size={18} />
-          Make Your Picks
+          {hasPicks ? (
+            <>
+              <CheckCircle size={18} />
+              Edit Your Picks
+            </>
+          ) : (
+            <>
+              <PenLine size={18} />
+              Make Your Picks
+            </>
+          )}
         </button>
 
         {loading ? null : user ? (
@@ -165,7 +182,7 @@ const Settings = () => {
         )}
       </div>
 
-      <BetsDrawer open={betsOpen} onOpenChange={(open) => { setBetsOpen(open); if (!open) fetchDisplayName(); }} />
+      <BetsDrawer open={betsOpen} onOpenChange={(open) => { setBetsOpen(open); if (!open) { fetchDisplayName(); fetchHasPicks(); } }} />
     </div>
   );
 };

@@ -48,6 +48,13 @@ Deno.serve(async (req) => {
       data = JSON.parse(text);
     } catch {
       console.error("Non-JSON response:", text);
+      const isFallbackable = response.status === 429 || response.status >= 500;
+      if (isFallbackable) {
+        return new Response(
+          JSON.stringify({ error: "API_RATE_LIMITED", fallback: true, data: [], meta: { per_page: 100 } }),
+          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
       return new Response(
         JSON.stringify({ error: `API returned non-JSON: ${text.substring(0, 200)}` }),
         { status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }

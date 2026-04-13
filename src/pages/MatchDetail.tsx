@@ -136,7 +136,7 @@ const MatchDetail = () => {
                 <span className="font-body font-semibold text-sm text-white">
                   {pickedTeam.abbreviation}
                 </span>
-                <span className="text-xs font-body text-primary-foreground">in <span className="font-bold">{userPick.games_in_series}</span></span>
+                <span className="font-body text-primary-foreground text-sm">in <span className="font-bold">{userPick.games_in_series}</span></span>
               </div>
             );
           })()}

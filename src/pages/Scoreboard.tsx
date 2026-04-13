@@ -132,9 +132,9 @@ const AllPicksMatrix = () => {
   let lastRound = "";
 
   return (
-    <ScrollArea className="w-full max-h-[60vh]">
+    <ScrollArea className="w-full max-h-[60vh]" type="always">
       <div className="min-w-max">
-        <Table>
+        <table className="w-full caption-bottom text-sm">
           <TableHeader>
             <TableRow>
               <TableHead className="sticky left-0 z-20 bg-card min-w-[100px]">Round</TableHead>

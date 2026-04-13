@@ -82,14 +82,17 @@ export function getConference(team1: string, team2: string): "East" | "West" | "
   return "Finals";
 }
 
-// TBD placeholder team for play-in spots
-const tbdTeam = (seed: number): Team => ({
-  name: "TBD (Play-In)",
-  abbreviation: "TBD",
-  color: "#666",
-  logo: "",
-  seed,
-});
+// Dummy play-in placeholder teams with unique abbreviations so picks can be made
+const playInPlaceholders: Record<string, Team> = {
+  "PIW7": { name: "West Play-In 7th", abbreviation: "PIW7", color: "#888", logo: "🏀", seed: 7 },
+  "PIW8": { name: "West Play-In 8th", abbreviation: "PIW8", color: "#888", logo: "🏀", seed: 8 },
+  "PIE7": { name: "East Play-In 7th", abbreviation: "PIE7", color: "#888", logo: "🏀", seed: 7 },
+  "PIE8": { name: "East Play-In 8th", abbreviation: "PIE8", color: "#888", logo: "🏀", seed: 8 },
+};
+
+export function isPlayInPlaceholder(abbr: string): boolean {
+  return abbr in playInPlaceholders;
+}
 
 // Full bracket following 2025 NBA bracket structure:
 // R1: 1v8, 4v5, 3v6, 2v7

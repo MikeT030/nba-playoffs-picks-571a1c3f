@@ -218,7 +218,7 @@ const AllPicksMatrix = () => {
                         {pick ? (
                           <span>
                             <span className="font-medium text-foreground">{pick.winner}</span>
-                            <span className="text-muted-foreground ml-1">{pick.games_in_series}G</span>
+                            <span className="ml-1 text-white">{pick.games_in_series}G</span>
                           </span>
                         ) : (
                           <span className="text-muted-foreground/40">—</span>

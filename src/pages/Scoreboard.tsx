@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
 import { bracketSeries } from "@/data/playoffsData";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+
 
 const participants = [
   { name: "Erik", avatar: "🎣" },

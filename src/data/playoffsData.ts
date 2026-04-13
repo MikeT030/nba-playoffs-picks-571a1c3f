@@ -67,7 +67,7 @@ function makeTeam(abbr: string, fullName: string, seed?: number): Team {
 // 2026 playoff seeds
 export const teamSeeds: Record<string, number> = {
   // East
-  DET: 1, BOS: 2, NYK: 3, CLE: 4, ATL: 5, TOR: 6,
+  DET: 1, BOS: 2, NYK: 3, CLE: 4, TOR: 5, ATL: 6,
   // West
   OKC: 1, SAS: 2, DEN: 3, LAL: 4, HOU: 5, MIN: 6,
 };

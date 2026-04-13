@@ -2,11 +2,30 @@ import { useParams, Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 import TeamLogo from "@/components/TeamLogo";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 
 const MatchDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
   const { data: matches, isLoading } = usePlayoffGames();
   const match = matches?.find((m) => m.id === id);
+
+  const { data: userPick } = useQuery({
+    queryKey: ["user-pick", id, user?.id],
+    queryFn: async () => {
+      if (!user || !id) return null;
+      const { data } = await supabase
+        .from("picks")
+        .select("winner, games_in_series")
+        .eq("user_id", user.id)
+        .eq("series_id", id)
+        .maybeSingle();
+      return data;
+    },
+    enabled: !!user && !!id,
+  });
 
   if (isLoading) {
     return (

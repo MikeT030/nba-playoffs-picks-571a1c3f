@@ -244,6 +244,18 @@ const AllPicksMatrix = () => {
                 </tr>
               );
             })}
+            {/* Score row */}
+            <tr className="border-t-2 border-primary/30 bg-muted/30">
+              <td className="sticky left-0 z-10 bg-muted/30 p-3 align-middle font-body text-xs text-muted-foreground min-w-[100px]"></td>
+              <td className="sticky left-[100px] z-10 bg-muted/30 p-3 align-middle font-display tracking-wide whitespace-nowrap text-sm text-primary">
+                Score
+              </td>
+              {players.map((player) => (
+                <td key={player} className="p-3 align-middle text-center font-display text-base text-primary">
+                  {playerScores.get(player) ?? 0}
+                </td>
+              ))}
+            </tr>
           </tbody>
         </table>
     </div>

@@ -353,7 +353,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
                 }}
               >
                 Continue
-              </Button>
+              </button>
             </div>
           </div>
         </DrawerContent>

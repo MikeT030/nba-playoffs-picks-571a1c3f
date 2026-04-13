@@ -27,7 +27,7 @@ const FloatingNav = () => {
               )}
             >
               <item.icon size={20} />
-              {isActive && <span>{item.label}</span>}
+              <span>{item.label}</span>
             </Link>
           );
         })}

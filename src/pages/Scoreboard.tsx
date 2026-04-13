@@ -13,19 +13,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { bracketSeries } from "@/data/playoffsData";
 
 
-const participants = [
-  { name: "Erik", avatar: "🎣" },
-  { name: "Alexander", avatar: "😎" },
-  { name: "David", avatar: "🎬" },
-  { name: "Fabian", avatar: "🏔️" },
-  { name: "Hannes", avatar: "🌄" },
-  { name: "Jörn", avatar: "🎿" },
-  { name: "Larsn", avatar: "🐕" },
-  { name: "Michi", avatar: "🎸" },
-  { name: "Momentum", avatar: "🚀" },
-  { name: "Simon", avatar: "📡" },
-  { name: "Sven", avatar: "🐶" },
-];
 
 // Scoring system:
 // 3 pts - correct winner + correct score from correct match

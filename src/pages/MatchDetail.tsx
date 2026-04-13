@@ -1,30 +1,43 @@
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
+import { useBracketData } from "@/hooks/useBracketData";
 import TeamLogo from "@/components/TeamLogo";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 
 const MatchDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const { data: matches, isLoading } = usePlayoffGames();
+  const { data: bracketData } = useBracketData();
   const match = matches?.find((m) => m.id === id);
 
+  // Map the API match id (e.g. "atl-nyk") to the bracket series_id (e.g. "east-r1-3v6")
+  const bracketSeriesId = useMemo(() => {
+    if (!match || !bracketData) return null;
+    const teamSet = new Set([match.homeTeam.abbreviation, match.awayTeam.abbreviation]);
+    const found = bracketData.find(
+      (s) => s.topTeam && s.bottomTeam && teamSet.has(s.topTeam.abbreviation) && teamSet.has(s.bottomTeam.abbreviation)
+    );
+    return found?.id ?? null;
+  }, [match, bracketData]);
+
   const { data: userPick } = useQuery({
-    queryKey: ["user-pick", id, user?.id],
+    queryKey: ["user-pick", bracketSeriesId, user?.id],
     queryFn: async () => {
-      if (!user || !id) return null;
+      if (!user || !bracketSeriesId) return null;
       const { data } = await supabase
         .from("picks")
         .select("winner, games_in_series")
         .eq("user_id", user.id)
-        .eq("series_id", id)
+        .eq("series_id", bracketSeriesId)
         .maybeSingle();
       return data;
     },
-    enabled: !!user && !!id,
+    enabled: !!user && !!bracketSeriesId,
   });
 
   if (isLoading) {

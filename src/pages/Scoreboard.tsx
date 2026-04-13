@@ -209,8 +209,8 @@ const AllPicksMatrix = () => {
                     {showRound ? (() => {
                       const words = round.split(" ");
                       return words.length > 1 ? (
-                        <span>{words[0]}<br />{words.slice(1).join(" ")}</span>
-                      ) : <span>{round}</span>;
+                        <span className="text-primary-foreground">{words[0]}<br />{words.slice(1).join(" ")}</span>
+                      ) : <span className="text-primary-foreground">{round}</span>;
                     })() : ""}
                   </td>
                   <td className="sticky left-[100px] z-10 bg-card p-3 align-middle font-display tracking-wide whitespace-nowrap text-sm">

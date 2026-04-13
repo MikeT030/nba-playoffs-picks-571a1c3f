@@ -13,10 +13,17 @@ const Settings = () => {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const [betsOpen, setBetsOpen] = useState(false);
+  const [hasPicks, setHasPicks] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState("");
   const [savingName, setSavingName] = useState(false);
+
+  const fetchHasPicks = async () => {
+    if (!user) return;
+    const { data } = await supabase.from("picks").select("id").eq("user_id", user.id);
+    setHasPicks(!!(data && data.length > 0));
+  };
 
   const fetchDisplayName = async () => {
     if (!user) return;

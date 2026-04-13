@@ -97,7 +97,7 @@ export const teamMeta: Record<string, { color: string; logo: string }> = {
   CLE: { color: "#860038", logo: nbaLogoUrl("CLE") },
   DAL: { color: "#00538C", logo: nbaLogoUrl("DAL") },
   DEN: { color: "#0E2240", logo: nbaLogoUrl("DEN") },
-  DET: { color: "#1D428A", logo: nbaLogoUrl("DET") },
+  DET: { color: "#4A7CCC", logo: nbaLogoUrl("DET") },
   GSW: { color: "#1D428A", logo: nbaLogoUrl("GSW") },
   HOU: { color: "#CE1141", logo: nbaLogoUrl("HOU") },
   IND: { color: "#002D62", logo: nbaLogoUrl("IND") },

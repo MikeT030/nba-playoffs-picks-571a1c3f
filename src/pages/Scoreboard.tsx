@@ -13,29 +13,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { bracketSeries } from "@/data/playoffsData";
 
 
-const participants = [
-  { name: "Erik", avatar: "🎣" },
-  { name: "Alexander", avatar: "😎" },
-  { name: "David", avatar: "🎬" },
-  { name: "Fabian", avatar: "🏔️" },
-  { name: "Hannes", avatar: "🌄" },
-  { name: "Jörn", avatar: "🎿" },
-  { name: "Larsn", avatar: "🐕" },
-  { name: "Michi", avatar: "🎸" },
-  { name: "Momentum", avatar: "🚀" },
-  { name: "Simon", avatar: "📡" },
-  { name: "Sven", avatar: "🐶" },
-];
 
 // Scoring system:
 // 3 pts - correct winner + correct score from correct match
 // 2 pts - correct winner from correct match (wrong score)
-// 1 pt  - correct winner from wrong match
-// 4 pts - correct champion bonus
+// 1 pt  - correct winner from wrong match (picked the right team but assigned to wrong series)
+// 4 pts - correct champion bonus (nba-finals winner)
 
 interface ParticipantScore {
   name: string;
-  avatar: string;
   perfectPicks: number;
   winnerPicks: number;
   loosePicks: number;
@@ -50,21 +36,87 @@ interface PickRow {
   games_in_series: number;
 }
 
+interface SeriesResult {
+  series_id: string;
+  winner: string;
+  games_played: number;
+}
+
 const roundOrder = ["First Round", "Conference Semifinals", "Conference Finals", "Finals"];
 
-const getScoreboard = (): ParticipantScore[] => {
-  return participants
-    .map((p) => ({
-      name: p.name,
-      avatar: p.avatar,
-      perfectPicks: 0,
-      winnerPicks: 0,
-      loosePicks: 0,
-      championBonus: false,
-      totalPoints: 0,
-    }))
-    .sort((a, b) => b.totalPoints - a.totalPoints || a.name.localeCompare(b.name));
-};
+function computeScoreboard(
+  allPicks: PickRow[],
+  results: SeriesResult[]
+): ParticipantScore[] {
+  // Group picks by player
+  const playerPicks = new Map<string, PickRow[]>();
+  for (const p of allPicks) {
+    const list = playerPicks.get(p.profile_name) || [];
+    list.push(p);
+    playerPicks.set(p.profile_name, list);
+  }
+
+  // Build result lookup
+  const resultMap = new Map<string, SeriesResult>();
+  for (const r of results) resultMap.set(r.series_id, r);
+
+  // Set of all actual winners (for loose pick matching)
+  const actualWinners = new Set(results.map((r) => r.winner));
+
+  const scores: ParticipantScore[] = [];
+
+  for (const [name, picks] of playerPicks) {
+    let perfectPicks = 0;
+    let winnerPicks = 0;
+    let loosePicks = 0;
+    let championBonus = false;
+
+    // Track which picks have been scored to avoid double-counting for loose picks
+    const scoredPicks = new Set<number>();
+
+    for (let i = 0; i < picks.length; i++) {
+      const pick = picks[i];
+      const result = resultMap.get(pick.series_id);
+      if (!result) continue; // series not decided yet
+
+      if (result.winner === pick.winner) {
+        // Correct match, correct winner
+        if (result.games_played === pick.games_in_series) {
+          perfectPicks++; // 3 pts
+        } else {
+          winnerPicks++; // 2 pts
+        }
+        scoredPicks.add(i);
+      }
+    }
+
+    // Loose picks: picked the right winner but assigned to wrong series
+    for (let i = 0; i < picks.length; i++) {
+      if (scoredPicks.has(i)) continue;
+      const pick = picks[i];
+      const result = resultMap.get(pick.series_id);
+      // Only count if the series IS decided and the pick was wrong for that series
+      if (result && result.winner !== pick.winner && actualWinners.has(pick.winner)) {
+        loosePicks++; // 1 pt
+        scoredPicks.add(i);
+      }
+    }
+
+    // Champion bonus
+    const finalsResult = resultMap.get("nba-finals");
+    const finalsPick = picks.find((p) => p.series_id === "nba-finals");
+    if (finalsResult && finalsPick && finalsResult.winner === finalsPick.winner) {
+      championBonus = true;
+    }
+
+    const totalPoints =
+      perfectPicks * 3 + winnerPicks * 2 + loosePicks * 1 + (championBonus ? 4 : 0);
+
+    scores.push({ name, perfectPicks, winnerPicks, loosePicks, championBonus, totalPoints });
+  }
+
+  return scores.sort((a, b) => b.totalPoints - a.totalPoints || a.name.localeCompare(b.name));
+}
 
 const getRankIcon = (index: number) => {
   if (index === 0) return <Trophy size={18} className="text-primary" />;
@@ -184,8 +236,23 @@ const AllPicksMatrix = () => {
 };
 
 const Scoreboard = () => {
-  const scoreboard = getScoreboard();
   const [showAllPicks, setShowAllPicks] = useState(false);
+  const [scoreboard, setScoreboard] = useState<ParticipantScore[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchScores = async () => {
+      const [picksRes, resultsRes] = await Promise.all([
+        supabase.from("picks").select("profile_name, series_id, winner, games_in_series"),
+        supabase.from("series_results").select("series_id, winner, games_played"),
+      ]);
+      const picks = (picksRes.data || []) as PickRow[];
+      const results = (resultsRes.data || []) as SeriesResult[];
+      setScoreboard(computeScoreboard(picks, results));
+      setLoading(false);
+    };
+    fetchScores();
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">

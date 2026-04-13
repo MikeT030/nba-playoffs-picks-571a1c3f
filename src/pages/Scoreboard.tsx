@@ -139,17 +139,20 @@ function getSeriesRound(seriesId: string): string {
 
 const AllPicksMatrix = () => {
   const [picks, setPicks] = useState<PickRow[]>([]);
+  const [results, setResults] = useState<SeriesResult[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetch = async () => {
-      const { data } = await supabase
-        .from("picks")
-        .select("profile_name, series_id, winner, games_in_series");
-      if (data) setPicks(data);
+    const fetchData = async () => {
+      const [picksRes, resultsRes] = await Promise.all([
+        supabase.from("picks").select("profile_name, series_id, winner, games_in_series"),
+        supabase.from("series_results").select("series_id, winner, games_played"),
+      ]);
+      if (picksRes.data) setPicks(picksRes.data);
+      if (resultsRes.data) setResults(resultsRes.data as SeriesResult[]);
       setLoading(false);
     };
-    fetch();
+    fetchData();
   }, []);
 
   if (loading) {

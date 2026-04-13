@@ -27,7 +27,7 @@ const FloatingNav = () => {
               )}
             >
               <item.icon size={20} />
-              <span className="text-sm font-bold">{item.label}</span>
+              <span className="text-sm font-semibold">{item.label}</span>
             </Link>
           );
         })}

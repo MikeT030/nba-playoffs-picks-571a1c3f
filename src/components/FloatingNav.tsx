@@ -1,5 +1,5 @@
 import { useLocation, Link } from "react-router-dom";
-import { ClipboardList } from "lucide-react";
+import { Network } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const BasketballSvg = ({ size = 20 }: { size?: number }) => (
@@ -19,7 +19,7 @@ const ScoreboardSvg = ({ size = 20 }: { size?: number }) => (
 const navItems = [
   { to: "/", label: "Home", icon: BasketballSvg },
   { to: "/scoreboard", label: "Scoreboard", icon: ScoreboardSvg },
-  { to: "/my-picks", label: "My Picks", icon: ClipboardList },
+  { to: "/my-picks", label: "My Picks", icon: Network },
 ];
 
 const FloatingNav = () => {

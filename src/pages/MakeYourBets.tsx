@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Check, Trophy, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import TeamLogo from "@/components/TeamLogo";
 import { bracketSeries, resolveSeriesTeams, type BracketSeries, type Team } from "@/data/playoffsData";
 
@@ -32,27 +33,42 @@ const roundOrder = [
   "Finals",
 ];
 
-const ProfileSelect = ({ onSelect }: { onSelect: (name: string) => void }) => (
-  <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4">
-    <Link to="/" className="absolute top-6 left-6 text-muted-foreground hover:text-foreground transition-colors">
-      <ArrowLeft size={24} />
-    </Link>
-    <h1 className="font-display text-5xl md:text-7xl tracking-wider mb-2">MAKE YOUR BETS</h1>
-    <p className="text-muted-foreground font-body mb-10">Who are you?</p>
-    <div className="grid grid-cols-3 gap-4 max-w-md w-full">
-      {participants.map((p) => (
+const ProfileSelect = ({ onSelect }: { onSelect: (name: string) => void }) => {
+  const [name, setName] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = name.trim();
+    if (trimmed) onSelect(trimmed);
+  };
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4">
+      <Link to="/" className="absolute top-6 left-6 text-muted-foreground hover:text-foreground transition-colors">
+        <ArrowLeft size={24} />
+      </Link>
+      <h1 className="font-display text-5xl md:text-7xl tracking-wider mb-2">MAKE YOUR BETS</h1>
+      <p className="text-muted-foreground font-body mb-10">What's your name?</p>
+      <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
+        <Input
+          type="text"
+          placeholder="Your name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="font-body text-center"
+          autoFocus
+        />
         <button
-          key={p.name}
-          onClick={() => onSelect(p.name)}
-          className="flex flex-col items-center gap-2 p-4 rounded-lg bg-card border border-transparent hover:border-primary/60 hover:bg-muted transition-all duration-200 group"
+          type="submit"
+          disabled={!name.trim()}
+          className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 disabled:opacity-50"
         >
-          <span className="text-3xl group-hover:scale-110 transition-transform">{p.avatar}</span>
-          <span className="font-body text-sm font-medium text-foreground">{p.name}</span>
+          CONTINUE
         </button>
-      ))}
+      </form>
     </div>
-  </div>
-);
+  );
+};
 
 const SeriesCard = ({
   series,

@@ -402,7 +402,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
                   )}
                   <div className="grid gap-4 md:grid-cols-2">
                     {conferenceSeries.map((series) => {
-                      const resolvedTeams = resolveSeriesTeams(series.id, picks);
+                      const resolvedTeams = resolveSeriesTeams(series.id, picks, bracketSeries);
                       return (
                         <SeriesCard
                           key={series.id}

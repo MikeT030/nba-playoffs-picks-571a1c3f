@@ -38,7 +38,7 @@ const FloatingNav = () => {
                 "flex items-center gap-2 px-5 py-3.5 rounded-full text-[15px] font-body font-medium transition-colors duration-200 whitespace-nowrap pl-[12px] pr-[12px] pt-[16px] pb-[16px]",
                 isActive
                   ? "bg-primary/15 text-primary border border-primary/40"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-[#F9F9FA] hover:text-foreground"
               )}
             >
               <item.icon size={20} />

@@ -91,6 +91,7 @@ const SeriesCard = ({
       >
         <TeamLogo src={team.logo} alt={team.name} className="w-12 h-12" />
         <span className="font-display text-lg tracking-wide">{team.abbreviation}</span>
+        {team.seed && <span className="text-[10px] text-muted-foreground font-body">#{team.seed} seed</span>}
         {isSelected && <Check size={16} className="text-primary" />}
       </button>
     );

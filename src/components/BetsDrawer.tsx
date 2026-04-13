@@ -345,7 +345,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved }: { open: boolean; onOpen
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent className="max-h-[92vh]">
         <div className="overflow-y-auto">
-          <div className="border-b border-border px-4 py-3 flex items-center justify-between">
+          <div className="px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div>
                 <h2 className="font-display text-xl tracking-wider">MAKE YOUR BETS</h2>

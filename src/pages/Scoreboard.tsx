@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Trophy, Star, List, ChevronLeft } from "lucide-react";
+import { Trophy, List, ChevronLeft } from "lucide-react";
 import HeroBanner from "@/components/HeroBanner";
 import {
   Table,
@@ -344,7 +344,7 @@ const Scoreboard = () => {
           <AccordionItem value="scoring" className="bg-card rounded-lg px-5 py-0 border-none">
             <AccordionTrigger className="font-display text-sm tracking-wider text-foreground flex items-center gap-2 hover:no-underline py-4">
               <span className="flex items-center gap-2">
-                <Star size={14} className="text-primary" /> SCORING SYSTEM
+                SCORING SYSTEM
               </span>
             </AccordionTrigger>
             <AccordionContent>

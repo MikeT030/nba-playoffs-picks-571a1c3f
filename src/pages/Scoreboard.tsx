@@ -177,7 +177,14 @@ const AllPicksMatrix = () => {
     return a.localeCompare(b);
   });
 
-  // Build lookup: player+series -> pick
+  // Compute per-player scores
+  const playerScores = new Map<string, number>();
+  const scoreboardData = computeScoreboard(picks, results);
+  for (const s of scoreboardData) {
+    playerScores.set(s.name, s.totalPoints);
+  }
+
+
   const pickMap = new Map<string, PickRow>();
   for (const p of picks) {
     pickMap.set(`${p.profile_name}::${p.series_id}`, p);

@@ -1,18 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { useEffect } from "react";
+
+type Step = "email" | "password" | "forgot";
 
 const Auth = () => {
-  const [isSignUp, setIsSignUp] = useState(true);
-  const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [step, setStep] = useState<Step>("email");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isExistingUser, setIsExistingUser] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -20,7 +21,7 @@ const Auth = () => {
     if (user) navigate("/my-picks", { replace: true });
   }, [user, navigate]);
 
-  const handleForgotPassword = async (e: React.FormEvent) => {
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) {
       toast.error("Please enter your email");
@@ -28,34 +29,31 @@ const Auth = () => {
     }
     setLoading(true);
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
+      const { data, error } = await supabase.functions.invoke("check-email", {
+        body: { email },
       });
       if (error) throw error;
-      toast.success("Check your email for a password reset link!");
-      setIsForgotPassword(false);
+      setIsExistingUser(!!data.exists);
+      setStep("password");
     } catch (err: any) {
-      toast.error(err.message);
+      toast.error("Could not verify email. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleEmailAuth = async (e: React.FormEvent) => {
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-        });
-        if (error) throw error;
-        navigate("/make-your-bets");
-      } else {
+      if (isExistingUser) {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         navigate("/my-picks");
+      } else {
+        const { error } = await supabase.auth.signUp({ email, password });
+        if (error) throw error;
+        navigate("/make-your-bets");
       }
     } catch (err: any) {
       toast.error(err.message);
@@ -64,17 +62,49 @@ const Auth = () => {
     }
   };
 
-  if (isForgotPassword) {
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      toast.success("Check your email for a password reset link!");
+      setStep("password");
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const headline =
+    step === "email"
+      ? "Log-in, alter"
+      : step === "forgot"
+        ? "RESET PASSWORD"
+        : isExistingUser
+          ? "Welcome back, man"
+          : "Sign up, buddy";
+
+  const subtitle =
+    step === "email"
+      ? "Enter your email to get started"
+      : step === "forgot"
+        ? "Enter your email to receive a reset link"
+        : isExistingUser
+          ? "Enter your password to sign in"
+          : "Create a password to sign up";
+
+  if (step === "forgot") {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-4">
         <div className="w-full max-w-sm space-y-8">
           <div className="text-center">
-            <h1 className="font-display text-4xl tracking-wider">RESET PASSWORD</h1>
-            <p className="text-muted-foreground font-body text-sm mt-2">
-              Enter your email to receive a reset link
-            </p>
+            <h1 className="font-display text-4xl tracking-wider">{headline}</h1>
+            <p className="text-muted-foreground font-body text-sm mt-2">{subtitle}</p>
           </div>
-
           <form onSubmit={handleForgotPassword} className="space-y-4">
             <Input
               type="email"
@@ -88,12 +118,8 @@ const Auth = () => {
               {loading ? "..." : "SEND RESET LINK"}
             </Button>
           </form>
-
           <p className="text-center text-sm text-muted-foreground font-body">
-            <button
-              onClick={() => setIsForgotPassword(false)}
-              className="text-primary underline"
-            >
+            <button onClick={() => setStep("password")} className="text-primary underline">
               Back to sign in
             </button>
           </p>
@@ -106,55 +132,63 @@ const Auth = () => {
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center">
-          <h1 className="font-display text-4xl tracking-wider">{isSignUp ? "SIGN UP" : "SIGN IN"}</h1>
-          <p className="text-muted-foreground font-body text-sm mt-2">
-            to save your playoff picks
-          </p>
+          <h1 className="font-display text-4xl tracking-wider">{headline}</h1>
+          <p className="text-muted-foreground font-body text-sm mt-2">{subtitle}</p>
         </div>
 
-        <form onSubmit={handleEmailAuth} className="space-y-4">
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="font-body"
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={6}
-            className="font-body"
-          />
-          <Button type="submit" className="w-full font-display tracking-wider" disabled={loading}>
-            {loading ? "..." : isSignUp ? "SIGN UP" : "SIGN IN"}
-          </Button>
-        </form>
-
-        {!isSignUp && (
-          <p className="text-center text-sm text-muted-foreground font-body">
-            <button
-              onClick={() => setIsForgotPassword(true)}
-              className="text-primary underline"
-            >
-              Forgot password?
-            </button>
-          </p>
+        {step === "email" ? (
+          <form onSubmit={handleEmailSubmit} className="space-y-4">
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="font-body"
+              autoFocus
+            />
+            <Button type="submit" className="w-full font-display tracking-wider" disabled={loading}>
+              {loading ? "..." : "CONTINUE"}
+            </Button>
+          </form>
+        ) : (
+          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground font-body">{email}</p>
+              <button
+                type="button"
+                onClick={() => { setStep("email"); setPassword(""); }}
+                className="text-primary underline text-xs font-body mt-1"
+              >
+                Change email
+              </button>
+            </div>
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+              className="font-body"
+              autoFocus
+            />
+            <Button type="submit" className="w-full font-display tracking-wider" disabled={loading}>
+              {loading ? "..." : isExistingUser ? "SIGN IN" : "SIGN UP"}
+            </Button>
+            {isExistingUser && (
+              <p className="text-center text-sm text-muted-foreground font-body">
+                <button
+                  type="button"
+                  onClick={() => setStep("forgot")}
+                  className="text-primary underline"
+                >
+                  Forgot password?
+                </button>
+              </p>
+            )}
+          </form>
         )}
-
-        <p className="text-center text-sm text-muted-foreground font-body">
-          {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
-          <button
-            onClick={() => setIsSignUp(!isSignUp)}
-            className="text-primary underline"
-          >
-            {isSignUp ? "Sign in" : "Sign up"}
-          </button>
-        </p>
       </div>
     </div>
   );

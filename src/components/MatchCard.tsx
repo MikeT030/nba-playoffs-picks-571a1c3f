@@ -1,30 +1,29 @@
 import { Link } from "react-router-dom";
 import type { Match } from "@/data/playoffsData";
 import TeamLogo from "@/components/TeamLogo";
-import { useMemo } from "react";
-
-interface BetSelection {
-  seriesId: string;
-  winner: string;
-  gamesInSeries: number;
-}
-
-interface SavedBets {
-  profile: string;
-  bets: BetSelection[];
-}
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 
 const useUserBet = (matchId: string) => {
-  return useMemo(() => {
-    try {
-      const raw = localStorage.getItem("nba-bets");
-      if (!raw) return null;
-      const saved: SavedBets = JSON.parse(raw);
-      return saved.bets.find((b) => b.seriesId === matchId) ?? null;
-    } catch {
-      return null;
-    }
-  }, [matchId]);
+  const { user } = useAuth();
+
+  const { data: dbPick } = useQuery({
+    queryKey: ["user-pick", matchId, user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      const { data } = await supabase
+        .from("picks")
+        .select("winner, games_in_series")
+        .eq("user_id", user.id)
+        .eq("series_id", matchId)
+        .maybeSingle();
+      return data ? { seriesId: matchId, winner: data.winner, gamesInSeries: data.games_in_series } : null;
+    },
+    enabled: !!user,
+  });
+
+  return dbPick ?? null;
 };
 
 interface MatchCardProps {

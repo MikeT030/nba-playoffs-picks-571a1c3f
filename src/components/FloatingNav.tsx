@@ -27,7 +27,7 @@ const FloatingNav = () => {
 
   return (
     <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-      <div className="flex items-center justify-between px-2 py-2 rounded-full bg-white/10 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] min-w-[240px]">
+      <div className="flex items-center justify-between px-2 py-2 rounded-full bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)] min-w-[240px]">
         {navItems.map((item) => {
           const isActive = location.pathname === item.to;
           return (

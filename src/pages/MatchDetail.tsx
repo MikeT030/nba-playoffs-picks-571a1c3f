@@ -168,7 +168,7 @@ const MatchDetail = () => {
                       <span className="font-semibold text-white">
                         {pickedTeam.abbreviation}
                       </span>{" "}
-                      in <span className="font-bold">{pick.games_in_series}</span>
+                      in <span className="font-bold text-white">{pick.games_in_series}</span>
                     </p>
                   </div>
                   <TeamLogo src={pickedTeam.logo} alt={pickedTeam.name} className="w-8 h-8" />

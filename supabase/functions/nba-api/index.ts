@@ -55,10 +55,16 @@ Deno.serve(async (req) => {
     }
 
     if (!response.ok) {
-      console.error("BallDontLie API error:", data);
+      console.error("BallDontLie API error:", response.status, data);
+      const isFallbackable = response.status === 429 || response.status >= 500;
       return new Response(
-        JSON.stringify({ error: `API error: ${response.status}`, details: data }),
-        { status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({
+          error: isFallbackable ? "API_RATE_LIMITED" : `API error: ${response.status}`,
+          fallback: isFallbackable,
+          data: [],
+          meta: { per_page: 100 },
+        }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 

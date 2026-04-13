@@ -295,15 +295,15 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
               <p className="text-muted-foreground font-body text-center text-sm">Sign in to make your picks</p>
             </DrawerHeader>
             <div className="flex justify-center">
-              <Button
-                className="font-display tracking-wider"
+              <button
+                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 w-full max-w-xs"
                 onClick={() => {
                   onOpenChange(false);
                   navigate("/auth");
                 }}
               >
                 SIGN IN
-              </Button>
+              </button>
             </div>
           </div>
         </DrawerContent>

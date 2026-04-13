@@ -363,7 +363,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="max-h-[92vh]">
+      <DrawerContent className="h-[92vh]">
         <div className="overflow-y-auto">
           <div className="px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">

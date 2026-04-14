@@ -12,12 +12,12 @@ const useUserBet = (match: Match) => {
   const { data: bracketData } = useBracketData();
 
   const bracketSeriesId = useMemo(() => {
-    if (!bracketData) return null;
+    if (!bracketData) return match.id;
     const teamSet = new Set([match.homeTeam.abbreviation, match.awayTeam.abbreviation]);
     const found = bracketData.find(
       (s) => s.topTeam && s.bottomTeam && teamSet.has(s.topTeam.abbreviation) && teamSet.has(s.bottomTeam.abbreviation)
     );
-    return found?.id ?? null;
+    return found?.id ?? match.id;
   }, [match, bracketData]);
 
   const { data: dbPick } = useQuery({

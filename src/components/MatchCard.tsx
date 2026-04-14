@@ -89,11 +89,13 @@ const MatchCard = ({ match }: MatchCardProps) => {
 
         {/* Score & Series */}
         <div className="text-center px-4">
-          {match.status === "live" && (
-            <span className="text-[10px] text-loss font-body font-semibold uppercase tracking-widest animate-pulse -mt-1">
-              Live
-            </span>
-          )}
+          <div className="h-3">
+            {match.status === "live" && (
+              <span className="text-[10px] text-loss font-body font-semibold uppercase tracking-widest animate-pulse">
+                Live
+              </span>
+            )}
+          </div>
           <div className="flex items-center gap-3">
             <span className="font-display text-3xl">{match.awayScore}</span>
             <span className="text-muted-foreground font-body text-sm">—</span>

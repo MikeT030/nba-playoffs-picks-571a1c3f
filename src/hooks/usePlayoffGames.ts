@@ -117,7 +117,7 @@ export function usePlayoffGames(season: number = 2025) {
     queryFn: async () => {
       try {
         const games = await getPlayoffGames(season);
-        if (games.length === 0) return fallbackMatches;
+        if (games.length === 0) return [...fallbackMatches, dummyFinalMatch];
         const apiMatches = groupIntoSeries(games);
 
         // Merge in TBD fallback matchups that aren't covered by API data
@@ -139,7 +139,7 @@ export function usePlayoffGames(season: number = 2025) {
         return allMatches;
       } catch (error) {
         console.warn("Failed to fetch NBA data, using fallback:", error);
-        return fallbackMatches;
+        return [...fallbackMatches, dummyFinalMatch];
       }
     },
     staleTime: 5 * 60 * 1000, // 5 min

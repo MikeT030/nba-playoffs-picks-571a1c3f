@@ -423,7 +423,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
                     }`}
                   >
                     {round}
-                    {unlocked && round !== "First Round" && <Check size={14} />}
+                    {unlocked && bracketSeries.filter((s) => s.round === round).every((s) => picks[s.id]) && <Check size={14} />}
                     {!unlocked && <span className="text-xs">🔒</span>}
                   </button>
                 );

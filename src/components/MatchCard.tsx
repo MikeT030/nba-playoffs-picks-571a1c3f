@@ -97,9 +97,9 @@ const MatchCard = ({ match }: MatchCardProps) => {
             )}
           </div>
           <div className="flex items-center gap-3">
-            <span className="font-display text-3xl">{match.awayScore}</span>
+            <span className="font-display text-2xl">{match.awayScore}</span>
             <span className="text-muted-foreground font-body text-sm">—</span>
-            <span className="font-display text-3xl">{match.homeScore}</span>
+            <span className="font-display text-2xl">{match.homeScore}</span>
           </div>
           <p className="text-xs text-muted-foreground font-body mt-1">
             Series {match.awayWins} – {match.homeWins}

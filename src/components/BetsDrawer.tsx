@@ -370,8 +370,8 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
           <div className="px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div>
-                <h2 className="font-display text-xl tracking-wider">MAKE YOUR PICKS</h2>
-                <p className="text-xs text-muted-foreground font-body">{profileName}'s picks</p>
+                <h2 className="font-display text-xl tracking-wider">MAKE YOUR PICKS,</h2>
+                <h2 className="font-display text-xl tracking-wider">{profileName?.toUpperCase()}</h2>
               </div>
             </div>
             <div className="flex items-center gap-2">

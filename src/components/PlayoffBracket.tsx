@@ -29,7 +29,7 @@ const SEMI_Y = [51, 291];
 // CF center = (95+335)/2 = 215 → top=171
 const CF_Y = 171;
 const FINALS_Y = 171;
-const BRACKET_H = 342 + CARD_H; // 430
+const BRACKET_H = R1_Y[R1_Y.length - 1] + CARD_H; // 442
 
 const COLS = {
   r1w: 0,

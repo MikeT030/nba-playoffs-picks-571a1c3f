@@ -16,7 +16,7 @@ interface BetSelection {
 }
 
 // ── Layout constants ──
-const CARD_H = 100;
+const CARD_H = 108;
 const CARD_W = 189;
 const CONN_W = 28;
 const COL_STEP = CARD_W + CONN_W;
@@ -121,7 +121,7 @@ const TeamSlot = ({
         <span className="text-[11px] text-muted-foreground font-body font-bold w-3 shrink-0">
           {team.seed ?? ""}
         </span>
-        <span className="font-display text-sm tracking-wide flex-1 truncate">
+        <span className="font-display text-sm tracking-wide flex-1 whitespace-nowrap">
           {isPlayInPlaceholder(team.abbreviation) ? "TBD" : team.abbreviation}
         </span>
         {isPicked && <span className="w-2 h-2 rounded-full bg-primary shrink-0" />}
@@ -160,7 +160,7 @@ const BracketCard = ({
 
   return (
     <div
-      className={`absolute bg-card rounded-lg border overflow-hidden ${
+      className={`absolute bg-card rounded-lg border ${
         isChampionship
           ? "border-primary/40 shadow-md shadow-primary/10"
           : "border-border/60"
@@ -173,7 +173,7 @@ const BracketCard = ({
       {/* Pick summary */}
       {winnerTeam ? (
         <div className="flex items-center justify-center" style={{ height: 24 }}>
-          <span className="text-[10px] font-body text-primary font-medium truncate px-1">
+          <span className="text-[10px] font-body text-primary font-medium whitespace-nowrap px-1">
             Your Pick: {winnerTeam.abbreviation} in {bet!.gamesInSeries}
           </span>
         </div>

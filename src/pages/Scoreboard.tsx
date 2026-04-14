@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Trophy, LayoutGrid, Network } from "lucide-react";
+import { Trophy, LayoutGrid, List } from "lucide-react";
 import HeroBanner from "@/components/HeroBanner";
 import {
   Table,
@@ -303,7 +303,7 @@ const Scoreboard = () => {
             : "border-transparent text-muted-foreground hover:text-foreground"
         }`}
       >
-        <Network size={16} className="rotate-90" />
+        <List size={16} />
         All Picks
       </button>
     </div>

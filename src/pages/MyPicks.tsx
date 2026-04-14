@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { PenLine, CheckCircle, LogIn } from "lucide-react";
+import { PenLine, CheckCircle, LogIn, Network } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import PlayoffBracket from "@/components/PlayoffBracket";
 import TeamLogo from "@/components/TeamLogo";
 import HeroBanner from "@/components/HeroBanner";
 import BetsDrawer from "@/components/BetsDrawer";
@@ -135,6 +136,7 @@ const MyPicks = () => {
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
   const [selectedRound, setSelectedRound] = useState("all");
+  const [showBracket, setShowBracket] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;
@@ -206,27 +208,36 @@ const MyPicks = () => {
     );
   }
 
-  const makePicksButton = (
-    <button
-      onClick={() => setBetsOpen(true)}
-      className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 mb-6 ${
-        bets.length > 0
-          ? "bg-primary/15 text-primary border border-primary/40"
-          : "bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
-      }`}
-    >
-      {bets.length > 0 ? (
-        <>
-          <CheckCircle size={18} />
-          Edit Your Picks
-        </>
-      ) : (
-        <>
-          <PenLine size={18} />
-          Make Your Picks
-        </>
-      )}
-    </button>
+  const actionButtons = (
+    <div className="flex items-center gap-3 mb-6">
+      <button
+        onClick={() => setBetsOpen(true)}
+        className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
+      >
+        {bets.length > 0 ? (
+          <>
+            <CheckCircle size={18} />
+            Edit Your Picks
+          </>
+        ) : (
+          <>
+            <PenLine size={18} />
+            Make Your Picks
+          </>
+        )}
+      </button>
+      <button
+        onClick={() => setShowBracket((v) => !v)}
+        className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 border ${
+          showBracket
+            ? "bg-primary/15 text-primary border-primary/40"
+            : "bg-card text-foreground border-border hover:bg-accent"
+        }`}
+      >
+        <Network size={18} className="rotate-90" />
+        Bracket
+      </button>
+    </div>
   );
 
   if (bets.length === 0) {
@@ -234,7 +245,7 @@ const MyPicks = () => {
       <div className="min-h-screen bg-background pb-28">
         <HeroBanner title="MY PICKS" subtitle="NBA Playoffs 2026" />
         <section className="container py-10">
-          {makePicksButton}
+          {actionButtons}
           <div className="flex items-center justify-center py-8">
             <div className="text-center">
               <p className="font-display text-2xl tracking-wider mb-2">NO PICKS YET</p>
@@ -254,61 +265,67 @@ const MyPicks = () => {
       <HeroBanner title="MY PICKS" subtitle={`${profileName}'s predictions · ${bets.length} picks`} />
 
       <section className="container py-8 pb-24">
-        {makePicksButton}
+        {actionButtons}
 
-        <Select value={selectedRound} onValueChange={setSelectedRound}>
-          <SelectTrigger className="w-[220px] mb-6">
-            <SelectValue placeholder="Select round" />
-          </SelectTrigger>
-          <SelectContent position="popper" sideOffset={4}>
-            {rounds.map((r) => (
-              <SelectItem key={r.value} value={r.value}>
-                {r.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {showBracket ? (
+          <PlayoffBracket picks={picks} />
+        ) : (
+          <>
+            <Select value={selectedRound} onValueChange={setSelectedRound}>
+              <SelectTrigger className="w-[220px] mb-6">
+                <SelectValue placeholder="Select round" />
+              </SelectTrigger>
+              <SelectContent position="popper" sideOffset={4}>
+                {rounds.map((r) => (
+                  <SelectItem key={r.value} value={r.value}>
+                    {r.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-        {(selectedRound === "all" ? roundOrder : [selectedRound]).map((round) => {
-          const roundSeries = bracketSeries.filter((s) => s.round === round);
-          const conferences = round === "Finals" ? ["Finals"] : ["West", "East"];
+            {(selectedRound === "all" ? roundOrder : [selectedRound]).map((round) => {
+              const roundSeries = bracketSeries.filter((s) => s.round === round);
+              const conferences = round === "Finals" ? ["Finals"] : ["West", "East"];
 
-          return (
-            <div key={round} className="mb-10">
-              <h2 className="font-display text-2xl tracking-wider mb-4">{round.toUpperCase()}</h2>
+              return (
+                <div key={round} className="mb-10">
+                  <h2 className="font-display text-2xl tracking-wider mb-4">{round.toUpperCase()}</h2>
 
-              {conferences.map((conf) => {
-                const confSeries = roundSeries.filter((s) => s.conference === conf);
-                if (!confSeries.length) return null;
+                  {conferences.map((conf) => {
+                    const confSeries = roundSeries.filter((s) => s.conference === conf);
+                    if (!confSeries.length) return null;
 
-                return (
-                  <div key={conf} className="mb-6">
-                    {conf !== "Finals" && (
-                      <h3 className="font-display text-lg tracking-wider text-foreground mb-3">
-                        {conf === "East" ? "Eastern Conference" : "Western Conference"}
-                      </h3>
-                    )}
-                    <div className="grid gap-4 md:grid-cols-2">
-                      {confSeries.map((series) => {
-                        const resolved = resolveSeriesTeams(series.id, picks);
-                        return (
-                          <PickCard
-                            key={series.id}
-                            topTeam={resolved.topTeam ?? series.topTeam}
-                            bottomTeam={resolved.bottomTeam ?? series.bottomTeam}
-                            bet={bets.find((b) => b.seriesId === series.id)}
-                            round={series.round}
-                            conference={series.conference}
-                          />
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+                    return (
+                      <div key={conf} className="mb-6">
+                        {conf !== "Finals" && (
+                          <h3 className="font-display text-lg tracking-wider text-foreground mb-3">
+                            {conf === "East" ? "Eastern Conference" : "Western Conference"}
+                          </h3>
+                        )}
+                        <div className="grid gap-4 md:grid-cols-2">
+                          {confSeries.map((series) => {
+                            const resolved = resolveSeriesTeams(series.id, picks);
+                            return (
+                              <PickCard
+                                key={series.id}
+                                topTeam={resolved.topTeam ?? series.topTeam}
+                                bottomTeam={resolved.bottomTeam ?? series.bottomTeam}
+                                bet={bets.find((b) => b.seriesId === series.id)}
+                                round={series.round}
+                                conference={series.conference}
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </>
+        )}
       </section>
 
       <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setRefreshKey((k) => k + 1)} />

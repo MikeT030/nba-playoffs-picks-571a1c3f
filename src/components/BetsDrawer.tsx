@@ -116,13 +116,13 @@ const SeriesCard = ({
       </div>
 
       {teamsReady && !locked && (
-        <div className="flex items-center justify-center gap-2">
-          <span className="text-xs text-muted-foreground font-body mr-1">In</span>
+        <div className="flex items-center justify-center gap-1.5">
+          <span className="text-[11px] text-muted-foreground font-body mr-1">In</span>
           {[4, 5, 6, 7].map((games) => (
             <button
               key={games}
               onClick={() => handlePickGames(games)}
-              className={`w-9 h-9 rounded-full font-display text-sm transition-all duration-200 ${
+              className={`w-8 h-8 rounded-full font-display text-xs transition-all duration-200 ${
                 selectedGames === games
                   ? "bg-primary/15 text-primary border border-primary/40"
                   : "bg-muted text-muted-foreground hover:text-foreground border border-transparent"
@@ -131,7 +131,7 @@ const SeriesCard = ({
               {games}
             </button>
           ))}
-          <span className="text-xs text-muted-foreground font-body ml-1">games</span>
+          <span className="text-[11px] text-muted-foreground font-body ml-1">games</span>
         </div>
       )}
 

@@ -15,20 +15,20 @@ interface BetSelection {
 }
 
 // ── Layout constants ──
-const CARD_H = 76;
+const CARD_H = 88;
 const CARD_W = 164;
 const CONN_W = 28;
 const COL_STEP = CARD_W + CONN_W;
 
 // Vertical positions (top of each card)
-const R1_Y = [0, 90, 212, 302];
-// Centers: 38, 128, 250, 340
-// Semi[0] = (38+128)/2 = 83 → top=45   Semi[1] = (250+340)/2 = 295 → top=257
-const SEMI_Y = [45, 257];
-// CF center = (83+295)/2 = 189 → top=151
-const CF_Y = 151;
-const FINALS_Y = 151;
-const BRACKET_H = 302 + CARD_H; // 378
+const R1_Y = [0, 102, 240, 342];
+// Centers: 44, 146, 284, 386
+// Semi[0] = (44+146)/2=95 → top=51   Semi[1] = (284+386)/2=335 → top=291
+const SEMI_Y = [51, 291];
+// CF center = (95+335)/2 = 215 → top=171
+const CF_Y = 171;
+const FINALS_Y = 171;
+const BRACKET_H = 342 + CARD_H; // 430
 
 const COLS = {
   r1w: 0,

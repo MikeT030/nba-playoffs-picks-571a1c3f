@@ -20,10 +20,16 @@ const useUserBet = (match: Match) => {
   const bracketSeriesId = useMemo(() => {
     if (!bracketData) return match.id;
     const teamSet = new Set([match.homeTeam.abbreviation, match.awayTeam.abbreviation]);
+    // Exact match: both teams in a bracket series
     const found = bracketData.find(
       (s) => s.topTeam && s.bottomTeam && teamSet.has(s.topTeam.abbreviation) && teamSet.has(s.bottomTeam.abbreviation)
     );
-    return found?.id ?? match.id;
+    if (found) return found.id;
+    // Partial match: one team appears in a bracket series (handles play-in games like CHA vs MIA)
+    const partial = bracketData.find(
+      (s) => s.topTeam && s.bottomTeam && (teamSet.has(s.topTeam.abbreviation) || teamSet.has(s.bottomTeam.abbreviation))
+    );
+    return partial?.id ?? match.id;
   }, [match, bracketData]);
 
   const { data: dbPick } = useQuery({

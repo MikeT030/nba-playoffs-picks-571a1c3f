@@ -27,7 +27,12 @@ const MatchDetail = () => {
     const found = bracketData.find(
       (s) => s.topTeam && s.bottomTeam && teamSet.has(s.topTeam.abbreviation) && teamSet.has(s.bottomTeam.abbreviation)
     );
-    return found?.id ?? match.id;
+    if (found) return found.id;
+    // Partial match for play-in games (e.g. CHA vs MIA → east-r1-2v7 where MIA is resolved)
+    const partial = bracketData.find(
+      (s) => s.topTeam && s.bottomTeam && (teamSet.has(s.topTeam.abbreviation) || teamSet.has(s.bottomTeam.abbreviation))
+    );
+    return partial?.id ?? match.id;
   }, [match, bracketData]);
 
   const { data: userPick } = useQuery({

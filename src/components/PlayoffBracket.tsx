@@ -240,7 +240,7 @@ const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({ picks 
         </div>
 
         {/* Conference labels */}
-        <div className="flex justify-between mb-3" style={{ width: TOTAL_W }}>
+        <div className="flex justify-between mb-3 pt-[4px]" style={{ width: TOTAL_W }}>
           <span className="font-display text-xs tracking-wider text-foreground uppercase">
             Western Conference
           </span>

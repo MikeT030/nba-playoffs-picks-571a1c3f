@@ -91,7 +91,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
         <div className="text-center px-4">
           <div className="h-0">
             {match.status === "live" && (
-              <span className="text-[10px] text-loss font-body font-semibold uppercase tracking-widest animate-pulse block -translate-y-2.5">
+              <span className="text-[10px] text-loss font-body font-semibold uppercase tracking-widest animate-pulse block -translate-y-3">
                 Live
               </span>
             )}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Check, Lock, Trophy } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -153,6 +153,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
   const [selectedRound, setSelectedRound] = useState(roundOrder[0]);
   const [saving, setSaving] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   // Load existing profile name and picks when drawer opens
   useEffect(() => {
@@ -240,6 +241,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
   const handleNextRound = () => {
     if (currentRoundComplete && !isLastRound) {
       setSelectedRound(roundOrder[currentRoundIndex + 1]);
+      scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -364,7 +366,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent className="h-[95vh]">
-        <div className="overflow-y-auto pb-24">
+        <div ref={scrollRef} className="overflow-y-auto pb-24">
           <div className="px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div>

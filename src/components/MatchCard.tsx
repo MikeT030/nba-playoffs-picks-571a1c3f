@@ -120,7 +120,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
       {bet && betTeamName && (
         <div className="px-4 pb-3 -mt-1">
           <p className="text-xs font-body text-foreground text-center">
-            YOUR PICK: <span className="font-medium">{betTeamName}</span> in <span className="font-medium">{bet.gamesInSeries}</span>
+            Your Pick: <span className="font-medium">{bet.winner}</span> in <span className="font-medium">{bet.gamesInSeries}</span>
           </p>
         </div>
       )}

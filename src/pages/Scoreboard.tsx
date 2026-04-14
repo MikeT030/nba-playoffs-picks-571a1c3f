@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Trophy, LayoutGrid, List } from "lucide-react";
+import { Trophy, LayoutGrid } from "lucide-react";
+import allPicksIcon from "@/assets/all-picks-icon.svg";
 import HeroBanner from "@/components/HeroBanner";
 import {
   Table,
@@ -303,7 +304,7 @@ const Scoreboard = () => {
             : "border-transparent text-muted-foreground hover:text-foreground"
         }`}
       >
-        <List size={16} />
+        <img src={allPicksIcon} alt="All Picks" className="w-4 h-4" />
         All Picks
       </button>
     </div>

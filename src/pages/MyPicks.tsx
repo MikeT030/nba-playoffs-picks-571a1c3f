@@ -268,7 +268,7 @@ const MyPicks = () => {
         {actionButtons}
 
         {showBracket ? (
-          <PlayoffBracket picks={picks} />
+          <PlayoffBracket picks={picks} bets={bets} />
         ) : (
           <>
             <Select value={selectedRound} onValueChange={setSelectedRound}>

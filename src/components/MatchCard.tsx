@@ -90,7 +90,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
         {/* Score & Series */}
         <div className="text-center px-4">
           {match.status === "live" && (
-            <span className="text-[10px] text-loss font-body font-semibold uppercase tracking-widest animate-pulse">
+            <span className="text-[10px] text-loss font-body font-semibold uppercase tracking-widest animate-pulse -mt-1">
               Live
             </span>
           )}

@@ -115,7 +115,7 @@ const PickCard = ({
       </div>
 
       {bet && winnerTeam ? (
-        <p className="text-xs font-body text-foreground text-center">
+        <p className="text-xs font-body text-primary text-center">
           YOUR PICK: <span className="font-medium">{winnerTeam.name}</span> in <span className="font-medium">{bet.gamesInSeries}</span>
         </p>
       ) : (

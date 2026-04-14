@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import TeamLogo from "@/components/TeamLogo";
 import {
   bracketSeries as defaultBracketSeries,

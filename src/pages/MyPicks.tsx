@@ -356,7 +356,7 @@ const MyPicks = () => {
             <button
               onClick={handleShareBracket}
               disabled={downloading}
-              className="inline-flex items-center gap-1.5 text-xs font-body text-primary hover:text-primary/80 underline underline-offset-2 disabled:opacity-50 mb-4"
+              className="inline-flex items-center gap-1.5 font-body text-primary hover:text-primary/80 underline underline-offset-2 disabled:opacity-50 mb-4 text-sm font-medium"
             >
               <Share2 size={14} />
               {downloading ? "Generating..." : "Share Bracket"}

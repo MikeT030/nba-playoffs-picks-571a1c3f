@@ -370,7 +370,7 @@ const Scoreboard = () => {
                   <span>Picked a team that won, but assigned to the wrong series</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">+4 pts</span>
+                  <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">4 pts</span>
                   <span>Correctly predicted the NBA Finals champion</span>
                 </div>
               </div>

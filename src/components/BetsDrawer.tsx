@@ -375,7 +375,6 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Trophy size={16} className="text-primary" />
               <span className="font-body text-sm text-muted-foreground">{betCount}/{totalSeries}</span>
             </div>
           </div>

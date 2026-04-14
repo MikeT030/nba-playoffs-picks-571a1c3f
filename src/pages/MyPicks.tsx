@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import { PenLine, CheckCircle, LogIn, LayoutGrid, Network, Download } from "lucide-react";
+import { PenLine, CheckCircle, LogIn, LayoutGrid, Network, Share2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PlayoffBracket from "@/components/PlayoffBracket";
 import TeamLogo from "@/components/TeamLogo";
@@ -140,29 +140,56 @@ const MyPicks = () => {
   const [downloading, setDownloading] = useState(false);
   const bracketRef = useRef<HTMLDivElement>(null);
 
-  const handleDownloadBracket = useCallback(async () => {
+  const handleShareBracket = useCallback(async () => {
     if (!bracketRef.current) return;
     setDownloading(true);
     try {
       const html2canvas = (await import("html2canvas")).default;
-      const jsPDF = (await import("jspdf")).default;
 
-      const canvas = await html2canvas(bracketRef.current, {
+      // Create a wrapper with the headline for capture
+      const wrapper = document.createElement("div");
+      wrapper.style.cssText = "position:absolute;left:-9999px;top:0;background:#0a0a0a;padding:32px 40px;";
+      const headline = document.createElement("h1");
+      headline.textContent = `${profileName ?? "My"}'s 2026 Playoffs Picks`;
+      headline.style.cssText = "font-family:'Bebas Neue',sans-serif;font-size:32px;color:#fff;letter-spacing:0.08em;text-align:center;margin-bottom:24px;";
+      wrapper.appendChild(headline);
+
+      const clone = bracketRef.current.cloneNode(true) as HTMLElement;
+      wrapper.appendChild(clone);
+      document.body.appendChild(wrapper);
+
+      const canvas = await html2canvas(wrapper, {
         backgroundColor: "#0a0a0a",
         scale: 2,
         useCORS: true,
       });
 
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF({
-        orientation: "landscape",
-        unit: "px",
-        format: [canvas.width, canvas.height],
-      });
-      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
-      pdf.save(`${profileName ?? "my"}-bracket.pdf`);
+      document.body.removeChild(wrapper);
+
+      const blob = await new Promise<Blob | null>((res) =>
+        canvas.toBlob((b) => res(b), "image/png")
+      );
+
+      if (!blob) throw new Error("Failed to create image");
+
+      const file = new File([blob], `${profileName ?? "my"}-bracket.png`, { type: "image/png" });
+
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          title: `${profileName}'s 2026 Playoffs Picks`,
+          files: [file],
+        });
+      } else {
+        // Fallback: download the image
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = file.name;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
     } catch (e) {
-      console.error("Failed to download bracket", e);
+      console.error("Failed to share bracket", e);
     } finally {
       setDownloading(false);
     }
@@ -315,12 +342,12 @@ const MyPicks = () => {
         {showBracket ? (
           <>
             <button
-              onClick={handleDownloadBracket}
+              onClick={handleShareBracket}
               disabled={downloading}
               className="inline-flex items-center gap-1.5 text-xs font-body text-primary hover:text-primary/80 underline underline-offset-2 disabled:opacity-50 mb-4"
             >
-              <Download size={14} />
-              {downloading ? "Generating..." : "Download Bracket"}
+              <Share2 size={14} />
+              {downloading ? "Generating..." : "Share Bracket"}
             </button>
             <PlayoffBracket ref={bracketRef} picks={picks} bets={bets} />
           </>

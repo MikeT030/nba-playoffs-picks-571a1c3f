@@ -166,11 +166,33 @@ const MyPicks = () => {
           htmlEl.style.overflow = "visible";
         }
       });
-      // Ensure the relative bracket area is fully visible (keep its explicit height since children are absolute)
+      // Ensure the relative bracket area is fully visible
       const relativeContainer = clone.querySelector("[class*='relative']") as HTMLElement | null;
       if (relativeContainer) {
         relativeContainer.style.overflow = "visible";
       }
+
+      // Convert all SVG <img> elements to base64 data URLs so html2canvas can render them
+      const imgElements = clone.querySelectorAll("img");
+      await Promise.all(
+        Array.from(imgElements).map(async (img) => {
+          const src = img.getAttribute("src");
+          if (!src) return;
+          try {
+            const resp = await fetch(src);
+            const blob = await resp.blob();
+            const dataUrl = await new Promise<string>((resolve) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result as string);
+              reader.readAsDataURL(blob);
+            });
+            img.setAttribute("src", dataUrl);
+          } catch {
+            // If fetch fails, leave original src
+          }
+        })
+      );
+
       wrapper.style.width = "max-content";
       wrapper.appendChild(clone);
       document.body.appendChild(wrapper);

@@ -64,14 +64,14 @@ const PickCard = ({
         : null;
 
   return (
-    <div className="bg-card rounded-lg p-5">
-      <p className="text-xs text-muted-foreground font-body font-medium uppercase tracking-wider mb-4">
+    <div className="bg-card rounded-lg p-3.5">
+      <p className="text-[11px] text-muted-foreground font-body font-medium uppercase tracking-wider mb-2.5">
         {round} · {conference}
       </p>
 
-      <div className="flex items-center gap-4 mb-3">
+      <div className="flex items-center gap-3 mb-2">
         <div
-          className={`flex-1 flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all ${
+          className={`flex-1 flex flex-col items-center gap-1.5 p-2 rounded-lg border-2 transition-all ${
             bet?.winner === topTeam?.abbreviation
               ? "border-primary bg-primary/10"
               : "border-transparent opacity-50"
@@ -79,21 +79,21 @@ const PickCard = ({
         >
           {topTeam ? (
             <>
-              <TeamLogo src={topTeam.logo} alt={topTeam.name} className="w-12 h-12" />
-              <span className="font-display text-lg tracking-wide">{isPlayInPlaceholder(topTeam.abbreviation) ? topTeam.name : topTeam.abbreviation}</span>
+              <TeamLogo src={topTeam.logo} alt={topTeam.name} className="w-10 h-10" />
+              <span className="font-display text-base tracking-wide">{isPlayInPlaceholder(topTeam.abbreviation) ? topTeam.name : topTeam.abbreviation}</span>
             </>
           ) : (
             <>
-              <span className="text-3xl opacity-30">🏀</span>
-              <span className="font-display text-lg tracking-wide text-muted-foreground/50">TBD</span>
+              <span className="text-2xl opacity-30">🏀</span>
+              <span className="font-display text-base tracking-wide text-muted-foreground/50">TBD</span>
             </>
           )}
         </div>
 
-        <span className="text-muted-foreground font-body text-sm">VS</span>
+        <span className="text-muted-foreground font-body text-xs">VS</span>
 
         <div
-          className={`flex-1 flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all ${
+          className={`flex-1 flex flex-col items-center gap-1.5 p-2 rounded-lg border-2 transition-all ${
             bet?.winner === bottomTeam?.abbreviation
               ? "border-primary bg-primary/10"
               : "border-transparent opacity-50"
@@ -101,25 +101,25 @@ const PickCard = ({
         >
           {bottomTeam ? (
             <>
-              <TeamLogo src={bottomTeam.logo} alt={bottomTeam.name} className="w-12 h-12" />
-              <span className="font-display text-lg tracking-wide">{isPlayInPlaceholder(bottomTeam.abbreviation) ? bottomTeam.name : bottomTeam.abbreviation}</span>
+              <TeamLogo src={bottomTeam.logo} alt={bottomTeam.name} className="w-10 h-10" />
+              <span className="font-display text-base tracking-wide">{isPlayInPlaceholder(bottomTeam.abbreviation) ? bottomTeam.name : bottomTeam.abbreviation}</span>
             </>
           ) : (
             <>
-              <span className="text-3xl opacity-30">🏀</span>
-              <span className="font-display text-lg tracking-wide text-muted-foreground/50">TBD</span>
+              <span className="text-2xl opacity-30">🏀</span>
+              <span className="font-display text-base tracking-wide text-muted-foreground/50">TBD</span>
             </>
           )}
         </div>
       </div>
 
       {bet && winnerTeam ? (
-        <p className="text-center text-sm font-body text-primary">
+        <p className="text-center text-xs font-body text-primary">
           <span className="font-medium">{winnerTeam.name}</span> in{" "}
           <span className="font-medium">{bet.gamesInSeries}</span> games
         </p>
       ) : (
-        <p className="text-center text-xs text-muted-foreground/60 font-body italic">
+        <p className="text-center text-[11px] text-muted-foreground/60 font-body italic">
           No pick made
         </p>
       )}

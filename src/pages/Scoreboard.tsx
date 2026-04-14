@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Trophy, List, ChevronLeft } from "lucide-react";
+import { Trophy, LayoutGrid, Network } from "lucide-react";
 import HeroBanner from "@/components/HeroBanner";
 import {
   Table,
@@ -282,34 +282,41 @@ const Scoreboard = () => {
     fetchScores();
   }, []);
 
+  const viewTabs = (
+    <div className="flex border-b border-border mb-6">
+      <button
+        onClick={() => setShowAllPicks(false)}
+        className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-body font-medium border-b-2 transition-colors ${
+          !showAllPicks
+            ? "border-primary text-primary"
+            : "border-transparent text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        <LayoutGrid size={16} />
+        Points
+      </button>
+      <button
+        onClick={() => setShowAllPicks(true)}
+        className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-body font-medium border-b-2 transition-colors ${
+          showAllPicks
+            ? "border-primary text-primary"
+            : "border-transparent text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        <Network size={16} className="rotate-90" />
+        All Picks
+      </button>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-background pb-28">
       <HeroBanner title={"SCORE\nBOARD"} subtitle="NBA Playoffs 2026" />
 
       <section className="container py-8">
-
-        {/* Toggle button */}
-        <div className="flex justify-end mb-4">
-          <button
-            onClick={() => setShowAllPicks(!showAllPicks)}
-            className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
-          >
-            {showAllPicks ? (
-              <>
-                <ChevronLeft size={18} />
-                Back to Scoreboard
-              </>
-            ) : (
-              <>
-                <List size={18} />
-                See All Picks
-              </>
-            )}
-          </button>
-        </div>
+        {viewTabs}
 
         {showAllPicks ? (
-          /* All Picks Matrix */
           <div className="bg-card rounded-lg overflow-hidden">
             <AllPicksMatrix />
           </div>

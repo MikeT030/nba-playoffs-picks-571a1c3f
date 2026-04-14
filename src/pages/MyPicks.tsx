@@ -259,7 +259,7 @@ const MyPicks = () => {
       <div className="min-h-screen bg-background pb-28">
         <HeroBanner title="MY PICKS" subtitle="NBA Playoffs 2026" />
         <section className="container py-10">
-          {actionButtons}
+          {editPicksButton}
           <div className="flex items-center justify-center py-8">
             <div className="text-center">
               <p className="font-display text-2xl tracking-wider mb-2">NO PICKS YET</p>
@@ -279,7 +279,8 @@ const MyPicks = () => {
       <HeroBanner title="MY PICKS" subtitle={`${profileName}'s predictions · ${bets.length} picks`} />
 
       <section className="container py-8 pb-24">
-        {actionButtons}
+        {editPicksButton}
+        {viewTabs}
 
         {showBracket ? (
           <PlayoffBracket picks={picks} bets={bets} />

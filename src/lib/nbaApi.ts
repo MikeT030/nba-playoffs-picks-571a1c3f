@@ -71,79 +71,52 @@ export async function getTeams(): Promise<NbaTeam[]> {
   return result.data;
 }
 
-// Local team logos
-import logoATL from "@/assets/logos/ATL.svg";
-import logoBOS from "@/assets/logos/BOS.svg";
-import logoBKN from "@/assets/logos/BKN.svg";
-import logoCHA from "@/assets/logos/CHA.svg";
-import logoCHI from "@/assets/logos/CHI.svg";
-import logoCLE from "@/assets/logos/CLE.svg";
-import logoDAL from "@/assets/logos/DAL.svg";
-import logoDEN from "@/assets/logos/DEN.svg";
-import logoDET from "@/assets/logos/DET.svg";
-import logoGSW from "@/assets/logos/GSW.svg";
-import logoHOU from "@/assets/logos/HOU.svg";
-import logoIND from "@/assets/logos/IND.svg";
-import logoLAC from "@/assets/logos/LAC.svg";
-import logoLAL from "@/assets/logos/LAL.svg";
-import logoMEM from "@/assets/logos/MEM.svg";
-import logoMIA from "@/assets/logos/MIA.svg";
-import logoMIL from "@/assets/logos/MIL.svg";
-import logoMIN from "@/assets/logos/MIN.svg";
-import logoNOP from "@/assets/logos/NOP.svg";
-import logoNYK from "@/assets/logos/NYK.svg";
-import logoOKC from "@/assets/logos/OKC.svg";
-import logoORL from "@/assets/logos/ORL.svg";
-import logoPHI from "@/assets/logos/PHI.svg";
-import logoPHX from "@/assets/logos/PHX.svg";
-import logoPOR from "@/assets/logos/POR.svg";
-import logoSAC from "@/assets/logos/SAC.svg";
-import logoSAS from "@/assets/logos/SAS.svg";
-import logoTOR from "@/assets/logos/TOR.svg";
-import logoUTA from "@/assets/logos/UTA.svg";
-import logoWAS from "@/assets/logos/WAS.svg";
+// Official NBA logo URL pattern
+const nbaLogoUrl = (abbr: string) =>
+  `https://cdn.nba.com/logos/nba/${nbaTeamIds[abbr]}/primary/L/logo.svg`;
 
-const localLogos: Record<string, string> = {
-  ATL: logoATL, BOS: logoBOS, BKN: logoBKN, CHA: logoCHA,
-  CHI: logoCHI, CLE: logoCLE, DAL: logoDAL, DEN: logoDEN,
-  DET: logoDET, GSW: logoGSW, HOU: logoHOU, IND: logoIND,
-  LAC: logoLAC, LAL: logoLAL, MEM: logoMEM, MIA: logoMIA,
-  MIL: logoMIL, MIN: logoMIN, NOP: logoNOP, NYK: logoNYK,
-  OKC: logoOKC, ORL: logoORL, PHI: logoPHI, PHX: logoPHX,
-  POR: logoPOR, SAC: logoSAC, SAS: logoSAS, TOR: logoTOR,
-  UTA: logoUTA, WAS: logoWAS,
+// NBA team IDs for logo URLs
+const nbaTeamIds: Record<string, number> = {
+  ATL: 1610612737, BOS: 1610612738, BKN: 1610612751, CHA: 1610612766,
+  CHI: 1610612741, CLE: 1610612739, DAL: 1610612742, DEN: 1610612743,
+  DET: 1610612765, GSW: 1610612744, HOU: 1610612745, IND: 1610612754,
+  LAC: 1610612746, LAL: 1610612747, MEM: 1610612763, MIA: 1610612748,
+  MIL: 1610612749, MIN: 1610612750, NOP: 1610612740, NYK: 1610612752,
+  OKC: 1610612760, ORL: 1610612753, PHI: 1610612755, PHX: 1610612756,
+  POR: 1610612757, SAC: 1610612758, SAS: 1610612759, TOR: 1610612761,
+  UTA: 1610612762, WAS: 1610612764,
 };
 
 // Team colors and logo URLs
 export const teamMeta: Record<string, { color: string; logo: string }> = {
-  ATL: { color: "#E03A3E", logo: localLogos.ATL },
-  BOS: { color: "#007A33", logo: localLogos.BOS },
-  BKN: { color: "#000000", logo: localLogos.BKN },
-  CHA: { color: "#1D1160", logo: localLogos.CHA },
-  CHI: { color: "#CE1141", logo: localLogos.CHI },
-  CLE: { color: "#860038", logo: localLogos.CLE },
-  DAL: { color: "#00538C", logo: localLogos.DAL },
-  DEN: { color: "#0E2240", logo: localLogos.DEN },
-  DET: { color: "#06438F", logo: localLogos.DET },
-  GSW: { color: "#1D428A", logo: localLogos.GSW },
-  HOU: { color: "#CE1141", logo: localLogos.HOU },
-  IND: { color: "#002D62", logo: localLogos.IND },
-  LAC: { color: "#C8102E", logo: localLogos.LAC },
-  LAL: { color: "#552583", logo: localLogos.LAL },
-  MEM: { color: "#5D76A9", logo: localLogos.MEM },
-  MIA: { color: "#98002E", logo: localLogos.MIA },
-  MIL: { color: "#00471B", logo: localLogos.MIL },
-  MIN: { color: "#0C2340", logo: localLogos.MIN },
-  NOP: { color: "#0C2340", logo: localLogos.NOP },
-  NYK: { color: "#006BB6", logo: localLogos.NYK },
-  OKC: { color: "#007AC1", logo: localLogos.OKC },
-  ORL: { color: "#0077C0", logo: localLogos.ORL },
-  PHI: { color: "#006BB6", logo: localLogos.PHI },
-  PHX: { color: "#1D1160", logo: localLogos.PHX },
-  POR: { color: "#E03A3E", logo: localLogos.POR },
-  SAC: { color: "#5A2D81", logo: localLogos.SAC },
-  SAS: { color: "#C4CED4", logo: localLogos.SAS },
-  TOR: { color: "#CE1141", logo: localLogos.TOR },
-  UTA: { color: "#002B5C", logo: localLogos.UTA },
-  WAS: { color: "#002B5C", logo: localLogos.WAS },
+  ATL: { color: "#E03A3E", logo: nbaLogoUrl("ATL") },
+  BOS: { color: "#007A33", logo: nbaLogoUrl("BOS") },
+  BKN: { color: "#000000", logo: nbaLogoUrl("BKN") },
+  CHA: { color: "#1D1160", logo: nbaLogoUrl("CHA") },
+  CHI: { color: "#CE1141", logo: nbaLogoUrl("CHI") },
+  CLE: { color: "#860038", logo: nbaLogoUrl("CLE") },
+  DAL: { color: "#00538C", logo: nbaLogoUrl("DAL") },
+  DEN: { color: "#0E2240", logo: nbaLogoUrl("DEN") },
+  DET: { color: "#06438F", logo: nbaLogoUrl("DET") },
+  GSW: { color: "#1D428A", logo: nbaLogoUrl("GSW") },
+  HOU: { color: "#CE1141", logo: nbaLogoUrl("HOU") },
+  IND: { color: "#002D62", logo: nbaLogoUrl("IND") },
+  LAC: { color: "#C8102E", logo: nbaLogoUrl("LAC") },
+  LAL: { color: "#552583", logo: nbaLogoUrl("LAL") },
+  MEM: { color: "#5D76A9", logo: nbaLogoUrl("MEM") },
+  MIA: { color: "#98002E", logo: nbaLogoUrl("MIA") },
+  MIL: { color: "#00471B", logo: nbaLogoUrl("MIL") },
+  MIN: { color: "#0C2340", logo: nbaLogoUrl("MIN") },
+  NOP: { color: "#0C2340", logo: nbaLogoUrl("NOP") },
+  NYK: { color: "#006BB6", logo: nbaLogoUrl("NYK") },
+  OKC: { color: "#007AC1", logo: nbaLogoUrl("OKC") },
+  ORL: { color: "#0077C0", logo: nbaLogoUrl("ORL") },
+  PHI: { color: "#006BB6", logo: nbaLogoUrl("PHI") },
+  PHX: { color: "#1D1160", logo: nbaLogoUrl("PHX") },
+  POR: { color: "#E03A3E", logo: nbaLogoUrl("POR") },
+  SAC: { color: "#5A2D81", logo: nbaLogoUrl("SAC") },
+  SAS: { color: "#C4CED4", logo: nbaLogoUrl("SAS") },
+  TOR: { color: "#CE1141", logo: nbaLogoUrl("TOR") },
+  UTA: { color: "#002B5C", logo: nbaLogoUrl("UTA") },
+  WAS: { color: "#002B5C", logo: nbaLogoUrl("WAS") },
 };

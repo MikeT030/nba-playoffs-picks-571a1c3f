@@ -191,6 +191,7 @@ const MatchDetail = () => {
               const pickedTeam =
                 pick.winner === match.homeTeam.abbreviation ? match.homeTeam : match.awayTeam;
               const isCurrentUser = user && pick.user_id === user.id;
+              const pts = computePickPoints(pick);
               return (
                 <div
                   key={pick.user_id}
@@ -207,6 +208,9 @@ const MatchDetail = () => {
                         {pickedTeam.abbreviation}
                       </span>{" "}
                       in <span className="font-bold text-white">{pick.games_in_series}</span>
+                      {pts !== null && (
+                        <span className="ml-2 text-primary font-bold">· {pts} pts</span>
+                      )}
                     </p>
                   </div>
                   <TeamLogo src={pickedTeam.logo} alt={pickedTeam.name} className="w-8 h-8" />

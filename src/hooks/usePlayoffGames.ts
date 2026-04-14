@@ -2,6 +2,35 @@ import { useQuery } from "@tanstack/react-query";
 import { getPlayoffGames, teamMeta, type NbaGame } from "@/lib/nbaApi";
 import { type Match, type Team, makeTips, fallbackMatches, getConference, teamSeeds } from "@/data/playoffsData";
 
+const dummyFinalMatch: Match = {
+  id: "cha-mia",
+  round: "First Round",
+  conference: "East",
+  gameNumber: 4,
+  date: "Apr 22",
+  time: "Final",
+  homeTeam: {
+    name: "Miami Heat",
+    abbreviation: "MIA",
+    color: teamMeta["MIA"].color,
+    logo: teamMeta["MIA"].logo,
+    seed: 8,
+  },
+  awayTeam: {
+    name: "Charlotte Hornets",
+    abbreviation: "CHA",
+    color: teamMeta["CHA"].color,
+    logo: teamMeta["CHA"].logo,
+    seed: 7,
+  },
+  homeWins: 3,
+  awayWins: 1,
+  status: "final",
+  homeScore: 104,
+  awayScore: 92,
+  tips: makeTips("MIA", "CHA"),
+};
+
 function gameStatusToLocal(status: string): "upcoming" | "live" | "final" {
   if (status === "Final") return "final";
   if (status.includes(":") || status.startsWith("Q") || status.startsWith("Half")) return "live";
@@ -88,7 +117,7 @@ export function usePlayoffGames(season: number = 2025) {
     queryFn: async () => {
       try {
         const games = await getPlayoffGames(season);
-        if (games.length === 0) return fallbackMatches;
+        if (games.length === 0) return [...fallbackMatches, dummyFinalMatch];
         const apiMatches = groupIntoSeries(games);
 
         // Merge in TBD fallback matchups that aren't covered by API data
@@ -102,10 +131,15 @@ export function usePlayoffGames(season: number = 2025) {
           return !apiTeamKeys.has(key);
         });
 
-        return [...apiMatches, ...tbdMatches];
+        const allMatches = [...apiMatches, ...tbdMatches];
+        // Add dummy CHA vs MIA final match
+        if (!allMatches.some((m) => m.id === "cha-mia")) {
+          allMatches.push(dummyFinalMatch);
+        }
+        return allMatches;
       } catch (error) {
         console.warn("Failed to fetch NBA data, using fallback:", error);
-        return fallbackMatches;
+        return [...fallbackMatches, dummyFinalMatch];
       }
     },
     staleTime: 5 * 60 * 1000, // 5 min

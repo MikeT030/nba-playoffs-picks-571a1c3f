@@ -44,7 +44,6 @@ const Index = () => {
           return;
         }
       }
-      // Auto-open drawer only if no picks saved
       timer = setTimeout(() => setBetsOpen(true), 800);
     };
     checkPicks();
@@ -83,9 +82,7 @@ const Index = () => {
         </button>
 
         <h2 className="font-display text-3xl tracking-wider mb-4">
-        <h2 className="font-display text-3xl tracking-wider mb-4">
           All Matchups
-        </h2>
         </h2>
 
         <Select value={selectedRound} onValueChange={setSelectedRound}>

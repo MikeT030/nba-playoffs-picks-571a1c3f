@@ -32,6 +32,7 @@ const Index = () => {
   const [betsSaved, setBetsSaved] = useState(false);
 
   useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
     const checkPicks = async () => {
       if (user) {
         const { data } = await supabase
@@ -40,14 +41,14 @@ const Index = () => {
           .eq("user_id", user.id);
         if (data && data.length > 0) {
           setBetsSaved(true);
-          return; // Don't auto-open if picks exist
+          return;
         }
       }
-      // Auto-open drawer if no picks saved
-      const timer = setTimeout(() => setBetsOpen(true), 800);
-      return () => clearTimeout(timer);
+      // Auto-open drawer only if no picks saved
+      timer = setTimeout(() => setBetsOpen(true), 800);
     };
     checkPicks();
+    return () => clearTimeout(timer);
   }, [user]);
 
   const filteredMatches =

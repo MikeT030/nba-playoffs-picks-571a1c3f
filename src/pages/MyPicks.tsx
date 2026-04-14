@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { PenLine, CheckCircle, LogIn, LayoutGrid, Network } from "lucide-react";
+import { useEffect, useState, useRef, useCallback } from "react";
+import { PenLine, CheckCircle, LogIn, LayoutGrid, Network, Download } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PlayoffBracket from "@/components/PlayoffBracket";
 import TeamLogo from "@/components/TeamLogo";
@@ -137,6 +137,36 @@ const MyPicks = () => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [selectedRound, setSelectedRound] = useState("all");
   const [showBracket, setShowBracket] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const bracketRef = useRef<HTMLDivElement>(null);
+
+  const handleDownloadBracket = useCallback(async () => {
+    if (!bracketRef.current) return;
+    setDownloading(true);
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const jsPDF = (await import("jspdf")).default;
+
+      const canvas = await html2canvas(bracketRef.current, {
+        backgroundColor: "#0a0a0a",
+        scale: 2,
+        useCORS: true,
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "px",
+        format: [canvas.width, canvas.height],
+      });
+      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+      pdf.save(`${profileName ?? "my"}-bracket.pdf`);
+    } catch (e) {
+      console.error("Failed to download bracket", e);
+    } finally {
+      setDownloading(false);
+    }
+  }, [profileName]);
 
   useEffect(() => {
     if (authLoading) return;
@@ -283,7 +313,17 @@ const MyPicks = () => {
         {viewTabs}
 
         {showBracket ? (
-          <PlayoffBracket picks={picks} bets={bets} />
+          <>
+            <button
+              onClick={handleDownloadBracket}
+              disabled={downloading}
+              className="flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 disabled:opacity-50 mb-4"
+            >
+              <Download size={16} />
+              {downloading ? "Generating..." : "Download Bracket"}
+            </button>
+            <PlayoffBracket ref={bracketRef} picks={picks} bets={bets} />
+          </>
         ) : (
           <>
             <Select value={selectedRound} onValueChange={setSelectedRound}>

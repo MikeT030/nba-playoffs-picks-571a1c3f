@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import TeamLogo from "@/components/TeamLogo";
 import {
   bracketSeries as defaultBracketSeries,
@@ -193,7 +194,7 @@ interface PlayoffBracketProps {
   seriesList?: BracketSeries[];
 }
 
-const PlayoffBracket = ({ picks = {}, bets = [], seriesList }: PlayoffBracketProps) => {
+const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({ picks = {}, bets = [], seriesList }, ref) => {
   const bracket = seriesList ?? defaultBracketSeries;
 
   const resolve = (id: string) => {
@@ -224,7 +225,7 @@ const PlayoffBracket = ({ picks = {}, bets = [], seriesList }: PlayoffBracketPro
 
   return (
     <div className="w-full overflow-x-auto pb-4 -mx-4 px-4">
-      <div style={{ width: TOTAL_W, minWidth: TOTAL_W }}>
+      <div ref={ref} style={{ width: TOTAL_W, minWidth: TOTAL_W }}>
         {/* Round headers */}
         <div className="flex mb-1" style={{ width: TOTAL_W }}>
           {headerLabels.map((label, i) => (
@@ -272,6 +273,8 @@ const PlayoffBracket = ({ picks = {}, bets = [], seriesList }: PlayoffBracketPro
       </div>
     </div>
   );
-};
+});
+
+PlayoffBracket.displayName = "PlayoffBracket";
 
 export default PlayoffBracket;

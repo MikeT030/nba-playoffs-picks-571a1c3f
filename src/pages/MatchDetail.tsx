@@ -95,7 +95,7 @@ const MatchDetail = () => {
             Back to Matchups
           </Link>
 
-          <p className="text-xs text-primary font-body font-semibold uppercase tracking-widest mb-4">
+          <p className="text-xs text-primary font-body font-semibold uppercase tracking-widest mb-4 text-center">
             {match.round} · Game {match.gameNumber} · {match.date}
           </p>
 

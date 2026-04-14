@@ -109,9 +109,10 @@ const TeamSlot = ({
   isTop: boolean;
 }) => (
   <div
-    className={`flex items-center gap-2 px-3 py-1.5 ${
+    className={`flex items-center gap-2 px-2.5 ${
       isTop ? "border-b border-border/40" : ""
     } ${isPicked ? "bg-primary/10" : ""}`}
+    style={{ height: 32 }}
   >
     {team ? (
       <>

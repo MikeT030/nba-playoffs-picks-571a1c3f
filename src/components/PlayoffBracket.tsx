@@ -224,7 +224,7 @@ const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({ picks 
   };
 
   return (
-    <div className="w-full overflow-x-auto pb-4 -mx-4 px-4">
+    <div className="w-full overflow-x-auto pb-4 -mx-4 px-4 pt-[8px]">
       <div ref={ref} style={{ width: TOTAL_W, minWidth: TOTAL_W }}>
         {/* Round headers */}
         <div className="flex mb-1" style={{ width: TOTAL_W }}>

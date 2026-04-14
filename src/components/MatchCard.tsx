@@ -7,6 +7,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useMemo } from "react";
 
+interface SeriesResult {
+  series_id: string;
+  winner: string;
+  games_played: number;
+}
+
 const useUserBet = (match: Match) => {
   const { user } = useAuth();
   const { data: bracketData } = useBracketData();
@@ -35,7 +41,30 @@ const useUserBet = (match: Match) => {
     enabled: !!user && !!bracketSeriesId,
   });
 
-  return dbPick ?? null;
+  const { data: seriesResult } = useQuery({
+    queryKey: ["series-result", bracketSeriesId],
+    queryFn: async () => {
+      if (!bracketSeriesId) return null;
+      const { data } = await supabase
+        .from("series_results")
+        .select("series_id, winner, games_played")
+        .eq("series_id", bracketSeriesId)
+        .maybeSingle();
+      return data as SeriesResult | null;
+    },
+    enabled: !!bracketSeriesId,
+  });
+
+  const points = useMemo(() => {
+    if (!dbPick || !seriesResult) return null;
+    if (seriesResult.winner === dbPick.winner) {
+      if (seriesResult.games_played === dbPick.gamesInSeries) return 3;
+      return 2;
+    }
+    return 0;
+  }, [dbPick, seriesResult]);
+
+  return { pick: dbPick ?? null, points };
 };
 
 interface MatchCardProps {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { PenLine, CheckCircle } from "lucide-react";
 import HeroBanner from "@/components/HeroBanner";
 import MatchCard from "@/components/MatchCard";
@@ -7,8 +7,6 @@ import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { type Match, makeTips } from "@/data/playoffsData";
-import { teamMeta } from "@/lib/nbaApi";
 import {
   Select,
   SelectContent,
@@ -24,35 +22,6 @@ const rounds = [
   { value: "Conference Finals", label: "Conference Finals" },
   { value: "Finals", label: "Finals" },
 ];
-
-const dummyFinalMatch: Match = {
-  id: "cha-mia",
-  round: "First Round",
-  conference: "East",
-  gameNumber: 4,
-  date: "Apr 22",
-  time: "Final",
-  homeTeam: {
-    name: "Miami Heat",
-    abbreviation: "MIA",
-    color: teamMeta["MIA"].color,
-    logo: teamMeta["MIA"].logo,
-    seed: 8,
-  },
-  awayTeam: {
-    name: "Charlotte Hornets",
-    abbreviation: "CHA",
-    color: teamMeta["CHA"].color,
-    logo: teamMeta["CHA"].logo,
-    seed: 7,
-  },
-  homeWins: 3,
-  awayWins: 1,
-  status: "final",
-  homeScore: 104,
-  awayScore: 92,
-  tips: makeTips("MIA", "CHA"),
-};
 
 const Index = () => {
   const { data: matches, isLoading } = usePlayoffGames();
@@ -81,16 +50,10 @@ const Index = () => {
     return () => clearTimeout(timer);
   }, [user]);
 
-  const allMatches = useMemo(() => {
-    if (!matches) return undefined;
-    const hasChaMia = matches.some((m) => m.id === "cha-mia");
-    return hasChaMia ? matches : [...matches, dummyFinalMatch];
-  }, [matches]);
-
   const filteredMatches =
     selectedRound === "all"
-      ? allMatches
-      : allMatches?.filter((m) => m.round === selectedRound);
+      ? matches
+      : matches?.filter((m) => m.round === selectedRound);
 
   return (
     <div className="min-h-screen bg-background pb-28">

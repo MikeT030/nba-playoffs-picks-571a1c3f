@@ -70,7 +70,7 @@ const PickCard = ({
         {round} · {conference}
       </p>
 
-      <div className="flex items-center gap-3 mb-2">
+      <div className="flex items-center gap-3 mb-2 pb-[4px]">
         <div
           className={`flex-1 flex flex-col items-center gap-1.5 p-2 rounded-lg border-2 transition-all ${
             bet?.winner === topTeam?.abbreviation
@@ -115,7 +115,7 @@ const PickCard = ({
       </div>
 
       {bet && winnerTeam ? (
-        <p className="text-xs font-body text-primary text-center">
+        <p className="text-xs font-body text-primary text-center pt-0">
           YOUR PICK: <span className="font-medium">{winnerTeam.name}</span> in <span className="font-medium">{bet.gamesInSeries}</span>
         </p>
       ) : (

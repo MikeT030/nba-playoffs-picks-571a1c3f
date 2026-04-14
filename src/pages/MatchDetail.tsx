@@ -163,6 +163,7 @@ const MatchDetail = () => {
 
           {user && userPick && (() => {
             const pickedTeam = userPick.winner === match.homeTeam.abbreviation ? match.homeTeam : match.awayTeam;
+            const pts = computePickPoints(userPick);
             return (
               <div className="items-center justify-center gap-3 bg-transparent rounded-lg px-4 py-3 flex flex-row mt-[18px]">
                 <span className="text-sm font-body uppercase tracking-wider text-primary-foreground">Your Pick</span>
@@ -171,6 +172,9 @@ const MatchDetail = () => {
                   {pickedTeam.abbreviation}
                 </span>
                 <span className="font-body text-primary-foreground text-sm">in <span className="font-bold">{userPick.games_in_series}</span></span>
+                {pts !== null && (
+                  <span className="font-body text-primary font-bold text-sm">· {pts} pts</span>
+                )}
               </div>
             );
           })()}

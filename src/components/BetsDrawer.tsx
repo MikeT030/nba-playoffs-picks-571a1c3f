@@ -69,10 +69,10 @@ const SeriesCard = ({
   const renderTeamSlot = (team: Team | undefined, isSelected: boolean) => {
     if (!team) {
       return (
-        <div className="flex-1 flex flex-col items-center gap-2 p-3 rounded-lg border-2 border-dashed border-muted-foreground/20">
-          <span className="text-3xl opacity-30">🏀</span>
+        <div className="flex-1 flex flex-col items-center gap-1.5 p-2 rounded-lg border-2 border-dashed border-muted-foreground/20">
+          <span className="text-2xl opacity-30">🏀</span>
           <div className="flex items-center gap-1">
-            <span className="font-display text-lg tracking-wide text-muted-foreground/50">TBD</span>
+            <span className="font-display text-base tracking-wide text-muted-foreground/50">TBD</span>
           </div>
         </div>
       );
@@ -82,7 +82,7 @@ const SeriesCard = ({
       <button
         onClick={() => handlePickWinner(team.abbreviation)}
         disabled={locked}
-        className={`flex-1 flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all duration-200 ${
+        className={`flex-1 flex flex-col items-center gap-1.5 p-2 rounded-lg border-2 transition-all duration-200 ${
           isSelected
             ? "border-primary bg-primary/10"
             : locked
@@ -90,39 +90,39 @@ const SeriesCard = ({
               : "border-transparent hover:border-muted-foreground/30"
         }`}
       >
-        <TeamLogo src={team.logo} alt={team.name} className="w-12 h-12" />
+        <TeamLogo src={team.logo} alt={team.name} className="w-10 h-10" />
         <div className="flex items-center gap-1">
-          {team.seed && <span className="text-xs text-muted-foreground font-body font-semibold">{team.seed}</span>}
-          <span className="font-display text-lg tracking-wide">{team.abbreviation}</span>
+          {team.seed && <span className="text-[11px] text-muted-foreground font-body font-semibold">{team.seed}</span>}
+          <span className="font-display text-base tracking-wide">{team.abbreviation}</span>
         </div>
-        {isSelected && <Check size={16} className="text-primary" />}
+        {isSelected && <Check size={14} className="text-primary" />}
       </button>
     );
   };
 
   return (
-    <div className={`bg-card rounded-lg p-5 ${locked ? "opacity-50" : ""}`}>
-      <div className="flex items-center justify-between mb-4">
-        <p className="text-xs text-muted-foreground font-body font-medium uppercase tracking-wider">
+    <div className={`bg-card rounded-lg p-3.5 ${locked ? "opacity-50" : ""}`}>
+      <div className="flex items-center justify-between mb-2.5">
+        <p className="text-[11px] text-muted-foreground font-body font-medium uppercase tracking-wider">
           {series.round} · {series.conference}
         </p>
         {locked && <Lock size={14} className="text-muted-foreground" />}
       </div>
 
-      <div className="flex items-center gap-4 mb-4">
+      <div className="flex items-center gap-3 mb-2">
         {renderTeamSlot(topTeam, selectedWinner === topTeam?.abbreviation)}
-        <span className="text-muted-foreground font-body text-sm">VS</span>
+        <span className="text-muted-foreground font-body text-xs">VS</span>
         {renderTeamSlot(bottomTeam, selectedWinner === bottomTeam?.abbreviation)}
       </div>
 
       {teamsReady && !locked && (
-        <div className="flex items-center justify-center gap-2">
-          <span className="text-xs text-muted-foreground font-body mr-1">In</span>
+        <div className="flex items-center justify-center gap-1.5">
+          <span className="text-[11px] text-muted-foreground font-body mr-1">In</span>
           {[4, 5, 6, 7].map((games) => (
             <button
               key={games}
               onClick={() => handlePickGames(games)}
-              className={`w-9 h-9 rounded-full font-display text-sm transition-all duration-200 ${
+              className={`w-8 h-8 rounded-full font-display text-xs transition-all duration-200 ${
                 selectedGames === games
                   ? "bg-primary/15 text-primary border border-primary/40"
                   : "bg-muted text-muted-foreground hover:text-foreground border border-transparent"
@@ -131,7 +131,7 @@ const SeriesCard = ({
               {games}
             </button>
           ))}
-          <span className="text-xs text-muted-foreground font-body ml-1">games</span>
+          <span className="text-[11px] text-muted-foreground font-body ml-1">games</span>
         </div>
       )}
 

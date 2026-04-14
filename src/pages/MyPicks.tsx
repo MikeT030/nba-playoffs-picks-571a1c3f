@@ -359,7 +359,7 @@ const MyPicks = () => {
               disabled={downloading}
               className="inline-flex items-center gap-1.5 font-body text-primary hover:text-primary/80 underline underline-offset-2 disabled:opacity-50 mb-4 text-sm font-medium"
             >
-              <img src={shareIcon} alt="Share" className="w-3.5 h-3.5" style={{ filter: "invert(1)" }} />
+              <img src={shareIcon} alt="Share" className="w-3.5 h-3.5" />
               {downloading ? "Generating..." : "Share Bracket"}
             </button>
             <PlayoffBracket ref={bracketRef} picks={picks} bets={bets} />

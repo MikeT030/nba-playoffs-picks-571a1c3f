@@ -82,7 +82,9 @@ const Index = () => {
         </button>
 
         <h2 className="font-display text-3xl tracking-wider mb-4">
-          Upcoming Matchups
+        <h2 className="font-display text-3xl tracking-wider mb-4">
+          All Matchups
+        </h2>
         </h2>
 
         <Select value={selectedRound} onValueChange={setSelectedRound}>

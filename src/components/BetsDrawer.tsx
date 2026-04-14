@@ -291,7 +291,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
               <DrawerTitle className="font-display text-4xl tracking-wider text-center">
                 MAKE YOUR PICKS
               </DrawerTitle>
-              <p className="text-muted-foreground font-body text-center text-sm">Sign in to make your picks</p>
+              <p className="text-muted-foreground font-body text-center text-sm">Sign in / Sign up to make your picks</p>
             </DrawerHeader>
             <div className="flex justify-center">
               <button

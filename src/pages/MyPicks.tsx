@@ -159,13 +159,20 @@ const MyPicks = () => {
       // Remove overflow constraints so full bracket is captured
       clone.style.overflow = "visible";
       clone.style.width = "max-content";
-      const scrollContainer = clone.closest("[class*='overflow']") as HTMLElement | null;
-      if (scrollContainer) scrollContainer.style.overflow = "visible";
-      // Also fix the parent scroll wrapper inside the clone
-      const innerScroll = clone.querySelector("[class*='overflow']") as HTMLElement | null;
-      if (innerScroll) {
-        innerScroll.style.overflow = "visible";
-        innerScroll.style.width = "max-content";
+      // Fix all overflow-hidden containers inside the clone
+      clone.querySelectorAll("*").forEach((el) => {
+        const htmlEl = el as HTMLElement;
+        const cs = htmlEl.style.overflow || "";
+        if (cs === "hidden" || cs === "auto" || cs === "scroll" || htmlEl.className?.includes?.("overflow")) {
+          htmlEl.style.overflow = "visible";
+        }
+      });
+      // Ensure the relative bracket area has enough height for cards + labels
+      const relativeContainer = clone.querySelector("[class*='relative']") as HTMLElement | null;
+      if (relativeContainer) {
+        relativeContainer.style.overflow = "visible";
+        relativeContainer.style.height = "auto";
+        relativeContainer.style.minHeight = relativeContainer.style.height;
       }
       wrapper.style.width = "max-content";
       wrapper.appendChild(clone);

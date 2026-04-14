@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { PenLine, CheckCircle, LogIn } from "lucide-react";
+import { PenLine, CheckCircle, LogIn, Network } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import PlayoffBracket from "@/components/PlayoffBracket";
 import TeamLogo from "@/components/TeamLogo";
 import HeroBanner from "@/components/HeroBanner";
 import BetsDrawer from "@/components/BetsDrawer";

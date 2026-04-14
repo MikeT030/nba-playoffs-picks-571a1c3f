@@ -167,12 +167,10 @@ const MyPicks = () => {
           htmlEl.style.overflow = "visible";
         }
       });
-      // Ensure the relative bracket area has enough height for cards + labels
+      // Ensure the relative bracket area is fully visible (keep its explicit height since children are absolute)
       const relativeContainer = clone.querySelector("[class*='relative']") as HTMLElement | null;
       if (relativeContainer) {
         relativeContainer.style.overflow = "visible";
-        relativeContainer.style.height = "auto";
-        relativeContainer.style.minHeight = relativeContainer.style.height;
       }
       wrapper.style.width = "max-content";
       wrapper.appendChild(clone);

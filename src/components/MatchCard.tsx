@@ -66,11 +66,6 @@ const MatchCard = ({ match }: MatchCardProps) => {
           <span className="text-xs text-muted-foreground font-body">
             {match.date} · {match.time}
           </span>
-          {match.status === "final" && (
-            <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest">
-              Final
-            </span>
-          )}
         </div>
       </div>
 
@@ -93,6 +88,11 @@ const MatchCard = ({ match }: MatchCardProps) => {
             {match.status === "live" && (
               <span className="text-[10px] text-loss font-body font-semibold uppercase tracking-widest animate-pulse block -translate-y-5">
                 Live
+              </span>
+            )}
+            {match.status === "final" && (
+              <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest block -translate-y-5">
+                Final
               </span>
             )}
           </div>

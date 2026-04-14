@@ -149,7 +149,7 @@ const MyPicks = () => {
 
       // Create a wrapper with the headline for capture
       const wrapper = document.createElement("div");
-      wrapper.style.cssText = "position:absolute;left:-9999px;top:0;background:#0a0a0a;padding:32px 40px;";
+      wrapper.style.cssText = "position:absolute;left:-9999px;top:0;background:#0a0a0a;padding:32px 40px 48px;";
       const headline = document.createElement("h1");
       headline.textContent = `${profileName ?? "My"}'s 2026 Playoffs Picks`;
       headline.style.cssText = "font-family:'Bebas Neue',sans-serif;font-size:32px;color:#fff;letter-spacing:0.08em;text-align:center;margin-bottom:24px;";

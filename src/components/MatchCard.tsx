@@ -69,7 +69,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
         </div>
       </div>
 
-      <div className="p-5 flex items-center gap-4 pt-4">
+      <div className="p-5 flex items-center gap-4 pt-[20px]">
         {/* Away Team */}
         <div className="flex-1 flex items-center gap-2 -translate-y-2">
           {match.awayTeam.seed && (
@@ -101,7 +101,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
             <span className="text-muted-foreground font-body text-sm">—</span>
             <span className="font-display text-2xl">{match.homeScore}</span>
           </div>
-          <p className="text-xs text-foreground font-body mt-1">
+          <p className="text-xs text-foreground font-body mt-1 font-medium">
             Series {match.awayWins} – {match.homeWins}
           </p>
         </div>
@@ -122,7 +122,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
       {bet && betTeamName && (
         <div className="px-4 pb-3 -mt-1">
           <p className="text-xs font-body text-foreground text-center">
-            Your Pick: <span className="font-medium">{bet.winner}</span> in <span className="font-medium">{bet.gamesInSeries}</span>
+            Your Pick: <span className="font-bold">{bet.winner}</span> in <span className="font-bold">{bet.gamesInSeries}</span>
           </p>
         </div>
       )}

@@ -109,7 +109,7 @@ const MatchDetail = () => {
 
             <div className="text-center">
               {match.status === "live" && (
-                <span className="text-[10px] text-loss font-body font-semibold uppercase tracking-widest animate-pulse -mt-1">
+                <span className="text-[10px] text-loss font-body font-semibold uppercase tracking-widest animate-pulse -mt-3">
                   Live
                 </span>
               )}

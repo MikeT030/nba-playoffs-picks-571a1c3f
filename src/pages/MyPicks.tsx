@@ -136,6 +136,7 @@ const MyPicks = () => {
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
   const [selectedRound, setSelectedRound] = useState("all");
+  const [showBracket, setShowBracket] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;

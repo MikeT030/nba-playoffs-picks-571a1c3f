@@ -16,19 +16,19 @@ interface BetSelection {
 }
 
 // ── Layout constants ──
-const CARD_H = 100;
+const CARD_H = 108;
 const CARD_W = 189;
 const CONN_W = 28;
 const COL_STEP = CARD_W + CONN_W;
 
 // Vertical positions (top of each card)
-const R1_Y = [0, 102, 240, 342];
-// Centers: 44, 146, 284, 386
-// Semi[0] = (44+146)/2=95 → top=51   Semi[1] = (284+386)/2=335 → top=291
-const SEMI_Y = [51, 291];
-// CF center = (95+335)/2 = 215 → top=171
-const CF_Y = 171;
-const FINALS_Y = 171;
+const R1_Y = [0, 110, 256, 366];
+// Centers: 54, 164, 310, 420
+// Semi[0] = (54+164)/2=109 → top=55   Semi[1] = (310+420)/2=365 → top=311
+const SEMI_Y = [55, 311];
+// CF center = (109+365)/2 = 237 → top=183
+const CF_Y = 183;
+const FINALS_Y = 183;
 const BRACKET_H = R1_Y[R1_Y.length - 1] + CARD_H; // 442
 
 const COLS = {
@@ -121,7 +121,7 @@ const TeamSlot = ({
         <span className="text-[11px] text-muted-foreground font-body font-bold w-3 shrink-0">
           {team.seed ?? ""}
         </span>
-        <span className="font-display text-sm tracking-wide flex-1 truncate">
+        <span className="font-display text-sm tracking-wide flex-1 whitespace-nowrap">
           {isPlayInPlaceholder(team.abbreviation) ? "TBD" : team.abbreviation}
         </span>
         {isPicked && <span className="w-2 h-2 rounded-full bg-primary shrink-0" />}
@@ -160,7 +160,7 @@ const BracketCard = ({
 
   return (
     <div
-      className={`absolute bg-card rounded-lg border overflow-hidden ${
+      className={`absolute bg-card rounded-lg border ${
         isChampionship
           ? "border-primary/40 shadow-md shadow-primary/10"
           : "border-border/60"
@@ -173,7 +173,7 @@ const BracketCard = ({
       {/* Pick summary */}
       {winnerTeam ? (
         <div className="flex items-center justify-center" style={{ height: 24 }}>
-          <span className="text-[10px] font-body text-primary font-medium truncate px-1">
+          <span className="text-[10px] font-body text-primary font-medium whitespace-nowrap px-1">
             Your Pick: {winnerTeam.abbreviation} in {bet!.gamesInSeries}
           </span>
         </div>

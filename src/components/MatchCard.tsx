@@ -74,7 +74,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
         </div>
       </div>
 
-      <div className="p-5 flex items-center gap-4">
+      <div className="p-5 flex items-center gap-4 pt-0">
         {/* Away Team */}
         <div className="flex-1 flex items-center gap-2">
           {match.awayTeam.seed && (

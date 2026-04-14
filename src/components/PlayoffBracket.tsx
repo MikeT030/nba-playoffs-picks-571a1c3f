@@ -7,25 +7,29 @@ import {
   type Team,
 } from "@/data/playoffsData";
 
+// ── Types ──
+interface BetSelection {
+  seriesId: string;
+  winner: string;
+  gamesInSeries: number;
+}
+
 // ── Layout constants ──
-const CARD_H = 48;
-const CARD_W = 132;
+const CARD_H = 88;
+const CARD_W = 164;
 const CONN_W = 28;
-const COL_STEP = CARD_W + CONN_W; // 160
+const COL_STEP = CARD_W + CONN_W;
 
-// Vertical card positions (top of each card)
-const R1_Y = [0, 58, 148, 206];
-// Centers: 24, 82, 172, 230
-// Semi centered between feeder pairs
-// Semi[0] = (24+82)/2 - 24 = 29
-// Semi[1] = (172+230)/2 - 24 = 177
-const SEMI_Y = [29, 177];
-// CF centered between semis: ((29+24)+(177+24))/2 - 24 = 127 - 24 = 103
-const CF_Y = 103;
-const FINALS_Y = 103;
-const BRACKET_H = 206 + CARD_H; // 254
+// Vertical positions (top of each card)
+const R1_Y = [0, 102, 240, 342];
+// Centers: 44, 146, 284, 386
+// Semi[0] = (44+146)/2=95 → top=51   Semi[1] = (284+386)/2=335 → top=291
+const SEMI_Y = [51, 291];
+// CF center = (95+335)/2 = 215 → top=171
+const CF_Y = 171;
+const FINALS_Y = 171;
+const BRACKET_H = 342 + CARD_H; // 430
 
-// Column x-positions (left edge)
 const COLS = {
   r1w: 0,
   sw: COL_STEP,
@@ -37,24 +41,20 @@ const COLS = {
 };
 const TOTAL_W = 7 * CARD_W + 6 * CONN_W;
 
-// ── Series ID mappings to column positions ──
 const westR1Ids = ["west-r1-1v8", "west-r1-4v5", "west-r1-3v6", "west-r1-2v7"];
 const westSemiIds = ["west-semi-top", "west-semi-bottom"];
 const eastR1Ids = ["east-r1-1v8", "east-r1-4v5", "east-r1-3v6", "east-r1-2v7"];
 const eastSemiIds = ["east-semi-top", "east-semi-bottom"];
 
-// ── Round header labels ──
 const headerLabels = [
-  { x: COLS.r1w, label: "1st Round" },
-  { x: COLS.sw, label: "Conf. Semis" },
-  { x: COLS.cfw, label: "Conf. Finals" },
-  { x: COLS.finals, label: "NBA Finals" },
-  { x: COLS.cfe, label: "Conf. Finals" },
-  { x: COLS.se, label: "Conf. Semis" },
-  { x: COLS.r1e, label: "1st Round" },
+  "1st Round", "Conf. Semis", "Conf. Finals",
+  "NBA Finals",
+  "Conf. Finals", "Conf. Semis", "1st Round",
 ];
 
-// ── SVG connector path builder ──
+// ── SVG connector helpers ──
+function cy(top: number) { return top + CARD_H / 2; }
+
 function bracketPath(
   fromX: number, fromCY: number,
   toX: number, toCY: number,
@@ -62,60 +62,44 @@ function bracketPath(
 ): string {
   if (dir === "right") {
     const sx = fromX + CARD_W;
-    const ex = toX;
     const mx = sx + CONN_W / 2;
-    return `M${sx},${fromCY} H${mx} V${toCY} H${ex}`;
+    return `M${sx},${fromCY} H${mx} V${toCY} H${toX}`;
   } else {
-    const sx = fromX;
-    const ex = toX + CARD_W;
-    const mx = sx - CONN_W / 2;
-    return `M${sx},${fromCY} H${mx} V${toCY} H${ex}`;
+    const mx = fromX - CONN_W / 2;
+    return `M${fromX},${fromCY} H${mx} V${toCY} H${toX + CARD_W}`;
   }
 }
 
-function cy(top: number) { return top + CARD_H / 2; }
-
 function generateConnectors(): string[] {
-  const paths: string[] = [];
-
-  // West: R1 → Semi
-  paths.push(bracketPath(COLS.r1w, cy(R1_Y[0]), COLS.sw, cy(SEMI_Y[0]), "right"));
-  paths.push(bracketPath(COLS.r1w, cy(R1_Y[1]), COLS.sw, cy(SEMI_Y[0]), "right"));
-  paths.push(bracketPath(COLS.r1w, cy(R1_Y[2]), COLS.sw, cy(SEMI_Y[1]), "right"));
-  paths.push(bracketPath(COLS.r1w, cy(R1_Y[3]), COLS.sw, cy(SEMI_Y[1]), "right"));
-
-  // West: Semi → CF
-  paths.push(bracketPath(COLS.sw, cy(SEMI_Y[0]), COLS.cfw, cy(CF_Y), "right"));
-  paths.push(bracketPath(COLS.sw, cy(SEMI_Y[1]), COLS.cfw, cy(CF_Y), "right"));
-
-  // West: CF → Finals
-  const wcfRight = COLS.cfw + CARD_W;
-  const finalsLeft = COLS.finals;
-  paths.push(`M${wcfRight},${cy(CF_Y)} H${finalsLeft}`);
-
-  // East: R1 → Semi
-  paths.push(bracketPath(COLS.r1e, cy(R1_Y[0]), COLS.se, cy(SEMI_Y[0]), "left"));
-  paths.push(bracketPath(COLS.r1e, cy(R1_Y[1]), COLS.se, cy(SEMI_Y[0]), "left"));
-  paths.push(bracketPath(COLS.r1e, cy(R1_Y[2]), COLS.se, cy(SEMI_Y[1]), "left"));
-  paths.push(bracketPath(COLS.r1e, cy(R1_Y[3]), COLS.se, cy(SEMI_Y[1]), "left"));
-
-  // East: Semi → CF
-  paths.push(bracketPath(COLS.se, cy(SEMI_Y[0]), COLS.cfe, cy(CF_Y), "left"));
-  paths.push(bracketPath(COLS.se, cy(SEMI_Y[1]), COLS.cfe, cy(CF_Y), "left"));
-
-  // East: CF → Finals
-  const ecfLeft = COLS.cfe;
-  const finalsRight = COLS.finals + CARD_W;
-  paths.push(`M${ecfLeft},${cy(CF_Y)} H${finalsRight}`);
-
-  return paths;
+  const p: string[] = [];
+  // West R1→Semi
+  p.push(bracketPath(COLS.r1w, cy(R1_Y[0]), COLS.sw, cy(SEMI_Y[0]), "right"));
+  p.push(bracketPath(COLS.r1w, cy(R1_Y[1]), COLS.sw, cy(SEMI_Y[0]), "right"));
+  p.push(bracketPath(COLS.r1w, cy(R1_Y[2]), COLS.sw, cy(SEMI_Y[1]), "right"));
+  p.push(bracketPath(COLS.r1w, cy(R1_Y[3]), COLS.sw, cy(SEMI_Y[1]), "right"));
+  // West Semi→CF
+  p.push(bracketPath(COLS.sw, cy(SEMI_Y[0]), COLS.cfw, cy(CF_Y), "right"));
+  p.push(bracketPath(COLS.sw, cy(SEMI_Y[1]), COLS.cfw, cy(CF_Y), "right"));
+  // West CF→Finals
+  p.push(`M${COLS.cfw + CARD_W},${cy(CF_Y)} H${COLS.finals}`);
+  // East R1→Semi
+  p.push(bracketPath(COLS.r1e, cy(R1_Y[0]), COLS.se, cy(SEMI_Y[0]), "left"));
+  p.push(bracketPath(COLS.r1e, cy(R1_Y[1]), COLS.se, cy(SEMI_Y[0]), "left"));
+  p.push(bracketPath(COLS.r1e, cy(R1_Y[2]), COLS.se, cy(SEMI_Y[1]), "left"));
+  p.push(bracketPath(COLS.r1e, cy(R1_Y[3]), COLS.se, cy(SEMI_Y[1]), "left"));
+  // East Semi→CF
+  p.push(bracketPath(COLS.se, cy(SEMI_Y[0]), COLS.cfe, cy(CF_Y), "left"));
+  p.push(bracketPath(COLS.se, cy(SEMI_Y[1]), COLS.cfe, cy(CF_Y), "left"));
+  // East CF→Finals
+  p.push(`M${COLS.cfe},${cy(CF_Y)} H${COLS.finals + CARD_W}`);
+  return p;
 }
 
 const connectorPaths = generateConnectors();
 
-// ── Components ──
+// ── Card components ──
 
-const TeamRow = ({
+const TeamSlot = ({
   team,
   isPicked,
   isTop,
@@ -125,26 +109,27 @@ const TeamRow = ({
   isTop: boolean;
 }) => (
   <div
-    className={`flex items-center gap-1.5 px-2.5 h-[24px] ${
+    className={`flex items-center gap-2 px-2.5 ${
       isTop ? "border-b border-border/40" : ""
     } ${isPicked ? "bg-primary/10" : ""}`}
+    style={{ height: 32 }}
   >
     {team ? (
       <>
-        <TeamLogo src={team.logo} alt={team.name} className="w-4 h-4" />
-        <span className="text-[10px] text-muted-foreground font-body font-bold w-3 text-center shrink-0">
+        <TeamLogo src={team.logo} alt={team.name} className="w-6 h-6" />
+        <span className="text-[11px] text-muted-foreground font-body font-bold w-3 shrink-0">
           {team.seed ?? ""}
         </span>
-        <span className="font-body text-xs font-semibold flex-1 truncate">
-          {isPlayInPlaceholder(team.abbreviation) ? "TBD" : team.name}
+        <span className="font-display text-sm tracking-wide flex-1 truncate">
+          {isPlayInPlaceholder(team.abbreviation) ? "TBD" : team.abbreviation}
         </span>
-        {isPicked && <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />}
+        {isPicked && <span className="w-2 h-2 rounded-full bg-primary shrink-0" />}
       </>
     ) : (
       <>
-        <span className="w-4 h-4 inline-flex items-center justify-center text-[10px] opacity-30">🏀</span>
-        <span className="text-[10px] w-3" />
-        <span className="font-body text-xs text-muted-foreground/50 flex-1">TBD</span>
+        <span className="w-6 h-6 inline-flex items-center justify-center text-sm opacity-30">🏀</span>
+        <span className="text-[11px] w-3" />
+        <span className="font-display text-sm tracking-wide text-muted-foreground/50 flex-1">TBD</span>
       </>
     )}
   </div>
@@ -154,6 +139,7 @@ const BracketCard = ({
   topTeam,
   bottomTeam,
   pickedWinner,
+  bet,
   x,
   y,
   isChampionship,
@@ -161,29 +147,53 @@ const BracketCard = ({
   topTeam?: Team;
   bottomTeam?: Team;
   pickedWinner?: string;
+  bet?: BetSelection;
   x: number;
   y: number;
   isChampionship?: boolean;
-}) => (
-  <div
-    className={`absolute bg-card rounded border border-border/60 overflow-hidden ${
-      isChampionship ? "shadow-md" : ""
-    }`}
-    style={{ left: x, top: y, width: CARD_W, height: CARD_H }}
-  >
-    <TeamRow team={topTeam} isPicked={pickedWinner === topTeam?.abbreviation} isTop />
-    <TeamRow team={bottomTeam} isPicked={pickedWinner === bottomTeam?.abbreviation} isTop={false} />
-  </div>
-);
+}) => {
+  const winnerTeam =
+    bet?.winner === topTeam?.abbreviation ? topTeam
+    : bet?.winner === bottomTeam?.abbreviation ? bottomTeam
+    : null;
+
+  return (
+    <div
+      className={`absolute bg-card rounded-lg border overflow-hidden ${
+        isChampionship
+          ? "border-primary/40 shadow-md shadow-primary/10"
+          : "border-border/60"
+      }`}
+      style={{ left: x, top: y, width: CARD_W, height: CARD_H }}
+    >
+      <TeamSlot team={topTeam} isPicked={pickedWinner === topTeam?.abbreviation} isTop />
+      <TeamSlot team={bottomTeam} isPicked={pickedWinner === bottomTeam?.abbreviation} isTop={false} />
+
+      {/* Pick summary */}
+      {winnerTeam ? (
+        <div className="flex items-center justify-center" style={{ height: 24 }}>
+          <span className="text-[11px] font-body text-primary font-semibold">
+            {winnerTeam.abbreviation} in {bet!.gamesInSeries}
+          </span>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center" style={{ height: 24 }}>
+          <span className="text-[10px] font-body text-muted-foreground/40 italic">No pick</span>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // ── Main bracket ──
 
 interface PlayoffBracketProps {
   picks?: Record<string, string>;
+  bets?: BetSelection[];
   seriesList?: BracketSeries[];
 }
 
-const PlayoffBracket = ({ picks = {}, seriesList }: PlayoffBracketProps) => {
+const PlayoffBracket = ({ picks = {}, bets = [], seriesList }: PlayoffBracketProps) => {
   const bracket = seriesList ?? defaultBracketSeries;
 
   const resolve = (id: string) => {
@@ -204,6 +214,7 @@ const PlayoffBracket = ({ picks = {}, seriesList }: PlayoffBracketProps) => {
         topTeam={topTeam}
         bottomTeam={bottomTeam}
         pickedWinner={picks[id]}
+        bet={bets.find((b) => b.seriesId === id)}
         x={x}
         y={y}
         isChampionship={isChamp}
@@ -216,19 +227,19 @@ const PlayoffBracket = ({ picks = {}, seriesList }: PlayoffBracketProps) => {
       <div style={{ width: TOTAL_W, minWidth: TOTAL_W }}>
         {/* Round headers */}
         <div className="flex mb-1" style={{ width: TOTAL_W }}>
-          {headerLabels.map((h, i) => (
+          {headerLabels.map((label, i) => (
             <div
               key={i}
-              className="text-center font-body text-[10px] font-medium text-muted-foreground uppercase tracking-wider"
+              className="text-center font-body text-[11px] font-medium text-muted-foreground uppercase tracking-wider"
               style={{ width: CARD_W, marginRight: i < 6 ? CONN_W : 0 }}
             >
-              {h.label}
+              {label}
             </div>
           ))}
         </div>
 
         {/* Conference labels */}
-        <div className="flex justify-between mb-2" style={{ width: TOTAL_W }}>
+        <div className="flex justify-between mb-3" style={{ width: TOTAL_W }}>
           <span className="font-display text-xs tracking-wider text-foreground uppercase">
             Western Conference
           </span>
@@ -239,7 +250,6 @@ const PlayoffBracket = ({ picks = {}, seriesList }: PlayoffBracketProps) => {
 
         {/* Bracket area */}
         <div className="relative" style={{ width: TOTAL_W, height: BRACKET_H }}>
-          {/* SVG connector lines */}
           <svg
             className="absolute inset-0 pointer-events-none"
             width={TOTAL_W}
@@ -247,35 +257,16 @@ const PlayoffBracket = ({ picks = {}, seriesList }: PlayoffBracketProps) => {
             fill="none"
           >
             {connectorPaths.map((d, i) => (
-              <path
-                key={i}
-                d={d}
-                stroke="hsl(var(--border))"
-                strokeWidth={1.5}
-                strokeOpacity={0.5}
-              />
+              <path key={i} d={d} stroke="hsl(var(--border))" strokeWidth={1.5} strokeOpacity={0.5} />
             ))}
           </svg>
 
-          {/* West R1 */}
           {westR1Ids.map((id, i) => renderCard(id, COLS.r1w, R1_Y[i]))}
-
-          {/* West Semi */}
           {westSemiIds.map((id, i) => renderCard(id, COLS.sw, SEMI_Y[i]))}
-
-          {/* West CF */}
           {renderCard("west-conf-finals", COLS.cfw, CF_Y)}
-
-          {/* Finals */}
           {renderCard("nba-finals", COLS.finals, FINALS_Y, true)}
-
-          {/* East CF */}
           {renderCard("east-conf-finals", COLS.cfe, CF_Y)}
-
-          {/* East Semi */}
           {eastSemiIds.map((id, i) => renderCard(id, COLS.se, SEMI_Y[i]))}
-
-          {/* East R1 */}
           {eastR1Ids.map((id, i) => renderCard(id, COLS.r1e, R1_Y[i]))}
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { PenLine, CheckCircle, LogIn, LayoutGrid, Network } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PlayoffBracket from "@/components/PlayoffBracket";

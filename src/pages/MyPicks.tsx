@@ -137,6 +137,36 @@ const MyPicks = () => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [selectedRound, setSelectedRound] = useState("all");
   const [showBracket, setShowBracket] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const bracketRef = useRef<HTMLDivElement>(null);
+
+  const handleDownloadBracket = useCallback(async () => {
+    if (!bracketRef.current) return;
+    setDownloading(true);
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const jsPDF = (await import("jspdf")).default;
+
+      const canvas = await html2canvas(bracketRef.current, {
+        backgroundColor: "#0a0a0a",
+        scale: 2,
+        useCORS: true,
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "px",
+        format: [canvas.width, canvas.height],
+      });
+      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+      pdf.save(`${profileName ?? "my"}-bracket.pdf`);
+    } catch (e) {
+      console.error("Failed to download bracket", e);
+    } finally {
+      setDownloading(false);
+    }
+  }, [profileName]);
 
   useEffect(() => {
     if (authLoading) return;

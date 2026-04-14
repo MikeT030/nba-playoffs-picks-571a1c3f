@@ -16,7 +16,7 @@ interface BetSelection {
 
 // ── Layout constants ──
 const CARD_H = 88;
-const CARD_W = 164;
+const CARD_W = 189;
 const CONN_W = 28;
 const COL_STEP = CARD_W + CONN_W;
 

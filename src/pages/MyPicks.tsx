@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import { PenLine, CheckCircle, LogIn, LayoutGrid, Network, Share2 } from "lucide-react";
+import { PenLine, CheckCircle, LogIn, LayoutGrid, Network } from "lucide-react";
+import shareIcon from "@/assets/share-icon.svg";
 import { useNavigate } from "react-router-dom";
 import PlayoffBracket from "@/components/PlayoffBracket";
 import TeamLogo from "@/components/TeamLogo";
@@ -358,7 +359,7 @@ const MyPicks = () => {
               disabled={downloading}
               className="inline-flex items-center gap-1.5 font-body text-primary hover:text-primary/80 underline underline-offset-2 disabled:opacity-50 mb-4 text-sm font-medium"
             >
-              <Share2 size={14} />
+              <img src={shareIcon} alt="Share" className="w-3.5 h-3.5" style={{ filter: "invert(1)" }} />
               {downloading ? "Generating..." : "Share Bracket"}
             </button>
             <PlayoffBracket ref={bracketRef} picks={picks} bets={bets} />

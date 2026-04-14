@@ -357,9 +357,11 @@ const MyPicks = () => {
             <button
               onClick={handleShareBracket}
               disabled={downloading}
-              className="inline-flex items-center gap-1.5 font-body text-primary hover:text-primary/80 underline underline-offset-2 disabled:opacity-50 mb-4 text-sm font-medium"
+              className="inline-flex items-center gap-1.5 font-body text-white hover:text-white/80 underline underline-offset-2 disabled:opacity-50 mb-4 text-sm font-medium"
             >
-              <img src={shareIcon} alt="Share" className="w-3.5 h-3.5" />
+              <svg width="14" height="14" viewBox="0 0 40 41" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                <path fillRule="evenodd" clipRule="evenodd" d="M22 6.83754V26.003C22 27.1059 21.1123 28 20 28C18.8954 28 18 27.105 18 26.003V6.83106L15.7411 9.08998C14.9672 9.86383 13.7122 9.86343 12.9257 9.07694C12.1446 8.29589 12.1493 7.02495 12.9127 6.26155L18.5956 0.578616C18.9804 0.193832 19.4841 0.00047404 19.9901 0L20.0054 0.00597072C20.5133 0.00705428 21.0184 0.199037 21.3979 0.578616L27.0809 6.26155C27.8547 7.0354 27.8543 8.29045 27.0678 9.07694C26.2868 9.85799 25.0158 9.85338 24.2524 9.08998L22 6.83754ZM4 37H36V22.9908C36 21.8913 36.8877 21 38 21C39.1046 21 40 21.8982 40 22.9908V39.0092C40 39.5585 39.7784 40.0558 39.418 40.416C39.0521 40.7774 38.554 41 38.0027 41H1.99729C1.44728 41 0.949187 40.7793 0.587987 40.4201C0.223492 40.0524 0 39.555 0 39.0092V22.9908C0 21.8913 0.88773 21 2 21C3.10457 21 4 21.8982 4 22.9908V37Z" fill="white"/>
+              </svg>
               {downloading ? "Generating..." : "Share Bracket"}
             </button>
             <PlayoffBracket ref={bracketRef} picks={picks} bets={bets} />

@@ -149,7 +149,7 @@ const MyPicks = () => {
 
       // Create a wrapper with the headline for capture
       const wrapper = document.createElement("div");
-      wrapper.style.cssText = "position:absolute;left:-9999px;top:0;background:#0a0a0a;padding:32px 40px;";
+      wrapper.style.cssText = "position:absolute;left:-9999px;top:0;background:#0a0a0a;padding:32px 40px 48px;";
       const headline = document.createElement("h1");
       headline.textContent = `${profileName ?? "My"}'s 2026 Playoffs Picks`;
       headline.style.cssText = "font-family:'Bebas Neue',sans-serif;font-size:32px;color:#fff;letter-spacing:0.08em;text-align:center;margin-bottom:24px;";
@@ -159,13 +159,20 @@ const MyPicks = () => {
       // Remove overflow constraints so full bracket is captured
       clone.style.overflow = "visible";
       clone.style.width = "max-content";
-      const scrollContainer = clone.closest("[class*='overflow']") as HTMLElement | null;
-      if (scrollContainer) scrollContainer.style.overflow = "visible";
-      // Also fix the parent scroll wrapper inside the clone
-      const innerScroll = clone.querySelector("[class*='overflow']") as HTMLElement | null;
-      if (innerScroll) {
-        innerScroll.style.overflow = "visible";
-        innerScroll.style.width = "max-content";
+      // Fix all overflow-hidden containers inside the clone
+      clone.querySelectorAll("*").forEach((el) => {
+        const htmlEl = el as HTMLElement;
+        const cs = htmlEl.style.overflow || "";
+        if (cs === "hidden" || cs === "auto" || cs === "scroll" || htmlEl.className?.includes?.("overflow")) {
+          htmlEl.style.overflow = "visible";
+        }
+      });
+      // Ensure the relative bracket area has enough height for cards + labels
+      const relativeContainer = clone.querySelector("[class*='relative']") as HTMLElement | null;
+      if (relativeContainer) {
+        relativeContainer.style.overflow = "visible";
+        relativeContainer.style.height = "auto";
+        relativeContainer.style.minHeight = relativeContainer.style.height;
       }
       wrapper.style.width = "max-content";
       wrapper.appendChild(clone);

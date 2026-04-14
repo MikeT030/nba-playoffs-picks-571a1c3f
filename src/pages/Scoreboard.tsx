@@ -358,19 +358,19 @@ const Scoreboard = () => {
             <AccordionContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-body text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
-                  <span className="font-display text-primary text-base w-6 text-right">3</span>
+                  <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">3 pts</span>
                   <span>Correct winner + correct game count on the right series</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-display text-primary text-base w-6 text-right">2</span>
+                  <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">2 pts</span>
                   <span>Correct winner on the right series (wrong game count)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-display text-primary text-base w-6 text-right">1</span>
+                  <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">1 pt</span>
                   <span>Picked a team that won, but assigned to the wrong series</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-display text-primary text-base w-6 text-right">+4</span>
+                  <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">+4 pts</span>
                   <span>Correctly predicted the NBA Finals champion</span>
                 </div>
               </div>

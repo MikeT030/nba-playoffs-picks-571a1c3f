@@ -71,11 +71,6 @@ const MatchCard = ({ match }: MatchCardProps) => {
               Live
             </span>
           )}
-          {match.status === "upcoming" && (
-            <span className="text-[10px] text-primary font-body font-semibold uppercase tracking-widest">
-              Upcoming
-            </span>
-          )}
           {match.status === "final" && (
             <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest">
               Final

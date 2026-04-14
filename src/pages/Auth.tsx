@@ -18,7 +18,7 @@ const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) navigate("/my-picks", { replace: true });
+    if (user) navigate("/", { replace: true });
   }, [user, navigate]);
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
@@ -49,11 +49,11 @@ const Auth = () => {
       if (isExistingUser) {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        navigate("/my-picks");
+        navigate("/");
       } else {
         const { error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
-        navigate("/make-your-bets");
+        navigate("/");
       }
     } catch (err: any) {
       toast.error(err.message);

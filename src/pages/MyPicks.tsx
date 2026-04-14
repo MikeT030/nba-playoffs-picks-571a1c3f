@@ -179,6 +179,8 @@ const MyPicks = () => {
         backgroundColor: "#0a0a0a",
         scale: 2,
         useCORS: true,
+        width: wrapper.scrollWidth,
+        height: wrapper.scrollHeight,
       });
 
       document.body.removeChild(wrapper);

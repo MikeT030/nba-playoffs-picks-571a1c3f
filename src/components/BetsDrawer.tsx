@@ -301,7 +301,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
                   navigate("/auth");
                 }}
               >
-                SIGN IN
+                SIGN IN / SIGN UP
               </button>
             </div>
           </div>

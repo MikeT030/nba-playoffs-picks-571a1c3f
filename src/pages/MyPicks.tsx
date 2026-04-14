@@ -317,9 +317,9 @@ const MyPicks = () => {
             <button
               onClick={handleDownloadBracket}
               disabled={downloading}
-              className="flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 disabled:opacity-50 mb-4"
+              className="inline-flex items-center gap-1.5 text-xs font-body text-primary hover:text-primary/80 underline underline-offset-2 disabled:opacity-50 mb-4"
             >
-              <Download size={16} />
+              <Download size={14} />
               {downloading ? "Generating..." : "Download Bracket"}
             </button>
             <PlayoffBracket ref={bracketRef} picks={picks} bets={bets} />

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { PenLine, CheckCircle, LogIn, Network } from "lucide-react";
+import { PenLine, CheckCircle, LogIn, LayoutGrid, Network } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PlayoffBracket from "@/components/PlayoffBracket";
 import TeamLogo from "@/components/TeamLogo";
@@ -208,33 +208,47 @@ const MyPicks = () => {
     );
   }
 
-  const actionButtons = (
-    <div className="flex items-center gap-3 mb-6">
+  const editPicksButton = (
+    <button
+      onClick={() => setBetsOpen(true)}
+      className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 mb-4"
+    >
+      {bets.length > 0 ? (
+        <>
+          <CheckCircle size={18} />
+          Edit Your Picks
+        </>
+      ) : (
+        <>
+          <PenLine size={18} />
+          Make Your Picks
+        </>
+      )}
+    </button>
+  );
+
+  const viewTabs = (
+    <div className="flex border-b border-border/40 mb-6">
       <button
-        onClick={() => setBetsOpen(true)}
-        className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
-      >
-        {bets.length > 0 ? (
-          <>
-            <CheckCircle size={18} />
-            Edit Your Picks
-          </>
-        ) : (
-          <>
-            <PenLine size={18} />
-            Make Your Picks
-          </>
-        )}
-      </button>
-      <button
-        onClick={() => setShowBracket((v) => !v)}
-        className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 border ${
-          showBracket
-            ? "bg-primary/15 text-primary border-primary/40"
-            : "bg-card text-foreground border-border hover:bg-accent"
+        onClick={() => setShowBracket(false)}
+        className={`flex items-center gap-2 px-4 py-2.5 font-body text-sm font-medium transition-all duration-200 border-b-2 -mb-px ${
+          !showBracket
+            ? "border-primary text-primary"
+            : "border-transparent text-muted-foreground hover:text-foreground"
         }`}
       >
-        <Network size={18} className="rotate-90" />
+        <LayoutGrid size={16} />
+        Cards
+      </button>
+      <button
+        onClick={() => setShowBracket(true)}
+        className={`flex items-center gap-2 px-4 py-2.5 font-body text-sm font-medium transition-all duration-200 border-b-2 -mb-px ${
+          showBracket
+            ? "border-primary text-primary"
+            : "border-transparent text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        <Network size={16} className="rotate-90" />
         Bracket
       </button>
     </div>
@@ -245,7 +259,7 @@ const MyPicks = () => {
       <div className="min-h-screen bg-background pb-28">
         <HeroBanner title="MY PICKS" subtitle="NBA Playoffs 2026" />
         <section className="container py-10">
-          {actionButtons}
+          {editPicksButton}
           <div className="flex items-center justify-center py-8">
             <div className="text-center">
               <p className="font-display text-2xl tracking-wider mb-2">NO PICKS YET</p>
@@ -265,7 +279,8 @@ const MyPicks = () => {
       <HeroBanner title="MY PICKS" subtitle={`${profileName}'s predictions · ${bets.length} picks`} />
 
       <section className="container py-8 pb-24">
-        {actionButtons}
+        {editPicksButton}
+        {viewTabs}
 
         {showBracket ? (
           <PlayoffBracket picks={picks} bets={bets} />

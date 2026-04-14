@@ -76,19 +76,19 @@ const MatchCard = ({ match }: MatchCardProps) => {
 
       <div className="p-5 flex items-center gap-4 pt-4">
         {/* Away Team */}
-        <div className="flex-1 flex items-center gap-3">
+        <div className="flex-1 flex items-center gap-2">
           {match.awayTeam.seed && (
             <span className="text-xs text-muted-foreground font-body font-semibold w-4 text-center shrink-0">{match.awayTeam.seed}</span>
           )}
           <TeamLogo src={match.awayTeam.logo} alt={match.awayTeam.name} className="w-10 h-10" />
-          <div className="flex flex-col justify-center">
-            <p className="font-display text-xl tracking-wide leading-none">{match.awayTeam.abbreviation}</p>
-            <p className="text-xs text-muted-foreground font-body hidden sm:block mt-0.5">{match.awayTeam.name}</p>
+          <div>
+            <p className="font-display text-xl tracking-wide">{match.awayTeam.abbreviation}</p>
+            <p className="text-xs text-muted-foreground font-body hidden sm:block">{match.awayTeam.name}</p>
           </div>
         </div>
 
         {/* Score & Series */}
-        <div className="text-center px-4 flex flex-col justify-center">
+        <div className="text-center px-4">
           <div className="h-0">
             {match.status === "live" && (
               <span className="text-[10px] text-loss font-body font-semibold uppercase tracking-widest animate-pulse block -translate-y-5">
@@ -97,9 +97,9 @@ const MatchCard = ({ match }: MatchCardProps) => {
             )}
           </div>
           <div className="flex items-center gap-3">
-            <span className="font-display text-2xl leading-none">{match.awayScore}</span>
+            <span className="font-display text-2xl">{match.awayScore}</span>
             <span className="text-muted-foreground font-body text-sm">—</span>
-            <span className="font-display text-2xl leading-none">{match.homeScore}</span>
+            <span className="font-display text-2xl">{match.homeScore}</span>
           </div>
           <p className="text-xs text-muted-foreground font-body mt-1">
             Series {match.awayWins} – {match.homeWins}
@@ -107,10 +107,10 @@ const MatchCard = ({ match }: MatchCardProps) => {
         </div>
 
         {/* Home Team */}
-        <div className="flex-1 flex items-center gap-3 justify-end text-right">
-          <div className="flex flex-col justify-center items-end">
-            <p className="font-display text-xl tracking-wide leading-none">{match.homeTeam.abbreviation}</p>
-            <p className="text-xs text-muted-foreground font-body hidden sm:block mt-0.5">{match.homeTeam.name}</p>
+        <div className="flex-1 flex items-center gap-2 justify-end text-right">
+          <div>
+            <p className="font-display text-xl tracking-wide">{match.homeTeam.abbreviation}</p>
+            <p className="text-xs text-muted-foreground font-body hidden sm:block">{match.homeTeam.name}</p>
           </div>
           <TeamLogo src={match.homeTeam.logo} alt={match.homeTeam.name} className="w-10 h-10" />
           {match.homeTeam.seed && (

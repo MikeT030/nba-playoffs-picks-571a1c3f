@@ -22,13 +22,13 @@ const CONN_W = 28;
 const COL_STEP = CARD_W + CONN_W;
 
 // Vertical positions (top of each card)
-const R1_Y = [0, 110, 256, 366];
-// Centers: 54, 164, 310, 420
-// Semi[0] = (54+164)/2=109 → top=55   Semi[1] = (310+420)/2=365 → top=311
-const SEMI_Y = [55, 311];
-// CF center = (109+365)/2 = 237 → top=183
-const CF_Y = 183;
-const FINALS_Y = 183;
+const R1_Y = [0, 120, 276, 396];
+// Centers: 54, 174, 330, 450
+// Semi[0] = (54+174)/2=114 → top=60   Semi[1] = (330+450)/2=390 → top=336
+const SEMI_Y = [60, 336];
+// CF center = (114+390)/2 = 252 → top=198
+const CF_Y = 198;
+const FINALS_Y = 198;
 const BRACKET_H = R1_Y[R1_Y.length - 1] + CARD_H; // 442
 
 const COLS = {

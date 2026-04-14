@@ -62,9 +62,26 @@ const MatchCard = ({ match }: MatchCardProps) => {
         <span className="text-xs text-muted-foreground font-body font-medium uppercase tracking-wider">
           {match.round} · Game {match.gameNumber}
         </span>
-        <span className="text-xs text-muted-foreground font-body">
-          {match.date} · {match.time}
-        </span>
+        <div className="flex flex-col items-end">
+          <span className="text-xs text-muted-foreground font-body">
+            {match.date} · {match.time}
+          </span>
+          {match.status === "live" && (
+            <span className="text-[10px] text-loss font-body font-semibold uppercase tracking-widest animate-pulse">
+              Live
+            </span>
+          )}
+          {match.status === "upcoming" && (
+            <span className="text-[10px] text-primary font-body font-semibold uppercase tracking-widest">
+              Upcoming
+            </span>
+          )}
+          {match.status === "final" && (
+            <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest">
+              Final
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="p-5 flex items-center gap-4">
@@ -87,21 +104,6 @@ const MatchCard = ({ match }: MatchCardProps) => {
             <span className="text-muted-foreground font-body text-sm">—</span>
             <span className="font-display text-3xl">{match.homeWins}</span>
           </div>
-          {match.status === "upcoming" && (
-            <span className="text-[10px] text-primary font-body font-semibold uppercase tracking-widest">
-              Upcoming
-            </span>
-          )}
-          {match.status === "live" && (
-            <span className="text-[10px] text-loss font-body font-semibold uppercase tracking-widest animate-pulse">
-              Live
-            </span>
-          )}
-          {match.status === "final" && (
-            <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest">
-              Final
-            </span>
-          )}
         </div>
 
         {/* Home Team */}

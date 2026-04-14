@@ -241,6 +241,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
   const handleNextRound = () => {
     if (currentRoundComplete && !isLastRound) {
       setSelectedRound(roundOrder[currentRoundIndex + 1]);
+      scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 

@@ -313,7 +313,17 @@ const MyPicks = () => {
         {viewTabs}
 
         {showBracket ? (
-          <PlayoffBracket picks={picks} bets={bets} />
+          <>
+            <button
+              onClick={handleDownloadBracket}
+              disabled={downloading}
+              className="flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 disabled:opacity-50 mb-4"
+            >
+              <Download size={16} />
+              {downloading ? "Generating..." : "Download Bracket"}
+            </button>
+            <PlayoffBracket ref={bracketRef} picks={picks} bets={bets} />
+          </>
         ) : (
           <>
             <Select value={selectedRound} onValueChange={setSelectedRound}>

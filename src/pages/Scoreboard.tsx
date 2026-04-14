@@ -351,7 +351,7 @@ const Scoreboard = () => {
         <Accordion type="single" collapsible className="mt-8">
           <AccordionItem value="scoring" className="bg-card rounded-lg px-5 py-0 border-none">
             <AccordionTrigger className="font-display text-sm tracking-wider text-foreground flex items-center gap-2 hover:no-underline py-4">
-              <span className="flex items-center gap-2 text-sm">
+              <span className="flex items-center gap-2 text-base">
                 SCORING SYSTEM
               </span>
             </AccordionTrigger>

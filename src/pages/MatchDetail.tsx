@@ -45,6 +45,29 @@ const MatchDetail = () => {
     enabled: !!user && !!bracketSeriesId,
   });
 
+  // Fetch series result
+  const { data: seriesResult } = useQuery({
+    queryKey: ["series-result", bracketSeriesId],
+    queryFn: async () => {
+      if (!bracketSeriesId) return null;
+      const { data } = await supabase
+        .from("series_results")
+        .select("series_id, winner, games_played")
+        .eq("series_id", bracketSeriesId)
+        .maybeSingle();
+      return data;
+    },
+    enabled: !!bracketSeriesId,
+  });
+
+  const computePickPoints = (pick: { winner: string; games_in_series: number }) => {
+    if (!seriesResult) return null;
+    if (seriesResult.winner === pick.winner) {
+      return seriesResult.games_played === pick.games_in_series ? 3 : 2;
+    }
+    return 0;
+  };
+
   // Fetch ALL picks for this series from all users
   const { data: allPicks } = useQuery({
     queryKey: ["series-picks", bracketSeriesId],
@@ -140,6 +163,7 @@ const MatchDetail = () => {
 
           {user && userPick && (() => {
             const pickedTeam = userPick.winner === match.homeTeam.abbreviation ? match.homeTeam : match.awayTeam;
+            const pts = computePickPoints(userPick);
             return (
               <div className="items-center justify-center gap-3 bg-transparent rounded-lg px-4 py-3 flex flex-row mt-[18px]">
                 <span className="text-sm font-body uppercase tracking-wider text-primary-foreground">Your Pick</span>
@@ -148,6 +172,9 @@ const MatchDetail = () => {
                   {pickedTeam.abbreviation}
                 </span>
                 <span className="font-body text-primary-foreground text-sm">in <span className="font-bold">{userPick.games_in_series}</span></span>
+                {pts !== null && (
+                  <span className="font-body text-primary font-bold text-sm">· {pts} pts</span>
+                )}
               </div>
             );
           })()}
@@ -164,6 +191,7 @@ const MatchDetail = () => {
               const pickedTeam =
                 pick.winner === match.homeTeam.abbreviation ? match.homeTeam : match.awayTeam;
               const isCurrentUser = user && pick.user_id === user.id;
+              const pts = computePickPoints(pick);
               return (
                 <div
                   key={pick.user_id}
@@ -180,6 +208,9 @@ const MatchDetail = () => {
                         {pickedTeam.abbreviation}
                       </span>{" "}
                       in <span className="font-bold text-white">{pick.games_in_series}</span>
+                      {pts !== null && (
+                        <span className="ml-2 text-primary font-bold">· {pts} pts</span>
+                      )}
                     </p>
                   </div>
                   <TeamLogo src={pickedTeam.logo} alt={pickedTeam.name} className="w-8 h-8" />

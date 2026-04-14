@@ -109,12 +109,12 @@ const MatchDetail = () => {
 
             <div className="text-center">
               <div className="flex items-center gap-4">
-                <span className="font-display text-5xl md:text-7xl">{match.awayWins}</span>
+                <span className="font-display text-5xl md:text-7xl">{match.awayScore}</span>
                 <span className="text-muted-foreground font-display text-3xl">:</span>
-                <span className="font-display text-5xl md:text-7xl">{match.homeWins}</span>
+                <span className="font-display text-5xl md:text-7xl">{match.homeScore}</span>
               </div>
               <p className="text-xs text-muted-foreground font-body mt-2 uppercase tracking-wider">
-                Series
+                Series {match.awayWins} – {match.homeWins}
               </p>
             </div>
 

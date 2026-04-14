@@ -92,7 +92,7 @@ const MatchDetail = () => {
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-body text-sm mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Matchups
+            Back
           </Link>
 
           <p className="text-xs text-primary font-body font-semibold uppercase tracking-widest mb-4 text-center">

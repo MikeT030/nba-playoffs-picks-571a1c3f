@@ -124,7 +124,7 @@ const MatchDetail = () => {
                 <span className="text-muted-foreground font-display text-3xl">:</span>
                 <span className="font-display text-5xl md:text-7xl">{match.homeScore}</span>
               </div>
-              <p className="text-xs text-muted-foreground font-body mt-2 uppercase tracking-wider">
+              <p className="text-xs text-foreground font-body mt-2 uppercase tracking-wider">
                 Series {match.awayWins} – {match.homeWins}
               </p>
             </div>

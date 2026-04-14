@@ -99,7 +99,7 @@ const MatchDetail = () => {
             {match.round} · Game {match.gameNumber} · {match.date}
           </p>
 
-          <div className="flex items-center justify-between gap-6">
+          <div className="flex items-center justify-between gap-6 pt-[4px]">
             <div className="flex-1 text-center flex flex-col items-center">
               <TeamLogo src={match.awayTeam.logo} alt={match.awayTeam.name} className="w-16 h-16 md:w-20 md:h-20" />
               <h2 className="font-display text-3xl md:text-4xl tracking-wider mt-2">

@@ -104,21 +104,6 @@ const MatchCard = ({ match }: MatchCardProps) => {
             <span className="text-muted-foreground font-body text-sm">—</span>
             <span className="font-display text-3xl">{match.homeWins}</span>
           </div>
-          {match.status === "upcoming" && (
-            <span className="text-[10px] text-primary font-body font-semibold uppercase tracking-widest">
-              Upcoming
-            </span>
-          )}
-          {match.status === "live" && (
-            <span className="text-[10px] text-loss font-body font-semibold uppercase tracking-widest animate-pulse">
-              Live
-            </span>
-          )}
-          {match.status === "final" && (
-            <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest">
-              Final
-            </span>
-          )}
         </div>
 
         {/* Home Team */}

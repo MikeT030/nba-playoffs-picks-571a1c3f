@@ -45,6 +45,29 @@ const MatchDetail = () => {
     enabled: !!user && !!bracketSeriesId,
   });
 
+  // Fetch series result
+  const { data: seriesResult } = useQuery({
+    queryKey: ["series-result", bracketSeriesId],
+    queryFn: async () => {
+      if (!bracketSeriesId) return null;
+      const { data } = await supabase
+        .from("series_results")
+        .select("series_id, winner, games_played")
+        .eq("series_id", bracketSeriesId)
+        .maybeSingle();
+      return data;
+    },
+    enabled: !!bracketSeriesId,
+  });
+
+  const computePickPoints = (pick: { winner: string; games_in_series: number }) => {
+    if (!seriesResult) return null;
+    if (seriesResult.winner === pick.winner) {
+      return seriesResult.games_played === pick.games_in_series ? 3 : 2;
+    }
+    return 0;
+  };
+
   // Fetch ALL picks for this series from all users
   const { data: allPicks } = useQuery({
     queryKey: ["series-picks", bracketSeriesId],

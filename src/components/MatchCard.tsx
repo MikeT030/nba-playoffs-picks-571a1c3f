@@ -7,6 +7,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useMemo } from "react";
 
+interface SeriesResult {
+  series_id: string;
+  winner: string;
+  games_played: number;
+}
+
 const useUserBet = (match: Match) => {
   const { user } = useAuth();
   const { data: bracketData } = useBracketData();
@@ -35,7 +41,30 @@ const useUserBet = (match: Match) => {
     enabled: !!user && !!bracketSeriesId,
   });
 
-  return dbPick ?? null;
+  const { data: seriesResult } = useQuery({
+    queryKey: ["series-result", bracketSeriesId],
+    queryFn: async () => {
+      if (!bracketSeriesId) return null;
+      const { data } = await supabase
+        .from("series_results")
+        .select("series_id, winner, games_played")
+        .eq("series_id", bracketSeriesId)
+        .maybeSingle();
+      return data as SeriesResult | null;
+    },
+    enabled: !!bracketSeriesId,
+  });
+
+  const points = useMemo(() => {
+    if (!dbPick || !seriesResult) return null;
+    if (seriesResult.winner === dbPick.winner) {
+      if (seriesResult.games_played === dbPick.gamesInSeries) return 3;
+      return 2;
+    }
+    return 0;
+  }, [dbPick, seriesResult]);
+
+  return { pick: dbPick ?? null, points };
 };
 
 interface MatchCardProps {
@@ -43,7 +72,7 @@ interface MatchCardProps {
 }
 
 const MatchCard = ({ match }: MatchCardProps) => {
-  const bet = useUserBet(match);
+  const { pick: bet, points } = useUserBet(match);
 
   const betTeamName = bet
     ? match.homeTeam.abbreviation === bet.winner
@@ -121,8 +150,11 @@ const MatchCard = ({ match }: MatchCardProps) => {
 
       {bet && betTeamName && (
         <div className="px-4 pb-3 -mt-1">
-          <p className="text-xs font-body text-foreground text-center">
+          <p className="font-body text-primary text-center pt-0 text-sm">
             Your Pick: <span className="font-bold">{bet.winner}</span> in <span className="font-bold">{bet.gamesInSeries}</span>
+            {points !== null && (
+              <span className="ml-2 text-foreground font-medium">· {points} pts</span>
+            )}
           </p>
         </div>
       )}

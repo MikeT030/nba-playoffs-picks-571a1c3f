@@ -171,13 +171,13 @@ const BracketCard = ({
 
       {/* Pick summary */}
       {winnerTeam ? (
-        <div className="px-3 py-0.5 text-center">
-          <span className="text-[10px] font-body text-primary font-medium">
+        <div className="flex items-center justify-center" style={{ height: 24 }}>
+          <span className="text-[11px] font-body text-primary font-semibold">
             {winnerTeam.abbreviation} in {bet!.gamesInSeries}
           </span>
         </div>
       ) : (
-        <div className="px-3 py-0.5 text-center">
+        <div className="flex items-center justify-center" style={{ height: 24 }}>
           <span className="text-[10px] font-body text-muted-foreground/40 italic">No pick</span>
         </div>
       )}

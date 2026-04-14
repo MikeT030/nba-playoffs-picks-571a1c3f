@@ -155,6 +155,18 @@ const MyPicks = () => {
       wrapper.appendChild(headline);
 
       const clone = bracketRef.current.cloneNode(true) as HTMLElement;
+      // Remove overflow constraints so full bracket is captured
+      clone.style.overflow = "visible";
+      clone.style.width = "max-content";
+      const scrollContainer = clone.closest("[class*='overflow']") as HTMLElement | null;
+      if (scrollContainer) scrollContainer.style.overflow = "visible";
+      // Also fix the parent scroll wrapper inside the clone
+      const innerScroll = clone.querySelector("[class*='overflow']") as HTMLElement | null;
+      if (innerScroll) {
+        innerScroll.style.overflow = "visible";
+        innerScroll.style.width = "max-content";
+      }
+      wrapper.style.width = "max-content";
       wrapper.appendChild(clone);
       document.body.appendChild(wrapper);
 

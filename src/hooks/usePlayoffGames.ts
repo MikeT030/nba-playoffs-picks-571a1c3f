@@ -131,7 +131,12 @@ export function usePlayoffGames(season: number = 2025) {
           return !apiTeamKeys.has(key);
         });
 
-        return [...apiMatches, ...tbdMatches];
+        const allMatches = [...apiMatches, ...tbdMatches];
+        // Add dummy CHA vs MIA final match
+        if (!allMatches.some((m) => m.id === "cha-mia")) {
+          allMatches.push(dummyFinalMatch);
+        }
+        return allMatches;
       } catch (error) {
         console.warn("Failed to fetch NBA data, using fallback:", error);
         return fallbackMatches;

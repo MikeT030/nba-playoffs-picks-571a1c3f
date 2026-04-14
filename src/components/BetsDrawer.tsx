@@ -153,6 +153,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
   const [selectedRound, setSelectedRound] = useState(roundOrder[0]);
   const [saving, setSaving] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   // Load existing profile name and picks when drawer opens
   useEffect(() => {

@@ -114,6 +114,11 @@ const MatchDetail = () => {
                   Live
                 </span>
               )}
+              {match.status === "final" && (
+                <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest -mt-6">
+                  Final
+                </span>
+              )}
               <div className="flex items-center gap-4">
                 <span className="font-display text-5xl md:text-7xl">{match.awayScore}</span>
                 <span className="text-muted-foreground font-display text-3xl">:</span>

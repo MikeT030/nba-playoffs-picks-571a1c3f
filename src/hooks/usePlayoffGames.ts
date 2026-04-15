@@ -33,7 +33,10 @@ const dummyFinalMatch: Match = {
 
 function gameStatusToLocal(status: string): "upcoming" | "live" | "final" {
   if (status === "Final") return "final";
-  if (status.includes(":") || status.startsWith("Q") || status.startsWith("Half")) return "live";
+  // Live statuses: "Q1 5:30", "Half", etc. — but NOT ISO datetimes like "2026-04-18T22:00:00Z"
+  if (status.startsWith("Q") || status.startsWith("Half")) return "live";
+  // A short status with ":" that isn't an ISO datetime (e.g. "Q3 2:15" parsed differently)
+  if (status.includes(":") && !status.includes("T") && status.length < 20) return "live";
   return "upcoming";
 }
 

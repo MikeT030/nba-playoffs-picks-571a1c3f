@@ -35,9 +35,9 @@ function gamesToSeriesGames(games: NbaGame[]): SeriesGame[] {
     const awayTeam = nbaTeamToTeam(g.visitor_team);
     const isFinal = g.status === "Final";
     const isLive =
-      g.status.includes(":") ||
       g.status.startsWith("Q") ||
-      g.status.startsWith("Half");
+      g.status.startsWith("Half") ||
+      (g.status.includes(":") && !g.status.includes("T") && g.status.length < 20);
 
     if (isFinal) {
       const winner =

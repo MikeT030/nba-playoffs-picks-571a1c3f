@@ -16,9 +16,13 @@ const MatchDetail = () => {
   const { data: bracketData } = useBracketData();
   const match = matches?.find((m) => m.id === id);
 
-  // Series games – only CHA vs MIA has per-game data for now
-  const seriesGames: SeriesGame[] | null = id === "cha-mia" ? chaMiaSeriesGames : null;
-  const [activeGameIdx, setActiveGameIdx] = useState(0);
+  // Series games from API/data
+  const { data: seriesGames } = useSeriesGames(
+    id,
+    match?.homeTeam.abbreviation,
+    match?.awayTeam.abbreviation
+  );
+  const hasSeriesGames = seriesGames && seriesGames.length > 1;
 
   // Default to latest game
   useEffect(() => {

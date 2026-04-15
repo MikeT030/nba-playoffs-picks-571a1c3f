@@ -320,14 +320,6 @@ const MyPicks = () => {
         </>
       );
     }
-    if (locked) {
-      return (
-        <>
-          <Lock size={18} />
-          Picks are locked. Tap me anyway?
-        </>
-      );
-    }
     return bets.length >= TOTAL_GAMES ? (
       <>
         <CheckCircle size={18} />
@@ -345,7 +337,7 @@ const MyPicks = () => {
     <button
       onClick={handlePickButtonClick}
       className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 mb-8 ${
-        locked
+        locked && monologueIndex >= 0
           ? "bg-muted/50 text-muted-foreground border border-border hover:bg-muted/70"
           : bets.length >= TOTAL_GAMES
             ? "bg-primary/15 text-primary border border-primary/40"

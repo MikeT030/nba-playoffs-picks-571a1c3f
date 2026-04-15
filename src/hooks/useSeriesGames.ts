@@ -23,7 +23,14 @@ function gamesToSeriesGames(games: NbaGame[]): SeriesGame[] {
   const wins: Record<string, number> = {};
   const result: SeriesGame[] = [];
 
-  sorted.forEach((g, idx) => {
+  // Only include played/live games (exclude upcoming)
+  const playedOrLive = sorted.filter((g) => {
+    if (g.status === "Final") return true;
+    if (g.status.includes(":") || g.status.startsWith("Q") || g.status.startsWith("Half")) return true;
+    return false;
+  });
+
+  playedOrLive.forEach((g, idx) => {
     const homeTeam = nbaTeamToTeam(g.home_team);
     const awayTeam = nbaTeamToTeam(g.visitor_team);
     const isFinal = g.status === "Final";

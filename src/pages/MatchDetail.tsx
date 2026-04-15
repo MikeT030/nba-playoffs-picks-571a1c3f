@@ -151,6 +151,7 @@ const MatchDetail = () => {
   const displayGameNum = activeGame ? activeGame.gameNumber : match.gameNumber;
   const displaySeriesAway = activeGame ? activeGame.seriesRecord[0] : match.awayWins;
   const displaySeriesHome = activeGame ? activeGame.seriesRecord[1] : match.homeWins;
+  const displayOt = activeGame ? activeGame.ot : undefined;
 
   return (
     <div className="min-h-screen bg-background pb-24">
@@ -206,7 +207,7 @@ const MatchDetail = () => {
               )}
               {displayStatus === "final" && (
                 <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest -mt-6">
-                  Final
+                  Final{displayOt ? `/${displayOt > 1 ? displayOt : ""}OT` : ""}
                 </span>
               )}
               <div className="flex items-center gap-4">

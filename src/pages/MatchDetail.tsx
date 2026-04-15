@@ -146,7 +146,7 @@ const MatchDetail = () => {
   }
 
   // Determine display data: use per-game data if available, otherwise series-level
-  const activeGame = hasSeriesGames ? seriesGames[activeGameIdx] : null;
+  const activeGame = hasSeriesGames ? playedGames[activeGameIdx] : null;
   const displayHome = activeGame ? activeGame.homeTeam : match.homeTeam;
   const displayAway = activeGame ? activeGame.awayTeam : match.awayTeam;
   const displayHomeScore = activeGame ? activeGame.homeScore : match.homeScore;

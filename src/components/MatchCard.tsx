@@ -130,6 +130,11 @@ const MatchCard = ({ match }: MatchCardProps) => {
                 Final
               </span>
             )}
+            {match.status === "upcoming" && (
+              <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest block -translate-y-5">
+                {match.time !== "TBD" ? match.time : "Upcoming"}
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-3">
             <span className="font-display text-2xl">{match.awayScore}</span>

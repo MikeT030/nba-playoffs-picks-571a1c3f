@@ -95,13 +95,13 @@ const MatchCard = ({ match }: MatchCardProps) => {
     >
       <div className="px-4 py-2 flex items-center justify-between border-b border-transparent">
         <span className="text-xs text-muted-foreground font-body font-medium uppercase tracking-wider">
-          {match.round} · Game {match.gameNumber}
+          {match.round} · Game {match.gameNumber} · {match.date}
         </span>
-        <div className="flex flex-col items-end">
-        <span className="text-xs text-muted-foreground font-body">
-          {match.status === "final" ? match.date : `${match.date} · ${match.time}`}
-        </span>
-        </div>
+        {match.status !== "final" && (
+          <span className="text-xs text-muted-foreground font-body">
+            {match.time}
+          </span>
+        )}
       </div>
 
       <div className="p-5 flex items-center gap-4 pt-[20px]">

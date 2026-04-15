@@ -3,23 +3,34 @@ import heroImage1 from "@/assets/hero-playoffs.jpg";
 import heroImage2 from "@/assets/hero-playoffs-2.jpg";
 import heroImage3 from "@/assets/hero-playoffs-3.jpg";
 
-const slides = [
+const defaultSlides = [
   { image: heroImage1, title: "NBA PLAYOFFS,\nBABY!", subtitle: "2026" },
   { image: heroImage2, title: "WHO'S TAKING\nTHE CROWN?", subtitle: "MAKE YOUR PICKS" },
   { image: heroImage3, title: "EVERY BUCKET\nCOUNTS", subtitle: "PLAYOFF MODE" },
 ];
 
-const HeroBanner = () => {
+interface HeroBannerProps {
+  title?: string;
+  subtitle?: string;
+}
+
+const HeroBanner = ({ title, subtitle }: HeroBannerProps) => {
+  const isCarousel = !title && !subtitle;
+  const slides = isCarousel
+    ? defaultSlides
+    : [{ image: heroImage1, title: title!, subtitle: subtitle! }];
+
   const [active, setActive] = useState(0);
 
   const next = useCallback(() => {
     setActive((prev) => (prev + 1) % slides.length);
-  }, []);
+  }, [slides.length]);
 
   useEffect(() => {
+    if (!isCarousel) return;
     const id = setInterval(next, 5000);
     return () => clearInterval(id);
-  }, [next]);
+  }, [next, isCarousel]);
 
   return (
     <div className="relative w-full h-[27.5vh] min-h-[198px] overflow-hidden">
@@ -51,21 +62,22 @@ const HeroBanner = () => {
             {slides[active].title}
           </h1>
 
-          {/* Nav dots */}
-          <div className="flex gap-2 mt-4">
-            {slides.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setActive(i)}
-                aria-label={`Go to slide ${i + 1}`}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  i === active
-                    ? "w-6 bg-primary"
-                    : "w-2 bg-foreground/40 hover:bg-foreground/60"
-                }`}
-              />
-            ))}
-          </div>
+          {isCarousel && (
+            <div className="flex gap-2 mt-4">
+              {slides.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActive(i)}
+                  aria-label={`Go to slide ${i + 1}`}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    i === active
+                      ? "w-6 bg-primary"
+                      : "w-2 bg-foreground/40 hover:bg-foreground/60"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

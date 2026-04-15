@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import { PenLine, CheckCircle, LogIn, LayoutGrid, Network } from "lucide-react";
+import { PenLine, CheckCircle, LogIn, LayoutGrid, Network, Lock } from "lucide-react";
 import shareIcon from "@/assets/share-icon.svg";
 import { useNavigate } from "react-router-dom";
 import PlayoffBracket from "@/components/PlayoffBracket";
@@ -23,6 +23,7 @@ import {
   type Team,
 } from "@/data/playoffsData";
 import { useBracketData } from "@/hooks/useBracketData";
+import { ALL_MONOLOGUE_LINES, isPlayoffsStarted } from "@/data/buttonMonologue";
 
 const rounds = [
   { value: "all", label: "All Rounds" },
@@ -141,6 +142,10 @@ const MyPicks = () => {
   const [selectedRound, setSelectedRound] = useState("all");
   const [showBracket, setShowBracket] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [monologueIndex, setMonologueIndex] = useState(-1);
+  const bracketRef = useRef<HTMLDivElement>(null);
+
+  const locked = isPlayoffsStarted();
   const bracketRef = useRef<HTMLDivElement>(null);
 
   const handleShareBracket = useCallback(async () => {
@@ -296,26 +301,59 @@ const MyPicks = () => {
         ? `WTF, bro. There are still ${gamesLeft} picks to make.`
         : "You did it, bro. Picks are legit and logged in.";
 
+  const handlePickButtonClick = () => {
+    if (locked) {
+      setMonologueIndex((prev) => {
+        const next = prev + 1;
+        return next >= ALL_MONOLOGUE_LINES.length ? 0 : next;
+      });
+    } else {
+      setBetsOpen(true);
+    }
+  };
+
+  const getPickButtonContent = () => {
+    if (locked && monologueIndex >= 0) {
+      return (
+        <>
+          <Lock size={18} />
+          {ALL_MONOLOGUE_LINES[monologueIndex]}
+        </>
+      );
+    }
+    if (locked) {
+      return (
+        <>
+          <Lock size={18} />
+          Picks are locked. Tap me anyway?
+        </>
+      );
+    }
+    return bets.length >= TOTAL_GAMES ? (
+      <>
+        <CheckCircle size={18} />
+        {infoLine}
+      </>
+    ) : (
+      <>
+        <PenLine size={18} />
+        {infoLine}
+      </>
+    );
+  };
+
   const editPicksButton = (
     <button
-      onClick={() => setBetsOpen(true)}
+      onClick={handlePickButtonClick}
       className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 mb-8 ${
-        bets.length >= TOTAL_GAMES
-          ? "bg-primary/15 text-primary border border-primary/40"
-          : "bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
+        locked
+          ? "bg-muted/50 text-muted-foreground border border-border hover:bg-muted/70"
+          : bets.length >= TOTAL_GAMES
+            ? "bg-primary/15 text-primary border border-primary/40"
+            : "bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
       }`}
     >
-      {bets.length >= TOTAL_GAMES ? (
-        <>
-          <CheckCircle size={18} />
-          {infoLine}
-        </>
-      ) : (
-        <>
-          <PenLine size={18} />
-          {infoLine}
-        </>
-      )}
+      {getPickButtonContent()}
     </button>
   );
 
@@ -361,7 +399,7 @@ const MyPicks = () => {
             </div>
           </div>
         </section>
-        <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setRefreshKey((k) => k + 1)} />
+        {!locked && <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setRefreshKey((k) => k + 1)} />}
       </div>
     );
   }
@@ -449,7 +487,7 @@ const MyPicks = () => {
         )}
       </section>
 
-      <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setRefreshKey((k) => k + 1)} />
+      {!locked && <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setRefreshKey((k) => k + 1)} />}
     </div>
   );
 };

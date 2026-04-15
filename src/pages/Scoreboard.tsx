@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Trophy, LayoutGrid } from "lucide-react";
+import { LayoutGrid } from "lucide-react";
 import allPicksIcon from "@/assets/all-picks-icon.svg";
 import HeroBanner from "@/components/HeroBanner";
 import {
@@ -12,7 +12,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
-import { bracketSeries } from "@/data/playoffsData";
+import { bracketSeries, type BracketSeries } from "@/data/playoffsData";
+import { useBracketData } from "@/hooks/useBracketData";
 
 
 
@@ -125,20 +126,22 @@ const getRankIcon = (index: number) => {
 };
 
 // Build a label for each series like "OKC-HOU"
-function getSeriesLabel(seriesId: string): string {
-  const s = bracketSeries.find((b) => b.id === seriesId);
+function getSeriesLabel(seriesId: string, seriesList: BracketSeries[]): string {
+  const s = seriesList.find((b) => b.id === seriesId);
   if (!s) return seriesId;
   const top = s.topTeam?.abbreviation || "TBD";
   const bot = s.bottomTeam?.abbreviation || "TBD";
   return `${top}-${bot}`;
 }
 
-function getSeriesRound(seriesId: string): string {
-  const s = bracketSeries.find((b) => b.id === seriesId);
+function getSeriesRound(seriesId: string, seriesList: BracketSeries[]): string {
+  const s = seriesList.find((b) => b.id === seriesId);
   return s?.round || "";
 }
 
 const AllPicksMatrix = () => {
+  const { data: resolvedBracket } = useBracketData();
+  const seriesList = resolvedBracket ?? bracketSeries;
   const [picks, setPicks] = useState<PickRow[]>([]);
   const [results, setResults] = useState<SeriesResult[]>([]);
   const [loading, setLoading] = useState(true);
@@ -172,8 +175,8 @@ const AllPicksMatrix = () => {
   // Order series by round then by bracket order
   const seriesIds = [...new Set(picks.map((p) => p.series_id))];
   const orderedSeries = seriesIds.sort((a, b) => {
-    const ra = roundOrder.indexOf(getSeriesRound(a));
-    const rb = roundOrder.indexOf(getSeriesRound(b));
+    const ra = roundOrder.indexOf(getSeriesRound(a, seriesList));
+    const rb = roundOrder.indexOf(getSeriesRound(b, seriesList));
     if (ra !== rb) return ra - rb;
     return a.localeCompare(b);
   });
@@ -210,7 +213,7 @@ const AllPicksMatrix = () => {
           </thead>
           <tbody>
             {orderedSeries.map((seriesId) => {
-              const round = getSeriesRound(seriesId);
+              const round = getSeriesRound(seriesId, seriesList);
               const showRound = round !== lastRound;
               lastRound = round;
 
@@ -225,7 +228,7 @@ const AllPicksMatrix = () => {
                     })() : ""}
                   </td>
                   <td className="sticky left-0 z-10 bg-[#22272E]/80 backdrop-blur-sm p-3 align-middle font-display tracking-wide whitespace-nowrap text-sm">
-                    {getSeriesLabel(seriesId)}
+                    {getSeriesLabel(seriesId, seriesList)}
                   </td>
                   {players.map((player) => {
                     const pick = pickMap.get(`${player}::${seriesId}`);

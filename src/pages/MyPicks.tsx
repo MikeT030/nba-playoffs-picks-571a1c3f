@@ -65,7 +65,7 @@ const PickCard = ({
         : null;
 
   return (
-    <div className="bg-card rounded-lg p-3.5">
+    <div className="rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md p-3.5 transition-all duration-200 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5">
       <p className="text-[11px] text-muted-foreground font-body font-medium uppercase tracking-wider mb-2.5">
         {round} · {conference}
       </p>

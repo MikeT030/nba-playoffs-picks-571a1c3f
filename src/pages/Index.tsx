@@ -84,7 +84,7 @@ const Index = () => {
       <HeroBanner />
 
       <section className="container py-10">
-        <p className="text-sm font-body text-muted-foreground mb-4">
+        <p className="text-sm font-body mb-4 text-[#d9d9d9] font-medium">
           {infoLine}
         </p>
 

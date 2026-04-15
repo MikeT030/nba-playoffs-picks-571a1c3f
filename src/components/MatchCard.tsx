@@ -98,9 +98,9 @@ const MatchCard = ({ match }: MatchCardProps) => {
           {match.round} · Game {match.gameNumber}
         </span>
         <div className="flex flex-col items-end">
-          <span className="text-xs text-muted-foreground font-body">
-            {match.date} · {match.time}
-          </span>
+        <span className="text-xs text-muted-foreground font-body">
+          {match.status === "final" ? match.date : `${match.date} · ${match.time}`}
+        </span>
         </div>
       </div>
 

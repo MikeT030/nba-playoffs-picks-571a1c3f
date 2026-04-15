@@ -99,12 +99,12 @@ const Index = () => {
           {pickCount >= TOTAL_GAMES ? (
             <>
               <CheckCircle size={18} />
-              Edit Your Picks
+              {infoLine}
             </>
           ) : (
             <>
               <PenLine size={18} />
-              Make Your Picks
+              {infoLine}
             </>
           )}
         </button>

@@ -1,12 +1,13 @@
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 import { useBracketData } from "@/hooks/useBracketData";
 import TeamLogo from "@/components/TeamLogo";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useState, useRef, useCallback } from "react";
+import { chaMiaSeriesGames, type SeriesGame } from "@/data/chamiaSeries";
 
 const MatchDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,11 +16,44 @@ const MatchDetail = () => {
   const { data: bracketData } = useBracketData();
   const match = matches?.find((m) => m.id === id);
 
+  // Series games – only CHA vs MIA has per-game data for now
+  const seriesGames: SeriesGame[] | null = id === "cha-mia" ? chaMiaSeriesGames : null;
+  const [activeGameIdx, setActiveGameIdx] = useState(0);
+
+  // Default to latest game
+  useEffect(() => {
+    if (seriesGames) setActiveGameIdx(seriesGames.length - 1);
+  }, [seriesGames?.length]);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
 
-  // Map the API match id (e.g. "atl-nyk") to the bracket series_id (e.g. "east-r1-3v6")
+  // Swipe handling
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    if (!seriesGames) return;
+    const diff = touchStartX.current - touchEndX.current;
+    const threshold = 50;
+    if (diff > threshold && activeGameIdx < seriesGames.length - 1) {
+      setActiveGameIdx((i) => i + 1);
+    } else if (diff < -threshold && activeGameIdx > 0) {
+      setActiveGameIdx((i) => i - 1);
+    }
+  }, [seriesGames, activeGameIdx]);
+
+  // Map the API match id to the bracket series_id
   const bracketSeriesId = useMemo(() => {
     if (!match) return null;
     if (!bracketData) return match.id;
@@ -28,7 +62,6 @@ const MatchDetail = () => {
       (s) => s.topTeam && s.bottomTeam && teamSet.has(s.topTeam.abbreviation) && teamSet.has(s.bottomTeam.abbreviation)
     );
     if (found) return found.id;
-    // Partial match for play-in games (e.g. CHA vs MIA → east-r1-2v7 where MIA is resolved)
     const partial = bracketData.find(
       (s) => s.topTeam && s.bottomTeam && (teamSet.has(s.topTeam.abbreviation) || teamSet.has(s.bottomTeam.abbreviation))
     );
@@ -50,7 +83,6 @@ const MatchDetail = () => {
     enabled: !!user && !!bracketSeriesId,
   });
 
-  // Fetch series result
   const { data: seriesResult } = useQuery({
     queryKey: ["series-result", bracketSeriesId],
     queryFn: async () => {
@@ -73,7 +105,6 @@ const MatchDetail = () => {
     return 0;
   };
 
-  // Fetch ALL picks for this series from all users
   const { data: allPicks } = useQuery({
     queryKey: ["series-picks", bracketSeriesId],
     queryFn: async () => {
@@ -104,14 +135,30 @@ const MatchDetail = () => {
     );
   }
 
+  // Determine display data: use per-game data if available, otherwise series-level
+  const activeGame = seriesGames ? seriesGames[activeGameIdx] : null;
+  const displayHome = activeGame ? activeGame.homeTeam : match.homeTeam;
+  const displayAway = activeGame ? activeGame.awayTeam : match.awayTeam;
+  const displayHomeScore = activeGame ? activeGame.homeScore : match.homeScore;
+  const displayAwayScore = activeGame ? activeGame.awayScore : match.awayScore;
+  const displayStatus = activeGame ? activeGame.status : match.status;
+  const displayDate = activeGame ? activeGame.date : match.date;
+  const displayGameNum = activeGame ? activeGame.gameNumber : match.gameNumber;
+  const displaySeriesAway = activeGame ? activeGame.seriesRecord[0] : match.awayWins;
+  const displaySeriesHome = activeGame ? activeGame.seriesRecord[1] : match.homeWins;
 
   return (
     <div className="min-h-screen bg-background pb-24">
-      <div className="relative overflow-hidden">
+      <div
+        className="relative overflow-hidden"
+        onTouchStart={seriesGames ? handleTouchStart : undefined}
+        onTouchMove={seriesGames ? handleTouchMove : undefined}
+        onTouchEnd={seriesGames ? handleTouchEnd : undefined}
+      >
         <div
           className="absolute inset-0"
           style={{
-            background: `linear-gradient(135deg, ${match.awayTeam.color}66 0%, transparent 50%, ${match.homeTeam.color}66 100%)`,
+            background: `linear-gradient(135deg, ${displayAway.color}66 0%, transparent 50%, ${displayHome.color}66 100%)`,
           }}
         />
         <div className="relative container py-6">
@@ -124,47 +171,82 @@ const MatchDetail = () => {
           </Link>
 
           <p className="text-xs text-primary font-body font-semibold uppercase tracking-widest mb-4 text-center">
-            {match.round} · Game {match.gameNumber} · {match.date}
+            {match.round} · Game {displayGameNum} · {displayDate}
           </p>
 
           <div className="flex items-center justify-between gap-6 pt-[4px]">
+            {/* Left arrow for desktop */}
+            {seriesGames && (
+              <button
+                onClick={() => setActiveGameIdx((i) => Math.max(0, i - 1))}
+                disabled={activeGameIdx === 0}
+                className="hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-card/50 text-foreground disabled:opacity-20 transition-opacity"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+            )}
+
             <div className="flex-1 text-center flex flex-col items-center">
-              <TeamLogo src={match.awayTeam.logo} alt={match.awayTeam.name} className="w-16 h-16 md:w-20 md:h-20" />
+              <TeamLogo src={displayAway.logo} alt={displayAway.name} className="w-16 h-16 md:w-20 md:h-20" />
               <h2 className="font-display text-3xl md:text-4xl tracking-wider mt-2">
-                {match.awayTeam.abbreviation}
+                {displayAway.abbreviation}
               </h2>
-              
             </div>
 
             <div className="text-center">
-              {match.status === "live" && (
+              {displayStatus === "live" && (
                 <span className="text-[10px] text-loss font-body font-semibold uppercase tracking-widest animate-pulse -mt-6">
                   Live
                 </span>
               )}
-              {match.status === "final" && (
+              {displayStatus === "final" && (
                 <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest -mt-6">
                   Final
                 </span>
               )}
               <div className="flex items-center gap-4">
-                <span className="font-display text-5xl md:text-7xl">{match.awayScore}</span>
+                <span className="font-display text-5xl md:text-7xl">{displayAwayScore}</span>
                 <span className="text-muted-foreground font-display text-3xl">:</span>
-                <span className="font-display text-5xl md:text-7xl">{match.homeScore}</span>
+                <span className="font-display text-5xl md:text-7xl">{displayHomeScore}</span>
               </div>
               <p className="text-xs text-foreground font-body mt-2 uppercase tracking-wider font-normal">
-                Series {match.awayWins} – {match.homeWins}
+                Series {displaySeriesAway} – {displaySeriesHome}
               </p>
             </div>
 
             <div className="flex-1 text-center flex flex-col items-center">
-              <TeamLogo src={match.homeTeam.logo} alt={match.homeTeam.name} className="w-16 h-16 md:w-20 md:h-20" />
+              <TeamLogo src={displayHome.logo} alt={displayHome.name} className="w-16 h-16 md:w-20 md:h-20" />
               <h2 className="font-display text-3xl md:text-4xl tracking-wider mt-2">
-                {match.homeTeam.abbreviation}
+                {displayHome.abbreviation}
               </h2>
-              
             </div>
+
+            {/* Right arrow for desktop */}
+            {seriesGames && (
+              <button
+                onClick={() => setActiveGameIdx((i) => Math.min(seriesGames.length - 1, i + 1))}
+                disabled={activeGameIdx === seriesGames.length - 1}
+                className="hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-card/50 text-foreground disabled:opacity-20 transition-opacity"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            )}
           </div>
+
+          {/* Game dots indicator */}
+          {seriesGames && (
+            <div className="flex items-center justify-center gap-2 mt-4">
+              {seriesGames.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveGameIdx(i)}
+                  className={`w-2 h-2 rounded-full transition-all ${
+                    i === activeGameIdx ? "bg-primary w-4" : "bg-muted-foreground/40"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
 
           {user && userPick && (() => {
             const pickedTeam = userPick.winner === match.homeTeam.abbreviation ? match.homeTeam : match.awayTeam;

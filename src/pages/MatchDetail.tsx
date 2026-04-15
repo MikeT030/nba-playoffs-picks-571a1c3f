@@ -187,7 +187,7 @@ const MatchDetail = () => {
 
           <div className="flex items-center justify-between gap-6 pt-[4px]">
             {/* Left arrow for desktop */}
-            {hasSeriesGames && seriesGames && (
+            {hasSeriesGames && (
               <button
                 onClick={() => setActiveGameIdx((i) => Math.max(0, i - 1))}
                 disabled={activeGameIdx === 0}

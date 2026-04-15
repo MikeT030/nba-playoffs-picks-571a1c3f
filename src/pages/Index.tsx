@@ -15,6 +15,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+const TOTAL_GAMES = 15;
+
 const rounds = [
   { value: "all", label: "All Rounds" },
   { value: "First Round", label: "First Round" },
@@ -29,7 +31,7 @@ const Index = () => {
   const { user } = useAuth();
   const [selectedRound, setSelectedRound] = useState("all");
   const [betsOpen, setBetsOpen] = useState(false);
-  const [betsSaved, setBetsSaved] = useState(false);
+  const [pickCount, setPickCount] = useState(0);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -40,7 +42,7 @@ const Index = () => {
           .select("id")
           .eq("user_id", user.id);
         if (data && data.length > 0) {
-          setBetsSaved(true);
+          setPickCount(data.length);
           return;
         }
       }
@@ -49,6 +51,28 @@ const Index = () => {
     checkPicks();
     return () => clearTimeout(timer);
   }, [user]);
+
+  const handleBetsSaved = () => {
+    // Re-fetch pick count after saving
+    if (user) {
+      supabase
+        .from("picks")
+        .select("id")
+        .eq("user_id", user.id)
+        .then(({ data }) => {
+          setPickCount(data?.length ?? 0);
+        });
+    }
+  };
+
+  const gamesLeft = TOTAL_GAMES - pickCount;
+
+  const infoLine =
+    pickCount === 0
+      ? `Go, bro. You have ${TOTAL_GAMES} games to pick.`
+      : pickCount < TOTAL_GAMES
+        ? `WTF, bro. There are still ${gamesLeft} picks to make.`
+        : "You did it, bro. Your picks are legit and logged in.";
 
   const filteredMatches =
     selectedRound === "all"
@@ -60,22 +84,19 @@ const Index = () => {
       <HeroBanner />
 
       <section className="container py-10">
-        {(() => {
-          const totalGames = 15;
-          const picksMade = user && betsSaved ? totalGames : 0;
-          // We'll refine picksMade with actual count below
-          return null;
-        })()}
+        <p className="text-sm font-body text-muted-foreground mb-4">
+          {infoLine}
+        </p>
 
         <button
           onClick={() => setBetsOpen(true)}
           className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 mb-6 ${
-            betsSaved
+            pickCount >= TOTAL_GAMES
               ? "bg-primary/15 text-primary border border-primary/40"
               : "bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
           }`}
         >
-          {betsSaved ? (
+          {pickCount >= TOTAL_GAMES ? (
             <>
               <CheckCircle size={18} />
               Edit Your Picks
@@ -135,7 +156,7 @@ const Index = () => {
         )}
       </section>
 
-      <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setBetsSaved(true)} resolvedBracket={resolvedBracket} />
+      <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={handleBetsSaved} resolvedBracket={resolvedBracket} />
     </div>
   );
 };

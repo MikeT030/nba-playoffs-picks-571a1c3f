@@ -96,7 +96,7 @@ function groupIntoSeries(games: NbaGame[]): Match[] {
       id: key.toLowerCase(),
       round: "First Round",
       conference: getConference(homeAbbr, awayAbbr),
-      gameNumber: seriesGames.length,
+      gameNumber,
       date: dateStr,
       time: latestGame.status === "Final" ? "Final" : latestGame.time || "TBD",
       homeTeam,

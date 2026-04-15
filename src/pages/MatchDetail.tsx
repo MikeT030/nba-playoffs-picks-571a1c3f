@@ -233,10 +233,10 @@ const MatchDetail = () => {
             </div>
 
             {/* Right arrow for desktop */}
-            {hasSeriesGames && seriesGames && (
+            {hasSeriesGames && (
               <button
-                onClick={() => setActiveGameIdx((i) => Math.min(seriesGames.length - 1, i + 1))}
-                disabled={activeGameIdx === seriesGames.length - 1}
+                onClick={() => setActiveGameIdx((i) => Math.min(playedGames.length - 1, i + 1))}
+                disabled={activeGameIdx === playedGames.length - 1}
                 className="hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-card/50 text-foreground disabled:opacity-20 transition-opacity"
               >
                 <ChevronRight className="w-5 h-5" />
@@ -245,9 +245,9 @@ const MatchDetail = () => {
           </div>
 
           {/* Game dots indicator */}
-          {hasSeriesGames && seriesGames && (
+          {hasSeriesGames && (
             <div className="flex items-center justify-center gap-2 mt-4">
-              {seriesGames.map((_, i) => (
+              {playedGames.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveGameIdx(i)}

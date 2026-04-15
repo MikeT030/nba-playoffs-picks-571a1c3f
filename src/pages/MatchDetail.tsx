@@ -32,8 +32,8 @@ const MatchDetail = () => {
 
   // Default to latest game
   useEffect(() => {
-    if (seriesGames && seriesGames.length > 0) setActiveGameIdx(seriesGames.length - 1);
-  }, [seriesGames?.length]);
+    if (playedGames.length > 0) setActiveGameIdx(playedGames.length - 1);
+  }, [playedGames.length]);
 
   useEffect(() => {
     window.scrollTo(0, 0);

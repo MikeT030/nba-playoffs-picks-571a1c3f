@@ -72,7 +72,7 @@ const Index = () => {
       ? `Go, bro. You have ${TOTAL_GAMES} games to pick.`
       : pickCount < TOTAL_GAMES
         ? `WTF, bro. There are still ${gamesLeft} picks to make.`
-        : "You did it, bro. Your picks are legit and logged in.";
+        : "You did it, bro. Picks are legit and logged in.";
 
   const filteredMatches =
     selectedRound === "all"

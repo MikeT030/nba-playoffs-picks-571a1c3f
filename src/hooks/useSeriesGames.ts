@@ -46,6 +46,9 @@ function gamesToSeriesGames(games: NbaGame[]): SeriesGame[] {
       day: "numeric",
     });
 
+    // Calculate OT periods: period > 4 means OT (period 5 = 1OT, 6 = 2OT, etc.)
+    const ot = g.period > 4 ? g.period - 4 : undefined;
+
     result.push({
       gameNumber: idx + 1,
       date: dateStr,
@@ -58,6 +61,7 @@ function gamesToSeriesGames(games: NbaGame[]): SeriesGame[] {
         wins[awayTeam.abbreviation] || 0,
         wins[homeTeam.abbreviation] || 0,
       ],
+      ot,
     });
   });
 

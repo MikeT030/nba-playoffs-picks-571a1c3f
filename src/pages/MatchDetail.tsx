@@ -22,7 +22,12 @@ const MatchDetail = () => {
     match?.homeTeam.abbreviation,
     match?.awayTeam.abbreviation
   );
-  const hasSeriesGames = seriesGames && seriesGames.length > 1;
+  // Only count games that have been played (final or live)
+  const playedGames = useMemo(
+    () => seriesGames?.filter((g) => g.status === "final" || g.status === "live") ?? [],
+    [seriesGames]
+  );
+  const hasSeriesGames = playedGames.length > 1;
   const [activeGameIdx, setActiveGameIdx] = useState(0);
 
   // Default to latest game

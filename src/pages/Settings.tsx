@@ -74,37 +74,34 @@ const Settings = () => {
           Back
         </button>
 
-        <h1 className="font-display text-3xl tracking-wider">SETTINGS</h1>
-
-        {!loading && user && displayName && (
+        <div className="flex items-center gap-2">
+          <h1 className="font-display text-3xl tracking-wider">
+            {!loading && user && displayName
+              ? <>YOUR PROFILE <span className="text-primary">{displayName.toUpperCase()}</span></>
+              : "SETTINGS"}
+          </h1>
+          {!loading && user && displayName && !editingName && (
+            <button
+              onClick={() => { setNameInput(displayName); setEditingName(true); }}
+              className="text-muted-foreground hover:text-foreground transition-colors mt-1"
+            >
+              <Pencil size={16} />
+            </button>
+          )}
+        </div>
+        {editingName && (
           <div className="flex items-center gap-2">
-            {editingName ? (
-              <>
-                <Input
-                  value={nameInput}
-                  onChange={(e) => setNameInput(e.target.value)}
-                  placeholder="Enter your name"
-                  className="font-body text-lg"
-                  autoFocus
-                  onKeyDown={(e) => e.key === "Enter" && handleSaveName()}
-                />
-                <Button size="icon" variant="ghost" onClick={handleSaveName} disabled={savingName}>
-                  <Check size={18} />
-                </Button>
-              </>
-            ) : (
-              <>
-                <p className="font-display text-xl tracking-wider">
-                  {displayName || "Set your name"}
-                </p>
-                <button
-                  onClick={() => { setNameInput(displayName); setEditingName(true); }}
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <Pencil size={16} />
-                </button>
-              </>
-            )}
+            <Input
+              value={nameInput}
+              onChange={(e) => setNameInput(e.target.value)}
+              placeholder="Enter your name"
+              className="font-body text-lg"
+              autoFocus
+              onKeyDown={(e) => e.key === "Enter" && handleSaveName()}
+            />
+            <Button size="icon" variant="ghost" onClick={handleSaveName} disabled={savingName}>
+              <Check size={18} />
+            </Button>
           </div>
         )}
 

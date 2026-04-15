@@ -23,10 +23,11 @@ const MatchDetail = () => {
     match?.awayTeam.abbreviation
   );
   const hasSeriesGames = seriesGames && seriesGames.length > 1;
+  const [activeGameIdx, setActiveGameIdx] = useState(0);
 
   // Default to latest game
   useEffect(() => {
-    if (seriesGames) setActiveGameIdx(seriesGames.length - 1);
+    if (seriesGames && seriesGames.length > 0) setActiveGameIdx(seriesGames.length - 1);
   }, [seriesGames?.length]);
 
   useEffect(() => {

@@ -77,8 +77,10 @@ function groupIntoSeries(games: NbaGame[]): Match[] {
       }
     }
 
-    // Use the latest game for display
-    const latestGame = seriesGames[seriesGames.length - 1];
+    // Use the latest played game for display, fall back to first upcoming
+    const playedGames = seriesGames.filter((g) => g.status === "Final" || g.status.startsWith("Q") || g.status.startsWith("Half") || g.status.includes(":"));
+    const latestGame = playedGames.length > 0 ? playedGames[playedGames.length - 1] : seriesGames[0];
+    const gameNumber = playedGames.length > 0 ? playedGames.length : 1;
     const dateObj = new Date(latestGame.date);
     const dateStr = dateObj.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 
@@ -94,7 +96,7 @@ function groupIntoSeries(games: NbaGame[]): Match[] {
       id: key.toLowerCase(),
       round: "First Round",
       conference: getConference(homeAbbr, awayAbbr),
-      gameNumber: seriesGames.length,
+      gameNumber,
       date: dateStr,
       time: latestGame.status === "Final" ? "Final" : latestGame.time || "TBD",
       homeTeam,

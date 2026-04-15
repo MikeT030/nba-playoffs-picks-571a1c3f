@@ -146,7 +146,6 @@ const MyPicks = () => {
   const bracketRef = useRef<HTMLDivElement>(null);
 
   const locked = isPlayoffsStarted();
-  const bracketRef = useRef<HTMLDivElement>(null);
 
   const handleShareBracket = useCallback(async () => {
     if (!bracketRef.current) return;

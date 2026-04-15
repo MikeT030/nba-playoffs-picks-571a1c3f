@@ -121,7 +121,6 @@ function computeScoreboard(
 }
 
 const getRankIcon = (index: number) => {
-  if (index === 0) return <Trophy size={18} className="text-primary" />;
   return <span className="text-muted-foreground font-body text-sm w-[18px] text-center inline-block">{index + 1}</span>;
 };
 

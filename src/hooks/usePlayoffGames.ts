@@ -126,14 +126,17 @@ export function usePlayoffGames(season: number = 2025) {
         const apiMatches = groupIntoSeries(games);
 
         // Merge in TBD fallback matchups that aren't covered by API data
-        const apiTeamKeys = new Set(
-          apiMatches.map((m) =>
-            [m.homeTeam.abbreviation, m.awayTeam.abbreviation].sort().join("-")
-          )
-        );
+        // Collect all real team abbreviations from API data
+        const apiTeams = new Set<string>();
+        apiMatches.forEach((m) => {
+          apiTeams.add(m.homeTeam.abbreviation);
+          apiTeams.add(m.awayTeam.abbreviation);
+        });
+        // Filter out fallback matchups where ANY real (non-placeholder) team already appears in API data
         const tbdMatches = fallbackMatches.filter((fb) => {
-          const key = [fb.homeTeam.abbreviation, fb.awayTeam.abbreviation].sort().join("-");
-          return !apiTeamKeys.has(key);
+          const homeInApi = apiTeams.has(fb.homeTeam.abbreviation);
+          const awayInApi = apiTeams.has(fb.awayTeam.abbreviation);
+          return !homeInApi && !awayInApi;
         });
 
         const allMatches = [...apiMatches, ...tbdMatches];

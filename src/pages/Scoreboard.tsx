@@ -318,12 +318,12 @@ const Scoreboard = () => {
         {viewTabs}
 
         {showAllPicks ? (
-          <div className="bg-card rounded-lg overflow-hidden">
+          <div className="rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md overflow-hidden transition-all duration-200 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5">
             <AllPicksMatrix />
           </div>
         ) : (
           /* Leaderboard */
-          <div className="bg-card rounded-lg overflow-hidden">
+          <div className="rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md overflow-hidden transition-all duration-200 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -349,7 +349,7 @@ const Scoreboard = () => {
 
         {/* Scoring legend */}
         <Accordion type="single" collapsible className="mt-8">
-          <AccordionItem value="scoring" className="bg-card rounded-lg px-5 py-0 border-none">
+          <AccordionItem value="scoring" className="rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md px-5 py-0 border-none transition-all duration-200 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5">
             <AccordionTrigger className="font-display text-sm tracking-wider text-foreground flex items-center gap-2 hover:no-underline py-4">
               <span className="flex items-center gap-2 text-base">
                 SCORING SYSTEM

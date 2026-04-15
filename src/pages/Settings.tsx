@@ -127,7 +127,7 @@ const Settings = () => {
 
         {loading ? null : user ? (
           <>
-            <Card>
+            <Card className="mt-3 mb-3">
               <CardHeader>
                 <CardTitle className="font-display text-lg tracking-wider">ACCOUNT</CardTitle>
               </CardHeader>

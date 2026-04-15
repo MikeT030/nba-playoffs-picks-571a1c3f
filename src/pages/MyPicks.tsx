@@ -22,6 +22,7 @@ import {
   isPlayInPlaceholder,
   type Team,
 } from "@/data/playoffsData";
+import { useBracketData } from "@/hooks/useBracketData";
 
 const rounds = [
   { value: "all", label: "All Rounds" },
@@ -130,6 +131,8 @@ const PickCard = ({
 const MyPicks = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const { data: resolvedBracket } = useBracketData();
+  const activeBracket = resolvedBracket ?? bracketSeries;
   const [betsOpen, setBetsOpen] = useState(false);
   const [profileName, setProfileName] = useState<string | null>(null);
   const [bets, setBets] = useState<BetSelection[]>([]);
@@ -372,7 +375,7 @@ const MyPicks = () => {
                 {downloading ? "Generating..." : "Share Bracket"}
               </button>
             </div>
-            <PlayoffBracket ref={bracketRef} picks={picks} bets={bets} />
+            <PlayoffBracket ref={bracketRef} picks={picks} bets={bets} seriesList={activeBracket} />
           </>
         ) : (
           <>
@@ -390,7 +393,7 @@ const MyPicks = () => {
             </Select>
 
             {(selectedRound === "all" ? roundOrder : [selectedRound]).map((round) => {
-              const roundSeries = bracketSeries.filter((s) => s.round === round);
+              const roundSeries = activeBracket.filter((s) => s.round === round);
               const conferences = round === "Finals" ? ["Finals"] : ["West", "East"];
 
               return (
@@ -410,7 +413,7 @@ const MyPicks = () => {
                         )}
                         <div className="grid gap-4 md:grid-cols-2">
                           {confSeries.map((series) => {
-                            const resolved = resolveSeriesTeams(series.id, picks);
+                            const resolved = resolveSeriesTeams(series.id, picks, activeBracket);
                             return (
                               <PickCard
                                 key={series.id}

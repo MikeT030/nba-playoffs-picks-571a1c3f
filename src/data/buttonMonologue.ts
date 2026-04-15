@@ -74,7 +74,6 @@ export const ALL_MONOLOGUE_LINES = MONOLOGUE_LINES.flat();
 
 // For testing: always true. In production, check if first playoff game has started.
 export const isPlayoffsStarted = (): boolean => {
-  // TODO: Replace with real date check, e.g.:
-  // return new Date() >= new Date("2026-04-19T12:00:00-04:00");
-  return true; // enabled for testing
+  // First playoff game: Saturday, April 18, 2026, 19:00 Berlin time (CEST = UTC+2)
+  return new Date() >= new Date("2026-04-18T17:00:00Z");
 };

@@ -314,7 +314,7 @@ const Scoreboard = () => {
 
   return (
     <div className="min-h-screen bg-background pb-28">
-      <HeroBanner title={"SCORE\nBOARD"} subtitle="NBA Playoffs 2026" />
+      <HeroBanner title="SCOREBOARD" subtitle="NBA Playoffs 2026" />
 
       <section className="container py-8">
         {viewTabs}

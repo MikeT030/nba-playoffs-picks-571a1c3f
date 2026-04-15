@@ -199,9 +199,14 @@ const MatchDetail = () => {
 
             <div className="flex-1 text-center flex flex-col items-center">
               <TeamLogo src={displayAway.logo} alt={displayAway.name} className="w-16 h-16 md:w-20 md:h-20" />
-              <h2 className="font-display text-3xl md:text-4xl tracking-wider mt-2">
-                {displayAway.abbreviation}
-              </h2>
+              <div className="flex items-center gap-1.5 mt-2">
+                {displayAway.seed && (
+                  <span className="text-xs text-muted-foreground font-body font-semibold">{displayAway.seed}</span>
+                )}
+                <h2 className="font-display text-3xl md:text-4xl tracking-wider">
+                  {displayAway.abbreviation}
+                </h2>
+              </div>
             </div>
 
             <div className="text-center">
@@ -227,9 +232,14 @@ const MatchDetail = () => {
 
             <div className="flex-1 text-center flex flex-col items-center">
               <TeamLogo src={displayHome.logo} alt={displayHome.name} className="w-16 h-16 md:w-20 md:h-20" />
-              <h2 className="font-display text-3xl md:text-4xl tracking-wider mt-2">
-                {displayHome.abbreviation}
-              </h2>
+              <div className="flex items-center gap-1.5 mt-2">
+                <h2 className="font-display text-3xl md:text-4xl tracking-wider">
+                  {displayHome.abbreviation}
+                </h2>
+                {displayHome.seed && (
+                  <span className="text-xs text-muted-foreground font-body font-semibold">{displayHome.seed}</span>
+                )}
+              </div>
             </div>
 
             {/* Right arrow for desktop */}

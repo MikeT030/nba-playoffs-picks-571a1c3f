@@ -53,15 +53,15 @@ const MatchDetail = () => {
   }, []);
 
   const handleTouchEnd = useCallback(() => {
-    if (!hasSeriesGames || !seriesGames) return;
+    if (!hasSeriesGames) return;
     const diff = touchStartX.current - touchEndX.current;
     const threshold = 50;
-    if (diff > threshold && activeGameIdx < seriesGames.length - 1) {
+    if (diff > threshold && activeGameIdx < playedGames.length - 1) {
       setActiveGameIdx((i) => i + 1);
     } else if (diff < -threshold && activeGameIdx > 0) {
       setActiveGameIdx((i) => i - 1);
     }
-  }, [seriesGames, activeGameIdx]);
+  }, [playedGames, activeGameIdx, hasSeriesGames]);
 
   // Map the API match id to the bracket series_id
   const bracketSeriesId = useMemo(() => {

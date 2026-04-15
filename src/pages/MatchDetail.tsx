@@ -2,12 +2,12 @@ import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 import { useBracketData } from "@/hooks/useBracketData";
+import { useSeriesGames } from "@/hooks/useSeriesGames";
 import TeamLogo from "@/components/TeamLogo";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useEffect, useState, useRef, useCallback } from "react";
-import { chaMiaSeriesGames, type SeriesGame } from "@/data/chamiaSeries";
 
 const MatchDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,13 +16,18 @@ const MatchDetail = () => {
   const { data: bracketData } = useBracketData();
   const match = matches?.find((m) => m.id === id);
 
-  // Series games – only CHA vs MIA has per-game data for now
-  const seriesGames: SeriesGame[] | null = id === "cha-mia" ? chaMiaSeriesGames : null;
+  // Series games from API/data
+  const { data: seriesGames } = useSeriesGames(
+    id,
+    match?.homeTeam.abbreviation,
+    match?.awayTeam.abbreviation
+  );
+  const hasSeriesGames = seriesGames && seriesGames.length > 1;
   const [activeGameIdx, setActiveGameIdx] = useState(0);
 
   // Default to latest game
   useEffect(() => {
-    if (seriesGames) setActiveGameIdx(seriesGames.length - 1);
+    if (seriesGames && seriesGames.length > 0) setActiveGameIdx(seriesGames.length - 1);
   }, [seriesGames?.length]);
 
   useEffect(() => {
@@ -43,7 +48,7 @@ const MatchDetail = () => {
   }, []);
 
   const handleTouchEnd = useCallback(() => {
-    if (!seriesGames) return;
+    if (!hasSeriesGames || !seriesGames) return;
     const diff = touchStartX.current - touchEndX.current;
     const threshold = 50;
     if (diff > threshold && activeGameIdx < seriesGames.length - 1) {
@@ -136,7 +141,7 @@ const MatchDetail = () => {
   }
 
   // Determine display data: use per-game data if available, otherwise series-level
-  const activeGame = seriesGames ? seriesGames[activeGameIdx] : null;
+  const activeGame = hasSeriesGames ? seriesGames[activeGameIdx] : null;
   const displayHome = activeGame ? activeGame.homeTeam : match.homeTeam;
   const displayAway = activeGame ? activeGame.awayTeam : match.awayTeam;
   const displayHomeScore = activeGame ? activeGame.homeScore : match.homeScore;
@@ -151,9 +156,9 @@ const MatchDetail = () => {
     <div className="min-h-screen bg-background pb-24">
       <div
         className="relative overflow-hidden"
-        onTouchStart={seriesGames ? handleTouchStart : undefined}
-        onTouchMove={seriesGames ? handleTouchMove : undefined}
-        onTouchEnd={seriesGames ? handleTouchEnd : undefined}
+        onTouchStart={hasSeriesGames ? handleTouchStart : undefined}
+        onTouchMove={hasSeriesGames ? handleTouchMove : undefined}
+        onTouchEnd={hasSeriesGames ? handleTouchEnd : undefined}
       >
         <div
           className="absolute inset-0"
@@ -176,7 +181,7 @@ const MatchDetail = () => {
 
           <div className="flex items-center justify-between gap-6 pt-[4px]">
             {/* Left arrow for desktop */}
-            {seriesGames && (
+            {hasSeriesGames && seriesGames && (
               <button
                 onClick={() => setActiveGameIdx((i) => Math.max(0, i - 1))}
                 disabled={activeGameIdx === 0}
@@ -222,7 +227,7 @@ const MatchDetail = () => {
             </div>
 
             {/* Right arrow for desktop */}
-            {seriesGames && (
+            {hasSeriesGames && seriesGames && (
               <button
                 onClick={() => setActiveGameIdx((i) => Math.min(seriesGames.length - 1, i + 1))}
                 disabled={activeGameIdx === seriesGames.length - 1}
@@ -234,7 +239,7 @@ const MatchDetail = () => {
           </div>
 
           {/* Game dots indicator */}
-          {seriesGames && (
+          {hasSeriesGames && seriesGames && (
             <div className="flex items-center justify-center gap-2 mt-4">
               {seriesGames.map((_, i) => (
                 <button

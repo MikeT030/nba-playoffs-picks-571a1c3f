@@ -84,9 +84,6 @@ const Index = () => {
       <HeroBanner />
 
       <section className="container py-10">
-        <p className="text-sm font-body mb-4 text-[#d9d9d9] font-medium">
-          {infoLine}
-        </p>
 
         <button
           onClick={() => setBetsOpen(true)}
@@ -99,12 +96,12 @@ const Index = () => {
           {pickCount >= TOTAL_GAMES ? (
             <>
               <CheckCircle size={18} />
-              Edit Your Picks
+              {infoLine}
             </>
           ) : (
             <>
               <PenLine size={18} />
-              Make Your Picks
+              {infoLine}
             </>
           )}
         </button>

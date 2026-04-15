@@ -287,20 +287,33 @@ const MyPicks = () => {
     );
   }
 
+  const TOTAL_GAMES = 15;
+  const gamesLeft = TOTAL_GAMES - bets.length;
+  const infoLine =
+    bets.length === 0
+      ? `Go, bro. You have ${TOTAL_GAMES} games to pick.`
+      : bets.length < TOTAL_GAMES
+        ? `WTF, bro. There are still ${gamesLeft} picks to make.`
+        : "You did it, bro. Picks are legit and logged in.";
+
   const editPicksButton = (
     <button
       onClick={() => setBetsOpen(true)}
-      className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 mb-8"
+      className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 mb-8 ${
+        bets.length >= TOTAL_GAMES
+          ? "bg-primary/15 text-primary border border-primary/40"
+          : "bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
+      }`}
     >
-      {bets.length > 0 ? (
+      {bets.length >= TOTAL_GAMES ? (
         <>
           <CheckCircle size={18} />
-          Edit Your Picks
+          {infoLine}
         </>
       ) : (
         <>
           <PenLine size={18} />
-          Make Your Picks
+          {infoLine}
         </>
       )}
     </button>

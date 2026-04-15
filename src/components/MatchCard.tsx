@@ -93,7 +93,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
       to={`/match/${match.id}`}
       className="block bg-card rounded-lg border border-transparent hover:border-primary/40 transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 group"
     >
-      <div className="px-4 py-2 flex items-center justify-between border-b border-transparent">
+      <div className={`px-4 py-2 flex items-center border-b border-transparent ${match.status === "final" ? "justify-center" : "justify-between"}`}>
         <span className="text-xs text-muted-foreground font-body font-medium uppercase tracking-wider">
           {match.round} · Game {match.gameNumber} · {match.date}
         </span>

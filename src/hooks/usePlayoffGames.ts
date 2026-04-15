@@ -81,7 +81,7 @@ function groupIntoSeries(games: NbaGame[]): Match[] {
     }
 
     // Use the latest played game for display, fall back to first upcoming
-    const playedGames = seriesGames.filter((g) => g.status === "Final" || g.status.startsWith("Q") || g.status.startsWith("Half") || g.status.includes(":"));
+    const playedGames = seriesGames.filter((g) => gameStatusToLocal(g.status) !== "upcoming");
     const latestGame = playedGames.length > 0 ? playedGames[playedGames.length - 1] : seriesGames[0];
     const gameNumber = playedGames.length > 0 ? playedGames.length : 1;
     const dateObj = new Date(latestGame.date);

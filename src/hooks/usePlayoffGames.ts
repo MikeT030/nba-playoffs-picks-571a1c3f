@@ -6,8 +6,8 @@ const dummyFinalMatch: Match = {
   id: "cha-mia",
   round: "First Round",
   conference: "East",
-  gameNumber: 4,
-  date: "Apr 22",
+  gameNumber: 7,
+  date: "May 3",
   time: "Final",
   homeTeam: {
     name: "Miami Heat",
@@ -24,10 +24,10 @@ const dummyFinalMatch: Match = {
     seed: 7,
   },
   homeWins: 3,
-  awayWins: 1,
+  awayWins: 4,
   status: "final",
-  homeScore: 104,
-  awayScore: 92,
+  homeScore: 100,
+  awayScore: 106,
   tips: makeTips("MIA", "CHA"),
 };
 

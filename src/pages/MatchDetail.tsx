@@ -199,7 +199,7 @@ const MatchDetail = () => {
 
             <div className="flex-1 text-center flex flex-col items-center relative">
               {displayAway.seed && (
-                <span className="absolute -right-1 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-body font-semibold">{displayAway.seed}</span>
+                <span className="absolute -left-1 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-body font-semibold">{displayAway.seed}</span>
               )}
               <TeamLogo src={displayAway.logo} alt={displayAway.name} className="w-16 h-16 md:w-20 md:h-20" />
               <h2 className="font-display text-3xl md:text-4xl tracking-wider mt-2">
@@ -230,7 +230,7 @@ const MatchDetail = () => {
 
             <div className="flex-1 text-center flex flex-col items-center relative">
               {displayHome.seed && (
-                <span className="absolute -left-1 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-body font-semibold">{displayHome.seed}</span>
+                <span className="absolute -right-1 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-body font-semibold">{displayHome.seed}</span>
               )}
               <TeamLogo src={displayHome.logo} alt={displayHome.name} className="w-16 h-16 md:w-20 md:h-20" />
               <h2 className="font-display text-3xl md:text-4xl tracking-wider mt-2">

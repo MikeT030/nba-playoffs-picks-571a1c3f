@@ -181,7 +181,7 @@ const MatchDetail = () => {
 
           <div className="flex items-center justify-between gap-6 pt-[4px]">
             {/* Left arrow for desktop */}
-            {seriesGames && (
+            {hasSeriesGames && seriesGames && (
               <button
                 onClick={() => setActiveGameIdx((i) => Math.max(0, i - 1))}
                 disabled={activeGameIdx === 0}
@@ -227,7 +227,7 @@ const MatchDetail = () => {
             </div>
 
             {/* Right arrow for desktop */}
-            {seriesGames && (
+            {hasSeriesGames && seriesGames && (
               <button
                 onClick={() => setActiveGameIdx((i) => Math.min(seriesGames.length - 1, i + 1))}
                 disabled={activeGameIdx === seriesGames.length - 1}
@@ -239,7 +239,7 @@ const MatchDetail = () => {
           </div>
 
           {/* Game dots indicator */}
-          {seriesGames && (
+          {hasSeriesGames && seriesGames && (
             <div className="flex items-center justify-center gap-2 mt-4">
               {seriesGames.map((_, i) => (
                 <button

@@ -48,7 +48,7 @@ const MatchDetail = () => {
   }, []);
 
   const handleTouchEnd = useCallback(() => {
-    if (!seriesGames) return;
+    if (!hasSeriesGames || !seriesGames) return;
     const diff = touchStartX.current - touchEndX.current;
     const threshold = 50;
     if (diff > threshold && activeGameIdx < seriesGames.length - 1) {

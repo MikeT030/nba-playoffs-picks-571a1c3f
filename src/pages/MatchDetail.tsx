@@ -185,7 +185,7 @@ const MatchDetail = () => {
             {match.round} · Game {displayGameNum} · {displayDate}
           </p>
 
-          <div className="flex items-center justify-between gap-6 pt-[4px]">
+          <div className="flex items-center justify-between gap-5 pt-[4px]">
             {/* Left arrow for desktop */}
             {hasSeriesGames && (
               <button

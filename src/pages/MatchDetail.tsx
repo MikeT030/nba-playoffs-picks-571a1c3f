@@ -156,9 +156,9 @@ const MatchDetail = () => {
     <div className="min-h-screen bg-background pb-24">
       <div
         className="relative overflow-hidden"
-        onTouchStart={seriesGames ? handleTouchStart : undefined}
-        onTouchMove={seriesGames ? handleTouchMove : undefined}
-        onTouchEnd={seriesGames ? handleTouchEnd : undefined}
+        onTouchStart={hasSeriesGames ? handleTouchStart : undefined}
+        onTouchMove={hasSeriesGames ? handleTouchMove : undefined}
+        onTouchEnd={hasSeriesGames ? handleTouchEnd : undefined}
       >
         <div
           className="absolute inset-0"

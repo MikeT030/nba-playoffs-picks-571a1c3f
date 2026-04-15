@@ -2,12 +2,12 @@ import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 import { useBracketData } from "@/hooks/useBracketData";
+import { useSeriesGames } from "@/hooks/useSeriesGames";
 import TeamLogo from "@/components/TeamLogo";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useEffect, useState, useRef, useCallback } from "react";
-import { chaMiaSeriesGames, type SeriesGame } from "@/data/chamiaSeries";
 
 const MatchDetail = () => {
   const { id } = useParams<{ id: string }>();

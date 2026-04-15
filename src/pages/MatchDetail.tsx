@@ -228,16 +228,14 @@ const MatchDetail = () => {
               </p>
             </div>
 
-            <div className="flex-1 text-center flex flex-col items-center">
+            <div className="flex-1 text-center flex flex-col items-center relative">
+              {displayHome.seed && (
+                <span className="absolute right-0 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-body font-semibold">{displayHome.seed}</span>
+              )}
               <TeamLogo src={displayHome.logo} alt={displayHome.name} className="w-16 h-16 md:w-20 md:h-20" />
-              <div className="flex items-center gap-1.5 mt-2">
-                <h2 className="font-display text-3xl md:text-4xl tracking-wider">
-                  {displayHome.abbreviation}
-                </h2>
-                {displayHome.seed && (
-                  <span className="text-xs text-muted-foreground font-body font-semibold">{displayHome.seed}</span>
-                )}
-              </div>
+              <h2 className="font-display text-3xl md:text-4xl tracking-wider mt-2">
+                {displayHome.abbreviation}
+              </h2>
             </div>
 
             {/* Right arrow for desktop */}

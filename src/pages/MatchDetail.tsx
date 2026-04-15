@@ -22,13 +22,18 @@ const MatchDetail = () => {
     match?.homeTeam.abbreviation,
     match?.awayTeam.abbreviation
   );
-  const hasSeriesGames = seriesGames && seriesGames.length > 1;
+  // Only count games that have been played (final or live)
+  const playedGames = useMemo(
+    () => seriesGames?.filter((g) => g.status === "final" || g.status === "live") ?? [],
+    [seriesGames]
+  );
+  const hasSeriesGames = playedGames.length > 1;
   const [activeGameIdx, setActiveGameIdx] = useState(0);
 
   // Default to latest game
   useEffect(() => {
-    if (seriesGames && seriesGames.length > 0) setActiveGameIdx(seriesGames.length - 1);
-  }, [seriesGames?.length]);
+    if (playedGames.length > 0) setActiveGameIdx(playedGames.length - 1);
+  }, [playedGames.length]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -48,15 +53,15 @@ const MatchDetail = () => {
   }, []);
 
   const handleTouchEnd = useCallback(() => {
-    if (!hasSeriesGames || !seriesGames) return;
+    if (!hasSeriesGames) return;
     const diff = touchStartX.current - touchEndX.current;
     const threshold = 50;
-    if (diff > threshold && activeGameIdx < seriesGames.length - 1) {
+    if (diff > threshold && activeGameIdx < playedGames.length - 1) {
       setActiveGameIdx((i) => i + 1);
     } else if (diff < -threshold && activeGameIdx > 0) {
       setActiveGameIdx((i) => i - 1);
     }
-  }, [seriesGames, activeGameIdx]);
+  }, [playedGames, activeGameIdx, hasSeriesGames]);
 
   // Map the API match id to the bracket series_id
   const bracketSeriesId = useMemo(() => {
@@ -141,7 +146,7 @@ const MatchDetail = () => {
   }
 
   // Determine display data: use per-game data if available, otherwise series-level
-  const activeGame = hasSeriesGames ? seriesGames[activeGameIdx] : null;
+  const activeGame = hasSeriesGames ? playedGames[activeGameIdx] : null;
   const displayHome = activeGame ? activeGame.homeTeam : match.homeTeam;
   const displayAway = activeGame ? activeGame.awayTeam : match.awayTeam;
   const displayHomeScore = activeGame ? activeGame.homeScore : match.homeScore;
@@ -182,7 +187,7 @@ const MatchDetail = () => {
 
           <div className="flex items-center justify-between gap-6 pt-[4px]">
             {/* Left arrow for desktop */}
-            {hasSeriesGames && seriesGames && (
+            {hasSeriesGames && (
               <button
                 onClick={() => setActiveGameIdx((i) => Math.max(0, i - 1))}
                 disabled={activeGameIdx === 0}
@@ -228,10 +233,10 @@ const MatchDetail = () => {
             </div>
 
             {/* Right arrow for desktop */}
-            {hasSeriesGames && seriesGames && (
+            {hasSeriesGames && (
               <button
-                onClick={() => setActiveGameIdx((i) => Math.min(seriesGames.length - 1, i + 1))}
-                disabled={activeGameIdx === seriesGames.length - 1}
+                onClick={() => setActiveGameIdx((i) => Math.min(playedGames.length - 1, i + 1))}
+                disabled={activeGameIdx === playedGames.length - 1}
                 className="hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-card/50 text-foreground disabled:opacity-20 transition-opacity"
               >
                 <ChevronRight className="w-5 h-5" />
@@ -240,9 +245,9 @@ const MatchDetail = () => {
           </div>
 
           {/* Game dots indicator */}
-          {hasSeriesGames && seriesGames && (
+          {hasSeriesGames && (
             <div className="flex items-center justify-center gap-2 mt-4">
-              {seriesGames.map((_, i) => (
+              {playedGames.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveGameIdx(i)}

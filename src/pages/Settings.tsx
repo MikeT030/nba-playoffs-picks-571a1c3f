@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import BetsDrawer from "@/components/BetsDrawer";
 import PlayerCard from "@/components/PlayerCard";
+import { playerCards } from "@/data/playerCards";
 import TeamLogo from "@/components/TeamLogo";
 import { bracketSeries, resolveSeriesTeams, isPlayInPlaceholder } from "@/data/playoffsData";
 import { teamMeta } from "@/lib/nbaApi";
@@ -26,6 +27,7 @@ const Settings = () => {
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState("");
   const [savingName, setSavingName] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(playerCards[0].id);
 
   const fetchPicks = async () => {
     if (!user) return;
@@ -126,7 +128,17 @@ const Settings = () => {
               <CardTitle className="font-display text-lg tracking-wider">THAT'S YOU</CardTitle>
             </CardHeader>
             <CardContent>
-              <PlayerCard />
+              <div className="flex gap-4 overflow-x-auto pb-2 snap-x">
+                {playerCards.map((p) => (
+                  <div key={p.id} className="snap-center shrink-0">
+                    <PlayerCard
+                      player={p}
+                      selected={selectedCard === p.id}
+                      onClick={() => setSelectedCard(p.id)}
+                    />
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         )}

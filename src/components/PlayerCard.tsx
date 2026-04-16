@@ -1,3 +1,4 @@
+import flairBustsLogo from "@/assets/flair-busts-logo.png";
 import westbrookImg from "@/assets/westbrook.jpeg";
 import ewingImg from "@/assets/ewing.png";
 import millerImg from "@/assets/miller.png";
@@ -73,9 +74,7 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
 
               {/* Top badge */}
               <div className="relative px-3 pt-3 pb-1 flex items-start justify-between">
-                <div className="bg-[#1a2744]/80 px-2 py-0.5 rounded text-[9px] font-display tracking-wider text-white/70 border border-white/10">
-                  BUST NOW™
-                </div>
+                <img src={flairBustsLogo} alt="Flair Busts" className="h-7 w-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]" />
               </div>
 
               {/* Player image */}

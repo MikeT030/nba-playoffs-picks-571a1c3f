@@ -95,7 +95,7 @@ const PlayerCard = ({ className = "" }: PlayerCardProps) => {
               {/* Game context */}
               <div className="bg-[#0d1833]/80 border-t border-blue-900/40 px-3 py-2 text-center">
                 <p className="font-body text-[8px] tracking-wider text-white/40 uppercase">
-                  Western Conf First Round G3 &bull; LAC @ DAL
+                  2024 Western Conf First Round G3 &bull; LAC @ DAL
                 </p>
               </div>
             </div>

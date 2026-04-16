@@ -89,7 +89,7 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
               </div>
 
               {/* Player name */}
-              <div className="relative px-4 pt-3 pb-[12px] flex items-end justify-center gap-2">
+              <div className="relative px-4 pt-3 pb-[12px] flex items-end justify-center gap-3 translate-x-3">
                 <div className="min-w-0">
                   <p className={`font-body italic ${player.nameColor} text-xl leading-none -mb-0.5 drop-shadow-[0_1px_6px_rgba(220,40,40,0.4)] text-right`}>
                     {player.firstName}
@@ -101,7 +101,7 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
                 <img
                   src={playoffBricksLogo}
                   alt="Playoff Bricks"
-                  className="h-12 w-auto flex-shrink-0 drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]"
+                  className="h-16 w-auto flex-shrink-0 drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]"
                 />
               </div>
 

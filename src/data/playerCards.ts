@@ -61,7 +61,7 @@ export const playerCards: PlayerCardData[] = [
     image: "miller",
     stat: "7",
     statLabel: "PTS",
-    statLine: "1/16 FG • 4 AST • 2 REB • 0/3 3PT • 41 MIN",
+    statLine: "1/16 FG • 0/3 3PT • 2 REB • 4 AST • 41 MIN",
     subtitle: "CAREER LOWLIGHT",
     gameContext: "2000 NBA Finals G1 • IND vs LAL",
     date: "JUN 7",

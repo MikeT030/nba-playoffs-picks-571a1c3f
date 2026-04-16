@@ -8,6 +8,7 @@ import { LogOut, Mail, ArrowLeft, LogIn, PenLine, CheckCircle, Pencil, Check } f
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import BetsDrawer from "@/components/BetsDrawer";
+import PlayerCard from "@/components/PlayerCard";
 import TeamLogo from "@/components/TeamLogo";
 import { bracketSeries, resolveSeriesTeams, isPlayInPlaceholder } from "@/data/playoffsData";
 import { teamMeta } from "@/lib/nbaApi";

@@ -124,33 +124,35 @@ const Settings = () => {
         )}
 
         {!loading && user && (
-          <Card className="mt-3 mb-3">
-            <CardHeader>
-              <CardTitle className="font-display text-lg tracking-wider">PICK YOUR CARD STYLE</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <PlayerCardVariants player={playerCards.find(p => p.id === "bsimmons")!} />
-            </CardContent>
-          </Card>
+          <>
+            <Card className="mt-3 mb-3">
+              <CardHeader>
+                <CardTitle className="font-display text-lg tracking-wider">PICK YOUR CARD STYLE</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <PlayerCardVariants player={playerCards.find(p => p.id === "bsimmons")!} />
+              </CardContent>
+            </Card>
 
-          <Card className="mt-3 mb-3">
-            <CardHeader>
-              <CardTitle className="font-display text-lg tracking-wider">THAT'S YOU</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-4 overflow-x-auto pb-2 snap-x">
-                {playerCards.map((p) => (
-                  <div key={p.id} className="snap-center shrink-0">
-                    <PlayerCard
-                      player={p}
-                      selected={selectedCard === p.id}
-                      onClick={() => setSelectedCard(p.id)}
-                    />
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+            <Card className="mt-3 mb-3">
+              <CardHeader>
+                <CardTitle className="font-display text-lg tracking-wider">THAT'S YOU</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex gap-4 overflow-x-auto pb-2 snap-x">
+                  {playerCards.map((p) => (
+                    <div key={p.id} className="snap-center shrink-0">
+                      <PlayerCard
+                        player={p}
+                        selected={selectedCard === p.id}
+                        onClick={() => setSelectedCard(p.id)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </>
         )}
 
         {!loading && user && (

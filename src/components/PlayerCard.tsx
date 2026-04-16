@@ -91,10 +91,10 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
               {/* Player name */}
               <div className="relative px-4 pt-3 pb-[12px] flex items-end justify-between gap-2">
                 <div className="flex-1 min-w-0">
-                  <p className={`font-body italic ${player.nameColor} text-xl leading-none -mb-0.5 drop-shadow-[0_1px_6px_rgba(220,40,40,0.4)]`}>
+                  <p className={`font-body italic ${player.nameColor} text-xl leading-none -mb-0.5 drop-shadow-[0_1px_6px_rgba(220,40,40,0.4)] text-right`}>
                     {player.firstName}
                   </p>
-                  <h3 className="font-display text-3xl tracking-wider text-white uppercase leading-none drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                  <h3 className="font-display text-3xl tracking-wider text-white uppercase leading-none drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] text-right">
                     {player.lastName}
                   </h3>
                 </div>

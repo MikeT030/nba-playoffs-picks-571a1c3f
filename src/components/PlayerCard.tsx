@@ -9,8 +9,8 @@ const images: Record<string, string> = {
   westbrook: westbrookImg,
   ewing: ewingImg,
   miller: millerImg,
+  starks: starksImg,
   lebron: lebronImg,
-};
 
 interface PlayerCardProps {
   player: PlayerCardData;

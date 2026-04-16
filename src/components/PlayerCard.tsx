@@ -10,7 +10,7 @@ interface PlayerCardProps {
 }
 
 const PlayerCard = ({ player, selected = false, onClick, className = "" }: PlayerCardProps) => {
-  const img = images[player.image] || westbrookImg;
+  const img = images[player.image] || images.westbrook;
 
   return (
     <button

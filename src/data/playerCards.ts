@@ -25,7 +25,7 @@ export const playerCards: PlayerCardData[] = [
     image: "westbrook",
     stat: "1",
     statLabel: "PT",
-    statLine: "0/7 FG \u2022 0/4 3PT \u2022 19 MIN",
+    statLine: "0/7 FG • 0/4 3PT • 1 AST • 19 MIN",
     subtitle: "CAREER LOWLIGHT",
     gameContext: "2024 Western Conf First Round G3 \u2022 LAC @ DAL",
     date: "APR 26",

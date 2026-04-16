@@ -94,7 +94,7 @@ export function usePlayoffGames(season: number = 2025) {
     queryFn: async () => {
       try {
         const games = await getPlayoffGames(season);
-        if (games.length === 0) return [...fallbackMatches, dummyFinalMatch];
+        if (games.length === 0) return fallbackMatches;
         const apiMatches = groupIntoSeries(games);
 
         // Merge in TBD fallback matchups that aren't covered by API data
@@ -111,15 +111,10 @@ export function usePlayoffGames(season: number = 2025) {
           return !homeInApi && !awayInApi;
         });
 
-        const allMatches = [...apiMatches, ...tbdMatches];
-        // Add dummy CHA vs MIA final match
-        if (!allMatches.some((m) => m.id === "cha-mia")) {
-          allMatches.push(dummyFinalMatch);
-        }
-        return allMatches;
+        return [...apiMatches, ...tbdMatches];
       } catch (error) {
         console.warn("Failed to fetch NBA data, using fallback:", error);
-        return [...fallbackMatches, dummyFinalMatch];
+        return fallbackMatches;
       }
     },
     staleTime: 5 * 60 * 1000, // 5 min

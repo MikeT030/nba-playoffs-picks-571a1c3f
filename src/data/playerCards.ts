@@ -133,7 +133,7 @@ export const playerCards: PlayerCardData[] = [
     image: "kmartin",
     stat: "4",
     statLabel: "PTS",
-    statLine: "2/8 FG • 0/0 FT • 37 MIN",
+    statLine: "2/8 FG • 0/0 FT • 8 TO • 37 MIN",
     subtitle: "CAREER LOWLIGHT",
     gameContext: "2003 NBA Finals G5 • NJN vs SAN",
     date: "JUN 15",

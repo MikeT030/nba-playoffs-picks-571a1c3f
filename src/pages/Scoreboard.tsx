@@ -279,6 +279,25 @@ const Scoreboard = () => {
   const [scoreboard, setScoreboard] = useState<ParticipantScore[]>([]);
   const [loading, setLoading] = useState(true);
   const [cardMap, setCardMap] = useState<Record<string, string>>({});
+  const [cardDialogOpen, setCardDialogOpen] = useState(false);
+  const [selectedCardIndex, setSelectedCardIndex] = useState(0);
+
+  // Build list of players with cards for navigation
+  const playersWithCards = scoreboard
+    .map((p) => {
+      const cardId = cardMap[p.name];
+      const card = cardId ? playerCards.find((c) => c.id === cardId) : null;
+      return card ? { name: p.name, card } : null;
+    })
+    .filter(Boolean) as { name: string; card: (typeof playerCards)[0] }[];
+
+  const openCardDialog = (playerName: string) => {
+    const idx = playersWithCards.findIndex((p) => p.name === playerName);
+    if (idx >= 0) {
+      setSelectedCardIndex(idx);
+      setCardDialogOpen(true);
+    }
+  };
 
   useEffect(() => {
     const fetchScores = async () => {

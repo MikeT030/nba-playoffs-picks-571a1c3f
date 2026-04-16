@@ -1,7 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import { getPlayoffGames, teamMeta, type NbaGame } from "@/lib/nbaApi";
 import { type Team, teamSeeds } from "@/data/playoffsData";
-import { chaMiaSeriesGames, type SeriesGame } from "@/data/chamiaSeries";
+
+export interface SeriesGame {
+  gameNumber: number;
+  date: string;
+  status: "final" | "live" | "upcoming";
+  homeTeam: Team;
+  awayTeam: Team;
+  homeScore: number;
+  awayScore: number;
+  seriesRecord: [number, number];
+  ot?: number;
+}
 
 function nbaTeamToTeam(t: { full_name: string; abbreviation: string }): Team {
   const meta = teamMeta[t.abbreviation] || { color: "#666", logo: "🏀" };
@@ -84,8 +95,8 @@ export function useSeriesGames(
   return useQuery({
     queryKey: ["series-games", matchId, season],
     queryFn: async (): Promise<SeriesGame[]> => {
-      // Hardcoded CHA vs MIA fallback
-      if (matchId === "cha-mia") return chaMiaSeriesGames;
+
+
 
       if (!homeAbbr || !awayAbbr) return [];
 

@@ -1,6 +1,8 @@
 import flairBustsLogo from "@/assets/flair-busts-logo.png";
 import playoffBricksLogo from "@/assets/playoff-bricks-logo.png";
 import { playerImages as images } from "@/lib/playerImages";
+import { teamMeta } from "@/lib/nbaApi";
+import TeamLogo from "@/components/TeamLogo";
 import type { PlayerCardData } from "@/data/playerCards";
 
 interface PlayerCardProps {
@@ -12,6 +14,7 @@ interface PlayerCardProps {
 
 const PlayerCard = ({ player, selected = false, onClick, className = "" }: PlayerCardProps) => {
   const img = images[player.image] || images.westbrook;
+  const teamLogo = teamMeta[player.teamAbbr]?.logo ?? "";
 
   return (
     <button
@@ -89,8 +92,13 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
               </div>
 
               {/* Player name */}
-              <div className="relative px-4 pt-3 pb-[12px] flex items-end justify-center gap-3 translate-x-3">
-                <div className="min-w-0">
+              <div className="relative px-4 pt-3 pb-[12px] flex items-center justify-between gap-3">
+                <TeamLogo
+                  src={teamLogo}
+                  alt={`${player.teamAbbr} logo`}
+                  className="w-12 h-12 flex-shrink-0 drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]"
+                />
+                <div className="min-w-0 flex-1 flex flex-col items-end">
                   <p className={`font-body italic ${player.nameColor} text-2xl leading-none -mb-0.5 drop-shadow-[0_1px_6px_rgba(220,40,40,0.4)] text-right`}>
                     {player.firstName}
                   </p>

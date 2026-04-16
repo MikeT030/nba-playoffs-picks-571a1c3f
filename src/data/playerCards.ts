@@ -3,6 +3,7 @@ export interface PlayerCardData {
   firstName: string;
   lastName: string;
   image: string; // import path handled in component
+  teamAbbr: string; // NBA team abbreviation for logo lookup
   stat: string;
   statLabel: string;
   statLine: string;
@@ -23,6 +24,7 @@ export const playerCards: PlayerCardData[] = [
     firstName: "Russell",
     lastName: "WESTBROOK",
     image: "westbrook",
+    teamAbbr: "LAC",
     stat: "1",
     statLabel: "PT",
     statLine: "0/7 FG • 0/4 3PT • 1 AST • 19 MIN",
@@ -41,6 +43,7 @@ export const playerCards: PlayerCardData[] = [
     firstName: "Patrick",
     lastName: "EWING",
     image: "ewing",
+    teamAbbr: "NYK",
     stat: "6",
     statLabel: "PTS",
     statLine: "3/7 FG \u2022 0/0 FT \u2022 1 AST \u2022 5 TOV \u2022 27 MIN",
@@ -59,6 +62,7 @@ export const playerCards: PlayerCardData[] = [
     firstName: "Reggie",
     lastName: "MILLER",
     image: "miller",
+    teamAbbr: "IND",
     stat: "7",
     statLabel: "PTS",
     statLine: "1/16 FG • 0/3 3PT • 2 REB • 4 AST • 41 MIN",
@@ -77,6 +81,7 @@ export const playerCards: PlayerCardData[] = [
     firstName: "John",
     lastName: "STARKS",
     image: "starks",
+    teamAbbr: "NYK",
     stat: "8",
     statLabel: "PTS",
     statLine: "2/18 FG • 0/11 3PT • 2 AST • 42 MIN",
@@ -95,6 +100,7 @@ export const playerCards: PlayerCardData[] = [
     firstName: "LeBron",
     lastName: "JAMES",
     image: "lebron",
+    teamAbbr: "MIA",
     stat: "8",
     statLabel: "PTS",
     statLine: "3/11 FG • 0/3 3PT • 7 AST • 4 TOV • 46 MIN",
@@ -113,6 +119,7 @@ export const playerCards: PlayerCardData[] = [
     firstName: "Scottie",
     lastName: "PIPPEN",
     image: "pippen",
+    teamAbbr: "CHI",
     stat: "6",
     statLabel: "PTS",
     statLine: "2/16 FG • 0/7 3PT • 4 TOV • 6 PF • 45 MIN",
@@ -131,6 +138,7 @@ export const playerCards: PlayerCardData[] = [
     firstName: "Kenyon",
     lastName: "MARTIN",
     image: "kmartin",
+    teamAbbr: "BKN",
     stat: "4",
     statLabel: "PTS",
     statLine: "2/8 FG • 0/0 FT • 8 TOV • 37 MIN",
@@ -149,6 +157,7 @@ export const playerCards: PlayerCardData[] = [
     firstName: "Ben",
     lastName: "SIMMONS",
     image: "bsimmons",
+    teamAbbr: "PHI",
     stat: "1",
     statLabel: "PT",
     statLine: "0/4 FG • 7 AST • 5 TOV • 30 MIN",
@@ -167,6 +176,7 @@ export const playerCards: PlayerCardData[] = [
     firstName: "Kobe",
     lastName: "BRYANT",
     image: "kobe",
+    teamAbbr: "LAL",
     stat: "11",
     statLabel: "PTS",
     statLine: "4/14 FG • 0/6 3PT • 1 AST • 29 MIN",
@@ -185,6 +195,7 @@ export const playerCards: PlayerCardData[] = [
     firstName: "Stephen",
     lastName: "CURRY",
     image: "curry",
+    teamAbbr: "GSW",
     stat: "17",
     statLabel: "PTS",
     statLine: "6/19 FG • 2 AST • 1/1 FT • 39 MIN",
@@ -203,6 +214,7 @@ export const playerCards: PlayerCardData[] = [
     firstName: "Dwyane",
     lastName: "WADE",
     image: "wade",
+    teamAbbr: "MIA",
     stat: "2",
     statLabel: "PTS",
     statLine: "1/8 FG • 0/0 FT • 3 REB • 31 MIN",

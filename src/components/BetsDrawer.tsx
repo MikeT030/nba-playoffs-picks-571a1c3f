@@ -367,7 +367,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, onCardRoulette, resolvedB
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="h-[95vh]">
+      <DrawerContent className="h-[95vh] border-none">
         <div ref={scrollRef} className="overflow-y-auto pb-24">
           <div className="px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">

@@ -317,7 +317,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, onCardRoulette, resolvedB
   if (!profileName) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className="h-[92vh]">
+        <DrawerContent className="h-[92vh] border-none">
           <div className="flex-1 flex flex-col items-center justify-center px-4 pb-8">
             <DrawerHeader className="pt-4 pb-2">
               <DrawerTitle className="font-display text-4xl tracking-wider text-center">

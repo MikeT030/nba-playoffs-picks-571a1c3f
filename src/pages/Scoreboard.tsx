@@ -148,11 +148,14 @@ const AllPicksMatrix = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const [picksRes, resultsRes] = await Promise.all([
-        supabase.from("picks").select("profile_name, series_id, winner, games_in_series"),
+      const [picksRes, resultsRes, profilesRes] = await Promise.all([
+        supabase.from("picks").select("profile_name, series_id, winner, games_in_series, user_id"),
         supabase.from("series_results").select("series_id, winner, games_played"),
+        supabase.from("profiles").select("user_id"),
       ]);
-      if (picksRes.data) setPicks(picksRes.data);
+      const activeUserIds = new Set((profilesRes.data || []).map((p: any) => p.user_id));
+      const activePicks = (picksRes.data || []).filter((p: any) => activeUserIds.has(p.user_id));
+      setPicks(activePicks);
       if (resultsRes.data) setResults(resultsRes.data as SeriesResult[]);
       setLoading(false);
     };
@@ -273,11 +276,13 @@ const Scoreboard = () => {
 
   useEffect(() => {
     const fetchScores = async () => {
-      const [picksRes, resultsRes] = await Promise.all([
-        supabase.from("picks").select("profile_name, series_id, winner, games_in_series"),
+      const [picksRes, resultsRes, profilesRes] = await Promise.all([
+        supabase.from("picks").select("profile_name, series_id, winner, games_in_series, user_id"),
         supabase.from("series_results").select("series_id, winner, games_played"),
+        supabase.from("profiles").select("user_id"),
       ]);
-      const picks = (picksRes.data || []) as PickRow[];
+      const activeUserIds = new Set((profilesRes.data || []).map((p: any) => p.user_id));
+      const picks = ((picksRes.data || []) as (PickRow & { user_id: string })[]).filter(p => activeUserIds.has(p.user_id));
       const results = (resultsRes.data || []) as SeriesResult[];
       setScoreboard(computeScoreboard(picks, results));
       setLoading(false);

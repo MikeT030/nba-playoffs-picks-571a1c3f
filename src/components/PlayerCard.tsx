@@ -73,8 +73,8 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
               </div>
 
               {/* Top badge */}
-              <div className="relative px-3 pt-3 pb-1 flex items-start justify-between">
-                <img src={flairBustsLogo} alt="Flair Busts" className="h-10 w-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]" />
+              <div className="relative px-3 pt-3 pb-0 flex items-start justify-between z-20">
+                <img src={flairBustsLogo} alt="Flair Busts" className="h-10 w-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)] mb-[-14px]" />
               </div>
 
               {/* Player image */}

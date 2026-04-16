@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { LayoutGrid } from "lucide-react";
+import { LayoutGrid, ChevronLeft, ChevronRight } from "lucide-react";
 import allPicksIcon from "@/assets/all-picks-icon.svg";
 import HeroBanner from "@/components/HeroBanner";
 import {
@@ -17,6 +17,8 @@ import { useBracketData } from "@/hooks/useBracketData";
 import { playerImages } from "@/lib/playerImages";
 import { playerCards } from "@/data/playerCards";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import PlayerCard from "@/components/PlayerCard";
 
 
 
@@ -277,6 +279,25 @@ const Scoreboard = () => {
   const [scoreboard, setScoreboard] = useState<ParticipantScore[]>([]);
   const [loading, setLoading] = useState(true);
   const [cardMap, setCardMap] = useState<Record<string, string>>({});
+  const [cardDialogOpen, setCardDialogOpen] = useState(false);
+  const [selectedCardIndex, setSelectedCardIndex] = useState(0);
+
+  // Build list of players with cards for navigation
+  const playersWithCards = scoreboard
+    .map((p) => {
+      const cardId = cardMap[p.name];
+      const card = cardId ? playerCards.find((c) => c.id === cardId) : null;
+      return card ? { name: p.name, card } : null;
+    })
+    .filter(Boolean) as { name: string; card: (typeof playerCards)[0] }[];
+
+  const openCardDialog = (playerName: string) => {
+    const idx = playersWithCards.findIndex((p) => p.name === playerName);
+    if (idx >= 0) {
+      setSelectedCardIndex(idx);
+      setCardDialogOpen(true);
+    }
+  };
 
   useEffect(() => {
     const fetchScores = async () => {
@@ -357,7 +378,7 @@ const Scoreboard = () => {
               </TableHeader>
               <TableBody>
                 {scoreboard.map((player, i) => (
-                  <TableRow key={player.name}>
+                  <TableRow key={player.name} className="cursor-pointer" onClick={() => openCardDialog(player.name)}>
                     <TableCell>{getRankIcon(i)}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2.5">
@@ -421,6 +442,56 @@ const Scoreboard = () => {
           Scores update as playoff results come in
         </p>
       </section>
+
+      {/* Player Card Dialog */}
+      <Dialog open={cardDialogOpen} onOpenChange={setCardDialogOpen}>
+        <DialogContent className="bg-transparent border-none shadow-none max-w-[360px] p-0 [&>button]:text-white [&>button]:top-2 [&>button]:right-2">
+          {playersWithCards.length > 0 && (
+            <div className="flex flex-col items-center gap-3">
+              {/* Username */}
+              <p className="font-display text-lg tracking-wider text-white text-center drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+                {playersWithCards[selectedCardIndex]?.name}
+              </p>
+
+              {/* Card */}
+              <div className="relative w-full">
+                <PlayerCard player={playersWithCards[selectedCardIndex]?.card} />
+
+                {/* Nav arrows */}
+                {playersWithCards.length > 1 && (
+                  <>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setSelectedCardIndex((prev) => (prev - 1 + playersWithCards.length) % playersWithCards.length); }}
+                      className="absolute left-[-16px] top-1/2 -translate-y-1/2 z-30 bg-background/60 backdrop-blur-sm rounded-full p-1.5 text-foreground hover:bg-background/80 transition-colors"
+                    >
+                      <ChevronLeft size={20} />
+                    </button>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setSelectedCardIndex((prev) => (prev + 1) % playersWithCards.length); }}
+                      className="absolute right-[-16px] top-1/2 -translate-y-1/2 z-30 bg-background/60 backdrop-blur-sm rounded-full p-1.5 text-foreground hover:bg-background/80 transition-colors"
+                    >
+                      <ChevronRight size={20} />
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {/* Dots indicator */}
+              {playersWithCards.length > 1 && (
+                <div className="flex gap-1.5">
+                  {playersWithCards.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setSelectedCardIndex(i)}
+                      className={`w-2 h-2 rounded-full transition-colors ${i === selectedCardIndex ? "bg-primary" : "bg-white/30"}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

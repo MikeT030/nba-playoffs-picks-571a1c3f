@@ -89,14 +89,22 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
               </div>
 
               {/* Player name */}
-              <div className="relative px-4 pt-3 pb-[12px]">
-                <p className={`font-body italic ${player.nameColor} text-xl leading-none -mb-0.5 drop-shadow-[0_1px_6px_rgba(220,40,40,0.4)]`}>
-                  {player.firstName}
-                </p>
-                <h3 className="font-display text-3xl tracking-wider text-white uppercase leading-none drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
-                  {player.lastName}
-                </h3>
+              <div className="relative px-4 pt-3 pb-[12px] flex items-end justify-between gap-2">
+                <div className="flex-1 min-w-0">
+                  <p className={`font-body italic ${player.nameColor} text-xl leading-none -mb-0.5 drop-shadow-[0_1px_6px_rgba(220,40,40,0.4)]`}>
+                    {player.firstName}
+                  </p>
+                  <h3 className="font-display text-3xl tracking-wider text-white uppercase leading-none drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                    {player.lastName}
+                  </h3>
+                </div>
+                <img
+                  src={playoffBricksLogo}
+                  alt="Playoff Bricks"
+                  className="h-12 w-auto flex-shrink-0 drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]"
+                />
               </div>
+
 
               {/* Game context ribbon */}
               <div className={`relative mx-3 mb-3 rounded px-3 py-1.5 bg-gradient-to-r ${player.accentPrimary} pb-[6px]`}>

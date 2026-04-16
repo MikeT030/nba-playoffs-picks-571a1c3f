@@ -289,7 +289,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, onCardRoulette, resolvedB
   if (!user) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className="max-h-[92vh]">
+        <DrawerContent className="max-h-[92vh] border-none">
           <div className="overflow-y-auto px-4 pb-8">
             <DrawerHeader className="pt-4 pb-2">
               <DrawerTitle className="font-display text-4xl tracking-wider text-center">

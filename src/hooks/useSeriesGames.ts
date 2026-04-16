@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getPlayoffGames, teamMeta, type NbaGame } from "@/lib/nbaApi";
 import { type Team, teamSeeds } from "@/data/playoffsData";
-import { chaMiaSeriesGames, type SeriesGame } from "@/data/chamiaSeries";
+import { type SeriesGame } from "@/data/chamiaSeries";
 
 function nbaTeamToTeam(t: { full_name: string; abbreviation: string }): Team {
   const meta = teamMeta[t.abbreviation] || { color: "#666", logo: "🏀" };

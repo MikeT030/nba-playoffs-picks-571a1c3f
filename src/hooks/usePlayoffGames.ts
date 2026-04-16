@@ -2,34 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getPlayoffGames, teamMeta, type NbaGame } from "@/lib/nbaApi";
 import { type Match, type Team, makeTips, fallbackMatches, getConference, teamSeeds } from "@/data/playoffsData";
 
-const dummyFinalMatch: Match = {
-  id: "cha-mia",
-  round: "First Round",
-  conference: "East",
-  gameNumber: 7,
-  date: "May 3",
-  time: "Final",
-  homeTeam: {
-    name: "Miami Heat",
-    abbreviation: "MIA",
-    color: teamMeta["MIA"].color,
-    logo: teamMeta["MIA"].logo,
-    seed: 8,
-  },
-  awayTeam: {
-    name: "Charlotte Hornets",
-    abbreviation: "CHA",
-    color: teamMeta["CHA"].color,
-    logo: teamMeta["CHA"].logo,
-    seed: 7,
-  },
-  homeWins: 3,
-  awayWins: 4,
-  status: "final",
-  homeScore: 100,
-  awayScore: 106,
-  tips: makeTips("MIA", "CHA"),
-};
 
 function gameStatusToLocal(status: string): "upcoming" | "live" | "final" {
   if (status === "Final") return "final";

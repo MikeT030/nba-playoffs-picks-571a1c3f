@@ -3,6 +3,7 @@ import ewingImg from "@/assets/ewing.png";
 import millerImg from "@/assets/miller.png";
 import starksImg from "@/assets/starks.png";
 import lebronImg from "@/assets/lebron.png";
+import pippenImg from "@/assets/pippen.png";
 import type { PlayerCardData } from "@/data/playerCards";
 
 const images: Record<string, string> = {
@@ -11,6 +12,7 @@ const images: Record<string, string> = {
   miller: millerImg,
   starks: starksImg,
   lebron: lebronImg,
+  pippen: pippenImg,
 };
 
 interface PlayerCardProps {

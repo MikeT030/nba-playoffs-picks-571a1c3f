@@ -141,7 +141,6 @@ const Settings = () => {
               </div>
             </CardContent>
           </Card>
-          </Card>
         )}
 
         {!loading && user && (

@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import BetsDrawer from "@/components/BetsDrawer";
 import PlayerCard from "@/components/PlayerCard";
+import PlayerCardVariants from "@/components/PlayerCardVariants";
 import { playerCards } from "@/data/playerCards";
 import TeamLogo from "@/components/TeamLogo";
 import { bracketSeries, resolveSeriesTeams, isPlayInPlaceholder } from "@/data/playoffsData";

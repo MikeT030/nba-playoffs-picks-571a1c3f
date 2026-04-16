@@ -53,7 +53,7 @@ const Settings = () => {
 
   useEffect(() => {
     fetchDisplayName();
-    fetchHasPicks();
+    fetchPicks();
   }, [user]);
 
   const handleSaveName = async () => {
@@ -193,7 +193,7 @@ const Settings = () => {
         )}
       </div>
 
-      <BetsDrawer open={betsOpen} onOpenChange={(open) => { setBetsOpen(open); if (!open) { fetchDisplayName(); fetchHasPicks(); } }} />
+      <BetsDrawer open={betsOpen} onOpenChange={(open) => { setBetsOpen(open); if (!open) { fetchDisplayName(); fetchPicks(); } }} />
     </div>
   );
 };

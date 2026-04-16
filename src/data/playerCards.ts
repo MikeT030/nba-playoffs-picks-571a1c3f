@@ -115,7 +115,7 @@ export const playerCards: PlayerCardData[] = [
     image: "pippen",
     stat: "6",
     statLabel: "PTS",
-    statLine: "2/16 FG • 0/7 3PT • 4 TOV • 45 MIN",
+    statLine: "2/16 FG • 0/7 3PT • 4 TOV • 6 PF • 45 MIN",
     subtitle: "CAREER LOWLIGHT",
     gameContext: "1998 NBA Finals G5 • CHI vs UTA",
     date: "JUN 12",

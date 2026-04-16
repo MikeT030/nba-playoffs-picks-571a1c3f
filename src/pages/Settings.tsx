@@ -10,7 +10,6 @@ import { toast } from "sonner";
 import BetsDrawer from "@/components/BetsDrawer";
 import PlayerCard from "@/components/PlayerCard";
 import { playerCards } from "@/data/playerCards";
-import { playerCards } from "@/data/playerCards";
 import TeamLogo from "@/components/TeamLogo";
 import { bracketSeries, resolveSeriesTeams, isPlayInPlaceholder } from "@/data/playoffsData";
 import { teamMeta } from "@/lib/nbaApi";

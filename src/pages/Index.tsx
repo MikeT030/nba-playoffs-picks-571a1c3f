@@ -3,6 +3,7 @@ import { PenLine, CheckCircle, Lock } from "lucide-react";
 import HeroBanner from "@/components/HeroBanner";
 import MatchCard from "@/components/MatchCard";
 import BetsDrawer from "@/components/BetsDrawer";
+import CountdownTimer from "@/components/CountdownTimer";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useAuth } from "@/contexts/AuthContext";
@@ -140,6 +141,8 @@ const Index = () => {
         <h2 className="font-display text-3xl tracking-wider mb-4">
           All Matchups
         </h2>
+
+        <CountdownTimer />
 
         <Select value={selectedRound} onValueChange={setSelectedRound}>
           <SelectTrigger className="w-[220px] mb-6">

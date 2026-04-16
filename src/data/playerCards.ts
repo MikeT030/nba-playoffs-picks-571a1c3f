@@ -3,6 +3,7 @@ export interface PlayerCardData {
   firstName: string;
   lastName: string;
   image: string; // import path handled in component
+  teamAbbr: string; // NBA team abbreviation for logo lookup
   stat: string;
   statLabel: string;
   statLine: string;

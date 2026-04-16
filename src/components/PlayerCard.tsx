@@ -79,7 +79,7 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
                     {player.statLabel}
                   </span>
                 </div>
-                <p className="text-center font-display text-[10px] tracking-[0.2em] text-amber-400/90 mt-0.5 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
+                <p className="text-center font-display text-xs tracking-[0.2em] text-amber-400/90 mt-1 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
                   {player.statLine}
                 </p>
                 <p className="text-center font-display text-[9px] tracking-[0.15em] text-white/60 mt-0.5">

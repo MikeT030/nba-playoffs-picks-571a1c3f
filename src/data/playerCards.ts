@@ -97,7 +97,7 @@ export const playerCards: PlayerCardData[] = [
     image: "lebron",
     stat: "8",
     statLabel: "PTS",
-    statLine: "3/11 FG • 0/3 3PT • 2/4 FT • 46 MIN",
+    statLine: "3/11 FG • 0/3 3PT • 7 AST • 4 TOV • 46 MIN",
     subtitle: "CAREER LOWLIGHT",
     gameContext: "2011 NBA Finals G4 • MIA vs DAL",
     date: "JUN 7",

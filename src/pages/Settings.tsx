@@ -128,8 +128,19 @@ const Settings = () => {
               <CardTitle className="font-display text-lg tracking-wider">THAT'S YOU</CardTitle>
             </CardHeader>
             <CardContent>
-              <PlayerCard />
+              <div className="flex gap-4 overflow-x-auto pb-2 snap-x">
+                {playerCards.map((p) => (
+                  <div key={p.id} className="snap-center shrink-0">
+                    <PlayerCard
+                      player={p}
+                      selected={selectedCard === p.id}
+                      onClick={() => setSelectedCard(p.id)}
+                    />
+                  </div>
+                ))}
+              </div>
             </CardContent>
+          </Card>
           </Card>
         )}
 

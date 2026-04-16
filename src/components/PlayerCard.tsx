@@ -5,6 +5,7 @@ import starksImg from "@/assets/starks.png";
 import lebronImg from "@/assets/lebron.png";
 import pippenImg from "@/assets/pippen.png";
 import kmartinImg from "@/assets/kmartin.png";
+import bsimmonsImg from "@/assets/bsimmons.png";
 import type { PlayerCardData } from "@/data/playerCards";
 
 const images: Record<string, string> = {
@@ -15,6 +16,7 @@ const images: Record<string, string> = {
   lebron: lebronImg,
   pippen: pippenImg,
   kmartin: kmartinImg,
+  bsimmons: bsimmonsImg,
 };
 
 interface PlayerCardProps {

@@ -108,7 +108,7 @@ const Index = () => {
     }
     const infoLine =
       pickCount === 0
-        ? `Go, bro. You have ${TOTAL_GAMES} games to pick.`
+        ? `Go, bro. You have games to pick.`
         : pickCount < TOTAL_GAMES
           ? `WTF, bro. There are still ${gamesLeft} picks to make.`
           : "You did it, bro. Picks are legit and logged in.";

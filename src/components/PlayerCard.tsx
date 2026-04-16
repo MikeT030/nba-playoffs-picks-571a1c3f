@@ -14,7 +14,7 @@ interface PlayerCardProps {
 
 const PlayerCard = ({ player, selected = false, onClick, className = "" }: PlayerCardProps) => {
   const img = images[player.image] || images.westbrook;
-  const teamLogo = teamMeta[player.teamAbbr]?.logo ?? "";
+  const teamLogo = player.logoOverride ?? teamMeta[player.teamAbbr]?.logo ?? "";
 
   return (
     <button

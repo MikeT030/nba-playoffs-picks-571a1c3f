@@ -8,8 +8,10 @@ import { LogOut, Mail, ArrowLeft, LogIn, PenLine, CheckCircle, Pencil, Check } f
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import BetsDrawer from "@/components/BetsDrawer";
+import CardRouletteOverlay from "@/components/CardRouletteOverlay";
 import PlayerCard from "@/components/PlayerCard";
 import { playerCards } from "@/data/playerCards";
+import { usePlayerCard } from "@/hooks/usePlayerCard";
 import TeamLogo from "@/components/TeamLogo";
 import { bracketSeries, resolveSeriesTeams, isPlayInPlaceholder } from "@/data/playoffsData";
 import { teamMeta } from "@/lib/nbaApi";
@@ -20,6 +22,7 @@ const Settings = () => {
   const navigate = useNavigate();
   const { data: resolvedBracket } = useBracketData();
   const activeBracket = resolvedBracket ?? bracketSeries;
+  const { assignedCardId, loading: cardLoading, assignRandomCard } = usePlayerCard();
   const [betsOpen, setBetsOpen] = useState(false);
   const [hasPicks, setHasPicks] = useState(false);
   const [picks, setPicks] = useState<{ seriesId: string; winner: string; gamesInSeries: number }[]>([]);
@@ -27,7 +30,9 @@ const Settings = () => {
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState("");
   const [savingName, setSavingName] = useState(false);
-  const [selectedCard, setSelectedCard] = useState(playerCards[0].id);
+  const [rouletteCardId, setRouletteCardId] = useState<string | null>(null);
+
+  const assignedCard = assignedCardId ? playerCards.find((c) => c.id === assignedCardId) : null;
 
   const fetchPicks = async () => {
     if (!user) return;
@@ -72,6 +77,14 @@ const Settings = () => {
       setDisplayName(nameInput.trim());
       setEditingName(false);
       toast.success("Name updated");
+    }
+  };
+
+  const handleCardRoulette = async () => {
+    if (assignedCardId || cardLoading) return;
+    const cardId = await assignRandomCard();
+    if (cardId) {
+      setRouletteCardId(cardId);
     }
   };
 
@@ -122,23 +135,14 @@ const Settings = () => {
           </div>
         )}
 
-        {!loading && user && (
+        {/* Player Card Section */}
+        {!loading && user && assignedCard && (
           <Card className="mt-3 mb-3">
             <CardHeader>
               <CardTitle className="font-display text-lg tracking-wider">THAT'S YOU</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="flex gap-4 overflow-x-auto pb-2 snap-x">
-                {playerCards.map((p) => (
-                  <div key={p.id} className="snap-center shrink-0">
-                    <PlayerCard
-                      player={p}
-                      selected={selectedCard === p.id}
-                      onClick={() => setSelectedCard(p.id)}
-                    />
-                  </div>
-                ))}
-              </div>
+            <CardContent className="flex justify-center">
+              <PlayerCard player={assignedCard} selected className="!opacity-100" />
             </CardContent>
           </Card>
         )}
@@ -265,7 +269,18 @@ const Settings = () => {
         )}
       </div>
 
-      <BetsDrawer open={betsOpen} onOpenChange={(open) => { setBetsOpen(open); if (!open) { fetchDisplayName(); fetchPicks(); } }} />
+      <BetsDrawer
+        open={betsOpen}
+        onOpenChange={(open) => { setBetsOpen(open); if (!open) { fetchDisplayName(); fetchPicks(); } }}
+        onCardRoulette={handleCardRoulette}
+      />
+
+      {rouletteCardId && (
+        <CardRouletteOverlay
+          targetCardId={rouletteCardId}
+          onDismiss={() => setRouletteCardId(null)}
+        />
+      )}
     </div>
   );
 };

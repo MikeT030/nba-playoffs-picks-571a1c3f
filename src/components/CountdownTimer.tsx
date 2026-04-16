@@ -29,7 +29,7 @@ const CountdownTimer = () => {
         { val: seconds, label: "SEC" },
       ].map(({ val, label }) => (
         <div key={label} className="flex flex-col items-center">
-          <span className="font-digital text-3xl md:text-4xl text-primary tracking-widest tabular-nums">
+          <span className="font-digital text-3xl md:text-4xl text-neon tracking-widest tabular-nums drop-shadow-[0_0_8px_hsl(var(--neon))]">
             {pad(val)}
           </span>
           <span className="text-[10px] font-body text-muted-foreground tracking-wider">

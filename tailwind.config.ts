@@ -54,6 +54,7 @@ export default {
         },
         win: "hsl(var(--win))",
         loss: "hsl(var(--loss))",
+        neon: "hsl(var(--neon))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

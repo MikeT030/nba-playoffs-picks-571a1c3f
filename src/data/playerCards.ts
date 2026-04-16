@@ -43,7 +43,7 @@ export const playerCards: PlayerCardData[] = [
     image: "ewing",
     stat: "6",
     statLabel: "PTS",
-    statLine: "3/7 FG \u2022 1 AST \u2022 1 BLK \u2022 5 TOV \u2022 27 MIN",
+    statLine: "3/7 FG \u2022 1 AST \u2022 0/0 FT \u2022 5 TOV \u2022 27 MIN",
     subtitle: "CAREER LOWLIGHT",
     gameContext: "1991 Eastern Conf First Round G1 \u2022 NYK vs CHI",
     date: "APR 25",

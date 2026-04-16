@@ -160,70 +160,59 @@ const Settings = () => {
           </div>
         )}
 
-        {!loading && user && (
-          <Card className="mt-3 mb-3">
-            <CardHeader>
-              <CardTitle className="font-display text-lg tracking-wider">YOUR PICKS</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {picks.length > 0 ? (
-                <div className="flex flex-wrap gap-3">
-                  {picks
-                    .filter((p) => {
-                      const series = activeBracket.find((s) => s.id === p.seriesId);
-                      return series && series.round === "First Round";
-                    })
-                    .concat(
-                      picks.filter((p) => {
-                        const series = activeBracket.find((s) => s.id === p.seriesId);
-                        return series && series.round !== "First Round";
-                      })
-                    )
-                    .map((p) => {
-                      const meta = teamMeta[p.winner];
-                      const logo = meta?.logo || "";
-                      const isPlaceholder = isPlayInPlaceholder(p.winner);
-                      return (
-                        <div
-                          key={p.seriesId}
-                          className="flex flex-col items-center gap-1 w-12"
-                          title={`${p.winner} in ${p.gamesInSeries}`}
-                        >
-                          {isPlaceholder || !logo ? (
-                            <span className="w-10 h-10 inline-flex items-center justify-center text-2xl">🏀</span>
-                          ) : (
-                            <TeamLogo src={logo} alt={p.winner} className="w-10 h-10" />
-                          )}
-                          <span className="font-display text-[11px] tracking-wide text-muted-foreground">
-                            {p.winner}
-                          </span>
-                        </div>
-                      );
-                    })}
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground font-body">No picks yet.</p>
-              )}
+        {!loading && user && (() => {
+          const championPick = picks.find((p) => p.seriesId === "nba-finals");
+          const championAbbr = championPick?.winner;
+          const championFullName = championAbbr
+            ? activeBracket.find((s) => s.topTeam?.abbreviation === championAbbr)?.topTeam?.name
+              ?? activeBracket.find((s) => s.bottomTeam?.abbreviation === championAbbr)?.bottomTeam?.name
+              ?? championAbbr
+            : null;
+          const championLogo = championAbbr ? teamMeta[championAbbr]?.logo : null;
+          const isPlaceholder = championAbbr ? isPlayInPlaceholder(championAbbr) : false;
 
-              <button
-                onClick={() => setBetsOpen(true)}
-                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 w-full"
-              >
-                {hasPicks ? (
-                  <>
-                    <CheckCircle size={18} />
-                    Edit Your Picks
-                  </>
+          return (
+            <Card className="mt-3 mb-3">
+              <CardHeader>
+                <CardTitle className="font-display text-lg tracking-wider">YOUR CHAMPION</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {championPick && championFullName ? (
+                  <div className="flex items-center gap-4">
+                    {isPlaceholder || !championLogo ? (
+                      <span className="w-16 h-16 inline-flex items-center justify-center text-4xl">🏀</span>
+                    ) : (
+                      <TeamLogo src={championLogo} alt={championFullName} className="w-16 h-16" />
+                    )}
+                    <div>
+                      <p className="font-display text-xl tracking-wider">{championFullName}</p>
+                      <p className="text-xs text-muted-foreground font-body">in {championPick.gamesInSeries} games</p>
+                    </div>
+                  </div>
                 ) : (
-                  <>
-                    <PenLine size={18} />
-                    Make Your Picks
-                  </>
+                  <p className="text-sm text-muted-foreground font-body">No champion picked yet.</p>
                 )}
-              </button>
-            </CardContent>
-          </Card>
-        )}
+
+                <button
+                  onClick={() => setBetsOpen(true)}
+                  className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 w-full"
+                >
+                  {hasPicks ? (
+                    <>
+                      <CheckCircle size={18} />
+                      Edit Your Picks
+                    </>
+                  ) : (
+                    <>
+                      <PenLine size={18} />
+                      Make Your Picks
+                    </>
+                  )}
+                </button>
+              </CardContent>
+            </Card>
+          );
+        })()}
 
         {loading ? null : user ? (
           <>

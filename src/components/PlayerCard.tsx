@@ -1,4 +1,5 @@
 import flairBustsLogo from "@/assets/flair-busts-logo.png";
+import playoffBricksLogo from "@/assets/playoff-bricks-logo.png";
 import { playerImages as images } from "@/lib/playerImages";
 import type { PlayerCardData } from "@/data/playerCards";
 

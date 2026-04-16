@@ -152,7 +152,7 @@ export const playerCards: PlayerCardData[] = [
     swirlPrimary: "rgba(0,43,92,0.4)",
     swirlSecondary: "rgba(200,16,46,0.4)",
     nameColor: "text-blue-400",
-    logoOverride: "https://upload.wikimedia.org/wikipedia/en/3/35/New_Jersey_Nets_logo.svg",
+    logoOverride: "/src/assets/new-jersey-nets-logo.png",
   },
   {
     id: "bsimmons",

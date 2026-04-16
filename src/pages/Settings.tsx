@@ -27,6 +27,8 @@ const Settings = () => {
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState("");
   const [savingName, setSavingName] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(playerCards[0].id);
+  const [savingName, setSavingName] = useState(false);
 
   const fetchPicks = async () => {
     if (!user) return;

@@ -445,7 +445,7 @@ const Scoreboard = () => {
 
       {/* Player Card Dialog */}
       <Dialog open={cardDialogOpen} onOpenChange={setCardDialogOpen}>
-        <DialogContent className="bg-transparent border-none shadow-none max-w-[260px] p-0 [&>button]:text-white [&>button]:top-2 [&>button]:right-2">
+        <DialogContent className="bg-transparent border-none shadow-none max-w-[359px] p-0 [&>button]:text-white [&>button]:top-2 [&>button]:right-2">
           {playersWithCards.length > 0 && (
             <div className="flex flex-col items-center gap-3">
               {/* Username */}

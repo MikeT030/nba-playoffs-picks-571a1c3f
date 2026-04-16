@@ -36,7 +36,7 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
     <button
       type="button"
       onClick={onClick}
-      className={`relative w-full max-w-[280px] mx-auto block text-left transition-all duration-200 ${
+      className={`relative w-full max-w-[322px] mx-auto block text-left transition-all duration-200 ${
         selected
           ? "ring-2 ring-primary ring-offset-2 ring-offset-background rounded-lg scale-[1.02]"
           : "opacity-70 hover:opacity-100 hover:scale-[1.01]"

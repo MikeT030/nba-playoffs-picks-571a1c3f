@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { LayoutGrid } from "lucide-react";
+import { LayoutGrid, ChevronLeft, ChevronRight } from "lucide-react";
 import allPicksIcon from "@/assets/all-picks-icon.svg";
 import HeroBanner from "@/components/HeroBanner";
 import {
@@ -17,6 +17,8 @@ import { useBracketData } from "@/hooks/useBracketData";
 import { playerImages } from "@/lib/playerImages";
 import { playerCards } from "@/data/playerCards";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import PlayerCard from "@/components/PlayerCard";
 
 
 

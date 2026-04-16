@@ -123,6 +123,17 @@ const Settings = () => {
         {!loading && user && (
           <Card className="mt-3 mb-3">
             <CardHeader>
+              <CardTitle className="font-display text-lg tracking-wider">THAT'S YOU</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <PlayerCard />
+            </CardContent>
+          </Card>
+        )}
+
+        {!loading && user && (
+          <Card className="mt-3 mb-3">
+            <CardHeader>
               <CardTitle className="font-display text-lg tracking-wider">YOUR PICKS</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">

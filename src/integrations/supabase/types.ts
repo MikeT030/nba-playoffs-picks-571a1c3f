@@ -47,6 +47,27 @@ export type Database = {
         }
         Relationships: []
       }
+      player_card_assignments: {
+        Row: {
+          card_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          card_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          card_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string

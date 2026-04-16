@@ -8,21 +8,35 @@ import { LogOut, Mail, ArrowLeft, LogIn, PenLine, CheckCircle, Pencil, Check } f
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import BetsDrawer from "@/components/BetsDrawer";
+import TeamLogo from "@/components/TeamLogo";
+import { bracketSeries, resolveSeriesTeams, isPlayInPlaceholder } from "@/data/playoffsData";
+import { teamMeta } from "@/lib/nbaApi";
+import { useBracketData } from "@/hooks/useBracketData";
 
 const Settings = () => {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
+  const { data: resolvedBracket } = useBracketData();
+  const activeBracket = resolvedBracket ?? bracketSeries;
   const [betsOpen, setBetsOpen] = useState(false);
   const [hasPicks, setHasPicks] = useState(false);
+  const [picks, setPicks] = useState<{ seriesId: string; winner: string; gamesInSeries: number }[]>([]);
   const [displayName, setDisplayName] = useState("");
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState("");
   const [savingName, setSavingName] = useState(false);
 
-  const fetchHasPicks = async () => {
+  const fetchPicks = async () => {
     if (!user) return;
-    const { data } = await supabase.from("picks").select("id").eq("user_id", user.id);
+    const { data } = await supabase.from("picks").select("*").eq("user_id", user.id);
     setHasPicks(!!(data && data.length > 0));
+    setPicks(
+      (data || []).map((row: any) => ({
+        seriesId: row.series_id,
+        winner: row.winner,
+        gamesInSeries: row.games_in_series,
+      }))
+    );
   };
 
   const fetchDisplayName = async () => {
@@ -39,7 +53,7 @@ const Settings = () => {
 
   useEffect(() => {
     fetchDisplayName();
-    fetchHasPicks();
+    fetchPicks();
   }, [user]);
 
   const handleSaveName = async () => {
@@ -105,22 +119,70 @@ const Settings = () => {
           </div>
         )}
 
-        <button
-          onClick={() => setBetsOpen(true)}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 w-full"
-        >
-          {hasPicks ? (
-            <>
-              <CheckCircle size={18} />
-              Edit Your Picks
-            </>
-          ) : (
-            <>
-              <PenLine size={18} />
-              Make Your Picks
-            </>
-          )}
-        </button>
+        {!loading && user && (
+          <Card className="mt-3 mb-3">
+            <CardHeader>
+              <CardTitle className="font-display text-lg tracking-wider">YOUR PICKS</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {picks.length > 0 ? (
+                <div className="flex flex-wrap gap-3">
+                  {picks
+                    .filter((p) => {
+                      const series = activeBracket.find((s) => s.id === p.seriesId);
+                      return series && series.round === "First Round";
+                    })
+                    .concat(
+                      picks.filter((p) => {
+                        const series = activeBracket.find((s) => s.id === p.seriesId);
+                        return series && series.round !== "First Round";
+                      })
+                    )
+                    .map((p) => {
+                      const meta = teamMeta[p.winner];
+                      const logo = meta?.logo || "";
+                      const isPlaceholder = isPlayInPlaceholder(p.winner);
+                      return (
+                        <div
+                          key={p.seriesId}
+                          className="flex flex-col items-center gap-1 w-12"
+                          title={`${p.winner} in ${p.gamesInSeries}`}
+                        >
+                          {isPlaceholder || !logo ? (
+                            <span className="w-10 h-10 inline-flex items-center justify-center text-2xl">🏀</span>
+                          ) : (
+                            <TeamLogo src={logo} alt={p.winner} className="w-10 h-10" />
+                          )}
+                          <span className="font-display text-[11px] tracking-wide text-muted-foreground">
+                            {p.winner}
+                          </span>
+                        </div>
+                      );
+                    })}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground font-body">No picks yet.</p>
+              )}
+
+              <button
+                onClick={() => setBetsOpen(true)}
+                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 w-full"
+              >
+                {hasPicks ? (
+                  <>
+                    <CheckCircle size={18} />
+                    Edit Your Picks
+                  </>
+                ) : (
+                  <>
+                    <PenLine size={18} />
+                    Make Your Picks
+                  </>
+                )}
+              </button>
+            </CardContent>
+          </Card>
+        )}
 
         {loading ? null : user ? (
           <>
@@ -179,7 +241,7 @@ const Settings = () => {
         )}
       </div>
 
-      <BetsDrawer open={betsOpen} onOpenChange={(open) => { setBetsOpen(open); if (!open) { fetchDisplayName(); fetchHasPicks(); } }} />
+      <BetsDrawer open={betsOpen} onOpenChange={(open) => { setBetsOpen(open); if (!open) { fetchDisplayName(); fetchPicks(); } }} />
     </div>
   );
 };

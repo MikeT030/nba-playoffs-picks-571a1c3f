@@ -115,15 +115,6 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
                 </h3>
               </div>
 
-              {/* Bottom bar */}
-              <div className="relative flex justify-between items-end px-3 pb-3">
-                <div className="bg-blue-800/60 border border-blue-500/30 rounded px-2 py-0.5">
-                  <span className="font-display text-[9px] tracking-wider text-white/80">{player.date}</span>
-                </div>
-                <div className="bg-blue-800/60 border border-blue-500/30 rounded px-2 py-0.5">
-                  <span className="font-display text-[9px] tracking-wider text-white/80">{player.year}</span>
-                </div>
-              </div>
 
               {/* Game context */}
               <div className="bg-[#0d1833]/80 border-t border-blue-900/40 px-3 py-2 text-center">

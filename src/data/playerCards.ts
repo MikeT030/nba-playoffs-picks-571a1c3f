@@ -79,7 +79,7 @@ export const playerCards: PlayerCardData[] = [
     image: "starks",
     stat: "8",
     statLabel: "PTS",
-    statLine: "2/18 FG • 0/11 3PT • 42 MIN",
+    statLine: "2/18 FG • 0/11 3PT • 2 AST • 42 MIN",
     subtitle: "CAREER LOWLIGHT",
     gameContext: "1994 NBA Finals G7 • NYK vs HOU",
     date: "JUN 22",

@@ -1,6 +1,7 @@
 import westbrookImg from "@/assets/westbrook.jpeg";
 import ewingImg from "@/assets/ewing.png";
 import millerImg from "@/assets/miller.png";
+import starksImg from "@/assets/starks.png";
 import lebronImg from "@/assets/lebron.png";
 import type { PlayerCardData } from "@/data/playerCards";
 
@@ -8,6 +9,7 @@ const images: Record<string, string> = {
   westbrook: westbrookImg,
   ewing: ewingImg,
   miller: millerImg,
+  starks: starksImg,
   lebron: lebronImg,
 };
 

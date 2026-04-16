@@ -146,7 +146,7 @@ const Settings = () => {
                     ? [assignedCard, ...playerCards.filter((c) => c.id !== assignedCard.id)]
                     : playerCards;
                   return ordered.map((card) => (
-                    <div key={card.id} className="w-[312px] flex-shrink-0">
+                    <div key={card.id} className="w-[359px] flex-shrink-0">
                       <PlayerCard
                         player={card}
                         selected={assignedCard?.id === card.id}

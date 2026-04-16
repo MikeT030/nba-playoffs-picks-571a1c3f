@@ -3,6 +3,7 @@ export interface PlayerCardData {
   firstName: string;
   lastName: string;
   image: string; // import path handled in component
+  team: string;  // NBA team abbreviation for the team they played for
   stat: string;
   statLabel: string;
   statLine: string;
@@ -23,6 +24,7 @@ export const playerCards: PlayerCardData[] = [
     firstName: "Russell",
     lastName: "WESTBROOK",
     image: "westbrook",
+    team: "LAC",
     stat: "1",
     statLabel: "PT",
     statLine: "0/7 FG • 0/4 3PT • 1 AST • 19 MIN",
@@ -41,6 +43,7 @@ export const playerCards: PlayerCardData[] = [
     firstName: "Patrick",
     lastName: "EWING",
     image: "ewing",
+    team: "NYK",
     stat: "6",
     statLabel: "PTS",
     statLine: "3/7 FG \u2022 0/0 FT \u2022 1 AST \u2022 5 TOV \u2022 27 MIN",
@@ -59,6 +62,7 @@ export const playerCards: PlayerCardData[] = [
     firstName: "Reggie",
     lastName: "MILLER",
     image: "miller",
+    team: "IND",
     stat: "7",
     statLabel: "PTS",
     statLine: "1/16 FG • 0/3 3PT • 2 REB • 4 AST • 41 MIN",

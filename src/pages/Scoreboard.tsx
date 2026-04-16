@@ -360,7 +360,23 @@ const Scoreboard = () => {
                   <TableRow key={player.name}>
                     <TableCell>{getRankIcon(i)}</TableCell>
                     <TableCell>
-                      <span className="font-body font-medium text-foreground">{player.name}</span>
+                      <div className="flex items-center gap-2.5">
+                        {(() => {
+                          const cardId = cardMap[player.name];
+                          const card = cardId ? playerCards.find(c => c.id === cardId) : null;
+                          const imgSrc = card ? playerImages[card.image] : null;
+                          return (
+                            <Avatar className="h-8 w-8 border border-border/40">
+                              {imgSrc ? (
+                                <AvatarImage src={imgSrc} alt={player.name} className="object-cover object-top" />
+                              ) : (
+                                <AvatarFallback className="text-xs bg-muted">{player.name.charAt(0)}</AvatarFallback>
+                              )}
+                            </Avatar>
+                          );
+                        })()}
+                        <span className="font-body font-medium text-foreground">{player.name}</span>
+                      </div>
                     </TableCell>
                     <TableCell className="text-right font-display text-lg text-foreground">{player.totalPoints}</TableCell>
                   </TableRow>

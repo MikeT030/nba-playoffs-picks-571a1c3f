@@ -1,30 +1,6 @@
 import flairBustsLogo from "@/assets/flair-busts-logo.png";
-import westbrookImg from "@/assets/westbrook.jpeg";
-import ewingImg from "@/assets/ewing.png";
-import millerImg from "@/assets/miller.png";
-import starksImg from "@/assets/starks.png";
-import lebronImg from "@/assets/lebron.png";
-import pippenImg from "@/assets/pippen.png";
-import kmartinImg from "@/assets/kmartin.png";
-import bsimmonsImg from "@/assets/bsimmons.png";
-import curryImg from "@/assets/curry.webp";
-import kobeImg from "@/assets/kobe.png";
-import wadeImg from "@/assets/wade.jpg";
+import { playerImages as images } from "@/lib/playerImages";
 import type { PlayerCardData } from "@/data/playerCards";
-
-const images: Record<string, string> = {
-  westbrook: westbrookImg,
-  ewing: ewingImg,
-  miller: millerImg,
-  starks: starksImg,
-  lebron: lebronImg,
-  pippen: pippenImg,
-  kmartin: kmartinImg,
-  bsimmons: bsimmonsImg,
-  curry: curryImg,
-  kobe: kobeImg,
-  wade: wadeImg,
-};
 
 interface PlayerCardProps {
   player: PlayerCardData;
@@ -34,7 +10,7 @@ interface PlayerCardProps {
 }
 
 const PlayerCard = ({ player, selected = false, onClick, className = "" }: PlayerCardProps) => {
-  const img = images[player.image] || westbrookImg;
+  const img = images[player.image] || images.westbrook;
 
   return (
     <button

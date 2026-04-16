@@ -14,6 +14,9 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { bracketSeries, type BracketSeries } from "@/data/playoffsData";
 import { useBracketData } from "@/hooks/useBracketData";
+import { playerImages } from "@/lib/playerImages";
+import { playerCards } from "@/data/playerCards";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 
 
@@ -273,18 +276,31 @@ const Scoreboard = () => {
   const [showAllPicks, setShowAllPicks] = useState(false);
   const [scoreboard, setScoreboard] = useState<ParticipantScore[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cardMap, setCardMap] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const fetchScores = async () => {
-      const [picksRes, resultsRes, profilesRes] = await Promise.all([
+      const [picksRes, resultsRes, profilesRes, cardsRes] = await Promise.all([
         supabase.from("picks").select("profile_name, series_id, winner, games_in_series, user_id"),
         supabase.from("series_results").select("series_id, winner, games_played"),
-        supabase.from("profiles").select("user_id"),
+        supabase.from("profiles").select("user_id, display_name"),
+        supabase.from("player_card_assignments").select("user_id, card_id"),
       ]);
       const activeUserIds = new Set((profilesRes.data || []).map((p: any) => p.user_id));
       const picks = ((picksRes.data || []) as (PickRow & { user_id: string })[]).filter(p => activeUserIds.has(p.user_id));
       const results = (resultsRes.data || []) as SeriesResult[];
       setScoreboard(computeScoreboard(picks, results));
+
+      // Build name -> card_id map via user_id
+      const userToName = new Map<string, string>();
+      for (const p of picks) userToName.set(p.user_id, p.profile_name);
+      const nameToCard: Record<string, string> = {};
+      for (const c of (cardsRes.data || [])) {
+        const name = userToName.get(c.user_id);
+        if (name) nameToCard[name] = c.card_id;
+      }
+      setCardMap(nameToCard);
+
       setLoading(false);
     };
     fetchScores();
@@ -344,7 +360,23 @@ const Scoreboard = () => {
                   <TableRow key={player.name}>
                     <TableCell>{getRankIcon(i)}</TableCell>
                     <TableCell>
-                      <span className="font-body font-medium text-foreground">{player.name}</span>
+                      <div className="flex items-center gap-2.5">
+                        {(() => {
+                          const cardId = cardMap[player.name];
+                          const card = cardId ? playerCards.find(c => c.id === cardId) : null;
+                          const imgSrc = card ? playerImages[card.image] : null;
+                          return (
+                            <Avatar className="h-8 w-8 border border-border/40">
+                              {imgSrc ? (
+                                <AvatarImage src={imgSrc} alt={player.name} className="object-cover object-top" />
+                              ) : (
+                                <AvatarFallback className="text-xs bg-muted">{player.name.charAt(0)}</AvatarFallback>
+                              )}
+                            </Avatar>
+                          );
+                        })()}
+                        <span className="font-body font-medium text-foreground">{player.name}</span>
+                      </div>
                     </TableCell>
                     <TableCell className="text-right font-display text-lg text-foreground">{player.totalPoints}</TableCell>
                   </TableRow>

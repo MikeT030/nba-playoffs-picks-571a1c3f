@@ -23,7 +23,7 @@ const CountdownTimer = () => {
   return (
     <div className="flex flex-col items-center gap-2 mb-6">
       {/* Scoreboard housing */}
-      <div className="relative rounded-lg border-2 border-[#3a3a3a] bg-[#0a0a0a] px-5 py-4 shadow-[inset_0_0_30px_rgba(0,0,0,0.8),0_0_20px_rgba(0,0,0,0.5)]">
+      <div className="relative rounded-lg border-2 border-primary/30 bg-[#0a0a0a] px-5 py-4 shadow-[inset_0_0_30px_rgba(0,0,0,0.8),0_0_20px_hsl(var(--primary)/0.15)]">
         {/* Wire mesh overlay effect */}
         <div
           className="absolute inset-0 rounded-lg opacity-[0.04] pointer-events-none"

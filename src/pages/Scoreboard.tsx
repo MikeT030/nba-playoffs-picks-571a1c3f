@@ -378,7 +378,7 @@ const Scoreboard = () => {
               </TableHeader>
               <TableBody>
                 {scoreboard.map((player, i) => (
-                  <TableRow key={player.name}>
+                  <TableRow key={player.name} className="cursor-pointer" onClick={() => openCardDialog(player.name)}>
                     <TableCell>{getRankIcon(i)}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2.5">

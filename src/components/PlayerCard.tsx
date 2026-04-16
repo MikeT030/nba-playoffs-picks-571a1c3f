@@ -1,4 +1,4 @@
-import flairBustsLogo from "@/assets/flair-busts-logo.png";
+import flairBustsLogo from "@/assets/flyer-busts-logo.png";
 import playoffBricksLogo from "@/assets/playoff-bricks-logo.png";
 import { playerImages as images } from "@/lib/playerImages";
 import { teamMeta } from "@/lib/nbaApi";

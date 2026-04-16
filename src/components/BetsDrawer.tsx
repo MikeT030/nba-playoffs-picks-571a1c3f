@@ -289,7 +289,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, onCardRoulette, resolvedB
   if (!user) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className="max-h-[92vh]">
+        <DrawerContent className="max-h-[92vh] border-none">
           <div className="overflow-y-auto px-4 pb-8">
             <DrawerHeader className="pt-4 pb-2">
               <DrawerTitle className="font-display text-4xl tracking-wider text-center">
@@ -317,7 +317,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, onCardRoulette, resolvedB
   if (!profileName) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className="h-[92vh]">
+        <DrawerContent className="h-[92vh] border-none">
           <div className="flex-1 flex flex-col items-center justify-center px-4 pb-8">
             <DrawerHeader className="pt-4 pb-2">
               <DrawerTitle className="font-display text-4xl tracking-wider text-center">
@@ -367,7 +367,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, onCardRoulette, resolvedB
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="h-[95vh]">
+      <DrawerContent className="h-[95vh] border-none">
         <div ref={scrollRef} className="overflow-y-auto pb-24">
           <div className="px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">

@@ -276,18 +276,31 @@ const Scoreboard = () => {
   const [showAllPicks, setShowAllPicks] = useState(false);
   const [scoreboard, setScoreboard] = useState<ParticipantScore[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cardMap, setCardMap] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const fetchScores = async () => {
-      const [picksRes, resultsRes, profilesRes] = await Promise.all([
+      const [picksRes, resultsRes, profilesRes, cardsRes] = await Promise.all([
         supabase.from("picks").select("profile_name, series_id, winner, games_in_series, user_id"),
         supabase.from("series_results").select("series_id, winner, games_played"),
-        supabase.from("profiles").select("user_id"),
+        supabase.from("profiles").select("user_id, display_name"),
+        supabase.from("player_card_assignments").select("user_id, card_id"),
       ]);
       const activeUserIds = new Set((profilesRes.data || []).map((p: any) => p.user_id));
       const picks = ((picksRes.data || []) as (PickRow & { user_id: string })[]).filter(p => activeUserIds.has(p.user_id));
       const results = (resultsRes.data || []) as SeriesResult[];
       setScoreboard(computeScoreboard(picks, results));
+
+      // Build name -> card_id map via user_id
+      const userToName = new Map<string, string>();
+      for (const p of picks) userToName.set(p.user_id, p.profile_name);
+      const nameToCard: Record<string, string> = {};
+      for (const c of (cardsRes.data || [])) {
+        const name = userToName.get(c.user_id);
+        if (name) nameToCard[name] = c.card_id;
+      }
+      setCardMap(nameToCard);
+
       setLoading(false);
     };
     fetchScores();

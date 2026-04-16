@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import { User } from "lucide-react";
 
 const TopRightAuth = () => {
   const location = useLocation();
@@ -8,9 +9,9 @@ const TopRightAuth = () => {
   return (
     <Link
       to="/settings"
-      className="absolute top-4 right-4 z-50 flex items-center justify-center px-4 h-10 rounded-full bg-card/80 backdrop-blur-xl border border-border/60 hover:border-primary/40 transition-colors text-sm font-medium text-foreground"
+      className="absolute top-4 right-4 z-50 flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-[#22272E]/80 backdrop-blur-md hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200"
     >
-      Profile
+      <User size={18} className="text-white" />
     </Link>
   );
 };

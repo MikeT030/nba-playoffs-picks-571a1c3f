@@ -14,6 +14,9 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { bracketSeries, type BracketSeries } from "@/data/playoffsData";
 import { useBracketData } from "@/hooks/useBracketData";
+import { playerImages } from "@/lib/playerImages";
+import { playerCards } from "@/data/playerCards";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 
 

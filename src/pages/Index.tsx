@@ -3,10 +3,12 @@ import { PenLine, CheckCircle, Lock } from "lucide-react";
 import HeroBanner from "@/components/HeroBanner";
 import MatchCard from "@/components/MatchCard";
 import BetsDrawer from "@/components/BetsDrawer";
+import CardRouletteOverlay from "@/components/CardRouletteOverlay";
 import CountdownTimer from "@/components/CountdownTimer";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePlayerCard } from "@/hooks/usePlayerCard";
 import { supabase } from "@/integrations/supabase/client";
 import { ALL_MONOLOGUE_LINES, isPlayoffsStarted } from "@/data/buttonMonologue";
 import {
@@ -31,10 +33,12 @@ const Index = () => {
   const { data: matches, isLoading } = usePlayoffGames();
   const { data: resolvedBracket } = useBracketData();
   const { user } = useAuth();
+  const { assignedCardId, loading: cardLoading, assignRandomCard } = usePlayerCard();
   const [selectedRound, setSelectedRound] = useState("all");
   const [betsOpen, setBetsOpen] = useState(false);
   const [pickCount, setPickCount] = useState(0);
   const [monologueIndex, setMonologueIndex] = useState(-1);
+  const [rouletteCardId, setRouletteCardId] = useState<string | null>(null);
 
   const locked = isPlayoffsStarted();
 
@@ -71,11 +75,19 @@ const Index = () => {
     }
   };
 
+  const handleCardRoulette = async () => {
+    // Only show roulette if user doesn't already have a card
+    if (assignedCardId || cardLoading) return;
+    const cardId = await assignRandomCard();
+    if (cardId) {
+      setRouletteCardId(cardId);
+    }
+  };
+
   const handleButtonClick = () => {
     if (locked) {
       setMonologueIndex((prev) => {
         const next = prev + 1;
-        // Loop back to start after all lines
         return next >= ALL_MONOLOGUE_LINES.length ? 0 : next;
       });
     } else {
@@ -189,7 +201,20 @@ const Index = () => {
       </section>
 
       {!locked && (
-        <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={handleBetsSaved} resolvedBracket={resolvedBracket} />
+        <BetsDrawer
+          open={betsOpen}
+          onOpenChange={setBetsOpen}
+          onBetsSaved={handleBetsSaved}
+          onCardRoulette={handleCardRoulette}
+          resolvedBracket={resolvedBracket}
+        />
+      )}
+
+      {rouletteCardId && (
+        <CardRouletteOverlay
+          targetCardId={rouletteCardId}
+          onDismiss={() => setRouletteCardId(null)}
+        />
       )}
     </div>
   );

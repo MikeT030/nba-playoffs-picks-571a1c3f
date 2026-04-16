@@ -144,7 +144,7 @@ const SeriesCard = ({
   );
 };
 
-const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open: boolean; onOpenChange: (open: boolean) => void; onBetsSaved?: () => void; resolvedBracket?: BracketSeries[] }) => {
+const BetsDrawer = ({ open, onOpenChange, onBetsSaved, onCardRoulette, resolvedBracket }: { open: boolean; onOpenChange: (open: boolean) => void; onBetsSaved?: () => void; onCardRoulette?: () => void; resolvedBracket?: BracketSeries[] }) => {
   const bracketSeries = resolvedBracket ?? defaultBracketSeries;
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -277,6 +277,8 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, resolvedBracket }: { open
       toast.success("Picks saved!");
       onBetsSaved?.();
       onOpenChange(false);
+      // Trigger card roulette after drawer closes
+      onCardRoulette?.();
     } catch (err: any) {
       toast.error(err.message || "Failed to save picks");
     } finally {

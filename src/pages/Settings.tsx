@@ -126,6 +126,15 @@ const Settings = () => {
         {!loading && user && (
           <Card className="mt-3 mb-3">
             <CardHeader>
+              <CardTitle className="font-display text-lg tracking-wider">PICK YOUR CARD STYLE</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <PlayerCardVariants player={playerCards.find(p => p.id === "bsimmons")!} />
+            </CardContent>
+          </Card>
+
+          <Card className="mt-3 mb-3">
+            <CardHeader>
               <CardTitle className="font-display text-lg tracking-wider">THAT'S YOU</CardTitle>
             </CardHeader>
             <CardContent>

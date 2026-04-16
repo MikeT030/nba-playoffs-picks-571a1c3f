@@ -16,6 +16,7 @@ export interface PlayerCardData {
   swirlPrimary: string;    // background swirl color
   swirlSecondary: string;  // background swirl color
   nameColor: string;       // first name italic color
+  logoOverride?: string;   // optional custom team logo URL (e.g. historical logos)
 }
 
 export const playerCards: PlayerCardData[] = [
@@ -151,6 +152,7 @@ export const playerCards: PlayerCardData[] = [
     swirlPrimary: "rgba(0,43,92,0.4)",
     swirlSecondary: "rgba(200,16,46,0.4)",
     nameColor: "text-blue-400",
+    logoOverride: "https://upload.wikimedia.org/wikipedia/en/3/35/New_Jersey_Nets_logo.svg",
   },
   {
     id: "bsimmons",

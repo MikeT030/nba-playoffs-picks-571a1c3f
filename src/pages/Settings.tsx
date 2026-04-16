@@ -176,13 +176,13 @@ const Settings = () => {
               <CardHeader>
                 <CardTitle className="font-display text-lg tracking-wider">YOUR CHAMPION</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-8">
                 {championPick && championFullName ? (
-                  <div className="flex flex-col items-center gap-3 text-center">
+                  <div className="flex flex-col items-center gap-4 text-center pb-4">
                     {isPlaceholder || !championLogo ? (
-                      <span className="w-20 h-20 inline-flex items-center justify-center text-5xl">🏀</span>
+                      <span className="w-36 h-36 inline-flex items-center justify-center text-7xl">🏀</span>
                     ) : (
-                      <TeamLogo src={championLogo} alt={championFullName} className="w-20 h-20" />
+                      <TeamLogo src={championLogo} alt={championFullName} className="w-36 h-36" />
                     )}
                     <div>
                       <p className="font-display text-xl tracking-wider">{championFullName}</p>

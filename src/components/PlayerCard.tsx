@@ -13,6 +13,7 @@ const images: Record<string, string> = {
   lebron: lebronImg,
 };
 
+interface PlayerCardProps {
   player: PlayerCardData;
   selected?: boolean;
   onClick?: () => void;

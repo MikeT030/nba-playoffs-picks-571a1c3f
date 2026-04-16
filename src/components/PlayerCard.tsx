@@ -11,8 +11,8 @@ const images: Record<string, string> = {
   miller: millerImg,
   starks: starksImg,
   lebron: lebronImg,
+};
 
-interface PlayerCardProps {
   player: PlayerCardData;
   selected?: boolean;
   onClick?: () => void;

@@ -16,17 +16,27 @@ import { useBracketData } from "@/hooks/useBracketData";
 const Settings = () => {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
+  const { data: resolvedBracket } = useBracketData();
+  const activeBracket = resolvedBracket ?? bracketSeries;
   const [betsOpen, setBetsOpen] = useState(false);
   const [hasPicks, setHasPicks] = useState(false);
+  const [picks, setPicks] = useState<{ seriesId: string; winner: string; gamesInSeries: number }[]>([]);
   const [displayName, setDisplayName] = useState("");
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState("");
   const [savingName, setSavingName] = useState(false);
 
-  const fetchHasPicks = async () => {
+  const fetchPicks = async () => {
     if (!user) return;
-    const { data } = await supabase.from("picks").select("id").eq("user_id", user.id);
+    const { data } = await supabase.from("picks").select("*").eq("user_id", user.id);
     setHasPicks(!!(data && data.length > 0));
+    setPicks(
+      (data || []).map((row: any) => ({
+        seriesId: row.series_id,
+        winner: row.winner,
+        gamesInSeries: row.games_in_series,
+      }))
+    );
   };
 
   const fetchDisplayName = async () => {

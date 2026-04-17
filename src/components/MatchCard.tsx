@@ -105,11 +105,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
   return (
     <Link
       to={`/match/${match.id}`}
-      className={`block rounded-lg border bg-[#22272E]/80 backdrop-blur-md transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 group ${
-        match.status === "live"
-          ? "border-[#FE943E] hover:border-[#FE943E]"
-          : "border-white/10 hover:border-primary/40"
-      }`}
+      className="block rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/40 group"
     >
       <div className="px-4 py-2 flex items-center justify-center border-b border-transparent">
         <span className="text-xs text-white font-body uppercase tracking-wider text-center font-normal">

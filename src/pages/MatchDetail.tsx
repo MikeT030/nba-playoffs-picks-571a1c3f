@@ -211,7 +211,7 @@ const MatchDetail = () => {
               {displayStatus === "live" && (
                 <span className="inline-flex items-center gap-1 text-[10px] text-loss font-body font-semibold uppercase tracking-widest -mt-6 whitespace-nowrap">
                   <span className="w-1.5 h-1.5 rounded-full bg-loss animate-pulse" />
-                  Live{(activeGame?.time ?? match.time) ? ` · ${activeGame?.time ?? match.time}` : ""}
+                  Live{match.time ? ` · ${match.time}` : ""}
                 </span>
               )}
               {displayStatus === "final" && (

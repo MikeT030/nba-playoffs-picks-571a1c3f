@@ -373,7 +373,7 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, onCardRoulette, resolvedB
             <div className="flex items-center gap-2">
               <div>
                 <h2 className="font-display text-xl tracking-wider">MAKE YOUR PICKS,</h2>
-                <h2 className="font-display text-xl tracking-wider">{profileName?.toUpperCase()}</h2>
+                <h2 className="font-display text-xl tracking-wider text-primary">{profileName?.toUpperCase()}</h2>
               </div>
             </div>
             <div className="flex items-center gap-2">

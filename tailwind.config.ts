@@ -17,6 +17,7 @@ export default {
         display: ['"Bebas Neue"', 'sans-serif'],
         body: ['Barlow', 'sans-serif'],
         digital: ['"DotGothic16"', '"Share Tech Mono"', 'monospace'],
+        led: ['"DSEG7 Classic"', '"DSEG7Classic"', '"Share Tech Mono"', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",

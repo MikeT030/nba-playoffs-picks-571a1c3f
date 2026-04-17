@@ -172,7 +172,7 @@ const Settings = () => {
           const isPlaceholder = championAbbr ? isPlayInPlaceholder(championAbbr) : false;
 
           return (
-            <Card className="mt-3 mb-3">
+            <Card className="mt-3 mb-3 border-0">
               <CardHeader>
                 <CardTitle className="font-display text-lg tracking-wider">YOUR CHAMPION</CardTitle>
               </CardHeader>
@@ -216,7 +216,7 @@ const Settings = () => {
 
         {loading ? null : user ? (
           <>
-            <Card className="mt-3 mb-3">
+            <Card className="mt-3 mb-3 border-0">
               <CardHeader>
                 <CardTitle className="font-display text-lg tracking-wider">ACCOUNT</CardTitle>
               </CardHeader>

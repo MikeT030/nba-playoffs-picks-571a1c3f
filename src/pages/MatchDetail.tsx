@@ -209,7 +209,7 @@ const MatchDetail = () => {
 
             <div className="text-center">
               {displayStatus === "live" && (
-                <span className="inline-flex items-center text-[10px] font-body font-semibold uppercase tracking-widest -mt-[42px] whitespace-nowrap text-[#fe953e]">
+                <span className="inline-flex items-center text-[10px] font-body uppercase tracking-widest -mt-[42px] whitespace-nowrap text-[#fe953e] font-bold">
                   {match.time ?? ""}
                 </span>
               )}

@@ -99,7 +99,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
     >
       <div className="px-4 py-2 flex items-center justify-center border-b border-transparent">
         <span className="text-xs text-white font-body uppercase tracking-wider text-center font-normal">
-          {match.conference !== "Finals" ? `${match.conference === "East" ? "EAST" : "WEST"} · ` : ""}{match.round} · Game {match.gameNumber} · {match.date}
+          {match.conference !== "Finals" ? `${match.conference === "East" ? "EAST" : "WEST"}  ` : ""}{match.round} · Game {match.gameNumber} · {match.date}
         </span>
       </div>
 

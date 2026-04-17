@@ -37,7 +37,7 @@ const CountdownTimer = () => {
         {/* Title sign — overlapping the top edge by 50% */}
         <div className="absolute left-1/2 -translate-x-1/2 -top-4 flex justify-center z-10">
           <span
-            className="font-digital text-lg md:text-xl text-amber-400 tracking-[0.25em] bg-[#0a0a0a] border-2 border-[#3a3a3a] rounded px-3 py-0.5"
+            className="font-digital text-lg md:text-xl text-amber-400 tracking-[0.25em] bg-[#0a0a0a] border-2 border-b-0 border-[#3a3a3a] rounded-t px-3 py-0.5"
           >
             TIP-OFF IN
           </span>

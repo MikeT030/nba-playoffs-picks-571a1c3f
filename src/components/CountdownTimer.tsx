@@ -23,7 +23,7 @@ const CountdownTimer = () => {
   return (
     <div className="flex flex-col items-center gap-2 mb-6">
       {/* Scoreboard housing */}
-      <div className="relative rounded-lg border-2 border-[#3a3a3a] bg-[#0a0a0a] px-5 py-4 shadow-[inset_0_0_30px_rgba(0,0,0,0.8),0_0_20px_rgba(0,0,0,0.5)]">
+      <div className="relative rounded-lg border-2 border-[#3a3a3a] bg-[#0a0a0a] px-5 py-4 pt-6 shadow-[inset_0_0_30px_rgba(0,0,0,0.8),0_0_20px_rgba(0,0,0,0.5)]">
         {/* Wire mesh overlay effect */}
         <div
           className="absolute inset-0 rounded-lg opacity-[0.04] pointer-events-none"
@@ -34,10 +34,10 @@ const CountdownTimer = () => {
           }}
         />
 
-        {/* Title sign */}
-        <div className="relative flex justify-center mb-2">
+        {/* Title sign — overlapping the top edge by 50% */}
+        <div className="absolute left-1/2 -translate-x-1/2 -top-3 flex justify-center z-10">
           <span
-            className="font-digital text-lg md:text-xl text-amber-400 tracking-[0.25em] drop-shadow-[0_0_10px_rgba(251,191,36,0.7)]"
+            className="font-digital text-lg md:text-xl text-amber-400 tracking-[0.25em] bg-[#0a0a0a] px-3 drop-shadow-[0_0_10px_rgba(251,191,36,0.7)]"
             style={{ textShadow: "0 0 8px rgba(251,191,36,0.6), 0 0 16px rgba(251,191,36,0.3)" }}
           >
             TIP-OFF IN

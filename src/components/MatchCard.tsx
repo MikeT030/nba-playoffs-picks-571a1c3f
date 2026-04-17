@@ -130,7 +130,8 @@ const MatchCard = ({ match }: MatchCardProps) => {
         <div className="text-center px-4">
           <div className="h-0">
             {match.status === "live" && (
-              <span className="inline-flex items-center text-[10px] font-body font-semibold uppercase tracking-widest -translate-y-5 whitespace-nowrap text-[#fe953e]">
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-body font-semibold uppercase tracking-widest -translate-y-5 whitespace-nowrap text-[#fe953e]">
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#FE943E] animate-pulse" />
                 {match.time ?? ""}
               </span>
             )}

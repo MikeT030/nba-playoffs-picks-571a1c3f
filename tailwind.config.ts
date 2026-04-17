@@ -17,6 +17,7 @@ export default {
         display: ['"Bebas Neue"', 'sans-serif'],
         body: ['Barlow', 'sans-serif'],
         digital: ['"DotGothic16"', '"Share Tech Mono"', 'monospace'],
+        dotmatrix: ['"Jersey 25 Charted"', '"DotGothic16"', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",

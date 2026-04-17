@@ -36,7 +36,7 @@ const CountdownTimer = () => {
 
         {/* Title sign — overlapping the top edge by 50% */}
         <div className="absolute left-1/2 -translate-x-1/2 -top-4 flex justify-center z-10">
-          <span className="relative font-led text-sm md:text-base text-amber-400 tracking-[0.25em] bg-[#0a0a0a] px-3 py-0.5">
+          <span className="relative font-led md:text-base text-amber-400 tracking-[0.25em] bg-[#0a0a0a] px-3 py-0.5 text-xs pt-[10px]">
             {/* Border drawn only on the protruding (top half) portion */}
             <span
               aria-hidden

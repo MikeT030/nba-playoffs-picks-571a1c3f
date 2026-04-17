@@ -16,7 +16,7 @@ export default {
       fontFamily: {
         display: ['"Bebas Neue"', 'sans-serif'],
         body: ['Barlow', 'sans-serif'],
-        digital: ['"Share Tech Mono"', 'monospace'],
+        digital: ['"DotGothic16"', '"Share Tech Mono"', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",

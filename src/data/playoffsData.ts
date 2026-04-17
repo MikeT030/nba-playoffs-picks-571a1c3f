@@ -237,10 +237,10 @@ const firstRoundMatchups = bracketSeries.filter((s) => s.round === "First Round"
 // Dummy demo matchup so the matchup card layout is always visible (e.g. CHA vs MIA)
 const chaMiaDummy: Match = {
   id: "demo-cha-mia",
-  round: "First Round",
+  round: "Conference Semifinals",
   conference: "East",
-  gameNumber: 7,
-  date: "Apr 21",
+  gameNumber: 6,
+  date: "May 13",
   time: "OT 2:14",
   homeTeam: makeTeam("MIA", "Miami Heat"),
   awayTeam: makeTeam("CHA", "Charlotte Hornets"),

@@ -177,26 +177,11 @@ const Index = () => {
             ))}
           </div>
         ) : (
-          <>
-            {(selectedRound !== "Finals" ? ["East", "West"] : ["Finals"]).map((conf) => {
-              const confMatches = filteredMatches?.filter((m) => m.conference === conf);
-              if (!confMatches?.length) return null;
-              return (
-                <div key={conf} className="mb-8">
-                  {conf !== "Finals" && (
-                    <h3 className="font-display text-lg tracking-wider text-foreground mb-3">
-                      {conf === "East" ? "Eastern Conference" : "Western Conference"}
-                    </h3>
-                  )}
-                  <div className="grid gap-4 md:grid-cols-2">
-                    {confMatches.map((match) => (
-                      <MatchCard key={match.id} match={match} />
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </>
+          <div className="grid gap-4 md:grid-cols-2">
+            {filteredMatches?.map((match) => (
+              <MatchCard key={match.id} match={match} />
+            ))}
+          </div>
         )}
       </section>
 

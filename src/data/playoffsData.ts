@@ -234,8 +234,24 @@ export function resolveBracketWithApiGames(
 // Convert bracket series to Match format for the home page (first round only)
 const firstRoundMatchups = bracketSeries.filter((s) => s.round === "First Round" && s.topTeam && s.bottomTeam);
 
-export const fallbackMatches: Match[] = firstRoundMatchups
-  .map((s, i) => ({
+// Dummy demo matchup so the matchup card layout is always visible (e.g. CHA vs MIA)
+const chaMiaDummy: Match = {
+  id: "demo-cha-mia",
+  round: "First Round",
+  conference: "East",
+  gameNumber: 1,
+  date: "Apr 21",
+  time: "7:30 PM ET",
+  homeTeam: makeTeam("MIA", "Miami Heat"),
+  awayTeam: makeTeam("CHA", "Charlotte Hornets"),
+  homeWins: 0,
+  awayWins: 0,
+  status: "upcoming" as const,
+  tips: makeTips("MIA", "CHA"),
+};
+
+export const fallbackMatches: Match[] = [
+  ...firstRoundMatchups.map((s, i) => ({
     id: s.id,
     round: "First Round",
     conference: s.conference,
@@ -248,4 +264,6 @@ export const fallbackMatches: Match[] = firstRoundMatchups
     awayWins: 0,
     status: "upcoming" as const,
     tips: makeTips(s.topTeam!.abbreviation, s.bottomTeam!.abbreviation),
-  }));
+  })),
+  chaMiaDummy,
+];

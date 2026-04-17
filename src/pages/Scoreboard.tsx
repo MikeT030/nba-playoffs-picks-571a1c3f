@@ -445,10 +445,30 @@ const Scoreboard = () => {
 
       {/* Player Card Drawer */}
       <Drawer open={cardDialogOpen} onOpenChange={setCardDialogOpen}>
-        <DrawerContent className="max-h-[92vh] border-none">
-          <div className="overflow-y-auto px-4 pb-8 pt-4">
+        <DrawerContent className="h-[92vh] border-none">
+          <div className="flex-1 flex items-center justify-center overflow-hidden px-4 pb-8 pt-4">
             {playersWithCards.length > 0 && (
-              <div className="flex flex-col items-center gap-3 mx-auto max-w-[359px]">
+              <div
+                className="flex flex-col items-center gap-3 mx-auto w-full max-w-[359px] touch-pan-y select-none"
+                onTouchStart={(e) => {
+                  (e.currentTarget as any)._touchStartX = e.touches[0].clientX;
+                  (e.currentTarget as any)._touchStartY = e.touches[0].clientY;
+                }}
+                onTouchEnd={(e) => {
+                  const startX = (e.currentTarget as any)._touchStartX;
+                  const startY = (e.currentTarget as any)._touchStartY;
+                  if (startX == null) return;
+                  const dx = e.changedTouches[0].clientX - startX;
+                  const dy = e.changedTouches[0].clientY - startY;
+                  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) && playersWithCards.length > 1) {
+                    if (dx < 0) {
+                      setSelectedCardIndex((prev) => (prev + 1) % playersWithCards.length);
+                    } else {
+                      setSelectedCardIndex((prev) => (prev - 1 + playersWithCards.length) % playersWithCards.length);
+                    }
+                  }
+                }}
+              >
                 {/* Username */}
                 <p className="font-display text-lg tracking-wider text-foreground text-center">
                   {playersWithCards[selectedCardIndex]?.name}
@@ -457,24 +477,6 @@ const Scoreboard = () => {
                 {/* Card */}
                 <div className="relative w-full">
                   <PlayerCard player={playersWithCards[selectedCardIndex]?.card} />
-
-                  {/* Nav arrows */}
-                  {playersWithCards.length > 1 && (
-                    <>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); setSelectedCardIndex((prev) => (prev - 1 + playersWithCards.length) % playersWithCards.length); }}
-                        className="absolute left-[-16px] top-1/2 -translate-y-1/2 z-30 bg-background/60 backdrop-blur-sm rounded-full p-1.5 text-foreground hover:bg-background/80 transition-colors"
-                      >
-                        <ChevronLeft size={20} />
-                      </button>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); setSelectedCardIndex((prev) => (prev + 1) % playersWithCards.length); }}
-                        className="absolute right-[-16px] top-1/2 -translate-y-1/2 z-30 bg-background/60 backdrop-blur-sm rounded-full p-1.5 text-foreground hover:bg-background/80 transition-colors"
-                      >
-                        <ChevronRight size={20} />
-                      </button>
-                    </>
-                  )}
                 </div>
 
                 {/* Dots indicator */}

@@ -241,7 +241,7 @@ const chaMiaDummy: Match = {
   conference: "East",
   gameNumber: 7,
   date: "Apr 21",
-  time: "OT",
+  time: "OT 2:14",
   homeTeam: makeTeam("MIA", "Miami Heat"),
   awayTeam: makeTeam("CHA", "Charlotte Hornets"),
   homeWins: 3,

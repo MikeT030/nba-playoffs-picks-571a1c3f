@@ -156,5 +156,12 @@ export function usePlayoffGames(season: number = 2025) {
     },
     staleTime: 5 * 60 * 1000, // 5 min
     retry: 1,
+    // Auto-refresh every 30s while at least one game is live; otherwise no polling.
+    refetchInterval: (query) => {
+      const data = query.state.data as Match[] | undefined;
+      const hasLive = Array.isArray(data) && data.some((m) => m.status === "live");
+      return hasLive ? 30_000 : false;
+    },
+    refetchIntervalInBackground: false,
   });
 }

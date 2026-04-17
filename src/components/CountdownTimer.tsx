@@ -34,6 +34,16 @@ const CountdownTimer = () => {
           }}
         />
 
+        {/* Title sign */}
+        <div className="relative flex justify-center mb-2">
+          <span
+            className="font-digital text-lg md:text-xl text-amber-400 tracking-[0.25em] drop-shadow-[0_0_10px_rgba(251,191,36,0.7)]"
+            style={{ textShadow: "0 0 8px rgba(251,191,36,0.6), 0 0 16px rgba(251,191,36,0.3)" }}
+          >
+            TIP-OFF IN
+          </span>
+        </div>
+
         {/* Main clock display */}
         <div className="relative flex items-center justify-center gap-1">
           {[

@@ -299,7 +299,7 @@ const MatchDetail = () => {
               return (
                 <div
                   key={pick.user_id}
-                  className="flex items-center gap-4 rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md p-4 transition-all duration-200 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
+                  className="flex items-center gap-4 rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md p-4"
                 >
                   <div className="flex-1">
                     <p className="font-body font-semibold">

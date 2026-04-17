@@ -96,18 +96,26 @@ function groupIntoSeries(games: NbaGame[]): Match[] {
     const homeTeam = nbaTeamToTeam(firstGame.home_team);
     const awayTeam = nbaTeamToTeam(firstGame.visitor_team);
 
+    const localStatus = gameStatusToLocal(latestGame.status);
+    const timeLabel =
+      localStatus === "final"
+        ? "Final"
+        : localStatus === "live"
+          ? formatLiveIndicator(latestGame.status, latestGame.period, latestGame.time)
+          : latestGame.time || "TBD";
+
     matches.push({
       id: key.toLowerCase(),
       round: "First Round",
       conference: getConference(homeAbbr, awayAbbr),
       gameNumber,
       date: dateStr,
-      time: latestGame.status === "Final" ? "Final" : latestGame.time || "TBD",
+      time: timeLabel,
       homeTeam,
       awayTeam,
       homeWins: homeAbbr === teamA ? teamAWins : teamBWins,
       awayWins: awayAbbr === teamA ? teamAWins : teamBWins,
-      status: gameStatusToLocal(latestGame.status),
+      status: localStatus,
       homeScore: latestGame.home_team_score,
       awayScore: latestGame.visitor_team_score,
       tips: makeTips(homeAbbr, awayAbbr),

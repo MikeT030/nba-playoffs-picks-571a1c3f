@@ -17,7 +17,7 @@ import { useBracketData } from "@/hooks/useBracketData";
 import { playerImages } from "@/lib/playerImages";
 import { playerCards } from "@/data/playerCards";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import PlayerCard from "@/components/PlayerCard";
 
 
@@ -443,55 +443,57 @@ const Scoreboard = () => {
         </p>
       </section>
 
-      {/* Player Card Dialog */}
-      <Dialog open={cardDialogOpen} onOpenChange={setCardDialogOpen}>
-        <DialogContent className="bg-transparent border-none shadow-none max-w-[359px] p-0 [&>button]:text-white [&>button]:top-2 [&>button]:right-2">
-          {playersWithCards.length > 0 && (
-            <div className="flex flex-col items-center gap-3">
-              {/* Username */}
-              <p className="font-display text-lg tracking-wider text-white text-center drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
-                {playersWithCards[selectedCardIndex]?.name}
-              </p>
+      {/* Player Card Drawer */}
+      <Drawer open={cardDialogOpen} onOpenChange={setCardDialogOpen}>
+        <DrawerContent className="max-h-[92vh] border-none">
+          <div className="overflow-y-auto px-4 pb-8 pt-4">
+            {playersWithCards.length > 0 && (
+              <div className="flex flex-col items-center gap-3 mx-auto max-w-[359px]">
+                {/* Username */}
+                <p className="font-display text-lg tracking-wider text-foreground text-center">
+                  {playersWithCards[selectedCardIndex]?.name}
+                </p>
 
-              {/* Card */}
-              <div className="relative w-full">
-                <PlayerCard player={playersWithCards[selectedCardIndex]?.card} />
+                {/* Card */}
+                <div className="relative w-full">
+                  <PlayerCard player={playersWithCards[selectedCardIndex]?.card} />
 
-                {/* Nav arrows */}
+                  {/* Nav arrows */}
+                  {playersWithCards.length > 1 && (
+                    <>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setSelectedCardIndex((prev) => (prev - 1 + playersWithCards.length) % playersWithCards.length); }}
+                        className="absolute left-[-16px] top-1/2 -translate-y-1/2 z-30 bg-background/60 backdrop-blur-sm rounded-full p-1.5 text-foreground hover:bg-background/80 transition-colors"
+                      >
+                        <ChevronLeft size={20} />
+                      </button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setSelectedCardIndex((prev) => (prev + 1) % playersWithCards.length); }}
+                        className="absolute right-[-16px] top-1/2 -translate-y-1/2 z-30 bg-background/60 backdrop-blur-sm rounded-full p-1.5 text-foreground hover:bg-background/80 transition-colors"
+                      >
+                        <ChevronRight size={20} />
+                      </button>
+                    </>
+                  )}
+                </div>
+
+                {/* Dots indicator */}
                 {playersWithCards.length > 1 && (
-                  <>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setSelectedCardIndex((prev) => (prev - 1 + playersWithCards.length) % playersWithCards.length); }}
-                      className="absolute left-[-16px] top-1/2 -translate-y-1/2 z-30 bg-background/60 backdrop-blur-sm rounded-full p-1.5 text-foreground hover:bg-background/80 transition-colors"
-                    >
-                      <ChevronLeft size={20} />
-                    </button>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setSelectedCardIndex((prev) => (prev + 1) % playersWithCards.length); }}
-                      className="absolute right-[-16px] top-1/2 -translate-y-1/2 z-30 bg-background/60 backdrop-blur-sm rounded-full p-1.5 text-foreground hover:bg-background/80 transition-colors"
-                    >
-                      <ChevronRight size={20} />
-                    </button>
-                  </>
+                  <div className="flex gap-1.5">
+                    {playersWithCards.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setSelectedCardIndex(i)}
+                        className={`w-2 h-2 rounded-full transition-colors ${i === selectedCardIndex ? "bg-primary" : "bg-white/30"}`}
+                      />
+                    ))}
+                  </div>
                 )}
               </div>
-
-              {/* Dots indicator */}
-              {playersWithCards.length > 1 && (
-                <div className="flex gap-1.5">
-                  {playersWithCards.map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setSelectedCardIndex(i)}
-                      className={`w-2 h-2 rounded-full transition-colors ${i === selectedCardIndex ? "bg-primary" : "bg-white/30"}`}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+            )}
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 };

@@ -10,37 +10,42 @@ const ChampionConfetti = ({ active }: ChampionConfettiProps) => {
   const hasFiredRef = useRef(false);
 
   useEffect(() => {
-    if (!active || !containerRef.current) return;
-
+    if (!active) return;
     const el = containerRef.current;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const viewportCenter = window.innerHeight / 2;
-          if (entry.boundingClientRect.top <= viewportCenter && !hasFiredRef.current) {
-            hasFiredRef.current = true;
-            fireConfetti(el);
-          }
-        });
-      },
-      { threshold: [0, 0.01, 0.1, 0.25, 0.5, 1] }
-    );
+    if (!el) return;
 
-    observer.observe(el);
-    return () => observer.disconnect();
+    hasFiredRef.current = false;
+
+    const checkPosition = () => {
+      if (hasFiredRef.current) return;
+      const rect = el.getBoundingClientRect();
+      const viewportCenter = window.innerHeight / 2;
+      // Fire when the top of the card is at or above the viewport center
+      if (rect.top <= viewportCenter && rect.top > -rect.height) {
+        hasFiredRef.current = true;
+        fireConfetti(el);
+        window.removeEventListener("scroll", checkPosition);
+      }
+    };
+
+    // Check immediately in case it's already in position
+    checkPosition();
+    window.addEventListener("scroll", checkPosition, { passive: true });
+    return () => window.removeEventListener("scroll", checkPosition);
   }, [active]);
 
   const fireConfetti = (el: HTMLElement) => {
     const rect = el.getBoundingClientRect();
     const originX = (rect.left + rect.width / 2) / window.innerWidth;
-    const originY = rect.top / window.innerHeight;
+    const originY = Math.max(rect.top / window.innerHeight, 0.05);
 
     const defaults = {
-      origin: { x: originX, y: Math.max(originY, 0.05) },
+      origin: { x: originX, y: originY },
       colors: ["#fbbf24", "#3b82f6", "#ffffff", "#f59e0b"],
       gravity: 0.8,
       scalar: 0.9,
       ticks: 200,
+      zIndex: 9999,
     };
 
     confetti({ ...defaults, particleCount: 80, spread: 70, startVelocity: 35 });

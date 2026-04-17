@@ -57,7 +57,7 @@ const CountdownTimer = () => {
             <div key={label} className="flex items-center">
               {/* Separator colon */}
               {i > 0 && (
-                <span className="font-digital text-2xl md:text-3xl text-amber-400 mx-1 drop-shadow-[0_0_12px_rgba(251,191,36,0.8)] animate-pulse">
+                <span className="font-dotmatrix text-2xl md:text-3xl text-amber-400 mx-1 drop-shadow-[0_0_12px_rgba(251,191,36,0.8)] animate-pulse">
                   :
                 </span>
               )}

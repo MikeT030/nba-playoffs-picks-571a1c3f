@@ -3,13 +3,42 @@ import { getPlayoffGames, teamMeta, type NbaGame } from "@/lib/nbaApi";
 import { type Match, type Team, makeTips, fallbackMatches, getConference, teamSeeds } from "@/data/playoffsData";
 
 
+// BallDontLie status values for live games:
+//   "1st Qtr", "2nd Qtr", "Halftime", "3rd Qtr", "4th Qtr", "Final", or a start-time like "7:00 pm ET"
+// `time` is "" / " " when the period is between plays (end of quarter), and "M:SS" during play.
+// `period` is 0 (not started), 1-4 (regulation), 5+ (overtime).
+const LIVE_STATUS_RE = /^(1st|2nd|3rd|4th)\s*Qtr$|^Halftime$/i;
+
 function gameStatusToLocal(status: string): "upcoming" | "live" | "final" {
   if (status === "Final") return "final";
-  // Live statuses: "Q1 5:30", "Half", etc. — but NOT ISO datetimes like "2026-04-18T22:00:00Z"
-  if (status.startsWith("Q") || status.startsWith("Half")) return "live";
-  // A short status with ":" that isn't an ISO datetime (e.g. "Q3 2:15" parsed differently)
-  if (status.includes(":") && !status.includes("T") && status.length < 20) return "live";
+  if (LIVE_STATUS_RE.test(status)) return "live";
   return "upcoming";
+}
+
+/**
+ * Map BallDontLie period/status/time to a compact live indicator string.
+ * Examples: "Q1 5:30", "End Q1", "Halftime", "End Q3", "End Q4", "OT 2:14", "OT2 1:05", "End OT"
+ */
+function formatLiveIndicator(status: string, period: number, time: string | null): string {
+  const trimmed = (time ?? "").trim();
+  // Halftime
+  if (/^Halftime$/i.test(status)) return "Halftime";
+
+  // Overtime (period >= 5)
+  if (period >= 5) {
+    const otNum = period - 4;
+    const label = otNum === 1 ? "OT" : `OT${otNum}`;
+    return trimmed ? `${label} ${trimmed}` : `End ${label}`;
+  }
+
+  // Regulation quarters 1-4
+  if (period >= 1 && period <= 4) {
+    const qLabel = `Q${period}`;
+    return trimmed ? `${qLabel} ${trimmed}` : `End ${qLabel}`;
+  }
+
+  // Fallback: pass through whatever the API gave us
+  return status || "";
 }
 
 function nbaTeamToTeam(t: { full_name: string; abbreviation: string }): Team {

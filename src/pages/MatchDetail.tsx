@@ -182,7 +182,7 @@ const MatchDetail = () => {
           </Link>
 
           <p className="text-xs text-primary font-body font-semibold uppercase tracking-widest mb-4 text-center">
-            {match.conference !== "Finals" ? `${match.conference === "East" ? "EAST" : "WEST"}  ` : ""}{match.round} · Game {displayGameNum} · {displayDate}
+            {match.conference !== "Finals" ? `${match.conference === "East" ? "EAST" : "WEST"}  ` : ""}{match.round === "Conference Semifinals" ? "Conf. Semifinals" : match.round === "Conference Finals" ? "Conf. Finals" : match.round} · Game {displayGameNum} · {displayDate}
           </p>
 
           <div className="flex items-center justify-between gap-5 pt-[4px]">

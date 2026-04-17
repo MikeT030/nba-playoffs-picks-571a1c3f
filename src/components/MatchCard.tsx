@@ -118,7 +118,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
             {match.status === "live" && (
               <span className="inline-flex items-center gap-1 text-[10px] text-loss font-body font-semibold uppercase tracking-widest -translate-y-5 whitespace-nowrap">
                 <span className="w-1.5 h-1.5 rounded-full bg-loss animate-pulse" />
-                Live{match.time ? ` · ${match.time}` : ""}
+                {match.time ?? ""}
               </span>
             )}
             {match.status === "final" && (

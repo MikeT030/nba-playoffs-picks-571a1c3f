@@ -16,13 +16,14 @@ const ChampionConfetti = ({ active }: ChampionConfettiProps) => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasFiredRef.current) {
+          // Fire when the top of the card reaches the top of the viewport
+          if (entry.boundingClientRect.top <= 8 && !hasFiredRef.current) {
             hasFiredRef.current = true;
             fireConfetti(el);
           }
         });
       },
-      { threshold: 0.3 }
+      { threshold: [0, 0.01, 0.1, 0.25, 0.5, 1], rootMargin: "0px 0px -100% 0px" }
     );
 
     observer.observe(el);

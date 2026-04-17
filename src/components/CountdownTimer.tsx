@@ -57,14 +57,14 @@ const CountdownTimer = () => {
             <div key={label} className="flex items-center">
               {/* Separator colon */}
               {i > 0 && (
-                <span className="font-digital text-2xl md:text-3xl text-amber-400 mx-1 drop-shadow-[0_0_12px_rgba(251,191,36,0.8)] animate-pulse">
+                <span className="font-dotmatrix text-2xl md:text-3xl text-amber-400 mx-1 drop-shadow-[0_0_12px_rgba(251,191,36,0.8)] animate-pulse">
                   :
                 </span>
               )}
               <div className="flex flex-col items-center">
                 {/* LED-style digit panel */}
                 <div className="bg-[#111] rounded border border-[#2a2a2a] px-2 py-1 shadow-[inset_0_2px_8px_rgba(0,0,0,0.6)]">
-                  <span className="font-digital text-3xl md:text-4xl text-amber-400 tracking-widest tabular-nums drop-shadow-[0_0_12px_rgba(251,191,36,0.8)]"
+                  <span className="font-dotmatrix text-3xl md:text-4xl text-amber-400 tracking-widest tabular-nums drop-shadow-[0_0_12px_rgba(251,191,36,0.8)]"
                     style={{ textShadow: "0 0 10px rgba(251,191,36,0.6), 0 0 20px rgba(251,191,36,0.3)" }}
                   >
                     {pad(val)}

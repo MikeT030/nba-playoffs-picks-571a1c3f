@@ -161,7 +161,7 @@ const MatchDetail = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       <div
-        className="relative overflow-hidden"
+        className={`relative overflow-hidden ${displayStatus === "live" ? "border border-[#FE943E]" : ""}`}
         onTouchStart={hasSeriesGames ? handleTouchStart : undefined}
         onTouchMove={hasSeriesGames ? handleTouchMove : undefined}
         onTouchEnd={hasSeriesGames ? handleTouchEnd : undefined}

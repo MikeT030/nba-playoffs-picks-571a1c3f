@@ -158,7 +158,15 @@ const MatchCard = ({ match }: MatchCardProps) => {
           <p className="font-body text-white text-center pt-0 text-sm">
             Your Pick: <span className="font-bold">{bet.winner}</span> in <span className="font-bold">{bet.gamesInSeries}</span>
             {points !== null && (
-              <span className="ml-2 text-foreground font-medium">· {points} pts</span>
+              <span className="ml-2 text-primary font-medium">
+                ·{" "}
+                {points === 3
+                  ? "Shiiiiit 3 Points"
+                  : points === 2
+                    ? "That's 2 Points"
+                    : "0 Points, Bro"}
+                {match.id === "nba-finals" && points > 0 && " And 4 for the Champ"}
+              </span>
             )}
           </p>
         </div>

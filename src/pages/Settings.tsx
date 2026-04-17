@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import BetsDrawer from "@/components/BetsDrawer";
 import CardRouletteOverlay from "@/components/CardRouletteOverlay";
+import ChampionConfetti from "@/components/ChampionConfetti";
 import PlayerCard from "@/components/PlayerCard";
 import { playerCards } from "@/data/playerCards";
 import { usePlayerCard } from "@/hooks/usePlayerCard";
@@ -172,7 +173,8 @@ const Settings = () => {
           const isPlaceholder = championAbbr ? isPlayInPlaceholder(championAbbr) : false;
 
           return (
-            <Card className="mt-3 mb-3 border-0">
+            <Card className="mt-3 mb-3 border-0 relative">
+              <ChampionConfetti active={!!(championPick && championFullName)} />
               <CardHeader>
                 <CardTitle className="font-display text-lg tracking-wider">YOUR CHAMPION</CardTitle>
               </CardHeader>

@@ -28,7 +28,8 @@ function formatLiveIndicator(status: string, period: number, time: string | null
   if (period >= 5) {
     const otNum = period - 4;
     const label = otNum === 1 ? "OT" : `OT${otNum}`;
-    return trimmed ? `${label} ${trimmed}` : `End ${label}`;
+    if (trimmed) return /^OT/i.test(trimmed) ? trimmed : `${label} ${trimmed}`;
+    return `End ${label}`;
   }
 
   // Regulation quarters 1-4

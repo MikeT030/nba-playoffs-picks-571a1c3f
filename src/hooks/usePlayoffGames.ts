@@ -107,13 +107,6 @@ function groupIntoSeries(games: NbaGame[]): Match[] {
           ? formatLiveIndicator(latestGame.status, latestGame.period, latestGame.time)
           : latestGame.time || "TBD";
 
-    // For upcoming games the API returns the ISO start time in `status`
-    // (e.g. "2026-04-19T17:00:00Z"). Prefer that for chronological sorting,
-    // otherwise fall back to the date-only field.
-    const isoStart = !Number.isNaN(new Date(latestGame.status).getTime())
-      ? latestGame.status
-      : latestGame.date;
-
     matches.push({
       id: key.toLowerCase(),
       round: "First Round",
@@ -121,7 +114,7 @@ function groupIntoSeries(games: NbaGame[]): Match[] {
       gameNumber,
       date: dateStr,
       time: timeLabel,
-      startTime: isoStart,
+      startTime: latestGame.date,
       homeTeam,
       awayTeam,
       homeWins: homeAbbr === teamA ? teamAWins : teamBWins,

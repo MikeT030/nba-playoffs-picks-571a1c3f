@@ -78,21 +78,7 @@ interface MatchCardProps {
 }
 
 const MatchCard = ({ match }: MatchCardProps) => {
-  const { pick: realBet, points: realPoints } = useUserBet(match);
-
-  // Demo override for CHA vs MIA card (visual only — no DB writes)
-  // Pretend: series ended, CHA won in 6, user picked CHA in 6 → perfect pick (3 pts)
-  const isDemo = match.id === "demo-cha-mia";
-  const demoPick = { seriesId: match.id, winner: "CHA", gamesInSeries: 6 };
-  const demoResult = { winner: "CHA", games_played: 6 };
-  const demoPoints =
-    demoResult.winner === demoPick.winner
-      ? demoResult.games_played === demoPick.gamesInSeries
-        ? 3
-        : 2
-      : 0;
-  const bet = isDemo ? demoPick : realBet;
-  const points = isDemo ? demoPoints : realPoints;
+  const { pick: bet, points } = useUserBet(match);
 
   const betTeamName = bet
     ? match.homeTeam.abbreviation === bet.winner

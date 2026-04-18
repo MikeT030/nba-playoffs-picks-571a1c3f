@@ -30,30 +30,40 @@ export const usePlayerCard = () => {
   const assignRandomCard = async (): Promise<string | null> => {
     if (!user) return null;
 
-    // Get all taken card IDs
-    const { data: taken } = await supabase
-      .from("player_card_assignments")
-      .select("card_id");
+    const MAX_ATTEMPTS = 5;
 
-    const takenIds = new Set((taken || []).map((r: any) => r.card_id));
-    const available = playerCards.filter((c) => !takenIds.has(c.id));
+    for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+      // Re-fetch taken cards each attempt to avoid stale data after race collisions
+      const { data: taken } = await supabase
+        .from("player_card_assignments")
+        .select("card_id");
 
-    if (available.length === 0) return null;
+      const takenIds = new Set((taken || []).map((r: any) => r.card_id));
+      const available = playerCards.filter((c) => !takenIds.has(c.id));
 
-    const chosen = available[Math.floor(Math.random() * available.length)];
+      if (available.length === 0) return null;
 
-    const { error } = await supabase
-      .from("player_card_assignments")
-      .insert({ user_id: user.id, card_id: chosen.id });
+      const chosen = available[Math.floor(Math.random() * available.length)];
 
-    if (error) {
-      // Could be race condition - card already taken or user already has one
-      console.error("Failed to assign card:", error);
-      return null;
+      const { error } = await supabase
+        .from("player_card_assignments")
+        .insert({ user_id: user.id, card_id: chosen.id });
+
+      if (!error) {
+        setAssignedCardId(chosen.id);
+        return chosen.id;
+      }
+
+      // 23505 = unique_violation (card got taken between fetch and insert) → retry.
+      // Any other error → bail.
+      if ((error as any).code !== "23505") {
+        console.error("Failed to assign card:", error);
+        return null;
+      }
     }
 
-    setAssignedCardId(chosen.id);
-    return chosen.id;
+    console.error("Failed to assign card after retries (race contention)");
+    return null;
   };
 
   return {

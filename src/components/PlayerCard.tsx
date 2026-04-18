@@ -93,11 +93,6 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
 
               {/* Player name */}
               <div className="relative px-4 pt-3 pb-[12px] flex items-center justify-between gap-3">
-                <TeamLogo
-                  src={teamLogo}
-                  alt={`${player.teamAbbr} logo`}
-                  className="w-12 h-12 flex-shrink-0 drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]"
-                />
                 <div className="min-w-0 flex-1 flex flex-col items-end">
                   <p className={`font-body italic ${player.nameColor} text-2xl leading-none -mb-0.5 drop-shadow-[0_1px_6px_rgba(220,40,40,0.4)] text-right`}>
                     {player.firstName}

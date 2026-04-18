@@ -145,28 +145,15 @@ function getSeriesRound(seriesId: string, seriesList: BracketSeries[]): string {
   return s?.round || "";
 }
 
-const AllPicksMatrix = () => {
+interface AllPicksMatrixProps {
+  picks: PickRow[];
+  results: SeriesResult[];
+  loading: boolean;
+}
+
+const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
   const { data: resolvedBracket } = useBracketData();
   const seriesList = resolvedBracket ?? bracketSeries;
-  const [picks, setPicks] = useState<PickRow[]>([]);
-  const [results, setResults] = useState<SeriesResult[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const [picksRes, resultsRes, profilesRes] = await Promise.all([
-        supabase.from("picks").select("profile_name, series_id, winner, games_in_series, user_id"),
-        supabase.from("series_results").select("series_id, winner, games_played"),
-        supabase.from("profiles").select("user_id"),
-      ]);
-      const activeUserIds = new Set((profilesRes.data || []).map((p: any) => p.user_id));
-      const activePicks = (picksRes.data || []).filter((p: any) => activeUserIds.has(p.user_id));
-      setPicks(activePicks);
-      if (resultsRes.data) setResults(resultsRes.data as SeriesResult[]);
-      setLoading(false);
-    };
-    fetchData();
-  }, []);
 
   if (loading) {
     return <p className="text-center text-muted-foreground font-body py-8">Loading picks…</p>;
@@ -274,6 +261,62 @@ const AllPicksMatrix = () => {
     </div>
   );
 };
+
+function exportAllPicksToExcel(
+  picks: PickRow[],
+  results: SeriesResult[],
+  seriesList: BracketSeries[]
+) {
+  if (picks.length === 0) return;
+
+  const players = [...new Set(picks.map((p) => p.profile_name))].sort((a, b) =>
+    a.localeCompare(b)
+  );
+  const seriesIds = [...new Set(picks.map((p) => p.series_id))];
+  const orderedSeries = seriesIds.sort((a, b) => {
+    const ra = roundOrder.indexOf(getSeriesRound(a, seriesList));
+    const rb = roundOrder.indexOf(getSeriesRound(b, seriesList));
+    if (ra !== rb) return ra - rb;
+    return a.localeCompare(b);
+  });
+
+  const pickMap = new Map<string, PickRow>();
+  for (const p of picks) pickMap.set(`${p.profile_name}::${p.series_id}`, p);
+
+  const playerScores = new Map<string, number>();
+  for (const s of computeScoreboard(picks, results)) {
+    playerScores.set(s.name, s.totalPoints);
+  }
+
+  const header = ["Round", "Series", ...players];
+  const rows: (string | number)[][] = [header];
+  let lastRound = "";
+  for (const seriesId of orderedSeries) {
+    const round = getSeriesRound(seriesId, seriesList);
+    const showRound = round !== lastRound;
+    lastRound = round;
+    const row: (string | number)[] = [
+      showRound ? round : "",
+      getSeriesLabel(seriesId, seriesList),
+    ];
+    for (const player of players) {
+      const pick = pickMap.get(`${player}::${seriesId}`);
+      row.push(pick ? `${pick.winner} in ${pick.games_in_series}` : "—");
+    }
+    rows.push(row);
+  }
+  rows.push(["", "Score", ...players.map((p) => playerScores.get(p) ?? 0)]);
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws["!cols"] = [
+    { wch: 20 },
+    { wch: 14 },
+    ...players.map(() => ({ wch: 14 })),
+  ];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "All Picks");
+  XLSX.writeFile(wb, "nba-playoffs-all-picks.xlsx");
+}
 
 const Scoreboard = () => {
   const [showAllPicks, setShowAllPicks] = useState(false);

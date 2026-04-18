@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { teamMeta, type NbaGame } from "@/lib/nbaApi";
 import { type Team, teamSeeds } from "@/data/playoffsData";
 import { usePlayoffGamesRaw } from "./usePlayoffGamesRaw";
@@ -31,11 +31,9 @@ function gamesToSeriesGames(games: NbaGame[]): SeriesGame[] {
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
 
-  // Track cumulative wins by abbreviation
   const wins: Record<string, number> = {};
   const result: SeriesGame[] = [];
 
-  // Only include played/live games (exclude upcoming)
   const playedOrLive = sorted.filter((g) => {
     if (g.status === "Final") return true;
     if (g.status.includes(":") || g.status.startsWith("Q") || g.status.startsWith("Half")) return true;
@@ -65,7 +63,6 @@ function gamesToSeriesGames(games: NbaGame[]): SeriesGame[] {
       day: "numeric",
     });
 
-    // Calculate OT periods: period > 4 means OT (period 5 = 1OT, 6 = 2OT, etc.)
     const ot = g.period > 4 ? g.period - 4 : undefined;
 
     result.push({
@@ -93,20 +90,22 @@ export function useSeriesGames(
   awayAbbr: string | undefined,
   season: number = 2025
 ) {
-  const { data: allGames, isLoading, isError, error } = usePlayoffGamesRaw(season);
+  usePlayoffGamesRaw(season);
 
-  const data = useMemo<SeriesGame[] | undefined>(() => {
-    if (!matchId || !homeAbbr || !awayAbbr) return [];
-    if (!allGames) return undefined;
-    const teamSet = new Set([homeAbbr, awayAbbr]);
-    const seriesGames = allGames.filter(
-      (g) =>
-        teamSet.has(g.home_team.abbreviation) &&
-        teamSet.has(g.visitor_team.abbreviation)
-    );
-    if (seriesGames.length === 0) return [];
-    return gamesToSeriesGames(seriesGames);
-  }, [allGames, matchId, homeAbbr, awayAbbr]);
-
-  return { data, isLoading, isError, error };
+  return useQuery<NbaGame[], Error, SeriesGame[]>({
+    queryKey: ["playoff-games-raw", season],
+    enabled: false,
+    initialData: [],
+    select: (allGames) => {
+      if (!matchId || !homeAbbr || !awayAbbr) return [];
+      const teamSet = new Set([homeAbbr, awayAbbr]);
+      const seriesGames = allGames.filter(
+        (g) =>
+          teamSet.has(g.home_team.abbreviation) &&
+          teamSet.has(g.visitor_team.abbreviation)
+      );
+      if (seriesGames.length === 0) return [];
+      return gamesToSeriesGames(seriesGames);
+    },
+  });
 }

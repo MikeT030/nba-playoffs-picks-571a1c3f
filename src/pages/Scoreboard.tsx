@@ -412,10 +412,23 @@ const Scoreboard = () => {
       <section className="container py-8">
         {viewTabs}
 
+        {showAllPicks && allPicks.length > 0 && (
+          <div className="flex justify-end mb-3 -mt-3">
+            <button
+              onClick={() => exportAllPicksToExcel(allPicks, allResults, seriesListForExport)}
+              className="inline-flex items-center gap-1.5 text-xs font-body text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
+            >
+              <Download size={14} />
+              Download as Excel
+            </button>
+          </div>
+        )}
+
         {showAllPicks ? (
           <div className="rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md overflow-hidden">
-            <AllPicksMatrix />
+            <AllPicksMatrix picks={allPicks} results={allResults} loading={loading} />
           </div>
+
         ) : (
           /* Leaderboard */
           <div className="rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md overflow-hidden">

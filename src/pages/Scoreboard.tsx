@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import * as XLSX from "xlsx";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { LayoutGrid, ChevronLeft, ChevronRight } from "lucide-react";
+import { LayoutGrid, ChevronLeft, ChevronRight, Download } from "lucide-react";
 import allPicksIcon from "@/assets/all-picks-icon.svg";
 import HeroBanner from "@/components/HeroBanner";
 import {
@@ -144,28 +145,15 @@ function getSeriesRound(seriesId: string, seriesList: BracketSeries[]): string {
   return s?.round || "";
 }
 
-const AllPicksMatrix = () => {
+interface AllPicksMatrixProps {
+  picks: PickRow[];
+  results: SeriesResult[];
+  loading: boolean;
+}
+
+const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
   const { data: resolvedBracket } = useBracketData();
   const seriesList = resolvedBracket ?? bracketSeries;
-  const [picks, setPicks] = useState<PickRow[]>([]);
-  const [results, setResults] = useState<SeriesResult[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const [picksRes, resultsRes, profilesRes] = await Promise.all([
-        supabase.from("picks").select("profile_name, series_id, winner, games_in_series, user_id"),
-        supabase.from("series_results").select("series_id, winner, games_played"),
-        supabase.from("profiles").select("user_id"),
-      ]);
-      const activeUserIds = new Set((profilesRes.data || []).map((p: any) => p.user_id));
-      const activePicks = (picksRes.data || []).filter((p: any) => activeUserIds.has(p.user_id));
-      setPicks(activePicks);
-      if (resultsRes.data) setResults(resultsRes.data as SeriesResult[]);
-      setLoading(false);
-    };
-    fetchData();
-  }, []);
 
   if (loading) {
     return <p className="text-center text-muted-foreground font-body py-8">Loading picks…</p>;
@@ -274,6 +262,62 @@ const AllPicksMatrix = () => {
   );
 };
 
+function exportAllPicksToExcel(
+  picks: PickRow[],
+  results: SeriesResult[],
+  seriesList: BracketSeries[]
+) {
+  if (picks.length === 0) return;
+
+  const players = [...new Set(picks.map((p) => p.profile_name))].sort((a, b) =>
+    a.localeCompare(b)
+  );
+  const seriesIds = [...new Set(picks.map((p) => p.series_id))];
+  const orderedSeries = seriesIds.sort((a, b) => {
+    const ra = roundOrder.indexOf(getSeriesRound(a, seriesList));
+    const rb = roundOrder.indexOf(getSeriesRound(b, seriesList));
+    if (ra !== rb) return ra - rb;
+    return a.localeCompare(b);
+  });
+
+  const pickMap = new Map<string, PickRow>();
+  for (const p of picks) pickMap.set(`${p.profile_name}::${p.series_id}`, p);
+
+  const playerScores = new Map<string, number>();
+  for (const s of computeScoreboard(picks, results)) {
+    playerScores.set(s.name, s.totalPoints);
+  }
+
+  const header = ["Round", "Series", ...players];
+  const rows: (string | number)[][] = [header];
+  let lastRound = "";
+  for (const seriesId of orderedSeries) {
+    const round = getSeriesRound(seriesId, seriesList);
+    const showRound = round !== lastRound;
+    lastRound = round;
+    const row: (string | number)[] = [
+      showRound ? round : "",
+      getSeriesLabel(seriesId, seriesList),
+    ];
+    for (const player of players) {
+      const pick = pickMap.get(`${player}::${seriesId}`);
+      row.push(pick ? `${pick.winner} in ${pick.games_in_series}` : "—");
+    }
+    rows.push(row);
+  }
+  rows.push(["", "Score", ...players.map((p) => playerScores.get(p) ?? 0)]);
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws["!cols"] = [
+    { wch: 20 },
+    { wch: 14 },
+    ...players.map(() => ({ wch: 14 })),
+  ];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "All Picks");
+  XLSX.writeFile(wb, "nba-playoffs-all-picks.xlsx");
+}
+
 const Scoreboard = () => {
   const [showAllPicks, setShowAllPicks] = useState(false);
   const [scoreboard, setScoreboard] = useState<ParticipantScore[]>([]);
@@ -281,6 +325,10 @@ const Scoreboard = () => {
   const [cardMap, setCardMap] = useState<Record<string, string>>({});
   const [cardDialogOpen, setCardDialogOpen] = useState(false);
   const [selectedCardIndex, setSelectedCardIndex] = useState(0);
+  const [allPicks, setAllPicks] = useState<PickRow[]>([]);
+  const [allResults, setAllResults] = useState<SeriesResult[]>([]);
+  const { data: resolvedBracket } = useBracketData();
+  const seriesListForExport = resolvedBracket ?? bracketSeries;
 
   // Build list of players with cards for navigation
   const playersWithCards = scoreboard
@@ -311,6 +359,8 @@ const Scoreboard = () => {
       const picks = ((picksRes.data || []) as (PickRow & { user_id: string })[]).filter(p => activeUserIds.has(p.user_id));
       const results = (resultsRes.data || []) as SeriesResult[];
       setScoreboard(computeScoreboard(picks, results));
+      setAllPicks(picks);
+      setAllResults(results);
 
       // Build name -> card_id map via user_id
       const userToName = new Map<string, string>();
@@ -326,6 +376,7 @@ const Scoreboard = () => {
     };
     fetchScores();
   }, []);
+
 
   const viewTabs = (
     <div className="flex border-b border-border/40 mb-7">
@@ -361,10 +412,23 @@ const Scoreboard = () => {
       <section className="container py-8">
         {viewTabs}
 
+        {showAllPicks && allPicks.length > 0 && (
+          <div className="flex justify-end mb-3 -mt-3">
+            <button
+              onClick={() => exportAllPicksToExcel(allPicks, allResults, seriesListForExport)}
+              className="inline-flex items-center gap-1.5 text-xs font-body text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
+            >
+              <Download size={14} />
+              Download as Excel
+            </button>
+          </div>
+        )}
+
         {showAllPicks ? (
           <div className="rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md overflow-hidden">
-            <AllPicksMatrix />
+            <AllPicksMatrix picks={allPicks} results={allResults} loading={loading} />
           </div>
+
         ) : (
           /* Leaderboard */
           <div className="rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md overflow-hidden">

@@ -1,6 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import { getPlayoffGames, teamMeta, type NbaGame } from "@/lib/nbaApi";
+import { useMemo } from "react";
+import { teamMeta, type NbaGame } from "@/lib/nbaApi";
 import { type Team, teamSeeds } from "@/data/playoffsData";
+import { usePlayoffGamesRaw } from "./usePlayoffGamesRaw";
 
 export interface SeriesGame {
   gameNumber: number;
@@ -92,26 +93,20 @@ export function useSeriesGames(
   awayAbbr: string | undefined,
   season: number = 2025
 ) {
-  return useQuery({
-    queryKey: ["series-games", matchId, season],
-    queryFn: async (): Promise<SeriesGame[]> => {
+  const { data: allGames, isLoading, isError, error } = usePlayoffGamesRaw(season);
 
+  const data = useMemo<SeriesGame[] | undefined>(() => {
+    if (!matchId || !homeAbbr || !awayAbbr) return [];
+    if (!allGames) return undefined;
+    const teamSet = new Set([homeAbbr, awayAbbr]);
+    const seriesGames = allGames.filter(
+      (g) =>
+        teamSet.has(g.home_team.abbreviation) &&
+        teamSet.has(g.visitor_team.abbreviation)
+    );
+    if (seriesGames.length === 0) return [];
+    return gamesToSeriesGames(seriesGames);
+  }, [allGames, matchId, homeAbbr, awayAbbr]);
 
-
-      if (!homeAbbr || !awayAbbr) return [];
-
-      const allGames = await getPlayoffGames(season);
-      const teamSet = new Set([homeAbbr, awayAbbr]);
-      const seriesGames = allGames.filter(
-        (g) =>
-          teamSet.has(g.home_team.abbreviation) &&
-          teamSet.has(g.visitor_team.abbreviation)
-      );
-
-      if (seriesGames.length === 0) return [];
-      return gamesToSeriesGames(seriesGames);
-    },
-    enabled: !!matchId && !!homeAbbr && !!awayAbbr,
-    staleTime: 5 * 60 * 1000,
-  });
+  return { data, isLoading, isError, error };
 }

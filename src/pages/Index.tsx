@@ -200,7 +200,7 @@ const Index = () => {
             {dateOrder.map((date) => (
               <div key={date}>
                 <div className="flex items-center gap-3 mb-3">
-                  <h3 className="font-display text-sm tracking-widest uppercase text-muted-foreground whitespace-nowrap">
+                  <h3 className="font-display text-sm tracking-widest uppercase whitespace-nowrap text-primary-foreground">
                     {date}
                   </h3>
                   <div className="h-px flex-1 bg-border" />

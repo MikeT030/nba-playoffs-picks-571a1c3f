@@ -33,6 +33,7 @@ export interface Match {
   gameNumber: number;
   date: string;
   time: string;
+  startTime?: string; // ISO datetime for sorting (from API)
   homeTeam: Team;
   awayTeam: Team;
   homeWins: number;

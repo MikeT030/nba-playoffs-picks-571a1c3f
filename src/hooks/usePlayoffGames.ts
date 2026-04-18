@@ -114,6 +114,7 @@ function groupIntoSeries(games: NbaGame[]): Match[] {
       gameNumber,
       date: dateStr,
       time: timeLabel,
+      startTime: latestGame.date,
       homeTeam,
       awayTeam,
       homeWins: homeAbbr === teamA ? teamAWins : teamBWins,

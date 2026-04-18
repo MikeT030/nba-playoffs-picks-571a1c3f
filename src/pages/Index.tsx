@@ -122,7 +122,9 @@ const Index = () => {
   }, {});
 
   // Sort matches within each date by tip-off time (earliest first).
-  // Times look like "7:00 PM", "10:30 PM", etc. TBD/empty go last.
+  // Prefer ISO startTime from the API; fall back to parsing the time label
+  // ("7:00 PM"). Live/Final games keep their original API start time so
+  // they sort alongside upcoming games on the same day.
   const parseTimeToMinutes = (t?: string): number => {
     if (!t) return Number.POSITIVE_INFINITY;
     const m = t.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
@@ -134,9 +136,16 @@ const Index = () => {
     if (ampm === "AM" && hours === 12) hours = 0;
     return hours * 60 + minutes;
   };
+  const sortKey = (m: { startTime?: string; time?: string }): number => {
+    if (m.startTime) {
+      const t = new Date(m.startTime).getTime();
+      if (!Number.isNaN(t)) return t;
+    }
+    return parseTimeToMinutes(m.time);
+  };
   if (groupedByDate) {
     for (const key of Object.keys(groupedByDate)) {
-      groupedByDate[key]!.sort((a, b) => parseTimeToMinutes(a.time) - parseTimeToMinutes(b.time));
+      groupedByDate[key]!.sort((a, b) => sortKey(a) - sortKey(b));
     }
   }
 

@@ -1,21 +1,15 @@
 import { Link } from "react-router-dom";
 import type { Match } from "@/data/playoffsData";
 import TeamLogo from "@/components/TeamLogo";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
 import { useBracketData } from "@/hooks/useBracketData";
+import { useAllUserPicks } from "@/hooks/useAllUserPicks";
+import { useAllSeriesResults } from "@/hooks/useAllSeriesResults";
 import { useMemo } from "react";
 
-interface SeriesResult {
-  series_id: string;
-  winner: string;
-  games_played: number;
-}
-
 const useUserBet = (match: Match) => {
-  const { user } = useAuth();
   const { data: bracketData } = useBracketData();
+  const { data: allPicks } = useAllUserPicks();
+  const { data: allResults } = useAllSeriesResults();
 
   const bracketSeriesId = useMemo(() => {
     if (!bracketData) return match.id;
@@ -32,34 +26,18 @@ const useUserBet = (match: Match) => {
     return partial?.id ?? match.id;
   }, [match, bracketData]);
 
-  const { data: dbPick } = useQuery({
-    queryKey: ["user-pick", bracketSeriesId, user?.id],
-    queryFn: async () => {
-      if (!user || !bracketSeriesId) return null;
-      const { data } = await supabase
-        .from("picks")
-        .select("winner, games_in_series")
-        .eq("user_id", user.id)
-        .eq("series_id", bracketSeriesId)
-        .maybeSingle();
-      return data ? { seriesId: bracketSeriesId, winner: data.winner, gamesInSeries: data.games_in_series } : null;
-    },
-    enabled: !!user && !!bracketSeriesId,
-  });
+  const dbPick = useMemo(() => {
+    if (!allPicks || !bracketSeriesId) return null;
+    const found = allPicks.find((p) => p.series_id === bracketSeriesId);
+    return found
+      ? { seriesId: bracketSeriesId, winner: found.winner, gamesInSeries: found.games_in_series }
+      : null;
+  }, [allPicks, bracketSeriesId]);
 
-  const { data: seriesResult } = useQuery({
-    queryKey: ["series-result", bracketSeriesId],
-    queryFn: async () => {
-      if (!bracketSeriesId) return null;
-      const { data } = await supabase
-        .from("series_results")
-        .select("series_id, winner, games_played")
-        .eq("series_id", bracketSeriesId)
-        .maybeSingle();
-      return data as SeriesResult | null;
-    },
-    enabled: !!bracketSeriesId,
-  });
+  const seriesResult = useMemo(() => {
+    if (!allResults || !bracketSeriesId) return null;
+    return allResults.find((r) => r.series_id === bracketSeriesId) ?? null;
+  }, [allResults, bracketSeriesId]);
 
   const points = useMemo(() => {
     if (!dbPick || !seriesResult) return null;

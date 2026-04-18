@@ -19,7 +19,7 @@ const CountdownTimer = () => {
   const seconds = Math.floor((diff % 60000) / 1000);
 
   const pad = (n: number) => String(n).padStart(2, "0");
-  const label = isRunning ? "GAMES ARE ON" : "TIP-OFF IN";
+  const label = isRunning ? "IT'S ON" : "TIP-OFF IN";
 
   return (
     <div className="flex flex-col items-center gap-2 mb-6">

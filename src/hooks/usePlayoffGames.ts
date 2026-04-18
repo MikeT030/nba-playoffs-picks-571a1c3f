@@ -1,6 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import { getPlayoffGames, teamMeta, type NbaGame } from "@/lib/nbaApi";
+import { useMemo } from "react";
+import { teamMeta, type NbaGame } from "@/lib/nbaApi";
 import { type Match, type Team, makeTips, fallbackMatches, getConference, teamSeeds } from "@/data/playoffsData";
+import { usePlayoffGamesRaw } from "./usePlayoffGamesRaw";
 
 
 // BallDontLie status values for live games:
@@ -129,42 +130,35 @@ function groupIntoSeries(games: NbaGame[]): Match[] {
 }
 
 export function usePlayoffGames(season: number = 2025) {
-  return useQuery({
-    queryKey: ["playoff-games", season],
-    queryFn: async () => {
-      try {
-        const games = await getPlayoffGames(season);
-        if (games.length === 0) return fallbackMatches;
-        const apiMatches = groupIntoSeries(games);
+  const rawQuery = usePlayoffGamesRaw(season);
+  const games = rawQuery.data;
 
-        // Merge in TBD fallback matchups that aren't covered by API data
-        // Collect all real team abbreviations from API data
-        const apiTeams = new Set<string>();
-        apiMatches.forEach((m) => {
-          apiTeams.add(m.homeTeam.abbreviation);
-          apiTeams.add(m.awayTeam.abbreviation);
-        });
-        // Filter out fallback matchups where ANY real (non-placeholder) team already appears in API data
-        const tbdMatches = fallbackMatches.filter((fb) => {
-          const homeInApi = apiTeams.has(fb.homeTeam.abbreviation);
-          const awayInApi = apiTeams.has(fb.awayTeam.abbreviation);
-          return !homeInApi && !awayInApi;
-        });
+  const matches = useMemo<Match[] | undefined>(() => {
+    if (!games) return undefined;
+    if (games.length === 0) return fallbackMatches;
 
-        return [...apiMatches, ...tbdMatches];
-      } catch (error) {
-        console.warn("Failed to fetch NBA data, using fallback:", error);
-        return fallbackMatches;
-      }
-    },
-    staleTime: 5 * 60 * 1000, // 5 min
-    retry: 1,
-    // Auto-refresh every 30s while at least one game is live; otherwise no polling.
-    refetchInterval: (query) => {
-      const data = query.state.data as Match[] | undefined;
-      const hasLive = Array.isArray(data) && data.some((m) => m.status === "live");
-      return hasLive ? 30_000 : false;
-    },
-    refetchIntervalInBackground: false,
-  });
+    const apiMatches = groupIntoSeries(games);
+
+    // Merge in TBD fallback matchups that aren't covered by API data
+    const apiTeams = new Set<string>();
+    apiMatches.forEach((m) => {
+      apiTeams.add(m.homeTeam.abbreviation);
+      apiTeams.add(m.awayTeam.abbreviation);
+    });
+    const tbdMatches = fallbackMatches.filter((fb) => {
+      const homeInApi = apiTeams.has(fb.homeTeam.abbreviation);
+      const awayInApi = apiTeams.has(fb.awayTeam.abbreviation);
+      return !homeInApi && !awayInApi;
+    });
+
+    return [...apiMatches, ...tbdMatches];
+  }, [games]);
+
+  // Auto-refresh every 30s while at least one game is live; otherwise no polling.
+  // Handled at the raw query level via refetchInterval would re-fetch the API,
+  // so we keep polling cadence on the raw layer instead. We just expose derived data here.
+  return {
+    ...rawQuery,
+    data: matches,
+  };
 }

@@ -131,6 +131,25 @@ const Index = () => {
       ? matches
       : matches?.filter((m) => m.round === selectedRound);
 
+  const groupedByDate = filteredMatches?.reduce<Record<string, typeof filteredMatches>>((acc, match) => {
+    const key = match.date || "TBD";
+    if (!acc[key]) acc[key] = [];
+    acc[key]!.push(match);
+    return acc;
+  }, {});
+
+  const dateOrder = groupedByDate
+    ? Object.keys(groupedByDate).sort((a, b) => {
+        if (a === "TBD") return 1;
+        if (b === "TBD") return -1;
+        const parse = (s: string) => {
+          const d = new Date(`${s}, ${new Date().getFullYear()}`);
+          return d.getTime();
+        };
+        return parse(a) - parse(b);
+      })
+    : [];
+
   return (
     <div className="min-h-screen bg-background pb-28">
       <HeroBanner />
@@ -177,9 +196,21 @@ const Index = () => {
             ))}
           </div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2">
-            {filteredMatches?.map((match) => (
-              <MatchCard key={match.id} match={match} />
+          <div className="space-y-8">
+            {dateOrder.map((date) => (
+              <div key={date}>
+                <div className="flex items-center gap-3 mb-3">
+                  <h3 className="font-display text-sm tracking-widest uppercase text-muted-foreground whitespace-nowrap">
+                    {date}
+                  </h3>
+                  <div className="h-px flex-1 bg-border" />
+                </div>
+                <div className="grid gap-4 md:grid-cols-2">
+                  {groupedByDate?.[date]?.map((match) => (
+                    <MatchCard key={match.id} match={match} />
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         )}

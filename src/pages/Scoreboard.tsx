@@ -325,6 +325,10 @@ const Scoreboard = () => {
   const [cardMap, setCardMap] = useState<Record<string, string>>({});
   const [cardDialogOpen, setCardDialogOpen] = useState(false);
   const [selectedCardIndex, setSelectedCardIndex] = useState(0);
+  const [allPicks, setAllPicks] = useState<PickRow[]>([]);
+  const [allResults, setAllResults] = useState<SeriesResult[]>([]);
+  const { data: resolvedBracket } = useBracketData();
+  const seriesListForExport = resolvedBracket ?? bracketSeries;
 
   // Build list of players with cards for navigation
   const playersWithCards = scoreboard
@@ -355,6 +359,8 @@ const Scoreboard = () => {
       const picks = ((picksRes.data || []) as (PickRow & { user_id: string })[]).filter(p => activeUserIds.has(p.user_id));
       const results = (resultsRes.data || []) as SeriesResult[];
       setScoreboard(computeScoreboard(picks, results));
+      setAllPicks(picks);
+      setAllResults(results);
 
       // Build name -> card_id map via user_id
       const userToName = new Map<string, string>();
@@ -370,6 +376,7 @@ const Scoreboard = () => {
     };
     fetchScores();
   }, []);
+
 
   const viewTabs = (
     <div className="flex border-b border-border/40 mb-7">

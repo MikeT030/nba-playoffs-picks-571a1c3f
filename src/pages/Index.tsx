@@ -9,7 +9,8 @@ import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePlayerCard } from "@/hooks/usePlayerCard";
-import { supabase } from "@/integrations/supabase/client";
+import { useAllUserPicks } from "@/hooks/useAllUserPicks";
+import { useQueryClient } from "@tanstack/react-query";
 import { ALL_MONOLOGUE_LINES, isPlayoffsStarted } from "@/data/buttonMonologue";
 import {
   Select,
@@ -34,45 +35,27 @@ const Index = () => {
   const { data: resolvedBracket } = useBracketData();
   const { user } = useAuth();
   const { assignedCardId, loading: cardLoading, assignRandomCard } = usePlayerCard();
+  const { data: userPicks } = useAllUserPicks();
+  const queryClient = useQueryClient();
   const [selectedRound, setSelectedRound] = useState("all");
   const [betsOpen, setBetsOpen] = useState(false);
-  const [pickCount, setPickCount] = useState(0);
   const [monologueIndex, setMonologueIndex] = useState(-1);
   const [rouletteCardId, setRouletteCardId] = useState<string | null>(null);
 
   const locked = isPlayoffsStarted();
+  const pickCount = userPicks?.length ?? 0;
 
+  // Auto-open the bets drawer once for users with no picks when playoffs haven't started.
   useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
-    const checkPicks = async () => {
-      if (user) {
-        const { data } = await supabase
-          .from("picks")
-          .select("id")
-          .eq("user_id", user.id);
-        if (data && data.length > 0) {
-          setPickCount(data.length);
-          return;
-        }
-      }
-      if (!locked) {
-        timer = setTimeout(() => setBetsOpen(true), 800);
-      }
-    };
-    checkPicks();
+    if (locked) return;
+    if (user && userPicks === undefined) return; // wait for picks query
+    if (pickCount > 0) return;
+    const timer = setTimeout(() => setBetsOpen(true), 800);
     return () => clearTimeout(timer);
-  }, [user, locked]);
+  }, [user, locked, userPicks, pickCount]);
 
   const handleBetsSaved = () => {
-    if (user) {
-      supabase
-        .from("picks")
-        .select("id")
-        .eq("user_id", user.id)
-        .then(({ data }) => {
-          setPickCount(data?.length ?? 0);
-        });
-    }
+    queryClient.invalidateQueries({ queryKey: ["user-picks-all", user?.id] });
   };
 
   const handleCardRoulette = async () => {

@@ -115,7 +115,7 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
 
 
               {/* Game context ribbon */}
-              <div className={`relative mx-3 mb-3 rounded px-3 py-1.5 bg-gradient-to-r ${player.accentPrimary} pb-[6px]`}>
+              <div className={`relative mx-3 mb-3 rounded px-3 py-1.5 bg-gradient-to-r ${player.accentPrimary} opacity-60 pb-[6px]`}>
                 <p className="font-display text-xs tracking-[0.15em] text-white/90 uppercase text-center leading-tight font-bold">
                   {player.gameContext}
                 </p>

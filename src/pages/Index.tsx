@@ -121,6 +121,25 @@ const Index = () => {
     return acc;
   }, {});
 
+  // Sort matches within each date by tip-off time (earliest first).
+  // Times look like "7:00 PM", "10:30 PM", etc. TBD/empty go last.
+  const parseTimeToMinutes = (t?: string): number => {
+    if (!t) return Number.POSITIVE_INFINITY;
+    const m = t.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+    if (!m) return Number.POSITIVE_INFINITY;
+    let hours = parseInt(m[1], 10);
+    const minutes = parseInt(m[2], 10);
+    const ampm = m[3]?.toUpperCase();
+    if (ampm === "PM" && hours !== 12) hours += 12;
+    if (ampm === "AM" && hours === 12) hours = 0;
+    return hours * 60 + minutes;
+  };
+  if (groupedByDate) {
+    for (const key of Object.keys(groupedByDate)) {
+      groupedByDate[key]!.sort((a, b) => parseTimeToMinutes(a.time) - parseTimeToMinutes(b.time));
+    }
+  }
+
   const dateOrder = groupedByDate
     ? Object.keys(groupedByDate).sort((a, b) => {
         if (a === "TBD") return 1;

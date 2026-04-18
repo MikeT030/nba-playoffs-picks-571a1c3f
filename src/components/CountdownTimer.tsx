@@ -10,15 +10,16 @@ const CountdownTimer = () => {
     return () => clearInterval(id);
   }, []);
 
-  const diff = Math.max(0, TARGET.getTime() - now);
+  const targetMs = TARGET.getTime();
+  const isRunning = now >= targetMs;
+  const diff = isRunning ? now - targetMs : targetMs - now;
   const days = Math.floor(diff / 86400000);
   const hours = Math.floor((diff % 86400000) / 3600000);
   const minutes = Math.floor((diff % 3600000) / 60000);
   const seconds = Math.floor((diff % 60000) / 1000);
 
-  if (diff <= 0) return null;
-
   const pad = (n: number) => String(n).padStart(2, "0");
+  const label = isRunning ? "PLAYOFFS RUNNING" : "TIP-OFF IN";
 
   return (
     <div className="flex flex-col items-center gap-2 mb-6">
@@ -42,7 +43,7 @@ const CountdownTimer = () => {
               aria-hidden
               className="pointer-events-none absolute inset-x-0 top-0 h-1/2 border-2 border-b-0 border-[#3a3a3a] rounded-t"
             />
-            TIP-OFF IN
+            {label}
           </span>
         </div>
 

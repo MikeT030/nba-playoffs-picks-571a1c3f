@@ -136,28 +136,15 @@ const Settings = () => {
           </div>
         )}
 
-        {/* That's You — all player cards, user's first if assigned */}
-        {!loading && user && (
+        {/* That's You — only the user's assigned card */}
+        {!loading && user && assignedCard && (
           <div className="mt-3 mb-3">
             <h2 className="font-display text-lg tracking-wider mb-3">THAT'S YOU</h2>
-            <div className="-mx-4 px-4 overflow-x-auto">
-              <div className="flex gap-4 pb-2" style={{ width: "max-content" }}>
-                {(() => {
-                  const ordered = assignedCard
-                    ? [assignedCard, ...playerCards.filter((c) => c.id !== assignedCard.id)]
-                    : playerCards;
-                  return ordered.map((card) => (
-                    <div key={card.id} className="w-[359px] flex-shrink-0">
-                      <PlayerCard
-                        player={card}
-                        selected={assignedCard?.id === card.id}
-                        className="!opacity-100"
-                      />
-                    </div>
-                  ));
-                })()}
-              </div>
-            </div>
+            <PlayerCard
+              player={assignedCard}
+              selected
+              className="!opacity-100"
+            />
           </div>
         )}
 

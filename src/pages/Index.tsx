@@ -199,11 +199,10 @@ const Index = () => {
           <div className="space-y-8">
             {dateOrder.map((date) => (
               <div key={date}>
-                <div className="flex items-center gap-3 mb-3">
+                <div className="mb-3">
                   <h3 className="font-display text-sm tracking-widest uppercase whitespace-nowrap text-primary-foreground">
                     {date}
                   </h3>
-                  <div className="h-px flex-1 bg-border" />
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   {groupedByDate?.[date]?.map((match) => (

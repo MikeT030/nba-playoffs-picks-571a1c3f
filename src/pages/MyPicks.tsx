@@ -390,7 +390,7 @@ const MyPicks = () => {
             </div>
           </div>
         </section>
-        {!locked && <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setRefreshKey((k) => k + 1)} />}
+        {!locked && <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setRefreshKey((k) => k + 1)} resolvedBracket={resolvedBracket} />}
       </div>
     );
   }
@@ -478,7 +478,7 @@ const MyPicks = () => {
         )}
       </section>
 
-      {!locked && <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setRefreshKey((k) => k + 1)} />}
+      {!locked && <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setRefreshKey((k) => k + 1)} resolvedBracket={resolvedBracket} />}
     </div>
   );
 };

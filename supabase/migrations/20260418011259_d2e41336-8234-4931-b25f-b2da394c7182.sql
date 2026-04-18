@@ -1,0 +1,2 @@
+ALTER TABLE public.player_card_assignments
+ADD CONSTRAINT player_card_assignments_card_id_unique UNIQUE (card_id);

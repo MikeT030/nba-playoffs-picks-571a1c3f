@@ -34,7 +34,9 @@ function formatLiveIndicator(status: string, period: number, time: string | null
   // Regulation quarters 1-4
   if (period >= 1 && period <= 4) {
     const qLabel = `Q${period}`;
-    return trimmed ? `${qLabel} ${trimmed}` : `End ${qLabel}`;
+    // The API's `time` field is already prefixed (e.g. "Q1 4:28"); use as-is when present.
+    if (trimmed) return /^(Q\d|OT)/i.test(trimmed) ? trimmed : `${qLabel} ${trimmed}`;
+    return `End ${qLabel}`;
   }
 
   // Fallback: pass through whatever the API gave us

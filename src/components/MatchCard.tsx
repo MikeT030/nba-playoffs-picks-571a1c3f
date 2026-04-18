@@ -110,7 +110,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
             <span className="text-muted-foreground font-body text-sm">—</span>
             <span className="font-display text-2xl">{match.homeScore}</span>
           </div>
-          <p className="text-xs text-foreground font-body mt-1 font-medium">
+          <p className="text-xs font-body mt-1 font-medium text-muted-foreground">
             Series {match.awayWins} – {match.homeWins}
           </p>
         </div>

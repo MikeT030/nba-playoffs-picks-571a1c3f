@@ -278,14 +278,24 @@ const MatchDetail = () => {
                 </span>
                 <span className="font-body text-primary-foreground text-sm">in <span className="font-bold">{userPick.games_in_series}</span></span>
                 {pts !== null && (
-                  <span className="font-body text-primary font-medium text-sm">
+                  <span className="font-body text-white font-medium text-sm">
                     ·{" "}
-                    {pts === 3
-                      ? "Shiiiiit 3 Points"
-                      : pts === 2
-                        ? "That's 2 Points"
-                        : "0 Points, Bro"}
-                    {match.id === "nba-finals" && pts > 0 && " And 4 for the Champ"}
+                    {pts === 3 ? (
+                      <>
+                        Shiiiiit <span className="text-primary">3</span> Points
+                      </>
+                    ) : pts === 2 ? (
+                      <>
+                        That's <span className="text-primary">2</span> Points
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-primary">0</span> Points, Bro
+                      </>
+                    )}
+                    {match.id === "nba-finals" && pts > 0 && (
+                      <> And <span className="text-primary">4</span> for the Champ</>
+                    )}
                   </span>
                 )}
               </div>

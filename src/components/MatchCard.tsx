@@ -5,7 +5,7 @@ import { useBracketData } from "@/hooks/useBracketData";
 import { useAllUserPicks } from "@/hooks/useAllUserPicks";
 import { useAllSeriesResults } from "@/hooks/useAllSeriesResults";
 import { useSeriesGames } from "@/hooks/useSeriesGames";
-import { pickDefaultGameIdx, isWithin24h, formatTipOff } from "@/lib/seriesUtils";
+import { pickDefaultGameIdx, isNextUp as checkIsNextUp, formatTipOff } from "@/lib/seriesUtils";
 import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 
 const useUserBet = (match: Match) => {
@@ -135,7 +135,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
   // Active game (or fallback to series-level)
   const activeGame = hasMultipleGames || allGames.length === 1 ? allGames[activeGameIdx] : null;
   const isUpcoming = activeGame?.status === "upcoming";
-  const isNextUp = isUpcoming && isWithin24h(activeGame?.startsAt);
+  const isNextUp = isUpcoming && checkIsNextUp(activeGame?.startsAt);
 
   const displayHome = activeGame ? activeGame.homeTeam : match.homeTeam;
   const displayAway = activeGame ? activeGame.awayTeam : match.awayTeam;

@@ -3,7 +3,7 @@ import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useSeriesGames } from "@/hooks/useSeriesGames";
-import { pickDefaultGameIdx, isWithin24h, formatTipOff } from "@/lib/seriesUtils";
+import { pickDefaultGameIdx, isNextUp as checkIsNextUp, formatTipOff } from "@/lib/seriesUtils";
 import TeamLogo from "@/components/TeamLogo";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -150,7 +150,7 @@ const MatchDetail = () => {
   // Determine display data: use per-game data if available, otherwise series-level
   const activeGame = (hasMultipleGames || allGames.length === 1) ? allGames[activeGameIdx] : null;
   const isUpcoming = activeGame?.status === "upcoming";
-  const isNextUp = isUpcoming && isWithin24h(activeGame?.startsAt);
+  const isNextUp = isUpcoming && checkIsNextUp(activeGame?.startsAt);
 
   const displayHome = activeGame ? activeGame.homeTeam : match.homeTeam;
   const displayAway = activeGame ? activeGame.awayTeam : match.awayTeam;

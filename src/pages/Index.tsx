@@ -121,7 +121,7 @@ const Index = () => {
     return acc;
   }, {});
 
-  // Sort matches within each date by tip-off time (earliest first).
+  // Sort matches within each date by tip-off time (latest first).
   // Times look like "7:00 PM", "10:30 PM", etc. TBD/empty go last.
   const parseTimeToMinutes = (t?: string): number => {
     if (!t) return Number.POSITIVE_INFINITY;
@@ -136,7 +136,7 @@ const Index = () => {
   };
   if (groupedByDate) {
     for (const key of Object.keys(groupedByDate)) {
-      groupedByDate[key]!.sort((a, b) => parseTimeToMinutes(a.time) - parseTimeToMinutes(b.time));
+      groupedByDate[key]!.sort((a, b) => parseTimeToMinutes(b.time) - parseTimeToMinutes(a.time));
     }
   }
 

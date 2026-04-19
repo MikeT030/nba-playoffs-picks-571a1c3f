@@ -71,8 +71,8 @@ function gamesToSeriesGames(games: NbaGame[], bracket: BracketSeries[]): SeriesG
   const result: SeriesGame[] = [];
 
   visible.forEach((g, idx) => {
-    const homeTeam = nbaTeamToTeam(g.home_team);
-    const awayTeam = nbaTeamToTeam(g.visitor_team);
+    const homeTeam = nbaTeamToTeam(g.home_team, bracket);
+    const awayTeam = nbaTeamToTeam(g.visitor_team, bracket);
     const status = classifyStatus(g);
 
     if (status === "final") {

@@ -312,6 +312,8 @@ interface PlayoffBracketProps {
   pickPoints?: Record<string, PickPointInfo>;
   /** Visual style for showing actual results & per-pick points. */
   variant?: BracketVariant;
+  /** Map of seriesId → series score string (e.g. "4-2") shown as the actual matchup standing. */
+  seriesScores?: Record<string, string>;
 }
 
 const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
@@ -321,6 +323,7 @@ const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
   actualWinners = {},
   pickPoints = {},
   variant = "badge",
+  seriesScores = {},
 }, ref) => {
   const bracket = seriesList ?? defaultBracketSeries;
 
@@ -349,6 +352,7 @@ const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
         actualWinnerAbbr={actualWinners[id]}
         pickPoint={pickPoints[id]}
         variant={variant}
+        seriesScore={seriesScores[id]}
       />
     );
   };

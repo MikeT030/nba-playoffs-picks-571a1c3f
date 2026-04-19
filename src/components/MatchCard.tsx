@@ -113,6 +113,11 @@ const MatchCard = ({ match }: MatchCardProps) => {
           <p className="text-xs font-body mt-1 font-medium text-muted-foreground">
             Series {match.awayWins} – {match.homeWins}
           </p>
+          {match.nextGame && (
+            <p className="text-[10px] font-body mt-0.5 text-muted-foreground/80 whitespace-nowrap">
+              Next: Game {match.nextGame.gameNumber} · {match.nextGame.date} {match.nextGame.time}
+            </p>
+          )}
         </div>
 
         {/* Home Team */}

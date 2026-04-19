@@ -335,27 +335,29 @@ const DemoBracketPreview = ({ seriesList }: DemoBracketPreviewProps) => {
             </div>
           </div>
 
-          {/* Points summary */}
-          <div className="flex items-center justify-center gap-4 py-2 px-3 rounded-lg bg-[#1A1E24] border border-border/50">
-            <div className="text-center">
-              <p className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">Your Points</p>
-              <p className="font-display text-2xl text-primary">{totalPoints}</p>
-            </div>
-            <div className="h-8 w-px bg-border/40" />
-            <div className="flex items-center gap-3 text-[10px] font-body">
-              <span className="flex items-center gap-1 text-emerald-300">
-                <span className="w-2 h-2 rounded-full bg-emerald-400" /> 3 perfect
-              </span>
-              <span className="flex items-center gap-1 text-amber-300">
-                <span className="w-2 h-2 rounded-full bg-amber-400" /> 2 winner
-              </span>
-              <span className="flex items-center gap-1 text-sky-300">
-                <span className="w-2 h-2 rounded-full bg-sky-400" /> 1 loose
-              </span>
-            </div>
-          </div>
-
           <div className="rounded-lg bg-[#1A1E24] p-3">
+            {/* Points summary */}
+            <div className="flex items-center justify-center gap-4 py-2 px-3">
+              <div className="text-center">
+                <p className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">Your Points</p>
+                <p className="font-display text-2xl text-primary">{totalPoints}</p>
+              </div>
+              <div className="h-8 w-px bg-border/40" />
+              <div className="flex items-center gap-3 text-[10px] font-body">
+                <span className="flex items-center gap-1 text-emerald-300">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400" /> 3 perfect
+                </span>
+                <span className="flex items-center gap-1 text-amber-300">
+                  <span className="w-2 h-2 rounded-full bg-amber-400" /> 2 winner
+                </span>
+                <span className="flex items-center gap-1 text-sky-300">
+                  <span className="w-2 h-2 rounded-full bg-sky-400" /> 1 loose
+                </span>
+              </div>
+            </div>
+
+            <div className="h-px w-full bg-[#2B2F37] my-3" />
+
             <PlayoffBracket
               picks={userPicks.picks}
               bets={userPicks.bets}

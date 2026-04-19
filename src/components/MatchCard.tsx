@@ -198,9 +198,8 @@ const MatchCard = ({ match }: MatchCardProps) => {
               </span>
             )}
             {isNextUp && (
-              <span className="inline-flex items-center gap-1.5 text-[10px] font-body font-semibold uppercase tracking-widest -translate-y-5 whitespace-nowrap text-primary">
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                Next Up · {formatTipOff(activeGame?.startsAt)}
+              <span className="text-[10px] font-body font-semibold uppercase tracking-widest block -translate-y-5 whitespace-nowrap text-primary">
+                {formatTipOff(activeGame?.startsAt)}
               </span>
             )}
             {isUpcoming && !isNextUp && (

@@ -379,7 +379,7 @@ const Scoreboard = () => {
 
 
   const viewTabs = (
-    <div className="flex border-b border-border/40 mb-7">
+    <div className="flex border-b border-border/40 mb-11">
       <button
         onClick={() => setShowAllPicks(false)}
         className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-sm font-medium transition-all duration-200 border-b-2 -mb-px ${

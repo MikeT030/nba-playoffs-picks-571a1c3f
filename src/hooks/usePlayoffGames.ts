@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { teamMeta, type NbaGame } from "@/lib/nbaApi";
-import { type Match, type Team, makeTips, fallbackMatches, getConference, teamSeeds } from "@/data/playoffsData";
+import { type Match, type Team, makeTips, fallbackMatches, getConference, getTeamSeed, type BracketSeries } from "@/data/playoffsData";
 import { usePlayoffGamesRaw } from "./usePlayoffGamesRaw";
+import { useBracketData } from "./useBracketData";
 
 const LIVE_STATUS_RE = /^(1st|2nd|3rd|4th)\s*Qtr$|^Halftime$/i;
 
@@ -37,18 +38,18 @@ function formatLiveIndicator(status: string, period: number, time: string | null
   return status || "";
 }
 
-function nbaTeamToTeam(t: { full_name: string; abbreviation: string }): Team {
+function nbaTeamToTeam(t: { full_name: string; abbreviation: string }, bracket: BracketSeries[]): Team {
   const meta = teamMeta[t.abbreviation] || { color: "#666", logo: "🏀" };
   return {
     name: t.full_name,
     abbreviation: t.abbreviation,
     color: meta.color,
     logo: meta.logo,
-    seed: teamSeeds[t.abbreviation],
+    seed: getTeamSeed(t.abbreviation, bracket),
   };
 }
 
-function groupIntoSeries(games: NbaGame[]): Match[] {
+function groupIntoSeries(games: NbaGame[], bracket: BracketSeries[]): Match[] {
   const seriesMap = new Map<string, NbaGame[]>();
 
   for (const game of games) {
@@ -85,8 +86,8 @@ function groupIntoSeries(games: NbaGame[]): Match[] {
     const homeAbbr = firstGame.home_team.abbreviation;
     const awayAbbr = firstGame.visitor_team.abbreviation;
 
-    const homeTeam = nbaTeamToTeam(firstGame.home_team);
-    const awayTeam = nbaTeamToTeam(firstGame.visitor_team);
+    const homeTeam = nbaTeamToTeam(firstGame.home_team, bracket);
+    const awayTeam = nbaTeamToTeam(firstGame.visitor_team, bracket);
 
     const localStatus = gameStatusToLocal(latestGame.status);
 
@@ -165,9 +166,9 @@ function groupIntoSeries(games: NbaGame[]): Match[] {
   return matches;
 }
 
-function deriveMatches(games: NbaGame[] | undefined): Match[] {
+function deriveMatches(games: NbaGame[] | undefined, bracket: BracketSeries[]): Match[] {
   if (!games || games.length === 0) return fallbackMatches;
-  const apiMatches = groupIntoSeries(games);
+  const apiMatches = groupIntoSeries(games, bracket);
 
   const apiTeams = new Set<string>();
   apiMatches.forEach((m) => {
@@ -185,11 +186,12 @@ function deriveMatches(games: NbaGame[] | undefined): Match[] {
 
 export function usePlayoffGames(season: number = 2025) {
   usePlayoffGamesRaw(season);
+  const { data: bracket = [] } = useBracketData(season);
 
   return useQuery<NbaGame[], Error, Match[]>({
     queryKey: ["playoff-games-raw", season],
     enabled: false,
     initialData: [],
-    select: deriveMatches,
+    select: (games) => deriveMatches(games, bracket),
   });
 }

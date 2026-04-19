@@ -186,7 +186,7 @@ const MatchDetail = () => {
             Back
           </Link>
 
-          <p className="text-xs text-primary font-body font-semibold uppercase tracking-widest mb-4 text-center">
+          <p className="text-xs font-body font-semibold uppercase tracking-widest mb-4 text-center text-primary-foreground">
             {match.conference !== "Finals" ? `${match.conference === "East" ? "EAST" : "WEST"}  ` : ""}{match.round === "Conference Semifinals" ? "Conf. Semifinals" : match.round === "Conference Finals" ? "Conf. Finals" : match.round} · Game {displayGameNum} · {displayDate}
           </p>
 

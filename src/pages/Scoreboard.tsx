@@ -196,12 +196,12 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
   return (
     <div className="w-full max-h-[75vh] overflow-auto">
       <table className="min-w-max text-sm border-collapse">
-          <thead className="[&_tr]:border-b">
-            <tr className="border-b">
-              <th className="sticky top-0 z-20 bg-[#22272E]/90 backdrop-blur-md h-12 px-3 text-left align-middle font-medium text-muted-foreground min-w-[100px]">Round</th>
-              <th className="sticky top-0 left-0 z-30 bg-[#22272E]/90 backdrop-blur-md h-12 px-3 text-left align-middle font-medium text-muted-foreground min-w-[100px]">Series</th>
+          <thead>
+            <tr>
+              <th className="sticky top-0 z-20 bg-[#1A1E24]/90 backdrop-blur-md h-12 px-3 text-left align-middle font-medium text-muted-foreground min-w-[100px]">Round</th>
+              <th className="sticky top-0 left-0 z-30 bg-[#1A1E24]/90 backdrop-blur-md h-12 px-3 text-left align-middle font-medium text-muted-foreground min-w-[100px]">Series</th>
               {players.map((player) => (
-                <th key={player} className="sticky top-0 z-20 bg-[#22272E]/90 backdrop-blur-md h-12 px-3 text-center align-middle font-medium text-muted-foreground min-w-[90px] whitespace-nowrap">
+                <th key={player} className="sticky top-0 z-20 bg-[#1A1E24]/90 backdrop-blur-md h-12 px-3 text-center align-middle font-medium text-muted-foreground min-w-[90px] whitespace-nowrap">
                   {player}
                 </th>
               ))}
@@ -214,8 +214,8 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
               lastRound = round;
 
               return (
-                <tr key={seriesId} className="border-b transition-colors hover:bg-muted/50">
-                  <td className="bg-[#22272E]/60 backdrop-blur-sm p-3 align-middle font-body text-xs text-muted-foreground min-w-[100px]">
+                <tr key={seriesId} className="transition-colors hover:bg-muted/50">
+                  <td className="bg-[#1A1E24]/60 backdrop-blur-sm p-3 align-middle font-body text-xs text-muted-foreground min-w-[100px]">
                     {showRound ? (() => {
                       const words = round.split(" ");
                       return words.length > 1 ? (
@@ -223,7 +223,7 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
                       ) : <span className="text-primary-foreground">{round}</span>;
                     })() : ""}
                   </td>
-                  <td className="sticky left-0 z-10 bg-[#22272E]/80 backdrop-blur-sm p-3 align-middle font-display tracking-wide whitespace-nowrap text-sm">
+                  <td className="sticky left-0 z-10 bg-[#1A1E24]/80 backdrop-blur-sm p-3 align-middle font-display tracking-wide whitespace-nowrap text-sm">
                     {getSeriesLabel(seriesId, seriesList)}
                   </td>
                   {players.map((player) => {
@@ -245,9 +245,9 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
               );
             })}
             {/* Score row */}
-            <tr className="border-t-2 border-primary/30 bg-[#22272E]/40">
-              <td className="bg-[#22272E]/30 p-3 align-middle font-body text-xs text-muted-foreground min-w-[100px]"></td>
-              <td className="sticky left-0 z-10 bg-[#22272E]/50 backdrop-blur-sm p-3 align-middle font-display tracking-wide whitespace-nowrap text-sm text-primary">
+            <tr className="bg-[#1A1E24]/40">
+              <td className="bg-[#1A1E24]/30 p-3 align-middle font-body text-xs text-muted-foreground min-w-[100px]"></td>
+              <td className="sticky left-0 z-10 bg-[#1A1E24]/50 backdrop-blur-sm p-3 align-middle font-display tracking-wide whitespace-nowrap text-sm text-primary">
                  Score
               </td>
               {players.map((player) => (

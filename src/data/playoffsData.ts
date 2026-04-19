@@ -41,11 +41,6 @@ export interface Match {
   homeScore?: number;
   awayScore?: number;
   tips: Tip[];
-  nextGame?: {
-    gameNumber: number;
-    date: string;
-    time: string;
-  };
 }
 
 const buddies = ["Erik", "Alexander", "David", "Fabian", "Hannes", "Jörn", "Larsn", "Michi", "Momentum", "Simon", "Sven"];

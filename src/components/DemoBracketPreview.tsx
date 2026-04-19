@@ -143,6 +143,24 @@ const DemoBracketPreview = ({ seriesList }: DemoBracketPreviewProps) => {
     return totalUserPoints(userBetsLite, resultsLite);
   }, [userPicks, actualResults]);
 
+  // Demo "matchup standings" — formatted as topWins-bottomWins per series,
+  // matching the actual advancement results above.
+  const seriesScores = useMemo(() => {
+    const map: Record<string, string> = {};
+    for (const b of actualResults.bets) {
+      const series = bracket.find((s) => s.id === b.seriesId);
+      const resolved = resolveSeriesTeams(b.seriesId, actualResults.picks, bracket);
+      const top = resolved.topTeam ?? series?.topTeam;
+      const bottom = resolved.bottomTeam ?? series?.bottomTeam;
+      if (!top || !bottom) continue;
+      const loserWins = Math.max(0, b.gamesInSeries - 4);
+      const topWins = b.winner === top.abbreviation ? 4 : loserWins;
+      const bottomWins = b.winner === bottom.abbreviation ? 4 : loserWins;
+      map[b.seriesId] = `${topWins}-${bottomWins}`;
+    }
+    return map;
+  }, [actualResults, bracket]);
+
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3">

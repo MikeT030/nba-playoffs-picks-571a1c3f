@@ -43,8 +43,14 @@ export function pickDefaultGameIdx(games: SeriesGame[]): number {
   const liveIdx = games.findIndex((g) => g.status === "live");
   if (liveIdx >= 0) return liveIdx;
 
+  // Only surface the next upcoming game by default once it's the same local
+  // calendar day as tip-off. Before game day we keep showing the last final
+  // so users see the most recent result, not a future scheduled game.
   const nextUpcomingIdx = games.findIndex((g) => g.status === "upcoming");
-  if (nextUpcomingIdx >= 0 && isNextUp(games[nextUpcomingIdx].startsAt)) {
+  if (
+    nextUpcomingIdx >= 0 &&
+    isSameLocalDay(games[nextUpcomingIdx].startsAt)
+  ) {
     return nextUpcomingIdx;
   }
 

@@ -110,12 +110,14 @@ const TeamSlot = ({
   isTop,
   actualWinnerAbbr,
   variant,
+  teamWins,
 }: {
   team?: Team;
   isPicked: boolean;
   isTop: boolean;
   actualWinnerAbbr?: string;
   variant?: BracketVariant;
+  teamWins?: number;
 }) => {
   const isActualWinner = !!team && !!actualWinnerAbbr && team.abbreviation === actualWinnerAbbr;
   const isActualLoser = !!team && !!actualWinnerAbbr && team.abbreviation !== actualWinnerAbbr;
@@ -151,6 +153,15 @@ const TeamSlot = ({
           >
             {isPlayInPlaceholder(team.abbreviation) ? "TBD" : team.abbreviation}
           </span>
+          {typeof teamWins === "number" && (
+            <span
+              className={`text-[11px] font-body font-bold tabular-nums shrink-0 ${
+                isActualWinner ? "text-emerald-300" : "text-muted-foreground/60"
+              }`}
+            >
+              {teamWins}
+            </span>
+          )}
           {isActualWinner && variant === "trophy" && (
             <Trophy size={12} className="text-emerald-400 shrink-0" />
           )}
@@ -240,6 +251,14 @@ const BracketCard = ({
       ? "border-rose-400/40"
       : "border-border/50";
 
+  // Parse "topWins-bottomWins" so we can render each team's score on its row.
+  const [topWins, bottomWins] = (() => {
+    if (!seriesScore) return [undefined, undefined] as const;
+    const m = seriesScore.match(/^(\d+)\s*-\s*(\d+)$/);
+    if (!m) return [undefined, undefined] as const;
+    return [Number(m[1]), Number(m[2])] as const;
+  })();
+
   return (
     <div
       className={`absolute rounded-lg bg-[#1A1E24]/80 backdrop-blur-md border ${variantOutline} ${
@@ -255,6 +274,7 @@ const BracketCard = ({
         isTop
         actualWinnerAbbr={actualWinnerAbbr}
         variant={variant}
+        teamWins={topWins}
       />
       <TeamSlot
         team={bottomTeam}
@@ -262,6 +282,7 @@ const BracketCard = ({
         isTop={false}
         actualWinnerAbbr={actualWinnerAbbr}
         variant={variant}
+        teamWins={bottomWins}
       />
 
       {winnerTeam ? (
@@ -280,20 +301,10 @@ const BracketCard = ({
             Your Pick: {winnerTeam.abbreviation} in {bet!.gamesInSeries}
           </span>
           <PointsTag point={pickPoint} variant={variant} />
-          {seriesScore && (
-            <span className="text-[9px] font-body font-bold text-muted-foreground/80 bg-muted/40 px-1.5 py-0.5 rounded shrink-0">
-              {seriesScore}
-            </span>
-          )}
         </div>
       ) : (
-        <div className="flex items-center justify-center gap-1.5" style={{ height: 24 }}>
+        <div className="flex items-center justify-center" style={{ height: 24 }}>
           <span className="text-[10px] font-body text-muted-foreground/40 italic">No pick</span>
-          {seriesScore && (
-            <span className="text-[9px] font-body font-bold text-muted-foreground/80 bg-muted/40 px-1.5 py-0.5 rounded shrink-0">
-              {seriesScore}
-            </span>
-          )}
         </div>
       )}
     </div>

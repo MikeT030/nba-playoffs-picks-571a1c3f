@@ -90,6 +90,31 @@ function groupIntoSeries(games: NbaGame[]): Match[] {
 
     const localStatus = gameStatusToLocal(latestGame.status);
 
+    // Pick the game whose tip-off should drive sorting:
+    // - live: the live game itself
+    // - upcoming: the next upcoming game (latestGame is the first upcoming)
+    // - final (series ongoing): the next scheduled game after the latest final
+    const upcomingGames = seriesGames.filter((g) => gameStatusToLocal(g.status) === "upcoming");
+    const sortGame =
+      localStatus === "live"
+        ? latestGame
+        : localStatus === "upcoming"
+          ? latestGame
+          : (upcomingGames[0] ?? latestGame);
+
+    const extractStartsAt = (g: NbaGame): string | undefined => {
+      if (g.datetime) {
+        const t = new Date(g.datetime).getTime();
+        if (!isNaN(t)) return new Date(t).toISOString();
+      }
+      if (/^\d{4}-\d{2}-\d{2}T/.test(g.status)) {
+        const t = new Date(g.status).getTime();
+        if (!isNaN(t)) return new Date(t).toISOString();
+      }
+      return undefined;
+    };
+    const startsAt = extractStartsAt(sortGame);
+
     // For upcoming games, the API's `time` field is null. Derive a local
     // tip-off label from `datetime` (or an ISO timestamp stored in `status`)
     // so cards display + sort by their actual scheduled time, not "TBD".
@@ -125,6 +150,7 @@ function groupIntoSeries(games: NbaGame[]): Match[] {
       gameNumber,
       date: dateStr,
       time: timeLabel,
+      startsAt,
       homeTeam,
       awayTeam,
       homeWins: homeAbbr === teamA ? teamAWins : teamBWins,

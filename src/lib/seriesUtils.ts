@@ -9,9 +9,31 @@ export function isWithin24h(startsAt: number | undefined): boolean {
 }
 
 /**
+ * True if the tip-off falls on the same local calendar day as "now",
+ * regardless of how many hours away it is.
+ */
+export function isSameLocalDay(startsAt: number | undefined): boolean {
+  if (!startsAt) return false;
+  const d = new Date(startsAt);
+  const now = new Date();
+  return d.toDateString() === now.toDateString();
+}
+
+/**
+ * True if we should surface a scheduled game as "Next Up":
+ * - it's later today (game day), OR
+ * - tip-off is within the next 24h
+ */
+export function isNextUp(startsAt: number | undefined): boolean {
+  if (!startsAt) return false;
+  if (startsAt < Date.now()) return false;
+  return isSameLocalDay(startsAt) || isWithin24h(startsAt);
+}
+
+/**
  * Default slide rule for a series:
  * 1. live game
- * 2. next upcoming within 24h of tip-off
+ * 2. next upcoming on game day or within 24h of tip-off
  * 3. most recent played (final)
  * 4. first scheduled game (Game 1)
  */
@@ -22,7 +44,7 @@ export function pickDefaultGameIdx(games: SeriesGame[]): number {
   if (liveIdx >= 0) return liveIdx;
 
   const nextUpcomingIdx = games.findIndex((g) => g.status === "upcoming");
-  if (nextUpcomingIdx >= 0 && isWithin24h(games[nextUpcomingIdx].startsAt)) {
+  if (nextUpcomingIdx >= 0 && isNextUp(games[nextUpcomingIdx].startsAt)) {
     return nextUpcomingIdx;
   }
 

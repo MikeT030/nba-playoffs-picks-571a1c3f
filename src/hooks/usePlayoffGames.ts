@@ -38,14 +38,14 @@ function formatLiveIndicator(status: string, period: number, time: string | null
   return status || "";
 }
 
-function nbaTeamToTeam(t: { full_name: string; abbreviation: string }): Team {
+function nbaTeamToTeam(t: { full_name: string; abbreviation: string }, bracket: BracketSeries[]): Team {
   const meta = teamMeta[t.abbreviation] || { color: "#666", logo: "🏀" };
   return {
     name: t.full_name,
     abbreviation: t.abbreviation,
     color: meta.color,
     logo: meta.logo,
-    seed: teamSeeds[t.abbreviation],
+    seed: getTeamSeed(t.abbreviation, bracket),
   };
 }
 

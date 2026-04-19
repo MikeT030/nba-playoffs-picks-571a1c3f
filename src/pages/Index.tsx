@@ -198,21 +198,12 @@ const Index = () => {
             ))}
           </div>
         ) : (
-          <div className="space-y-8">
-            {dateOrder.map((date) => (
-              <div key={date}>
-                <div className="mb-3">
-                  <h3 className="font-display text-sm tracking-widest uppercase whitespace-nowrap text-primary-foreground">
-                    {date}
-                  </h3>
-                </div>
-                <div className="grid gap-4 md:grid-cols-2">
-                  {groupedByDate?.[date]?.map((match) => (
-                    <MatchCard key={match.id} match={match} />
-                  ))}
-                </div>
-              </div>
-            ))}
+          <div className="grid gap-4 md:grid-cols-2">
+            {dateOrder.flatMap((date) =>
+              groupedByDate?.[date]?.map((match) => (
+                <MatchCard key={match.id} match={match} />
+              )) ?? []
+            )}
           </div>
         )}
       </section>

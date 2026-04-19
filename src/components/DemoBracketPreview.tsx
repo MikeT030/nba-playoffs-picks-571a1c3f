@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Shuffle } from "lucide-react";
+import { Shuffle, Trophy } from "lucide-react";
 import PlayoffBracket, { type BracketVariant } from "@/components/PlayoffBracket";
 import {
   bracketSeries as defaultBracketSeries,
@@ -8,6 +8,9 @@ import {
   type BracketSeries,
 } from "@/data/playoffsData";
 import { scorePick, totalUserPoints, type PickPointInfo } from "@/lib/pickScoring";
+
+const DEMO_BUDDIES = ["Erik", "Alexander", "David", "Fabian", "Hannes", "Jörn", "Larsn", "Michi", "Momentum", "Simon", "Sven"];
+const DEMO_AVATARS = ["🎣", "😎", "🎬", "🏔️", "🌄", "🎿", "🐕", "🎸", "🚀", "📡", "🐶"];
 
 interface DemoBracketPreviewProps {
   seriesList?: BracketSeries[];

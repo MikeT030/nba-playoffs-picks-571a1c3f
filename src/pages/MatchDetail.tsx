@@ -3,6 +3,7 @@ import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useSeriesGames } from "@/hooks/useSeriesGames";
+import { pickDefaultGameIdx, isWithin24h, formatTipOff } from "@/lib/seriesUtils";
 import TeamLogo from "@/components/TeamLogo";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,24 +17,25 @@ const MatchDetail = () => {
   const { data: bracketData } = useBracketData();
   const match = matches?.find((m) => m.id === id);
 
-  // Series games from API/data
+  // Series games from API/data — full timeline (final + live + upcoming)
   const { data: seriesGames } = useSeriesGames(
     id,
     match?.homeTeam.abbreviation,
     match?.awayTeam.abbreviation
   );
-  // Only count games that have been played (final or live)
-  const playedGames = useMemo(
-    () => seriesGames?.filter((g) => g.status === "final" || g.status === "live") ?? [],
-    [seriesGames]
-  );
-  const hasSeriesGames = playedGames.length > 1;
+  const allGames = useMemo(() => seriesGames ?? [], [seriesGames]);
+  const hasMultipleGames = allGames.length > 1;
   const [activeGameIdx, setActiveGameIdx] = useState(0);
+  const [defaultApplied, setDefaultApplied] = useState(false);
 
-  // Default to latest game
+  const defaultIdx = useMemo(() => pickDefaultGameIdx(allGames), [allGames]);
   useEffect(() => {
-    if (playedGames.length > 0) setActiveGameIdx(playedGames.length - 1);
-  }, [playedGames.length]);
+    if (allGames.length === 0) return;
+    if (!defaultApplied) {
+      setActiveGameIdx(defaultIdx);
+      setDefaultApplied(true);
+    }
+  }, [allGames.length, defaultIdx, defaultApplied]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -53,15 +55,15 @@ const MatchDetail = () => {
   }, []);
 
   const handleTouchEnd = useCallback(() => {
-    if (!hasSeriesGames) return;
+    if (!hasMultipleGames) return;
     const diff = touchStartX.current - touchEndX.current;
     const threshold = 50;
-    if (diff > threshold && activeGameIdx < playedGames.length - 1) {
+    if (diff > threshold && activeGameIdx < allGames.length - 1) {
       setActiveGameIdx((i) => i + 1);
     } else if (diff < -threshold && activeGameIdx > 0) {
       setActiveGameIdx((i) => i - 1);
     }
-  }, [playedGames, activeGameIdx, hasSeriesGames]);
+  }, [allGames.length, activeGameIdx, hasMultipleGames]);
 
   // Map the API match id to the bracket series_id
   const bracketSeriesId = useMemo(() => {
@@ -146,7 +148,10 @@ const MatchDetail = () => {
   }
 
   // Determine display data: use per-game data if available, otherwise series-level
-  const activeGame = hasSeriesGames ? playedGames[activeGameIdx] : null;
+  const activeGame = (hasMultipleGames || allGames.length === 1) ? allGames[activeGameIdx] : null;
+  const isUpcoming = activeGame?.status === "upcoming";
+  const isNextUp = isUpcoming && isWithin24h(activeGame?.startsAt);
+
   const displayHome = activeGame ? activeGame.homeTeam : match.homeTeam;
   const displayAway = activeGame ? activeGame.awayTeam : match.awayTeam;
   const displayHomeScore = activeGame ? activeGame.homeScore : match.homeScore;
@@ -162,9 +167,9 @@ const MatchDetail = () => {
     <div className="min-h-screen bg-background pb-24">
       <div
         className="relative overflow-hidden"
-        onTouchStart={hasSeriesGames ? handleTouchStart : undefined}
-        onTouchMove={hasSeriesGames ? handleTouchMove : undefined}
-        onTouchEnd={hasSeriesGames ? handleTouchEnd : undefined}
+        onTouchStart={hasMultipleGames ? handleTouchStart : undefined}
+        onTouchMove={hasMultipleGames ? handleTouchMove : undefined}
+        onTouchEnd={hasMultipleGames ? handleTouchEnd : undefined}
       >
         <div
           className="absolute inset-0"
@@ -187,7 +192,7 @@ const MatchDetail = () => {
 
           <div className="flex items-center justify-between gap-5 pt-[4px]">
             {/* Left arrow for desktop */}
-            {hasSeriesGames && (
+            {hasMultipleGames && (
               <button
                 onClick={() => setActiveGameIdx((i) => Math.max(0, i - 1))}
                 disabled={activeGameIdx === 0}
@@ -219,10 +224,31 @@ const MatchDetail = () => {
                   Final{displayOt ? `/${displayOt > 1 ? displayOt : ""}OT` : ""}
                 </span>
               )}
+              {isNextUp && (
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-body font-bold uppercase tracking-widest -mt-[42px] whitespace-nowrap text-primary">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                  Next Up · {formatTipOff(activeGame?.startsAt)}
+                </span>
+              )}
+              {isUpcoming && !isNextUp && (
+                <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest -mt-6 block">
+                  Tip-off {formatTipOff(activeGame?.startsAt)}
+                </span>
+              )}
               <div className="flex items-center gap-4">
-                <span className="font-display text-5xl md:text-7xl">{displayAwayScore}</span>
-                <span className="text-muted-foreground font-display text-3xl">:</span>
-                <span className="font-display text-5xl md:text-7xl">{displayHomeScore}</span>
+                {isUpcoming ? (
+                  <>
+                    <span className="font-display text-5xl md:text-7xl text-muted-foreground">—</span>
+                    <span className="text-muted-foreground font-display text-3xl">:</span>
+                    <span className="font-display text-5xl md:text-7xl text-muted-foreground">—</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="font-display text-5xl md:text-7xl">{displayAwayScore}</span>
+                    <span className="text-muted-foreground font-display text-3xl">:</span>
+                    <span className="font-display text-5xl md:text-7xl">{displayHomeScore}</span>
+                  </>
+                )}
               </div>
               <p className="text-xs text-foreground font-body mt-2 uppercase tracking-wider font-normal">
                 Series {displaySeriesAway} – {displaySeriesHome}
@@ -240,10 +266,10 @@ const MatchDetail = () => {
             </div>
 
             {/* Right arrow for desktop */}
-            {hasSeriesGames && (
+            {hasMultipleGames && (
               <button
-                onClick={() => setActiveGameIdx((i) => Math.min(playedGames.length - 1, i + 1))}
-                disabled={activeGameIdx === playedGames.length - 1}
+                onClick={() => setActiveGameIdx((i) => Math.min(allGames.length - 1, i + 1))}
+                disabled={activeGameIdx === allGames.length - 1}
                 className="hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-card/50 text-foreground disabled:opacity-20 transition-opacity"
               >
                 <ChevronRight className="w-5 h-5" />
@@ -251,20 +277,32 @@ const MatchDetail = () => {
             )}
           </div>
 
-          {/* Game dots indicator */}
-          {hasSeriesGames && (
+          {/* Game dots indicator: solid for played/live, outlined for upcoming */}
+          {hasMultipleGames && (
             <div className="flex items-center justify-center gap-2 mt-4">
-              {playedGames.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveGameIdx(i)}
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    i === activeGameIdx ? "bg-primary w-4" : "bg-muted-foreground/40"
-                  }`}
-                />
-              ))}
+              {allGames.map((g, i) => {
+                const isActive = i === activeGameIdx;
+                const isPlayed = g.status === "final" || g.status === "live";
+                let cls = "h-2 rounded-full transition-all border ";
+                if (isActive) {
+                  cls += "bg-primary border-primary w-4";
+                } else if (isPlayed) {
+                  cls += "bg-muted-foreground/40 border-transparent w-2";
+                } else {
+                  cls += "bg-transparent border-muted-foreground/40 w-2";
+                }
+                return (
+                  <button
+                    key={i}
+                    onClick={() => setActiveGameIdx(i)}
+                    className={cls}
+                    aria-label={`Game ${i + 1}${g.status === "upcoming" ? " (scheduled)" : ""}`}
+                  />
+                );
+              })}
             </div>
           )}
+
 
           {user && userPick && (() => {
             const pickedTeam = userPick.winner === match.homeTeam.abbreviation ? match.homeTeam : match.awayTeam;

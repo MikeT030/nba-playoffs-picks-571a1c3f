@@ -23,13 +23,29 @@ export function usePlayoffGamesRaw(season: number = 2025) {
     staleTime: 5 * 60 * 1000,
     retry: 2,
     retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 8000),
-    // Auto-refresh every 30s while at least one game is live; otherwise no polling.
+    // Auto-refresh:
+    //  - every 30s when at least one game is live
+    //  - every 60s when the soonest upcoming tip-off is within ~25h, so the
+    //    UI can flip "scheduled → next-up → live" without a manual reload
     refetchInterval: (query) => {
       const data = query.state.data as NbaGame[] | undefined;
-      const hasLive =
-        Array.isArray(data) &&
-        data.some((g) => g.status === "Final" ? false : LIVE_STATUS_RE.test(g.status));
-      return hasLive ? 30_000 : false;
+      if (!Array.isArray(data)) return false;
+      const hasLive = data.some((g) =>
+        g.status === "Final" ? false : LIVE_STATUS_RE.test(g.status)
+      );
+      if (hasLive) return 30_000;
+
+      const now = Date.now();
+      const TWENTY_FIVE_H = 25 * 60 * 60 * 1000;
+      const nearTipOff = data.some((g) => {
+        if (g.status === "Final") return false;
+        if (LIVE_STATUS_RE.test(g.status)) return false;
+        const ts = new Date(g.date).getTime();
+        if (isNaN(ts)) return false;
+        const diff = ts - now;
+        return diff > 0 && diff <= TWENTY_FIVE_H;
+      });
+      return nearTipOff ? 60_000 : false;
     },
     refetchIntervalInBackground: false,
   });

@@ -5,6 +5,7 @@ import { useBracketData } from "@/hooks/useBracketData";
 import { useAllUserPicks } from "@/hooks/useAllUserPicks";
 import { useAllSeriesResults } from "@/hooks/useAllSeriesResults";
 import { useSeriesGames } from "@/hooks/useSeriesGames";
+import { pickDefaultGameIdx, isWithin24h, formatTipOff } from "@/lib/seriesUtils";
 import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 
 const useUserBet = (match: Match) => {
@@ -63,16 +64,24 @@ const MatchCard = ({ match }: MatchCardProps) => {
     match.homeTeam.abbreviation,
     match.awayTeam.abbreviation
   );
-  const playedGames = useMemo(
-    () => seriesGames?.filter((g) => g.status === "final" || g.status === "live") ?? [],
-    [seriesGames]
-  );
-  const hasSeriesGames = playedGames.length > 1;
-  const [activeGameIdx, setActiveGameIdx] = useState(0);
 
+  // All games (final + live + upcoming) — full swipeable timeline
+  const allGames = useMemo(() => seriesGames ?? [], [seriesGames]);
+  const hasMultipleGames = allGames.length > 1;
+  const [activeGameIdx, setActiveGameIdx] = useState(0);
+  const [defaultApplied, setDefaultApplied] = useState(false);
+
+  // Apply default-slide rule once games are available; re-apply if the
+  // default index changes (e.g. a live game starts) and the user hasn't
+  // manually navigated yet.
+  const defaultIdx = useMemo(() => pickDefaultGameIdx(allGames), [allGames]);
   useEffect(() => {
-    if (playedGames.length > 0) setActiveGameIdx(playedGames.length - 1);
-  }, [playedGames.length]);
+    if (allGames.length === 0) return;
+    if (!defaultApplied) {
+      setActiveGameIdx(defaultIdx);
+      setDefaultApplied(true);
+    }
+  }, [allGames.length, defaultIdx, defaultApplied]);
 
   // Swipe handling
   const touchStartX = useRef(0);
@@ -90,18 +99,18 @@ const MatchCard = ({ match }: MatchCardProps) => {
   }, []);
 
   const handleTouchEnd = useCallback(() => {
-    if (!hasSeriesGames) return;
+    if (!hasMultipleGames) return;
     const diff = touchStartX.current - touchEndX.current;
     const threshold = 50;
     if (Math.abs(diff) > threshold) {
       swipedRef.current = true;
-      if (diff > 0 && activeGameIdx < playedGames.length - 1) {
+      if (diff > 0 && activeGameIdx < allGames.length - 1) {
         setActiveGameIdx((i) => i + 1);
       } else if (diff < 0 && activeGameIdx > 0) {
         setActiveGameIdx((i) => i - 1);
       }
     }
-  }, [playedGames.length, activeGameIdx, hasSeriesGames]);
+  }, [allGames.length, activeGameIdx, hasMultipleGames]);
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
@@ -124,7 +133,10 @@ const MatchCard = ({ match }: MatchCardProps) => {
   );
 
   // Active game (or fallback to series-level)
-  const activeGame = hasSeriesGames ? playedGames[activeGameIdx] : null;
+  const activeGame = hasMultipleGames || allGames.length === 1 ? allGames[activeGameIdx] : null;
+  const isUpcoming = activeGame?.status === "upcoming";
+  const isNextUp = isUpcoming && isWithin24h(activeGame?.startsAt);
+
   const displayHome = activeGame ? activeGame.homeTeam : match.homeTeam;
   const displayAway = activeGame ? activeGame.awayTeam : match.awayTeam;
   const displayHomeScore = activeGame ? activeGame.homeScore : match.homeScore;
@@ -147,9 +159,9 @@ const MatchCard = ({ match }: MatchCardProps) => {
   return (
     <div
       onClick={handleClick}
-      onTouchStart={hasSeriesGames ? handleTouchStart : undefined}
-      onTouchMove={hasSeriesGames ? handleTouchMove : undefined}
-      onTouchEnd={hasSeriesGames ? handleTouchEnd : undefined}
+      onTouchStart={hasMultipleGames ? handleTouchStart : undefined}
+      onTouchMove={hasMultipleGames ? handleTouchMove : undefined}
+      onTouchEnd={hasMultipleGames ? handleTouchEnd : undefined}
       className="block rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/40 group cursor-pointer select-none"
     >
       <div className="px-4 py-2 flex items-center justify-center border-b border-transparent">
@@ -185,11 +197,32 @@ const MatchCard = ({ match }: MatchCardProps) => {
                 Final{displayOt ? `/${displayOt > 1 ? displayOt : ""}OT` : ""}
               </span>
             )}
+            {isNextUp && (
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-body font-semibold uppercase tracking-widest -translate-y-5 whitespace-nowrap text-primary">
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                Next Up · {formatTipOff(activeGame?.startsAt)}
+              </span>
+            )}
+            {isUpcoming && !isNextUp && (
+              <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest block -translate-y-5">
+                Scheduled
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-3">
-            <span className="font-display text-2xl">{displayAwayScore}</span>
-            <span className="text-muted-foreground font-body text-sm">—</span>
-            <span className="font-display text-2xl">{displayHomeScore}</span>
+            {isUpcoming ? (
+              <>
+                <span className="font-display text-2xl text-muted-foreground">—</span>
+                <span className="text-muted-foreground font-body text-sm">—</span>
+                <span className="font-display text-2xl text-muted-foreground">—</span>
+              </>
+            ) : (
+              <>
+                <span className="font-display text-2xl">{displayAwayScore}</span>
+                <span className="text-muted-foreground font-body text-sm">—</span>
+                <span className="font-display text-2xl">{displayHomeScore}</span>
+              </>
+            )}
           </div>
           <p className="text-xs font-body mt-1 font-medium text-muted-foreground">
             Series {displaySeriesAway} – {displaySeriesHome}
@@ -209,19 +242,29 @@ const MatchCard = ({ match }: MatchCardProps) => {
         </div>
       </div>
 
-      {/* Game dots indicator */}
-      {hasSeriesGames && (
+      {/* Game dots indicator: solid for played/live, outlined for upcoming */}
+      {hasMultipleGames && (
         <div className="flex items-center justify-center gap-1.5 pb-3 -mt-1">
-          {playedGames.map((_, i) => (
-            <button
-              key={i}
-              onClick={(e) => handleDotClick(e, i)}
-              className={`h-1.5 rounded-full transition-all ${
-                i === activeGameIdx ? "bg-primary w-3" : "bg-muted-foreground/40 w-1.5"
-              }`}
-              aria-label={`Game ${i + 1}`}
-            />
-          ))}
+          {allGames.map((g, i) => {
+            const isActive = i === activeGameIdx;
+            const isPlayed = g.status === "final" || g.status === "live";
+            let cls = "h-1.5 rounded-full transition-all border ";
+            if (isActive) {
+              cls += "bg-primary border-primary w-3";
+            } else if (isPlayed) {
+              cls += "bg-muted-foreground/40 border-transparent w-1.5";
+            } else {
+              cls += "bg-transparent border-muted-foreground/40 w-1.5";
+            }
+            return (
+              <button
+                key={i}
+                onClick={(e) => handleDotClick(e, i)}
+                className={cls}
+                aria-label={`Game ${i + 1}${g.status === "upcoming" ? " (scheduled)" : ""}`}
+              />
+            );
+          })}
         </div>
       )}
 

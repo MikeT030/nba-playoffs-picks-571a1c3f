@@ -136,6 +136,7 @@ export function useSeriesGames(
   season: number = 2025
 ) {
   usePlayoffGamesRaw(season);
+  const { data: bracket = [] } = useBracketData(season);
 
   return useQuery<NbaGame[], Error, SeriesGame[]>({
     queryKey: ["playoff-games-raw", season],
@@ -150,7 +151,7 @@ export function useSeriesGames(
           teamSet.has(g.visitor_team.abbreviation)
       );
       if (seriesGames.length === 0) return [];
-      return gamesToSeriesGames(seriesGames);
+      return gamesToSeriesGames(seriesGames, bracket);
     },
   });
 }

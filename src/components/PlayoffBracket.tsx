@@ -1,4 +1,5 @@
 import { forwardRef } from "react";
+import { Check, X, Trophy } from "lucide-react";
 import TeamLogo from "@/components/TeamLogo";
 import {
   bracketSeries as defaultBracketSeries,
@@ -7,6 +8,9 @@ import {
   type BracketSeries,
   type Team,
 } from "@/data/playoffsData";
+import type { PickPointInfo } from "@/lib/pickScoring";
+
+export type BracketVariant = "badge" | "ring" | "stripe" | "trophy";
 
 // ── Types ──
 interface BetSelection {
@@ -104,37 +108,97 @@ const TeamSlot = ({
   team,
   isPicked,
   isTop,
+  actualWinnerAbbr,
+  variant,
 }: {
   team?: Team;
   isPicked: boolean;
   isTop: boolean;
-}) => (
-  <div
-    className={`flex items-center gap-2 px-2.5 ${
-      isTop ? "border-b border-border/40" : ""
-    } ${isPicked ? "bg-primary/10" : ""}`}
-    style={{ height: 36 }}
-  >
-    {team ? (
-      <>
-        <TeamLogo src={team.logo} alt={team.name} className="w-6 h-6" />
-        <span className="text-[11px] text-muted-foreground font-body font-bold w-3 shrink-0">
-          {team.seed ?? ""}
-        </span>
-        <span className="font-display text-sm tracking-wide flex-1 whitespace-nowrap">
-          {isPlayInPlaceholder(team.abbreviation) ? "TBD" : team.abbreviation}
-        </span>
-        {isPicked && <span className="w-2 h-2 rounded-full bg-primary shrink-0" />}
-      </>
-    ) : (
-      <>
-        <span className="w-6 h-6 inline-flex items-center justify-center text-sm opacity-30">🏀</span>
-        <span className="text-[11px] w-3" />
-        <span className="font-display text-sm tracking-wide text-muted-foreground/50 flex-1">TBD</span>
-      </>
-    )}
-  </div>
-);
+  actualWinnerAbbr?: string;
+  variant?: BracketVariant;
+}) => {
+  const isActualWinner = !!team && !!actualWinnerAbbr && team.abbreviation === actualWinnerAbbr;
+  const isActualLoser = !!team && !!actualWinnerAbbr && team.abbreviation !== actualWinnerAbbr;
+
+  const winnerRowClass =
+    isActualWinner && variant === "stripe"
+      ? "border-l-2 border-l-emerald-400"
+      : "";
+
+  return (
+    <div
+      className={`flex items-center gap-2 px-2.5 ${
+        isTop ? "border-b border-border/40" : ""
+      } ${isPicked ? "bg-primary/10" : ""} ${
+        isActualWinner ? "bg-emerald-500/5" : ""
+      } ${winnerRowClass}`}
+      style={{ height: 36 }}
+    >
+      {team ? (
+        <>
+          <TeamLogo
+            src={team.logo}
+            alt={team.name}
+            className={`w-6 h-6 ${isActualLoser ? "opacity-40 grayscale" : ""}`}
+          />
+          <span className="text-[11px] text-muted-foreground font-body font-bold w-3 shrink-0">
+            {team.seed ?? ""}
+          </span>
+          <span
+            className={`font-display text-sm tracking-wide flex-1 whitespace-nowrap ${
+              isActualLoser ? "text-muted-foreground/50 line-through" : ""
+            } ${isActualWinner ? "text-emerald-300" : ""}`}
+          >
+            {isPlayInPlaceholder(team.abbreviation) ? "TBD" : team.abbreviation}
+          </span>
+          {isActualWinner && variant === "trophy" && (
+            <Trophy size={12} className="text-emerald-400 shrink-0" />
+          )}
+          {isActualWinner && variant === "badge" && (
+            <span className="text-[9px] font-body font-bold text-emerald-300 bg-emerald-500/15 px-1.5 py-0.5 rounded shrink-0">
+              ADV
+            </span>
+          )}
+          {isPicked && !isActualWinner && (
+            <span className="w-2 h-2 rounded-full bg-primary shrink-0" />
+          )}
+        </>
+      ) : (
+        <>
+          <span className="w-6 h-6 inline-flex items-center justify-center text-sm opacity-30">🏀</span>
+          <span className="text-[11px] w-3" />
+          <span className="font-display text-sm tracking-wide text-muted-foreground/50 flex-1">TBD</span>
+        </>
+      )}
+    </div>
+  );
+};
+
+const PointsTag = ({
+  point,
+  variant,
+}: {
+  point?: PickPointInfo;
+  variant: BracketVariant;
+}) => {
+  if (!point || point.kind === "none") return null;
+  const colorByKind: Record<string, string> = {
+    perfect: "text-emerald-300 bg-emerald-500/15 border-emerald-400/40",
+    winner: "text-amber-300 bg-amber-500/15 border-amber-400/40",
+    loose: "text-sky-300 bg-sky-500/15 border-sky-400/40",
+  };
+  const cls = colorByKind[point.kind];
+  if (variant === "badge" || variant === "trophy") {
+    return (
+      <span className={`text-[9px] font-body font-bold px-1.5 py-0.5 rounded-full border ${cls}`}>
+        +{point.points}
+      </span>
+    );
+  }
+  return (
+    <span className={`text-[10px] font-body font-bold ${cls.split(" ")[0]}`}>+{point.points}</span>
+  );
+};
 
 const BracketCard = ({
   topTeam,
@@ -144,6 +208,9 @@ const BracketCard = ({
   x,
   y,
   isChampionship,
+  actualWinnerAbbr,
+  pickPoint,
+  variant = "badge",
 }: {
   topTeam?: Team;
   bottomTeam?: Team;
@@ -152,30 +219,65 @@ const BracketCard = ({
   x: number;
   y: number;
   isChampionship?: boolean;
+  actualWinnerAbbr?: string;
+  pickPoint?: PickPointInfo;
+  variant?: BracketVariant;
 }) => {
   const winnerTeam =
     bet?.winner === topTeam?.abbreviation ? topTeam
     : bet?.winner === bottomTeam?.abbreviation ? bottomTeam
     : null;
 
+  const isCorrect = !!actualWinnerAbbr && !!bet && bet.winner === actualWinnerAbbr;
+  const isWrong = !!actualWinnerAbbr && !!bet && bet.winner !== actualWinnerAbbr;
+
+  const variantOutline =
+    variant === "ring" && isCorrect
+      ? "border-emerald-400/60"
+      : variant === "ring" && isWrong
+      ? "border-rose-400/40"
+      : "border-border/50";
+
   return (
     <div
-      className={`absolute rounded-lg bg-[#1A1E24]/80 backdrop-blur-md border border-border/50 ${
+      className={`absolute rounded-lg bg-[#1A1E24]/80 backdrop-blur-md border ${variantOutline} ${
         isChampionship
           ? "shadow-md shadow-primary/10"
           : "hover:shadow-lg hover:shadow-primary/5 transition-all duration-200"
       }`}
       style={{ left: x, top: y, width: CARD_W, height: CARD_H }}
     >
-      <TeamSlot team={topTeam} isPicked={pickedWinner === topTeam?.abbreviation} isTop />
-      <TeamSlot team={bottomTeam} isPicked={pickedWinner === bottomTeam?.abbreviation} isTop={false} />
+      <TeamSlot
+        team={topTeam}
+        isPicked={pickedWinner === topTeam?.abbreviation}
+        isTop
+        actualWinnerAbbr={actualWinnerAbbr}
+        variant={variant}
+      />
+      <TeamSlot
+        team={bottomTeam}
+        isPicked={pickedWinner === bottomTeam?.abbreviation}
+        isTop={false}
+        actualWinnerAbbr={actualWinnerAbbr}
+        variant={variant}
+      />
 
-      {/* Pick summary */}
       {winnerTeam ? (
-        <div className="flex items-center justify-center" style={{ height: 24 }}>
-          <span className="text-[10px] font-body text-primary font-medium whitespace-nowrap px-1">
+        <div className="flex items-center justify-center gap-1.5 px-1" style={{ height: 24 }}>
+          {actualWinnerAbbr &&
+            (isCorrect ? (
+              <Check size={11} className="text-emerald-400 shrink-0" />
+            ) : (
+              <X size={11} className="text-rose-400 shrink-0" />
+            ))}
+          <span
+            className={`text-[10px] font-body font-medium whitespace-nowrap ${
+              actualWinnerAbbr && isWrong ? "text-rose-300/80" : "text-primary"
+            }`}
+          >
             Your Pick: {winnerTeam.abbreviation} in {bet!.gamesInSeries}
           </span>
+          <PointsTag point={pickPoint} variant={variant} />
         </div>
       ) : (
         <div className="flex items-center justify-center" style={{ height: 24 }}>
@@ -192,9 +294,22 @@ interface PlayoffBracketProps {
   picks?: Record<string, string>;
   bets?: BetSelection[];
   seriesList?: BracketSeries[];
+  /** Map of seriesId → actual winning team abbreviation (from results). */
+  actualWinners?: Record<string, string>;
+  /** Map of seriesId → scored points info for the user's pick on that series. */
+  pickPoints?: Record<string, PickPointInfo>;
+  /** Visual style for showing actual results & per-pick points. */
+  variant?: BracketVariant;
 }
 
-const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({ picks = {}, bets = [], seriesList }, ref) => {
+const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
+  picks = {},
+  bets = [],
+  seriesList,
+  actualWinners = {},
+  pickPoints = {},
+  variant = "badge",
+}, ref) => {
   const bracket = seriesList ?? defaultBracketSeries;
 
   const resolve = (id: string) => {
@@ -219,6 +334,9 @@ const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({ picks 
         x={x}
         y={y}
         isChampionship={isChamp}
+        actualWinnerAbbr={actualWinners[id]}
+        pickPoint={pickPoints[id]}
+        variant={variant}
       />
     );
   };

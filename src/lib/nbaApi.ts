@@ -13,6 +13,8 @@ export interface NbaTeam {
 export interface NbaGame {
   id: number;
   date: string;
+  /** ISO timestamp of tip-off (UTC), e.g. "2026-04-19T17:00:00.000Z". */
+  datetime?: string;
   season: number;
   status: string;
   period: number;

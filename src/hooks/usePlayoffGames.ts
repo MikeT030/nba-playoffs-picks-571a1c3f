@@ -86,8 +86,8 @@ function groupIntoSeries(games: NbaGame[], bracket: BracketSeries[]): Match[] {
     const homeAbbr = firstGame.home_team.abbreviation;
     const awayAbbr = firstGame.visitor_team.abbreviation;
 
-    const homeTeam = nbaTeamToTeam(firstGame.home_team);
-    const awayTeam = nbaTeamToTeam(firstGame.visitor_team);
+    const homeTeam = nbaTeamToTeam(firstGame.home_team, bracket);
+    const awayTeam = nbaTeamToTeam(firstGame.visitor_team, bracket);
 
     const localStatus = gameStatusToLocal(latestGame.status);
 

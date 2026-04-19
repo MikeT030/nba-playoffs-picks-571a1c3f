@@ -258,11 +258,13 @@ export function resolveBracketWithApiGames(
   });
 }
 
-// Convert bracket series to Match format for the home page (first round only)
-const firstRoundMatchups = bracketSeries.filter((s) => s.round === "First Round" && s.topTeam && s.bottomTeam);
-
-export const fallbackMatches: Match[] = [
-  ...firstRoundMatchups.map((s, i) => ({
+// Convert bracket series to Match format for the home page (first round only).
+// Builds from any bracket — pass the resolved bracket (with play-in winners
+// filled in) to avoid showing PIW7/PIW8 placeholders once the API knows who
+// the real 7/8 seeds are.
+export function buildFallbackMatches(seriesList: BracketSeries[] = bracketSeries): Match[] {
+  const firstRound = seriesList.filter((s) => s.round === "First Round" && s.topTeam && s.bottomTeam);
+  return firstRound.map((s, i) => ({
     id: s.id,
     round: "First Round",
     conference: s.conference,
@@ -275,5 +277,7 @@ export const fallbackMatches: Match[] = [
     awayWins: 0,
     status: "upcoming" as const,
     tips: makeTips(s.topTeam!.abbreviation, s.bottomTeam!.abbreviation),
-  })),
-];
+  }));
+}
+
+export const fallbackMatches: Match[] = buildFallbackMatches();

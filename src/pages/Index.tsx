@@ -114,51 +114,13 @@ const Index = () => {
       ? matches
       : matches?.filter((m) => m.round === selectedRound);
 
-  const groupedByDate = filteredMatches?.reduce<Record<string, typeof filteredMatches>>((acc, match) => {
-    const key = match.date || "TBD";
-    if (!acc[key]) acc[key] = [];
-    acc[key]!.push(match);
-    return acc;
-  }, {});
-
-  // Sort matches within each date by tip-off time (latest first).
-  // Times look like "7:00 PM", "10:30 PM", etc. TBD/empty go last.
-  const parseTimeToMinutes = (t?: string): number => {
-    if (!t) return Number.POSITIVE_INFINITY;
-    const m = t.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
-    if (!m) return Number.POSITIVE_INFINITY;
-    let hours = parseInt(m[1], 10);
-    const minutes = parseInt(m[2], 10);
-    const ampm = m[3]?.toUpperCase();
-    if (ampm === "PM" && hours !== 12) hours += 12;
-    if (ampm === "AM" && hours === 12) hours = 0;
-    return hours * 60 + minutes;
-  };
-  if (groupedByDate) {
-    for (const key of Object.keys(groupedByDate)) {
-      groupedByDate[key]!.sort((a, b) => parseTimeToMinutes(b.time) - parseTimeToMinutes(a.time));
-    }
-  }
-
-  const dateOrder = groupedByDate
-    ? Object.keys(groupedByDate).sort((a, b) => {
-        if (a === "TBD") return 1;
-        if (b === "TBD") return -1;
-        const parse = (s: string) => {
-          const d = new Date(`${s}, ${new Date().getFullYear()}`);
-          return d.getTime();
-        };
-        // Today's matchups go first, then chronological order for the rest.
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const todayMs = today.getTime();
-        const aMs = parse(a);
-        const bMs = parse(b);
-        const aIsToday = aMs === todayMs;
-        const bIsToday = bMs === todayMs;
-        if (aIsToday && !bIsToday) return -1;
-        if (bIsToday && !aIsToday) return 1;
-        return aMs - bMs;
+  // Sort matches chronologically by actual tip-off timestamp. Series with no
+  // known startsAt (TBD) fall to the bottom while preserving relative order.
+  const sortedMatches = filteredMatches
+    ? [...filteredMatches].sort((a, b) => {
+        const aTs = a.startsAt ? new Date(a.startsAt).getTime() : Number.POSITIVE_INFINITY;
+        const bTs = b.startsAt ? new Date(b.startsAt).getTime() : Number.POSITIVE_INFINITY;
+        return aTs - bTs;
       })
     : [];
 
@@ -209,11 +171,9 @@ const Index = () => {
           </div>
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
-            {dateOrder.flatMap((date) =>
-              groupedByDate?.[date]?.map((match) => (
-                <MatchCard key={match.id} match={match} />
-              )) ?? []
-            )}
+            {sortedMatches.map((match) => (
+              <MatchCard key={match.id} match={match} />
+            ))}
           </div>
         )}
       </section>

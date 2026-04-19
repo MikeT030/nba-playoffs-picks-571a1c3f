@@ -190,7 +190,7 @@ const MatchDetail = () => {
             {match.conference !== "Finals" ? `${match.conference === "East" ? "EAST" : "WEST"}  ` : ""}{match.round === "Conference Semifinals" ? "Conf. Semifinals" : match.round === "Conference Finals" ? "Conf. Finals" : match.round} · Game {displayGameNum} · {displayDate}
           </p>
 
-          <div className="flex items-center justify-between gap-5 pt-[4px]">
+          <div className="flex items-center justify-between gap-5 pt-[10px]">
             {/* Left arrow for desktop */}
             {hasMultipleGames && (
               <button

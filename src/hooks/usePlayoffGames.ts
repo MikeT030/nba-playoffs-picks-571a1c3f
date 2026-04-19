@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { teamMeta, type NbaGame } from "@/lib/nbaApi";
-import { type Match, type Team, makeTips, fallbackMatches, getConference, getTeamSeed, type BracketSeries } from "@/data/playoffsData";
+import { type Match, type Team, makeTips, buildFallbackMatches, getConference, getTeamSeed, type BracketSeries } from "@/data/playoffsData";
 import { usePlayoffGamesRaw } from "./usePlayoffGamesRaw";
 import { useBracketData } from "./useBracketData";
 
@@ -167,7 +167,10 @@ function groupIntoSeries(games: NbaGame[], bracket: BracketSeries[]): Match[] {
 }
 
 function deriveMatches(games: NbaGame[] | undefined, bracket: BracketSeries[]): Match[] {
-  if (!games || games.length === 0) return fallbackMatches;
+  // Always derive fallbacks from the resolved bracket so PIW7/PIW8
+  // placeholders are replaced as soon as play-in winners are known.
+  const fallbacks = buildFallbackMatches(bracket);
+  if (!games || games.length === 0) return fallbacks;
   const apiMatches = groupIntoSeries(games, bracket);
 
   const apiTeams = new Set<string>();
@@ -175,7 +178,7 @@ function deriveMatches(games: NbaGame[] | undefined, bracket: BracketSeries[]): 
     apiTeams.add(m.homeTeam.abbreviation);
     apiTeams.add(m.awayTeam.abbreviation);
   });
-  const tbdMatches = fallbackMatches.filter((fb) => {
+  const tbdMatches = fallbacks.filter((fb) => {
     const homeInApi = apiTeams.has(fb.homeTeam.abbreviation);
     const awayInApi = apiTeams.has(fb.awayTeam.abbreviation);
     return !homeInApi && !awayInApi;

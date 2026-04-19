@@ -211,6 +211,7 @@ const BracketCard = ({
   actualWinnerAbbr,
   pickPoint,
   variant = "badge",
+  seriesScore,
 }: {
   topTeam?: Team;
   bottomTeam?: Team;
@@ -222,6 +223,7 @@ const BracketCard = ({
   actualWinnerAbbr?: string;
   pickPoint?: PickPointInfo;
   variant?: BracketVariant;
+  seriesScore?: string;
 }) => {
   const winnerTeam =
     bet?.winner === topTeam?.abbreviation ? topTeam
@@ -278,10 +280,20 @@ const BracketCard = ({
             Your Pick: {winnerTeam.abbreviation} in {bet!.gamesInSeries}
           </span>
           <PointsTag point={pickPoint} variant={variant} />
+          {seriesScore && (
+            <span className="text-[9px] font-body font-bold text-muted-foreground/80 bg-muted/40 px-1.5 py-0.5 rounded shrink-0">
+              {seriesScore}
+            </span>
+          )}
         </div>
       ) : (
-        <div className="flex items-center justify-center" style={{ height: 24 }}>
+        <div className="flex items-center justify-center gap-1.5" style={{ height: 24 }}>
           <span className="text-[10px] font-body text-muted-foreground/40 italic">No pick</span>
+          {seriesScore && (
+            <span className="text-[9px] font-body font-bold text-muted-foreground/80 bg-muted/40 px-1.5 py-0.5 rounded shrink-0">
+              {seriesScore}
+            </span>
+          )}
         </div>
       )}
     </div>
@@ -300,6 +312,8 @@ interface PlayoffBracketProps {
   pickPoints?: Record<string, PickPointInfo>;
   /** Visual style for showing actual results & per-pick points. */
   variant?: BracketVariant;
+  /** Map of seriesId → series score string (e.g. "4-2") shown as the actual matchup standing. */
+  seriesScores?: Record<string, string>;
 }
 
 const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
@@ -309,6 +323,7 @@ const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
   actualWinners = {},
   pickPoints = {},
   variant = "badge",
+  seriesScores = {},
 }, ref) => {
   const bracket = seriesList ?? defaultBracketSeries;
 
@@ -337,6 +352,7 @@ const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
         actualWinnerAbbr={actualWinners[id]}
         pickPoint={pickPoints[id]}
         variant={variant}
+        seriesScore={seriesScores[id]}
       />
     );
   };

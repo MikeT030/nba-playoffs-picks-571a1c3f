@@ -235,8 +235,6 @@ const Settings = () => {
               </CardContent>
             </Card>
 
-            <DemoBracketPreview seriesList={activeBracket} />
-
             <button
               className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-destructive/15 text-destructive border border-destructive/40 hover:bg-destructive/20"
               onClick={handleSignOut}

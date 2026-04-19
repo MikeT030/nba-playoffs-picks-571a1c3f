@@ -294,9 +294,22 @@ interface PlayoffBracketProps {
   picks?: Record<string, string>;
   bets?: BetSelection[];
   seriesList?: BracketSeries[];
+  /** Map of seriesId → actual winning team abbreviation (from results). */
+  actualWinners?: Record<string, string>;
+  /** Map of seriesId → scored points info for the user's pick on that series. */
+  pickPoints?: Record<string, PickPointInfo>;
+  /** Visual style for showing actual results & per-pick points. */
+  variant?: BracketVariant;
 }
 
-const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({ picks = {}, bets = [], seriesList }, ref) => {
+const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
+  picks = {},
+  bets = [],
+  seriesList,
+  actualWinners = {},
+  pickPoints = {},
+  variant = "badge",
+}, ref) => {
   const bracket = seriesList ?? defaultBracketSeries;
 
   const resolve = (id: string) => {
@@ -321,6 +334,9 @@ const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({ picks 
         x={x}
         y={y}
         isChampionship={isChamp}
+        actualWinnerAbbr={actualWinners[id]}
+        pickPoint={pickPoints[id]}
+        variant={variant}
       />
     );
   };

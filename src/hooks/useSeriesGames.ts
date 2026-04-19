@@ -38,7 +38,7 @@ function classifyStatus(g: NbaGame): "final" | "live" | "upcoming" {
   return "upcoming";
 }
 
-function gamesToSeriesGames(games: NbaGame[]): SeriesGame[] {
+function gamesToSeriesGames(games: NbaGame[], bracket: BracketSeries[]): SeriesGame[] {
   const sorted = [...games].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );

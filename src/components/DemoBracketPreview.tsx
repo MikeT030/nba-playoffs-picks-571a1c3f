@@ -206,7 +206,7 @@ const DemoBracketPreview = ({ seriesList }: DemoBracketPreviewProps) => {
   const bracket = seriesList ?? defaultBracketSeries;
   const [seed, setSeed] = useState(0);
   const [enabled, setEnabled] = useState(false);
-  const [variant, setVariant] = useState<BracketVariant>("badge");
+  const [variant] = useState<BracketVariant>("ring");
 
   const userPicks = useMemo(
     () => generatePicks(bracket),
@@ -305,36 +305,6 @@ const DemoBracketPreview = ({ seriesList }: DemoBracketPreviewProps) => {
         </button>
       ) : (
         <>
-          {/* Variant dot navigation */}
-          <div className="flex flex-col items-center gap-2">
-            <div className="flex items-center gap-3">
-              {VARIANTS.map((v) => {
-                const active = variant === v.id;
-                return (
-                  <button
-                    key={v.id}
-                    onClick={() => setVariant(v.id)}
-                    aria-label={`${v.label} variant`}
-                    aria-pressed={active}
-                    className={`rounded-full transition-all duration-200 ${
-                      active
-                        ? "w-4 h-4 bg-primary ring-2 ring-primary/30"
-                        : "w-3 h-3 bg-muted-foreground/30 hover:bg-muted-foreground/60"
-                    }`}
-                  />
-                );
-              })}
-            </div>
-            <div className="text-center">
-              <p className="font-display text-xs tracking-wider text-foreground uppercase">
-                {VARIANTS.find((v) => v.id === variant)?.label}
-              </p>
-              <p className="text-[10px] text-muted-foreground font-body">
-                {VARIANTS.find((v) => v.id === variant)?.description}
-              </p>
-            </div>
-          </div>
-
           <div className="rounded-lg bg-[#1A1E24] p-3">
             {/* Points summary */}
             <div className="flex items-center justify-center py-2 px-3">

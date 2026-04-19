@@ -3,6 +3,7 @@ import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useSeriesGames } from "@/hooks/useSeriesGames";
+import { pickDefaultGameIdx, isWithin24h, formatTipOff } from "@/lib/seriesUtils";
 import TeamLogo from "@/components/TeamLogo";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,24 +17,25 @@ const MatchDetail = () => {
   const { data: bracketData } = useBracketData();
   const match = matches?.find((m) => m.id === id);
 
-  // Series games from API/data
+  // Series games from API/data — full timeline (final + live + upcoming)
   const { data: seriesGames } = useSeriesGames(
     id,
     match?.homeTeam.abbreviation,
     match?.awayTeam.abbreviation
   );
-  // Only count games that have been played (final or live)
-  const playedGames = useMemo(
-    () => seriesGames?.filter((g) => g.status === "final" || g.status === "live") ?? [],
-    [seriesGames]
-  );
-  const hasSeriesGames = playedGames.length > 1;
+  const allGames = useMemo(() => seriesGames ?? [], [seriesGames]);
+  const hasMultipleGames = allGames.length > 1;
   const [activeGameIdx, setActiveGameIdx] = useState(0);
+  const [defaultApplied, setDefaultApplied] = useState(false);
 
-  // Default to latest game
+  const defaultIdx = useMemo(() => pickDefaultGameIdx(allGames), [allGames]);
   useEffect(() => {
-    if (playedGames.length > 0) setActiveGameIdx(playedGames.length - 1);
-  }, [playedGames.length]);
+    if (allGames.length === 0) return;
+    if (!defaultApplied) {
+      setActiveGameIdx(defaultIdx);
+      setDefaultApplied(true);
+    }
+  }, [allGames.length, defaultIdx, defaultApplied]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -53,15 +55,15 @@ const MatchDetail = () => {
   }, []);
 
   const handleTouchEnd = useCallback(() => {
-    if (!hasSeriesGames) return;
+    if (!hasMultipleGames) return;
     const diff = touchStartX.current - touchEndX.current;
     const threshold = 50;
-    if (diff > threshold && activeGameIdx < playedGames.length - 1) {
+    if (diff > threshold && activeGameIdx < allGames.length - 1) {
       setActiveGameIdx((i) => i + 1);
     } else if (diff < -threshold && activeGameIdx > 0) {
       setActiveGameIdx((i) => i - 1);
     }
-  }, [playedGames, activeGameIdx, hasSeriesGames]);
+  }, [allGames.length, activeGameIdx, hasMultipleGames]);
 
   // Map the API match id to the bracket series_id
   const bracketSeriesId = useMemo(() => {

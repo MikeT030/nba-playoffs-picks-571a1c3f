@@ -23,6 +23,8 @@ import {
   type Team,
 } from "@/data/playoffsData";
 import { useBracketData } from "@/hooks/useBracketData";
+import { useAllSeriesResults } from "@/hooks/useAllSeriesResults";
+import { totalUserPoints } from "@/lib/pickScoring";
 import { ALL_MONOLOGUE_LINES, isPlayoffsStarted } from "@/data/buttonMonologue";
 
 const rounds = [
@@ -133,6 +135,7 @@ const MyPicks = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { data: resolvedBracket } = useBracketData();
+  const { data: seriesResults = [] } = useAllSeriesResults();
   const activeBracket = resolvedBracket ?? bracketSeries;
   const [betsOpen, setBetsOpen] = useState(false);
   const [profileName, setProfileName] = useState<string | null>(null);
@@ -401,6 +404,36 @@ const MyPicks = () => {
 
       <section className="container py-8 pb-24">
         {editPicksButton}
+
+        {seriesResults.length > 0 && (() => {
+          const userBetsLite = bets.map((b) => ({
+            series_id: b.seriesId,
+            winner: b.winner,
+            games_in_series: b.gamesInSeries,
+          }));
+          const totalPoints = totalUserPoints(userBetsLite, seriesResults);
+          return (
+            <div className="flex items-center justify-center gap-4 py-2 px-3 mb-6 rounded-lg bg-[#1A1E24] border border-border/50">
+              <div className="text-center">
+                <p className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">Your Points</p>
+                <p className="font-display text-2xl text-primary">{totalPoints}</p>
+              </div>
+              <div className="h-8 w-px bg-border/40" />
+              <div className="flex items-center gap-3 text-[10px] font-body">
+                <span className="flex items-center gap-1 text-emerald-300">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400" /> 3 perfect
+                </span>
+                <span className="flex items-center gap-1 text-amber-300">
+                  <span className="w-2 h-2 rounded-full bg-amber-400" /> 2 winner
+                </span>
+                <span className="flex items-center gap-1 text-sky-300">
+                  <span className="w-2 h-2 rounded-full bg-sky-400" /> 1 loose
+                </span>
+              </div>
+            </div>
+          );
+        })()}
+
         {viewTabs}
 
         {showBracket ? (

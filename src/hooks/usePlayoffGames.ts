@@ -49,7 +49,7 @@ function nbaTeamToTeam(t: { full_name: string; abbreviation: string }, bracket: 
   };
 }
 
-function groupIntoSeries(games: NbaGame[]): Match[] {
+function groupIntoSeries(games: NbaGame[], bracket: BracketSeries[]): Match[] {
   const seriesMap = new Map<string, NbaGame[]>();
 
   for (const game of games) {

@@ -79,6 +79,5 @@ export function formatTipOff(startsAt: number | undefined): string {
   const time = d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
 
   if (sameDay) return `Tonight ${time}`;
-  if (isTomorrow) return `TOMORROW ${time}`;
   return `${d.toLocaleDateString("en-US", { weekday: "short" })} ${time}`;
 }

@@ -25,7 +25,10 @@ interface GeneratedPicks {
 function generatePicks(
   bracket: BracketSeries[],
   // Optional bias map: when provided, use this to break ties / pre-seed winners
-  preferred?: Record<string, string>
+  preferred?: Record<string, string>,
+  // Series IDs whose `preferred` winner should be honored even if the team
+  // is not part of that series' resolved roster (used to force loose hits).
+  forceOverrideIds?: Set<string>
 ): GeneratedPicks {
   const picks: Record<string, string> = {};
   const bets: GeneratedPicks["bets"] = [];
@@ -45,8 +48,10 @@ function generatePicks(
     if (isPlayInPlaceholder(top.abbreviation) || isPlayInPlaceholder(bottom.abbreviation)) continue;
 
     let winner: string;
-    if (preferred?.[s.id] && (preferred[s.id] === top.abbreviation || preferred[s.id] === bottom.abbreviation)) {
-      winner = preferred[s.id];
+    const pref = preferred?.[s.id];
+    const forced = !!pref && !!forceOverrideIds?.has(s.id);
+    if (pref && (forced || pref === top.abbreviation || pref === bottom.abbreviation)) {
+      winner = pref;
     } else {
       winner = Math.random() < 0.5 ? top.abbreviation : bottom.abbreviation;
     }

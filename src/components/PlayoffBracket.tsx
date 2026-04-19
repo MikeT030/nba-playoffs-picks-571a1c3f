@@ -211,6 +211,7 @@ const BracketCard = ({
   actualWinnerAbbr,
   pickPoint,
   variant = "badge",
+  seriesScore,
 }: {
   topTeam?: Team;
   bottomTeam?: Team;
@@ -222,6 +223,7 @@ const BracketCard = ({
   actualWinnerAbbr?: string;
   pickPoint?: PickPointInfo;
   variant?: BracketVariant;
+  seriesScore?: string;
 }) => {
   const winnerTeam =
     bet?.winner === topTeam?.abbreviation ? topTeam

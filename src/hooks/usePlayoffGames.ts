@@ -96,6 +96,20 @@ function groupIntoSeries(games: NbaGame[]): Match[] {
           ? formatLiveIndicator(latestGame.status, latestGame.period, latestGame.time)
           : latestGame.time || "TBD";
 
+    // Find the next upcoming game when the latest game is final
+    let nextGame: Match["nextGame"] | undefined;
+    if (localStatus === "final") {
+      const upcoming = seriesGames.find((g) => gameStatusToLocal(g.status) === "upcoming");
+      if (upcoming) {
+        const upcomingDate = new Date(upcoming.date);
+        nextGame = {
+          gameNumber: playedGames.length + 1,
+          date: upcomingDate.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+          time: upcoming.time || "TBD",
+        };
+      }
+    }
+
     matches.push({
       id: key.toLowerCase(),
       round: "First Round",
@@ -111,6 +125,7 @@ function groupIntoSeries(games: NbaGame[]): Match[] {
       homeScore: latestGame.home_team_score,
       awayScore: latestGame.visitor_team_score,
       tips: makeTips(homeAbbr, awayAbbr),
+      nextGame,
     });
   }
 

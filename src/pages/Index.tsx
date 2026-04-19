@@ -42,7 +42,7 @@ const Index = () => {
   const [monologueIndex, setMonologueIndex] = useState(-1);
   const [rouletteCardId, setRouletteCardId] = useState<string | null>(null);
 
-  const locked = false; // Picks button stays active even after tip-off
+  const locked = true; // Picks button shows monologue-only inactive state
   const pickCount = userPicks?.length ?? 0;
 
   // Auto-open the bets drawer once for users with no picks when playoffs haven't started.

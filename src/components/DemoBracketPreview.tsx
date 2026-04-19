@@ -340,7 +340,7 @@ const DemoBracketPreview = ({ seriesList }: DemoBracketPreviewProps) => {
             <div className="flex items-center justify-center py-2 px-3">
               <div className="text-center">
                 <p className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">Your Points</p>
-                <p className="font-display text-2xl text-primary">{totalPoints}</p>
+                <p className="font-display text-2xl text-primary-foreground">{totalPoints}</p>
               </div>
             </div>
 

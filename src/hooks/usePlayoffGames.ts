@@ -18,13 +18,19 @@ function formatLiveIndicator(status: string, period: number, time: string | null
   if (period >= 5) {
     const otNum = period - 4;
     const label = otNum === 1 ? "OT" : `OT${otNum}`;
-    if (trimmed) return /^OT/i.test(trimmed) ? trimmed : `${label} ${trimmed}`;
+    if (trimmed) {
+      if (/^(OT|END|Q\d)/i.test(trimmed)) return trimmed;
+      return `${label} ${trimmed}`;
+    }
     return `End ${label}`;
   }
 
   if (period >= 1 && period <= 4) {
     const qLabel = `Q${period}`;
-    if (trimmed) return /^(Q\d|OT)/i.test(trimmed) ? trimmed : `${qLabel} ${trimmed}`;
+    if (trimmed) {
+      if (/^(Q\d|OT|END)/i.test(trimmed)) return trimmed;
+      return `${qLabel} ${trimmed}`;
+    }
     return `End ${qLabel}`;
   }
 

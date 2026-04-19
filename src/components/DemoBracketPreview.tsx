@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Shuffle } from "lucide-react";
+import { Shuffle, Trophy } from "lucide-react";
 import PlayoffBracket, { type BracketVariant } from "@/components/PlayoffBracket";
 import {
   bracketSeries as defaultBracketSeries,
@@ -8,6 +8,9 @@ import {
   type BracketSeries,
 } from "@/data/playoffsData";
 import { scorePick, totalUserPoints, type PickPointInfo } from "@/lib/pickScoring";
+
+const DEMO_BUDDIES = ["Erik", "Alexander", "David", "Fabian", "Hannes", "Jörn", "Larsn", "Michi", "Momentum", "Simon", "Sven"];
+const DEMO_AVATARS = ["🎣", "😎", "🎬", "🏔️", "🌄", "🎿", "🐕", "🎸", "🚀", "📡", "🐶"];
 
 interface DemoBracketPreviewProps {
   seriesList?: BracketSeries[];
@@ -143,6 +146,33 @@ const DemoBracketPreview = ({ seriesList }: DemoBracketPreviewProps) => {
     return totalUserPoints(userBetsLite, resultsLite);
   }, [userPicks, actualResults]);
 
+  // Demo standings: each buddy gets their own random pick set, scored against the same actual results.
+  const standings = useMemo(() => {
+    const resultsLite = actualResults.bets.map((b) => ({
+      series_id: b.seriesId,
+      winner: b.winner,
+      games_played: b.gamesInSeries,
+    }));
+
+    const rows = DEMO_BUDDIES.map((name, i) => {
+      // Each buddy gets a deterministic-ish but varied pick set per reroll
+      const buddyPicks = generatePicks(bracket);
+      const buddyBetsLite = buddyPicks.bets.map((b) => ({
+        series_id: b.seriesId,
+        winner: b.winner,
+        games_in_series: b.gamesInSeries,
+      }));
+      const total = totalUserPoints(buddyBetsLite, resultsLite);
+      return { name, avatar: DEMO_AVATARS[i], total };
+    });
+
+    // Inject the user as "You" using the same pick set shown on the bracket
+    rows.push({ name: "You", avatar: "⭐", total: totalPoints });
+
+    return rows.sort((a, b) => b.total - a.total || a.name.localeCompare(b.name));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seed, actualResults, bracket, totalPoints]);
+
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3">
@@ -232,6 +262,50 @@ const DemoBracketPreview = ({ seriesList }: DemoBracketPreviewProps) => {
               pickPoints={pickPoints}
               variant={variant}
             />
+          </div>
+
+          {/* Demo standings */}
+          <div className="rounded-lg bg-[#1A1E24] border border-border/50 overflow-hidden">
+            <div className="px-3 py-2 border-b border-border/40">
+              <h3 className="font-display text-sm tracking-wider uppercase">Demo Standings</h3>
+              <p className="text-[10px] text-muted-foreground font-body">
+                How everyone scored against the simulated results above.
+              </p>
+            </div>
+            <ul>
+              {standings.map((row, idx) => {
+                const isYou = row.name === "You";
+                const isLeader = idx === 0;
+                return (
+                  <li
+                    key={`${row.name}-${idx}`}
+                    className={`flex items-center gap-3 px-3 py-2 ${
+                      idx < standings.length - 1 ? "border-b border-border/20" : ""
+                    } ${isYou ? "bg-primary/10" : ""}`}
+                  >
+                    <span className="font-display text-xs text-muted-foreground w-6 shrink-0 text-center">
+                      {idx + 1}
+                    </span>
+                    <span className="text-base shrink-0">{row.avatar}</span>
+                    <span
+                      className={`font-body text-sm flex-1 truncate ${
+                        isYou ? "text-primary font-semibold" : "text-foreground"
+                      }`}
+                    >
+                      {row.name}
+                    </span>
+                    {isLeader && <Trophy size={14} className="text-amber-400 shrink-0" />}
+                    <span
+                      className={`font-display text-base tabular-nums ${
+                        isYou ? "text-primary" : "text-foreground"
+                      }`}
+                    >
+                      {row.total}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         </>
       )}

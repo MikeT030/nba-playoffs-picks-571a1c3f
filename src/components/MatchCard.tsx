@@ -162,7 +162,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
       onTouchStart={hasMultipleGames ? handleTouchStart : undefined}
       onTouchMove={hasMultipleGames ? handleTouchMove : undefined}
       onTouchEnd={hasMultipleGames ? handleTouchEnd : undefined}
-      className="block rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/40 group cursor-pointer select-none"
+      className="block rounded-lg bg-[#1A1E24]/80 backdrop-blur-md transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 group cursor-pointer select-none"
     >
       <div className="px-4 py-2 flex items-center justify-center border-b border-transparent">
         <span className="text-xs text-white font-body uppercase tracking-wider text-center font-normal">

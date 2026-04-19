@@ -204,8 +204,8 @@ const MatchCard = ({ match }: MatchCardProps) => {
               </span>
             )}
             {isUpcoming && !isNextUp && (
-              <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest block -translate-y-5">
-                Scheduled
+              <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest block -translate-y-5 whitespace-nowrap">
+                {formatTipOff(activeGame?.startsAt)}
               </span>
             )}
           </div>

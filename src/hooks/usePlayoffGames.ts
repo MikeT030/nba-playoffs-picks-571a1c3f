@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { teamMeta, type NbaGame } from "@/lib/nbaApi";
-import { type Match, type Team, makeTips, fallbackMatches, getConference, teamSeeds } from "@/data/playoffsData";
+import { type Match, type Team, makeTips, fallbackMatches, getConference, getTeamSeed, type BracketSeries } from "@/data/playoffsData";
 import { usePlayoffGamesRaw } from "./usePlayoffGamesRaw";
+import { useBracketData } from "./useBracketData";
 
 const LIVE_STATUS_RE = /^(1st|2nd|3rd|4th)\s*Qtr$|^Halftime$/i;
 

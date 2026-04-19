@@ -33,6 +33,8 @@ export interface Match {
   gameNumber: number;
   date: string;
   time: string;
+  /** ISO timestamp of the next/active game's tip-off, when known. */
+  startsAt?: string;
   homeTeam: Team;
   awayTeam: Team;
   homeWins: number;

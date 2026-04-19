@@ -89,12 +89,34 @@ function groupIntoSeries(games: NbaGame[]): Match[] {
     const awayTeam = nbaTeamToTeam(firstGame.visitor_team);
 
     const localStatus = gameStatusToLocal(latestGame.status);
+
+    // For upcoming games, the API's `time` field is null. Derive a local
+    // tip-off label from `datetime` (or an ISO timestamp stored in `status`)
+    // so cards display + sort by their actual scheduled time, not "TBD".
+    const formatUpcomingTime = (g: NbaGame): string => {
+      let ts: number | undefined;
+      if (g.datetime) {
+        const t = new Date(g.datetime).getTime();
+        if (!isNaN(t)) ts = t;
+      }
+      if (ts === undefined && /^\d{4}-\d{2}-\d{2}T/.test(g.status)) {
+        const t = new Date(g.status).getTime();
+        if (!isNaN(t)) ts = t;
+      }
+      if (ts === undefined) return g.time || "TBD";
+      return new Date(ts).toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      });
+    };
+
     const timeLabel =
       localStatus === "final"
         ? "Final"
         : localStatus === "live"
           ? formatLiveIndicator(latestGame.status, latestGame.period, latestGame.time)
-          : latestGame.time || "TBD";
+          : formatUpcomingTime(latestGame);
 
     matches.push({
       id: key.toLowerCase(),

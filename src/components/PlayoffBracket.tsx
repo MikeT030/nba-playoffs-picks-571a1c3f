@@ -110,12 +110,14 @@ const TeamSlot = ({
   isTop,
   actualWinnerAbbr,
   variant,
+  teamWins,
 }: {
   team?: Team;
   isPicked: boolean;
   isTop: boolean;
   actualWinnerAbbr?: string;
   variant?: BracketVariant;
+  teamWins?: number;
 }) => {
   const isActualWinner = !!team && !!actualWinnerAbbr && team.abbreviation === actualWinnerAbbr;
   const isActualLoser = !!team && !!actualWinnerAbbr && team.abbreviation !== actualWinnerAbbr;
@@ -151,6 +153,15 @@ const TeamSlot = ({
           >
             {isPlayInPlaceholder(team.abbreviation) ? "TBD" : team.abbreviation}
           </span>
+          {typeof teamWins === "number" && (
+            <span
+              className={`text-[11px] font-body font-bold tabular-nums shrink-0 ${
+                isActualWinner ? "text-emerald-300" : "text-muted-foreground/60"
+              }`}
+            >
+              {teamWins}
+            </span>
+          )}
           {isActualWinner && variant === "trophy" && (
             <Trophy size={12} className="text-emerald-400 shrink-0" />
           )}

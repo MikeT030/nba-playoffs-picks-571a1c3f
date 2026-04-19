@@ -1,4 +1,5 @@
 import { forwardRef } from "react";
+import { Check, X, Trophy } from "lucide-react";
 import TeamLogo from "@/components/TeamLogo";
 import {
   bracketSeries as defaultBracketSeries,
@@ -7,6 +8,9 @@ import {
   type BracketSeries,
   type Team,
 } from "@/data/playoffsData";
+import type { PickPointInfo } from "@/lib/pickScoring";
+
+export type BracketVariant = "badge" | "ring" | "stripe" | "trophy";
 
 // ── Types ──
 interface BetSelection {

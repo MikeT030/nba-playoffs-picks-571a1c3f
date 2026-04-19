@@ -134,13 +134,7 @@ const Index = () => {
 
         <button
           onClick={handleButtonClick}
-          className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 mb-6 ${
-            locked && monologueIndex >= 0
-              ? "bg-muted/50 text-muted-foreground border border-border hover:bg-muted/70"
-              : pickCount >= TOTAL_GAMES
-                ? "bg-primary/15 text-primary border border-primary/40"
-                : "bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
-          }`}
+          className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 mb-6 bg-muted/50 text-muted-foreground border border-border hover:bg-muted/70"
         >
           {getButtonContent()}
         </button>

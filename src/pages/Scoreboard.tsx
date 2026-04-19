@@ -413,7 +413,7 @@ const Scoreboard = () => {
         {viewTabs}
 
         {showAllPicks && allPicks.length > 0 && (
-          <div className="flex justify-end mb-3 -mt-3 pb-0 py-[16px] pt-[16px]">
+          <div className="flex justify-end mb-3 -mt-3 pb-0 py-[16px] pt-[10px]">
             <button
               onClick={() => exportAllPicksToExcel(allPicks, allResults, seriesListForExport)}
               className="inline-flex items-center gap-1.5 text-xs font-body text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"

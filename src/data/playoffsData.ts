@@ -66,13 +66,38 @@ function makeTeam(abbr: string, fullName: string, seed?: number): Team {
   return { name: fullName, abbreviation: abbr, color: meta.color, logo: meta.logo, seed };
 }
 
-// 2026 playoff seeds
-export const teamSeeds: Record<string, number> = {
-  // East
-  DET: 1, BOS: 2, NYK: 3, CLE: 4, TOR: 5, ATL: 6,
-  // West
-  OKC: 1, SAS: 2, DEN: 3, LAL: 4, HOU: 5, MIN: 6,
+// Maps a Round 1 series ID suffix to the [topSeed, bottomSeed] it represents.
+// e.g. "west-r1-1v8" → top=1, bottom=8.
+const ROUND1_SEED_PAIRS: Record<string, [number, number]> = {
+  "1v8": [1, 8],
+  "4v5": [4, 5],
+  "3v6": [3, 6],
+  "2v7": [2, 7],
 };
+
+/**
+ * Derive a team's seed dynamically from the Round 1 bracket pairings.
+ * Works for both static seeds (1–6) and Play-In-resolved seeds (7/8) once
+ * `resolveBracketWithApiGames` has filled in the real opponents.
+ *
+ * Pass the resolved bracket (from `useBracketData`) for live 7/8 seeds;
+ * falls back to the static `bracketSeries` otherwise.
+ */
+export function getTeamSeed(
+  abbreviation: string | undefined,
+  seriesList: BracketSeries[] = bracketSeries
+): number | undefined {
+  if (!abbreviation) return undefined;
+  for (const s of seriesList) {
+    if (s.round !== "First Round") continue;
+    const suffix = s.id.split("-r1-")[1];
+    const pair = suffix ? ROUND1_SEED_PAIRS[suffix] : undefined;
+    if (!pair) continue;
+    if (s.topTeam?.abbreviation === abbreviation) return pair[0];
+    if (s.bottomTeam?.abbreviation === abbreviation) return pair[1];
+  }
+  return undefined;
+}
 
 const eastTeams = new Set(["BOS", "NYK", "DET", "CLE", "ATL", "TOR", "ORL", "MIA", "MIL", "IND", "CHI", "BKN", "CHA", "WAS", "PHI"]);
 

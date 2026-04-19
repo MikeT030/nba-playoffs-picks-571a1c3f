@@ -280,10 +280,20 @@ const BracketCard = ({
             Your Pick: {winnerTeam.abbreviation} in {bet!.gamesInSeries}
           </span>
           <PointsTag point={pickPoint} variant={variant} />
+          {seriesScore && (
+            <span className="text-[9px] font-body font-bold text-muted-foreground/80 bg-muted/40 px-1.5 py-0.5 rounded shrink-0">
+              {seriesScore}
+            </span>
+          )}
         </div>
       ) : (
-        <div className="flex items-center justify-center" style={{ height: 24 }}>
+        <div className="flex items-center justify-center gap-1.5" style={{ height: 24 }}>
           <span className="text-[10px] font-body text-muted-foreground/40 italic">No pick</span>
+          {seriesScore && (
+            <span className="text-[9px] font-body font-bold text-muted-foreground/80 bg-muted/40 px-1.5 py-0.5 rounded shrink-0">
+              {seriesScore}
+            </span>
+          )}
         </div>
       )}
     </div>

@@ -148,7 +148,17 @@ const Index = () => {
           const d = new Date(`${s}, ${new Date().getFullYear()}`);
           return d.getTime();
         };
-        return parse(a) - parse(b);
+        // Today's matchups go first, then chronological order for the rest.
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const todayMs = today.getTime();
+        const aMs = parse(a);
+        const bMs = parse(b);
+        const aIsToday = aMs === todayMs;
+        const bIsToday = bMs === todayMs;
+        if (aIsToday && !bIsToday) return -1;
+        if (bIsToday && !aIsToday) return 1;
+        return aMs - bMs;
       })
     : [];
 

@@ -90,8 +90,23 @@ function gamesToSeriesGames(games: NbaGame[]): SeriesGame[] {
 
     const ot = g.period > 4 ? g.period - 4 : undefined;
 
-    // startsAt: prefer the game's date timestamp (often ISO with tip-off time).
-    const startsAt = isNaN(dateObj.getTime()) ? undefined : dateObj.getTime();
+    // startsAt: prefer the precise ISO `datetime` field (with tip-off time).
+    // The API also stores an ISO string in `status` for scheduled games
+    // (e.g. "2026-04-19T17:00:00Z"). Fall back to `g.date` only as a last
+    // resort — that's date-only and parses to midnight UTC, which would
+    // make every upcoming game look like it tips off at midnight local.
+    let startsAt: number | undefined;
+    if (g.datetime) {
+      const t = new Date(g.datetime).getTime();
+      if (!isNaN(t)) startsAt = t;
+    }
+    if (startsAt === undefined && /^\d{4}-\d{2}-\d{2}T/.test(g.status)) {
+      const t = new Date(g.status).getTime();
+      if (!isNaN(t)) startsAt = t;
+    }
+    if (startsAt === undefined && !isNaN(dateObj.getTime())) {
+      startsAt = dateObj.getTime();
+    }
 
     result.push({
       gameNumber: idx + 1,

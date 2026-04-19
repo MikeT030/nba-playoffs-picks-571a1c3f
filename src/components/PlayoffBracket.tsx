@@ -151,17 +151,12 @@ const TeamSlot = ({
               isActualLoser ? "text-muted-foreground/50 line-through" : ""
             } ${isActualWinner ? "text-emerald-300" : ""}`}
           >
-            {isPlayInPlaceholder(team.abbreviation) ? "TBD" : team.abbreviation}
+            {isPlayInPlaceholder(team.abbreviation)
+              ? "TBD"
+              : typeof teamWins === "number"
+              ? `${team.abbreviation} in ${teamWins}`
+              : team.abbreviation}
           </span>
-          {typeof teamWins === "number" && (
-            <span
-              className={`text-[11px] font-body font-bold tabular-nums shrink-0 ${
-                isActualWinner ? "text-emerald-300" : "text-muted-foreground/60"
-              }`}
-            >
-              {teamWins}
-            </span>
-          )}
           {isActualWinner && variant === "trophy" && (
             <Trophy size={12} className="text-emerald-400 shrink-0" />
           )}

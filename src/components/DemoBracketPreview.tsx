@@ -249,6 +249,7 @@ const DemoBracketPreview = ({ seriesList }: DemoBracketPreviewProps) => {
               actualWinners={actualWinners}
               pickPoints={pickPoints}
               variant={variant}
+              seriesScores={seriesScores}
             />
           </div>
         </>

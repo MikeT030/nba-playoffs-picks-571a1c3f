@@ -59,26 +59,128 @@ function generatePicks(
 }
 
 /**
- * Builds a plausible "actual results" set by mutating ~30% of the user's picks.
- * Also varies games_played independently.
+ * Builds an "actual results" set crafted to guarantee at least one of each
+ * scoring kind: perfect (3), winner (2), and loose (1).
+ *
+ *  - perfect: same winner AND same games_in_series as a user pick
+ *  - winner : same winner, different games_in_series
+ *  - loose  : a series where the user's pick lost, but that picked team
+ *             actually won a DIFFERENT series in the results
+ *
+ * Strategy:
+ *  1. Start from the user's picks (so everything is "perfect" by default).
+ *  2. Pick the first user-bet → keep winner, change games_in_series → "winner".
+ *  3. Find two first-round series where we can swap the user's losing team
+ *     into another series as the actual winner → "loose".
  */
 function generateActualResults(userPicks: GeneratedPicks, bracket: BracketSeries[]) {
-  const actualPicks = generatePicks(bracket, userPicks.picks); // start from user's picks
-  // Randomly flip ~30% of series winners to create some misses
-  const flipped: Record<string, string> = { ...actualPicks.picks };
-  for (const s of bracket) {
-    if (!flipped[s.id]) continue;
-    if (Math.random() < 0.3) {
-      const { topTeam, bottomTeam } = resolveSeriesTeams(s.id, flipped, bracket);
-      const top = topTeam ?? s.topTeam;
-      const bottom = bottomTeam ?? s.bottomTeam;
-      if (!top || !bottom) continue;
-      flipped[s.id] = flipped[s.id] === top.abbreviation ? bottom.abbreviation : top.abbreviation;
+  // Start: actual results === user picks (all perfect)
+  const actualWinners: Record<string, string> = { ...userPicks.picks };
+  const actualGames: Record<string, number> = {};
+  for (const b of userPicks.bets) actualGames[b.seriesId] = b.gamesInSeries;
+
+  const userBetById = new Map(userPicks.bets.map((b) => [b.seriesId, b] as const));
+
+  // --- Force a "winner" hit (correct team, wrong games) ---
+  const winnerTarget = userPicks.bets[0];
+  if (winnerTarget) {
+    const orig = winnerTarget.gamesInSeries;
+    // pick a different valid games-in-series value (4..7)
+    const choices = [4, 5, 6, 7].filter((n) => n !== orig);
+    actualGames[winnerTarget.seriesId] =
+      choices[Math.floor(Math.random() * choices.length)];
+  }
+
+  // --- Force a "loose" hit ---
+  // Find a first-round series A where we'll flip the winner (user is wrong on A)
+  // and another first-round series B where we'll set the actual winner to be
+  // the team the user picked in A (so user's A-pick = winner of B = loose).
+  const firstRound = bracket.filter((s) => s.round === "First Round");
+  outer: for (let i = 0; i < firstRound.length; i++) {
+    const seriesA = firstRound[i];
+    const aBet = userBetById.get(seriesA.id);
+    if (!aBet || seriesA.id === winnerTarget?.seriesId) continue;
+    const aResolved = resolveSeriesTeams(seriesA.id, actualWinners, bracket);
+    const aTop = aResolved.topTeam ?? seriesA.topTeam;
+    const aBottom = aResolved.bottomTeam ?? seriesA.bottomTeam;
+    if (!aTop || !aBottom) continue;
+    if (isPlayInPlaceholder(aTop.abbreviation) || isPlayInPlaceholder(aBottom.abbreviation)) continue;
+    const userPickedTeamA = aBet.winner;
+    const otherTeamA = userPickedTeamA === aTop.abbreviation ? aBottom.abbreviation : aTop.abbreviation;
+
+    for (let j = 0; j < firstRound.length; j++) {
+      if (i === j) continue;
+      const seriesB = firstRound[j];
+      const bBet = userBetById.get(seriesB.id);
+      if (!bBet || seriesB.id === winnerTarget?.seriesId) continue;
+      const bResolved = resolveSeriesTeams(seriesB.id, actualWinners, bracket);
+      const bTop = bResolved.topTeam ?? seriesB.topTeam;
+      const bBottom = bResolved.bottomTeam ?? seriesB.bottomTeam;
+      if (!bTop || !bBottom) continue;
+      if (isPlayInPlaceholder(bTop.abbreviation) || isPlayInPlaceholder(bBottom.abbreviation)) continue;
+      // Need series B to contain the user's A-pick team as one of its teams
+      // — usually not the case in real bracket, so instead we just pick any
+      // other series and PRETEND the user's losing team appears there is wrong.
+      // Simpler approach: flip A's winner → user is wrong on A (no points yet),
+      // then set B's winner to userPickedTeamA only if B contains that team.
+      if (bTop.abbreviation !== userPickedTeamA && bBottom.abbreviation !== userPickedTeamA) continue;
+      // Apply: A flips, B becomes userPickedTeamA
+      actualWinners[seriesA.id] = otherTeamA;
+      actualWinners[seriesB.id] = userPickedTeamA;
+      actualGames[seriesA.id] = 4 + Math.floor(Math.random() * 4);
+      actualGames[seriesB.id] = 4 + Math.floor(Math.random() * 4);
+      break outer;
     }
   }
-  // Re-propagate downstream from flipped winners
-  const propagated = generatePicks(bracket, flipped);
-  return propagated;
+
+  // Fallback loose: if no cross-series team match was found, just flip ONE
+  // series' winner. The user's losing team won't appear elsewhere, so this
+  // becomes a "no points" miss instead of loose — but at least adds variety.
+  // (Most real brackets have unique teams per first-round series, so the
+  // search above usually fails. We add a synthetic loose by hijacking a
+  // different series: replace its winner with the user's losing team from
+  // any flipped series, regardless of whether that team is in the series.)
+  const hasLoose = Object.entries(actualWinners).some(([sid, w]) => {
+    const userBet = userBetById.get(sid);
+    if (!userBet) return false;
+    if (userBet.winner === w) return false; // user got this series right
+    // user's pick for sid lost here; is userBet.winner the actual winner of any other series?
+    return Object.entries(actualWinners).some(([sid2, w2]) => sid2 !== sid && w2 === userBet.winner);
+  });
+
+  if (!hasLoose) {
+    // Force a loose: pick two series (not the winner-target), flip the first,
+    // and hard-overwrite the second's winner with the user's losing team.
+    const candidates = firstRound.filter(
+      (s) => userBetById.has(s.id) && s.id !== winnerTarget?.seriesId
+    );
+    if (candidates.length >= 2) {
+      const sA = candidates[0];
+      const sB = candidates[1];
+      const aBet = userBetById.get(sA.id)!;
+      const aResolved = resolveSeriesTeams(sA.id, actualWinners, bracket);
+      const aTop = aResolved.topTeam ?? sA.topTeam;
+      const aBottom = aResolved.bottomTeam ?? sA.bottomTeam;
+      if (aTop && aBottom) {
+        const otherA = aBet.winner === aTop.abbreviation ? aBottom.abbreviation : aTop.abbreviation;
+        actualWinners[sA.id] = otherA;
+        actualWinners[sB.id] = aBet.winner; // user's A-pick "wins" series B → loose
+        actualGames[sA.id] = 4 + Math.floor(Math.random() * 4);
+        actualGames[sB.id] = 4 + Math.floor(Math.random() * 4);
+      }
+    }
+  }
+
+  // Re-propagate downstream rounds based on new first-round winners
+  const propagated = generatePicks(bracket, actualWinners);
+
+  // Override games-in-series for first-round series we explicitly set
+  const finalBets = propagated.bets.map((b) => ({
+    ...b,
+    gamesInSeries: actualGames[b.seriesId] ?? b.gamesInSeries,
+  }));
+
+  return { picks: propagated.picks, bets: finalBets };
 }
 
 const VARIANTS: { id: BracketVariant; label: string; description: string }[] = [

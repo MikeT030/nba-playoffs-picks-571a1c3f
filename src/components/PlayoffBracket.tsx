@@ -160,7 +160,7 @@ const BracketCard = ({
 
   return (
     <div
-      className={`absolute rounded-lg bg-[#1A1E24]/80 backdrop-blur-md ${
+      className={`absolute rounded-lg bg-[#1A1E24]/80 backdrop-blur-md border border-border/50 ${
         isChampionship
           ? "shadow-md shadow-primary/10"
           : "hover:shadow-lg hover:shadow-primary/5 transition-all duration-200"

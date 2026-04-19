@@ -193,7 +193,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
               </span>
             )}
             {displayStatus === "final" && (
-              <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest block -translate-y-5">
+              <span className="text-muted-foreground font-body font-semibold uppercase tracking-widest block -translate-y-5 text-xs">
                 Final{displayOt ? `/${displayOt > 1 ? displayOt : ""}OT` : ""}
               </span>
             )}

@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { teamMeta, type NbaGame } from "@/lib/nbaApi";
-import { type Team, teamSeeds } from "@/data/playoffsData";
+import { type Team, getTeamSeed, type BracketSeries } from "@/data/playoffsData";
 import { usePlayoffGamesRaw } from "./usePlayoffGamesRaw";
+import { useBracketData } from "./useBracketData";
 
 export interface SeriesGame {
   gameNumber: number;
@@ -19,14 +20,14 @@ export interface SeriesGame {
 
 const LIVE_STATUS_RE = /^(1st|2nd|3rd|4th)\s*Qtr$|^Halftime$/i;
 
-function nbaTeamToTeam(t: { full_name: string; abbreviation: string }): Team {
+function nbaTeamToTeam(t: { full_name: string; abbreviation: string }, bracket: BracketSeries[]): Team {
   const meta = teamMeta[t.abbreviation] || { color: "#666", logo: "🏀" };
   return {
     name: t.full_name,
     abbreviation: t.abbreviation,
     color: meta.color,
     logo: meta.logo,
-    seed: teamSeeds[t.abbreviation],
+    seed: getTeamSeed(t.abbreviation, bracket),
   };
 }
 

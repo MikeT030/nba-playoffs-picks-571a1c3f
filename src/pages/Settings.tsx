@@ -11,6 +11,7 @@ import BetsDrawer from "@/components/BetsDrawer";
 import CardRouletteOverlay from "@/components/CardRouletteOverlay";
 import ChampionConfetti from "@/components/ChampionConfetti";
 import PlayerCard from "@/components/PlayerCard";
+import DemoBracketPreview from "@/components/DemoBracketPreview";
 import { playerCards } from "@/data/playerCards";
 import { usePlayerCard } from "@/hooks/usePlayerCard";
 import TeamLogo from "@/components/TeamLogo";
@@ -233,6 +234,8 @@ const Settings = () => {
                 </div>
               </CardContent>
             </Card>
+
+            <DemoBracketPreview seriesList={activeBracket} />
 
             <button
               className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-destructive/15 text-destructive border border-destructive/40 hover:bg-destructive/20"

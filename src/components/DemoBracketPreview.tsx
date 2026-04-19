@@ -153,6 +153,11 @@ function generateActualResults(userPicks: GeneratedPicks, bracket: BracketSeries
     return Object.entries(actualWinners).some(([sid2, w2]) => sid2 !== sid && w2 === userBet.winner);
   });
 
+  // Track series IDs whose actual winner is NOT one of the series' rostered
+  // teams (only happens for the synthetic loose fallback below). These need
+  // to bypass the team-roster validation in `generatePicks`.
+  const forceOverrideIds = new Set<string>();
+
   if (!hasLoose) {
     // Force a loose: pick two series (not the winner-target), flip the first,
     // and hard-overwrite the second's winner with the user's losing team.
@@ -172,12 +177,14 @@ function generateActualResults(userPicks: GeneratedPicks, bracket: BracketSeries
         actualWinners[sB.id] = aBet.winner; // user's A-pick "wins" series B → loose
         actualGames[sA.id] = 4 + Math.floor(Math.random() * 4);
         actualGames[sB.id] = 4 + Math.floor(Math.random() * 4);
+        forceOverrideIds.add(sB.id);
       }
     }
   }
 
-  // Re-propagate downstream rounds based on new first-round winners
-  const propagated = generatePicks(bracket, actualWinners);
+  // Re-propagate downstream rounds based on new first-round winners.
+  // Pass forceOverrideIds so synthetic loose-target winners aren't discarded.
+  const propagated = generatePicks(bracket, actualWinners, forceOverrideIds);
 
   // Override games-in-series for first-round series we explicitly set
   const finalBets = propagated.bets.map((b) => ({

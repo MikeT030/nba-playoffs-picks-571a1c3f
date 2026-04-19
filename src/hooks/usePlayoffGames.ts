@@ -166,9 +166,9 @@ function groupIntoSeries(games: NbaGame[], bracket: BracketSeries[]): Match[] {
   return matches;
 }
 
-function deriveMatches(games: NbaGame[] | undefined): Match[] {
+function deriveMatches(games: NbaGame[] | undefined, bracket: BracketSeries[]): Match[] {
   if (!games || games.length === 0) return fallbackMatches;
-  const apiMatches = groupIntoSeries(games);
+  const apiMatches = groupIntoSeries(games, bracket);
 
   const apiTeams = new Set<string>();
   apiMatches.forEach((m) => {
@@ -186,11 +186,12 @@ function deriveMatches(games: NbaGame[] | undefined): Match[] {
 
 export function usePlayoffGames(season: number = 2025) {
   usePlayoffGamesRaw(season);
+  const { data: bracket = [] } = useBracketData(season);
 
   return useQuery<NbaGame[], Error, Match[]>({
     queryKey: ["playoff-games-raw", season],
     enabled: false,
     initialData: [],
-    select: deriveMatches,
+    select: (games) => deriveMatches(games, bracket),
   });
 }

@@ -205,7 +205,7 @@ const Settings = () => {
 
         {loading ? null : user ? (
           <>
-            <Card className="mt-3 mb-3 border-0">
+            <Card className="mt-3 mb-3 border-0 bg-[#1A1E24]">
               <CardHeader>
                 <CardTitle className="font-display text-lg tracking-wider">ACCOUNT</CardTitle>
               </CardHeader>

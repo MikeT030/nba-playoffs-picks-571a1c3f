@@ -207,7 +207,7 @@ const MatchDetail = () => {
                 <span className="absolute -left-1 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-body font-semibold">{displayAway.seed}</span>
               )}
               <TeamLogo src={displayAway.logo} alt={displayAway.name} className="w-16 h-16 md:w-20 md:h-20" />
-              <h2 className="text-3xl md:text-4xl tracking-wider mt-2" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
+              <h2 className="md:text-4xl tracking-wider mt-2 text-2xl" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
                 {displayAway.abbreviation}
               </h2>
             </div>
@@ -237,15 +237,15 @@ const MatchDetail = () => {
               <div className="flex items-center gap-4">
                 {isUpcoming ? (
                   <>
-                    <span className="text-5xl md:text-7xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
+                    <span className="md:text-7xl text-4xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
                     <span className="text-muted-foreground text-3xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>:</span>
-                    <span className="text-5xl md:text-7xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
+                    <span className="md:text-7xl text-4xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
                   </>
                 ) : (
                   <>
-                    <span className="text-5xl md:text-7xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayAwayScore}</span>
+                    <span className="md:text-7xl text-4xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayAwayScore}</span>
                     <span className="text-muted-foreground text-3xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>:</span>
-                    <span className="text-5xl md:text-7xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayHomeScore}</span>
+                    <span className="md:text-7xl text-4xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayHomeScore}</span>
                   </>
                 )}
               </div>
@@ -259,7 +259,7 @@ const MatchDetail = () => {
                 <span className="absolute -right-1 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-body font-semibold">{displayHome.seed}</span>
               )}
               <TeamLogo src={displayHome.logo} alt={displayHome.name} className="w-16 h-16 md:w-20 md:h-20" />
-              <h2 className="text-3xl md:text-4xl tracking-wider mt-2" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
+              <h2 className="md:text-4xl tracking-wider mt-2 text-2xl" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
                 {displayHome.abbreviation}
               </h2>
             </div>

@@ -382,7 +382,7 @@ const Scoreboard = () => {
     <div className="flex border-b border-border/40 mb-11">
       <button
         onClick={() => setShowAllPicks(false)}
-        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-sm font-medium transition-all duration-200 border-b-2 -mb-px ${
+        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-base font-medium transition-all duration-200 border-b-2 -mb-px ${
           !showAllPicks
             ? "border-primary text-primary"
             : "border-transparent text-muted-foreground hover:text-foreground"
@@ -393,13 +393,13 @@ const Scoreboard = () => {
       </button>
       <button
         onClick={() => setShowAllPicks(true)}
-        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-sm font-medium transition-all duration-200 border-b-2 -mb-px ${
+        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-base font-medium transition-all duration-200 border-b-2 -mb-px ${
           showAllPicks
             ? "border-primary text-primary"
             : "border-transparent text-muted-foreground hover:text-foreground"
         }`}
       >
-        <img src={allPicksIcon} alt="All Picks" className="w-4 h-4" />
+        <img src={allPicksIcon} alt="All Picks" className="w-4 h-4 text-muted-foreground" />
         All Picks
       </button>
     </div>

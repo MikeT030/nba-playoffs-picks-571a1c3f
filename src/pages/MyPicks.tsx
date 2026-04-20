@@ -149,7 +149,7 @@ const MyPicks = () => {
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
   const [selectedRound, setSelectedRound] = useState("all");
-  const [showBracket, setShowBracket] = useState(false);
+  const [showBracket, setShowBracket] = useState(true);
   const [downloading, setDownloading] = useState(false);
   const [monologueIndex, setMonologueIndex] = useState(-1);
   const bracketRef = useRef<HTMLDivElement>(null);

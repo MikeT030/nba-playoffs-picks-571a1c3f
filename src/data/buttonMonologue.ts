@@ -1,7 +1,7 @@
 export const MONOLOGUE_LINES: string[][] = [
   // Phase 1: The Polite "No"
   [
-    "Sorry! We're officially in \"Game Mode\" now.",
+    "Sorry! Officially in \"Game Mode\" now.",
     "The gate is closed. The lock is turned.",
     "But don't panic! I took care of things.",
     "I went ahead and finalized your picks.",

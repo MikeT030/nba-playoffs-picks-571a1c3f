@@ -335,9 +335,9 @@ const MatchDetail = () => {
         <h3 className="font-display text-2xl tracking-wider mb-6">
           All Picks
         </h3>
-        <div className="grid gap-3">
-          {allPicks && allPicks.length > 0 ? (
-            allPicks.map((pick) => {
+        {allPicks && allPicks.length > 0 ? (
+          <div className="rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md overflow-hidden">
+            {allPicks.map((pick, idx) => {
               const pickedTeam =
                 pick.winner === match.homeTeam.abbreviation ? match.homeTeam : match.awayTeam;
               const isCurrentUser = user && pick.user_id === user.id;
@@ -345,7 +345,9 @@ const MatchDetail = () => {
               return (
                 <div
                   key={pick.user_id}
-                  className="flex items-center gap-4 rounded-lg bg-[#1A1E24]/80 backdrop-blur-md p-4"
+                  className={`flex items-center gap-4 p-4 ${
+                    idx !== allPicks.length - 1 ? "border-b border-[#2B2F37]" : ""
+                  }`}
                 >
                   <div className="flex-1">
                     <p className="font-body font-semibold">
@@ -366,11 +368,11 @@ const MatchDetail = () => {
                   <TeamLogo src={pickedTeam.logo} alt={pickedTeam.name} className="w-8 h-8" />
                 </div>
               );
-            })
-          ) : (
-            <p className="text-muted-foreground font-body text-sm">No picks yet for this series.</p>
-          )}
-        </div>
+            })}
+          </div>
+        ) : (
+          <p className="text-muted-foreground font-body text-sm">No picks yet for this series.</p>
+        )}
       </section>
     </div>
   );

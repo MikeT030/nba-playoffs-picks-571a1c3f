@@ -360,17 +360,6 @@ const MyPicks = () => {
   const viewTabs = (
     <div className="flex border-b border-border/40 mb-6">
       <button
-        onClick={() => setShowBracket(false)}
-        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-sm font-medium transition-all duration-200 border-b-2 -mb-px ${
-          !showBracket
-            ? "border-primary text-primary"
-            : "border-transparent text-muted-foreground hover:text-foreground"
-        }`}
-      >
-        <LayoutGrid size={16} />
-        Cards
-      </button>
-      <button
         onClick={() => setShowBracket(true)}
         className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-sm font-medium transition-all duration-200 border-b-2 -mb-px ${
           showBracket
@@ -380,6 +369,17 @@ const MyPicks = () => {
       >
         <Network size={16} className="rotate-90" />
         Bracket
+      </button>
+      <button
+        onClick={() => setShowBracket(false)}
+        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-sm font-medium transition-all duration-200 border-b-2 -mb-px ${
+          !showBracket
+            ? "border-primary text-primary"
+            : "border-transparent text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        <LayoutGrid size={16} />
+        Cards
       </button>
     </div>
   );

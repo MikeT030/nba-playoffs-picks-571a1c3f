@@ -217,9 +217,9 @@ const MatchCard = ({ match }: MatchCardProps) => {
               </>
             ) : (
               <>
-                <span className="text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayAwayScore}</span>
+                <span className="text-xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayAwayScore}</span>
                 <span className="text-muted-foreground font-body text-sm">—</span>
-                <span className="text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayHomeScore}</span>
+                <span className="text-xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayHomeScore}</span>
               </>
             )}
           </div>

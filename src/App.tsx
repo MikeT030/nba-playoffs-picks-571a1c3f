@@ -16,6 +16,7 @@ import Auth from "./pages/Auth.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import Settings from "./pages/Settings.tsx";
 import Admin from "./pages/Admin.tsx";
+import DemoMatchDetail from "./pages/DemoMatchDetail.tsx";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/demo-match" element={<DemoMatchDetail />} />
             <Route path="/my-picks" element={<MyPicks />} />
             <Route path="/make-your-bets" element={<MakeYourBets />} />
             <Route path="/scoreboard" element={<Scoreboard />} />

@@ -380,7 +380,6 @@ const MyPicks = () => {
       <HeroBanner title="MY PICKS" subtitle={`${profileName}'s predictions · ${bets.length} picks`} />
 
       <section className="container py-8 pb-24">
-        {editPicksButton}
 
         {seriesResults.length > 0 && (() => {
           const userBetsLite = bets.map((b) => ({

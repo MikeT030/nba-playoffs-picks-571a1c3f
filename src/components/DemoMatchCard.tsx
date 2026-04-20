@@ -48,7 +48,7 @@ const DemoMatchCard = () => {
           </span>
           <TeamLogo src={away.logo} alt={away.name} className="w-10 h-10" />
           <div>
-            <p className="font-display text-xl tracking-wide">{away.abbreviation}</p>
+            <p className="tracking-wide text-lg" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{away.abbreviation}</p>
             <p className="text-xs text-muted-foreground font-body hidden sm:block">{away.name}</p>
           </div>
         </div>
@@ -73,7 +73,7 @@ const DemoMatchCard = () => {
         {/* Home Team */}
         <div className="flex-1 flex items-center gap-2 justify-end text-right -translate-y-2">
           <div>
-            <p className="font-display text-xl tracking-wide">{home.abbreviation}</p>
+            <p className="tracking-wide text-lg" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{home.abbreviation}</p>
             <p className="text-xs text-muted-foreground font-body hidden sm:block">{home.name}</p>
           </div>
           <TeamLogo src={home.logo} alt={home.name} className="w-10 h-10" />

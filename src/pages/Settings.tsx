@@ -156,7 +156,7 @@ const Settings = () => {
         </button>
 
         <div className="flex items-center gap-2">
-          <h1 className="text-3xl tracking-wider" style={{ fontFamily: "'Archivo Black', sans-serif" }}>
+          <h1 className="tracking-wider text-2xl" style={{ fontFamily: "'Archivo Black', sans-serif" }}>
             {!loading && user && displayName
               ? <>YOUR PROFILE <span className="text-primary">{displayName.toUpperCase()}</span></>
               : "SETTINGS"}

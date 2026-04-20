@@ -237,15 +237,15 @@ const MatchDetail = () => {
               <div className="flex items-center gap-4">
                 {isUpcoming ? (
                   <>
-                    <span className="font-display text-5xl md:text-7xl text-muted-foreground">—</span>
-                    <span className="text-muted-foreground font-display text-3xl">:</span>
-                    <span className="font-display text-5xl md:text-7xl text-muted-foreground">—</span>
+                    <span className="text-5xl md:text-7xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
+                    <span className="text-muted-foreground text-3xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>:</span>
+                    <span className="text-5xl md:text-7xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
                   </>
                 ) : (
                   <>
-                    <span className="font-display text-5xl md:text-7xl">{displayAwayScore}</span>
-                    <span className="text-muted-foreground font-display text-3xl">:</span>
-                    <span className="font-display text-5xl md:text-7xl">{displayHomeScore}</span>
+                    <span className="text-5xl md:text-7xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayAwayScore}</span>
+                    <span className="text-muted-foreground text-3xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>:</span>
+                    <span className="text-5xl md:text-7xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayHomeScore}</span>
                   </>
                 )}
               </div>

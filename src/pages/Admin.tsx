@@ -93,19 +93,27 @@ const Admin = () => {
           Internal area for testing new features.
         </p>
 
-        <div className="bg-[#1A1E24] rounded-lg p-5 space-y-4">
-          <div className="flex items-center gap-2">
-            <Shield size={18} className="text-primary" />
-            <h2 className="font-display text-lg tracking-wider">ROLES</h2>
-          </div>
-
-          {loadingAdmins ? (
-            <p className="font-body text-sm text-muted-foreground">Loading…</p>
-          ) : admins.length === 0 ? (
-            <p className="font-body text-sm text-muted-foreground">
-              No admins found.
-            </p>
-          ) : (
+        <Accordion type="single" collapsible className="bg-[#1A1E24] rounded-lg px-5">
+          <AccordionItem value="roles" className="border-b-0">
+            <AccordionTrigger className="hover:no-underline">
+              <div className="flex items-center gap-2">
+                <Shield size={18} className="text-primary" />
+                <h2 className="font-display text-lg tracking-wider">ROLES</h2>
+                {!loadingAdmins && admins.length > 0 && (
+                  <span className="font-body text-xs text-muted-foreground ml-1">
+                    ({admins.length})
+                  </span>
+                )}
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              {loadingAdmins ? (
+                <p className="font-body text-sm text-muted-foreground">Loading…</p>
+              ) : admins.length === 0 ? (
+                <p className="font-body text-sm text-muted-foreground">
+                  No admins found.
+                </p>
+              ) : (
             <ul className="space-y-2">
               {admins.map((admin) => {
                 const isSelf = admin.user_id === user.id;

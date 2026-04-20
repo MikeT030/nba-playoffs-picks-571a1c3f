@@ -207,7 +207,7 @@ const MatchDetail = () => {
                 <span className="absolute -left-1 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-body font-semibold">{displayAway.seed}</span>
               )}
               <TeamLogo src={displayAway.logo} alt={displayAway.name} className="w-16 h-16 md:w-20 md:h-20" />
-              <h2 className="font-display text-3xl md:text-4xl tracking-wider mt-2">
+              <h2 className="text-3xl md:text-4xl tracking-wider mt-2" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
                 {displayAway.abbreviation}
               </h2>
             </div>

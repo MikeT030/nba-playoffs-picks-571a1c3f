@@ -39,7 +39,7 @@ const HeroBanner = ({ title = "NBA PLAYOFFS, BABY!", subtitle = "2026" }: HeroBa
       ) : (
         <div className="w-full bg-background">
           <div className="container py-6">
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-5 py-[20px]">
               <img
                 src={trophyThumb}
                 alt="NBA Championship Trophy"

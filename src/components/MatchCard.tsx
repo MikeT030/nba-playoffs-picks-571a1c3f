@@ -211,15 +211,15 @@ const MatchCard = ({ match }: MatchCardProps) => {
           <div className="flex items-center gap-2">
             {isUpcoming ? (
               <>
-                <span className="font-display text-2xl text-muted-foreground">—</span>
+                <span className="text-2xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
                 <span className="text-muted-foreground font-body text-sm">—</span>
-                <span className="font-display text-2xl text-muted-foreground">—</span>
+                <span className="text-2xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
               </>
             ) : (
               <>
-                <span className="font-display text-2xl">{displayAwayScore}</span>
+                <span className="text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayAwayScore}</span>
                 <span className="text-muted-foreground font-body text-sm">—</span>
-                <span className="font-display text-2xl">{displayHomeScore}</span>
+                <span className="text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayHomeScore}</span>
               </>
             )}
           </div>

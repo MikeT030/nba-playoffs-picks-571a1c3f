@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/accordion";
 import { toast } from "sonner";
 import DemoMatchCard from "@/components/DemoMatchCard";
+import DemoMatchCardFonts from "@/components/DemoMatchCardFonts";
 
 interface AdminUser {
   id: string;
@@ -156,6 +157,11 @@ const Admin = () => {
         <div className="space-y-2">
           <h2 className="font-display text-lg tracking-wider text-muted-foreground">DEMO MATCH CARD</h2>
           <DemoMatchCard />
+        </div>
+
+        <div className="space-y-2">
+          <h2 className="font-display text-lg tracking-wider text-muted-foreground">FONT VARIANTS</h2>
+          <DemoMatchCardFonts />
         </div>
       </div>
     </div>

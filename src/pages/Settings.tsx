@@ -38,7 +38,7 @@ const Settings = () => {
   const [rouletteCardId, setRouletteCardId] = useState<string | null>(null);
   const [monologueIndex, setMonologueIndex] = useState(-1);
 
-  const locked = true; // Picks button shows monologue-only inactive state
+  const locked = false; // Picks button active — opens BetsDrawer
   const TOTAL_GAMES = 15;
   const pickCount = picks.length;
   const gamesLeft = TOTAL_GAMES - pickCount;

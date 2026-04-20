@@ -145,7 +145,7 @@ const Index = () => {
               <SelectItem
                 key={r.value}
                 value={r.value}
-                className="data-[state=checked]:bg-primary/15 data-[state=checked]:text-primary data-[state=checked]:border data-[state=checked]:border-primary/40 data-[state=checked]:rounded-full my-0.5"
+                className="focus:bg-primary/15 focus:text-primary focus:border focus:border-primary/40 focus:rounded-full data-[state=checked]:bg-primary/15 data-[state=checked]:text-primary data-[state=checked]:border data-[state=checked]:border-primary/40 data-[state=checked]:rounded-full my-0.5"
               >
                 {r.label}
               </SelectItem>

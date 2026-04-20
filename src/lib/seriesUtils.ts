@@ -1,11 +1,18 @@
 import type { SeriesGame } from "@/hooks/useSeriesGames";
 
 export const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+export const TWELVE_HOURS_MS = 12 * 60 * 60 * 1000;
 
 export function isWithin24h(startsAt: number | undefined): boolean {
   if (!startsAt) return false;
   const diff = startsAt - Date.now();
   return diff > 0 && diff <= ONE_DAY_MS;
+}
+
+export function isWithin12h(startsAt: number | undefined): boolean {
+  if (!startsAt) return false;
+  const diff = startsAt - Date.now();
+  return diff > 0 && diff <= TWELVE_HOURS_MS;
 }
 
 /**

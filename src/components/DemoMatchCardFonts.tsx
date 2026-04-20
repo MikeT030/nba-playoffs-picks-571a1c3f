@@ -52,7 +52,7 @@ const DemoMatchCardFont = ({ fontFamily, fontLabel }: DemoMatchCardFontProps) =>
             </span>
             <TeamLogo src={away.logo} alt={away.name} className="w-10 h-10" />
             <div>
-              <p className="text-xl tracking-wide" style={{ fontFamily }}>
+              <p className="text-lg tracking-wide" style={{ fontFamily }}>
                 {away.abbreviation}
               </p>
               <p className="text-xs text-muted-foreground font-body hidden sm:block">{away.name}</p>
@@ -79,7 +79,7 @@ const DemoMatchCardFont = ({ fontFamily, fontLabel }: DemoMatchCardFontProps) =>
           {/* Home Team */}
           <div className="flex-1 flex items-center gap-2 justify-end text-right -translate-y-2">
             <div>
-              <p className="text-xl tracking-wide" style={{ fontFamily }}>
+              <p className="text-lg tracking-wide" style={{ fontFamily }}>
                 {home.abbreviation}
               </p>
               <p className="text-xs text-muted-foreground font-body hidden sm:block">{home.name}</p>

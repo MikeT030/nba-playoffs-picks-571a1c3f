@@ -1,6 +1,6 @@
 import { useState } from "react";
 import heroImage from "@/assets/hero-playoffs.jpg";
-import trophyThumb from "@/assets/trophy-thumb.jpg";
+import trophyThumb from "@/assets/trophy-thumb.png";
 
 interface HeroBannerProps {
   title?: string;

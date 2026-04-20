@@ -146,9 +146,11 @@ const Admin = () => {
                   </li>
                 );
               })}
-            </ul>
-          )}
-        </div>
+                </ul>
+              )}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
     </div>
   );

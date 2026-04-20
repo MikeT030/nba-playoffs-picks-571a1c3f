@@ -132,12 +132,6 @@ const Index = () => {
 
         <CountdownTimer />
 
-        <button
-          onClick={handleButtonClick}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 mb-6 bg-muted/50 text-muted-foreground border border-border hover:bg-muted/70"
-        >
-          {getButtonContent()}
-        </button>
 
         <h2 className="font-display text-3xl tracking-wider mb-4">
           All Matchups

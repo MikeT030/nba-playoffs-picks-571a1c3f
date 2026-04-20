@@ -399,7 +399,20 @@ const Scoreboard = () => {
             : "border-transparent text-muted-foreground hover:text-foreground"
         }`}
       >
-        <img src={allPicksIcon} alt="All Picks" className="w-4 h-4 text-muted-foreground" />
+        <span
+          aria-label="All Picks"
+          className="w-4 h-4 bg-current"
+          style={{
+            WebkitMaskImage: `url(${allPicksIcon})`,
+            maskImage: `url(${allPicksIcon})`,
+            WebkitMaskRepeat: "no-repeat",
+            maskRepeat: "no-repeat",
+            WebkitMaskPosition: "center",
+            maskPosition: "center",
+            WebkitMaskSize: "contain",
+            maskSize: "contain",
+          }}
+        />
         All Picks
       </button>
     </div>

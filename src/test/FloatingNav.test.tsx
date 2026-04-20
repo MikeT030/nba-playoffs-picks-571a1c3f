@@ -13,7 +13,7 @@ const renderNav = (route = "/") =>
 describe("FloatingNav", () => {
   it("renders all navigation links", () => {
     renderNav();
-    expect(screen.getByText("Home")).toBeInTheDocument();
+    expect(screen.getByText("Games")).toBeInTheDocument();
     expect(screen.getByText("Scoreboard")).toBeInTheDocument();
     expect(screen.getByText("My Picks")).toBeInTheDocument();
   });

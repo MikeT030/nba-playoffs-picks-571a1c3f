@@ -12,7 +12,7 @@ import { usePlayerCard } from "@/hooks/usePlayerCard";
 import { useAllUserPicks } from "@/hooks/useAllUserPicks";
 import { useQueryClient } from "@tanstack/react-query";
 import { ALL_MONOLOGUE_LINES, isPlayoffsStarted } from "@/data/buttonMonologue";
-import { flipMomentForSlate } from "@/lib/seriesUtils";
+import { isTodaySlateET } from "@/lib/seriesUtils";
 import {
   Select,
   SelectContent,
@@ -125,10 +125,9 @@ const Index = () => {
       })
     : [];
 
-  // Split matches into "Today" (current US slate) vs "Next days".
-  // A match belongs to "Today" if it's live, or if we've crossed its
-  // slate flip moment (day-before 20:00 CET) and tip-off is still ahead.
-  const now = Date.now();
+  // Split matches into "Today" (current US-Eastern slate) vs "Next days".
+  // A match belongs to "Today" if it's live, or if its US-Eastern game date
+  // matches the active ET slate (today ET after noon, yesterday ET before noon).
   const todayMatches: typeof sortedMatches = [];
   const nextDaysMatches: typeof sortedMatches = [];
   for (const m of sortedMatches) {
@@ -137,7 +136,7 @@ const Index = () => {
       continue;
     }
     const ts = m.startsAt ? new Date(m.startsAt).getTime() : undefined;
-    if (ts && ts > now && now >= flipMomentForSlate(ts)) {
+    if (ts && ts > Date.now() && isTodaySlateET(ts)) {
       todayMatches.push(m);
     } else {
       nextDaysMatches.push(m);

@@ -114,6 +114,42 @@ export function isPastSlateFlip(startsAt: number | undefined): boolean {
 }
 
 /**
+ * True if the game's US-Eastern game date matches the current "active" ET slate.
+ *
+ * The active ET slate is:
+ *   - today's ET date when ET local hour >= 12 (afternoon onward — tonight's slate)
+ *   - yesterday's ET date when ET local hour < 12 (early AM — last night's slate
+ *     that's still wrapping up for late-night CET viewers)
+ *
+ * This buckets exactly one NBA slate into "Today" at any given moment.
+ */
+export function isTodaySlateET(startsAt: number | undefined): boolean {
+  if (!startsAt) return false;
+  const nowMs = Date.now();
+  const nowEt = getZonedYMD(nowMs, "America/New_York");
+  const nowEtHourParts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "America/New_York",
+    hour: "2-digit",
+    hour12: false,
+  }).formatToParts(new Date(nowMs));
+  const nowEtHour = Number(nowEtHourParts.find((p) => p.type === "hour")!.value) % 24;
+
+  let activeY = nowEt.y;
+  let activeM = nowEt.m;
+  let activeD = nowEt.d;
+  if (nowEtHour < 12) {
+    const prev = new Date(Date.UTC(nowEt.y, nowEt.m - 1, nowEt.d));
+    prev.setUTCDate(prev.getUTCDate() - 1);
+    activeY = prev.getUTCFullYear();
+    activeM = prev.getUTCMonth() + 1;
+    activeD = prev.getUTCDate();
+  }
+
+  const gameEt = getZonedYMD(startsAt, "America/New_York");
+  return gameEt.y === activeY && gameEt.m === activeM && gameEt.d === activeD;
+}
+
+/**
  * True if we should surface a scheduled game as "Next Up":
  * we've crossed the "day before, 20:00 CET" flip moment for this game's
  * US-Eastern slate, and tip-off is still in the future.

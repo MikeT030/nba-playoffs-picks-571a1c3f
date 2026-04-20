@@ -40,9 +40,9 @@ const DemoMatchCard = () => {
         </span>
       </div>
 
-      <div className="p-5 flex items-center gap-4 pt-[20px]">
+      <div className="p-5 flex items-center justify-between gap-2 pt-[20px]">
         {/* Away Team */}
-        <div className="flex-1 flex items-center gap-2 -translate-y-2">
+        <div className="flex-1 flex items-center gap-1.5 -translate-y-2">
           <span className="text-xs text-muted-foreground font-body font-semibold w-4 text-center shrink-0">
             {away.seed}
           </span>
@@ -54,13 +54,13 @@ const DemoMatchCard = () => {
         </div>
 
         {/* Score & Series */}
-        <div className="text-center px-4">
+        <div className="text-center shrink-0">
           <div className="h-0">
             <span className="text-muted-foreground font-body font-semibold uppercase tracking-widest block -translate-y-5 text-xs">
               Final
             </span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <span className="font-medium text-lg" style={{ fontFamily: "'Orbitron', sans-serif" }}>{awayScore}</span>
             <span className="text-muted-foreground font-body text-sm">—</span>
             <span className="font-medium text-lg" style={{ fontFamily: "'Orbitron', sans-serif" }}>{homeScore}</span>
@@ -71,7 +71,7 @@ const DemoMatchCard = () => {
         </div>
 
         {/* Home Team */}
-        <div className="flex-1 flex items-center gap-2 justify-end text-right -translate-y-2">
+        <div className="flex-1 flex items-center gap-1.5 justify-end text-right -translate-y-2">
           <div>
             <p className="tracking-wide text-lg" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{home.abbreviation}</p>
             <p className="text-xs text-muted-foreground font-body hidden sm:block">{home.name}</p>

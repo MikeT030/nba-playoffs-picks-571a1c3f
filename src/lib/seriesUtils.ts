@@ -1,11 +1,18 @@
 import type { SeriesGame } from "@/hooks/useSeriesGames";
 
 export const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+export const TWELVE_HOURS_MS = 12 * 60 * 60 * 1000;
 
 export function isWithin24h(startsAt: number | undefined): boolean {
   if (!startsAt) return false;
   const diff = startsAt - Date.now();
   return diff > 0 && diff <= ONE_DAY_MS;
+}
+
+export function isWithin12h(startsAt: number | undefined): boolean {
+  if (!startsAt) return false;
+  const diff = startsAt - Date.now();
+  return diff > 0 && diff <= TWELVE_HOURS_MS;
 }
 
 /**
@@ -43,13 +50,13 @@ export function pickDefaultGameIdx(games: SeriesGame[]): number {
   const liveIdx = games.findIndex((g) => g.status === "live");
   if (liveIdx >= 0) return liveIdx;
 
-  // Only surface the next upcoming game by default once it's the same local
-  // calendar day as tip-off. Before game day we keep showing the last final
-  // so users see the most recent result, not a future scheduled game.
+  // Surface the next upcoming game once tip-off is within 12 hours, so users
+  // see the next game earlier instead of staying on the most recent final.
   const nextUpcomingIdx = games.findIndex((g) => g.status === "upcoming");
   if (
     nextUpcomingIdx >= 0 &&
-    isSameLocalDay(games[nextUpcomingIdx].startsAt)
+    (isSameLocalDay(games[nextUpcomingIdx].startsAt) ||
+      isWithin12h(games[nextUpcomingIdx].startsAt))
   ) {
     return nextUpcomingIdx;
   }

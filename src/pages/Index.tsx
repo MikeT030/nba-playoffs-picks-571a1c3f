@@ -140,7 +140,7 @@ const Index = () => {
           >
             <SelectValue />
           </SelectTrigger>
-          <SelectContent position="popper" sideOffset={4}>
+          <SelectContent position="popper" sideOffset={4} className="bg-[#1A1E24] border-[#1A1E24]">
             {rounds.map((r) => (
               <SelectItem
                 key={r.value}

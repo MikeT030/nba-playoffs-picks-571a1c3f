@@ -259,7 +259,7 @@ const MatchDetail = () => {
                 <span className="absolute -right-1 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-body font-semibold">{displayHome.seed}</span>
               )}
               <TeamLogo src={displayHome.logo} alt={displayHome.name} className="w-16 h-16 md:w-20 md:h-20" />
-              <h2 className="font-display text-3xl md:text-4xl tracking-wider mt-2">
+              <h2 className="text-3xl md:text-4xl tracking-wider mt-2" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
                 {displayHome.abbreviation}
               </h2>
             </div>

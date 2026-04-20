@@ -361,7 +361,6 @@ const MyPicks = () => {
       <div className="min-h-screen bg-background pb-28">
         <HeroBanner title="MY PICKS" subtitle="Playoffs Picks 2026" />
         <section className="container py-10">
-          {editPicksButton}
           <div className="flex items-center justify-center py-8">
             <div className="text-center">
               <p className="font-display text-2xl tracking-wider mb-2">NO PICKS YET</p>

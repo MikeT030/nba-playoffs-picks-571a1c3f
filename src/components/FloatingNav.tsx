@@ -17,7 +17,7 @@ const ScoreboardSvg = ({ size = 20 }: { size?: number }) => (
 );
 
 const navItems = [
-  { to: "/", label: "Home", icon: BasketballSvg },
+  { to: "/", label: "Games", icon: BasketballSvg },
   { to: "/scoreboard", label: "Scoreboard", icon: ScoreboardSvg },
   { to: "/my-picks", label: "My Picks", icon: Network },
 ];

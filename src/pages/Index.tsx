@@ -154,7 +154,13 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background pb-28">
-      <HeroBanner />
+      <HeroBanner
+        subtitle={
+          pickCount >= TOTAL_GAMES
+            ? "Playoffs Picks 2026"
+            : "Playoffs Picks 2026"
+        }
+      />
 
       <section className="container py-10 pt-[20px]">
 

@@ -269,7 +269,7 @@ const MyPicks = () => {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-background pb-28">
-        <HeroBanner title="MY PICKS" subtitle="NBA Playoffs 2026" />
+        <HeroBanner title="MY PICKS" subtitle="Playoffs Picks 2026" />
         <section className="container py-10 text-center">
           <p className="text-muted-foreground font-body">Loading...</p>
         </section>
@@ -280,7 +280,7 @@ const MyPicks = () => {
   if (!user) {
     return (
       <div className="min-h-screen bg-background pb-28">
-        <HeroBanner title="MY PICKS" subtitle="NBA Playoffs 2026" />
+        <HeroBanner title="MY PICKS" subtitle="Playoffs Picks 2026" />
         <section className="container py-10">
           <div className="flex flex-col items-center justify-center py-8 gap-4">
             <p className="font-display text-2xl tracking-wider">SIGN IN TO VIEW PICKS</p>
@@ -300,16 +300,7 @@ const MyPicks = () => {
     );
   }
 
-  const TOTAL_GAMES = 15;
-  const gamesLeft = TOTAL_GAMES - bets.length;
-  const infoLine =
-    bets.length === 0
-      ? `Go, bro. You have ${TOTAL_GAMES} games to pick.`
-      : bets.length < TOTAL_GAMES
-        ? `WTF, bro. There are still ${gamesLeft} picks to make.`
-        : "You did it, bro. Picks are legit and logged in.";
-
-  const handlePickButtonClick = () => {
+  const handleEditClick = () => {
     if (locked) {
       setMonologueIndex((prev) => {
         const next = prev + 1;
@@ -320,45 +311,28 @@ const MyPicks = () => {
     }
   };
 
-  const getPickButtonContent = () => {
-    if (locked && monologueIndex >= 0) {
-      return (
-        <>
-          <Lock size={18} />
-          {ALL_MONOLOGUE_LINES[monologueIndex]}
-        </>
-      );
-    }
-    return bets.length >= TOTAL_GAMES ? (
-      <>
-        <CheckCircle size={18} />
-        {infoLine}
-      </>
-    ) : (
-      <>
-        <PenLine size={18} />
-        {infoLine}
-      </>
-    );
-  };
-
   const editPicksButton = (
-    <button
-      onClick={handlePickButtonClick}
-      className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 mb-8 ${
-        locked && monologueIndex >= 0
-          ? "bg-muted/50 text-muted-foreground border border-border hover:bg-muted/70"
-          : bets.length >= TOTAL_GAMES
-            ? "bg-primary/15 text-primary border border-primary/40"
-            : "bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
-      }`}
+    <Button
+      variant="outline"
+      size="lg"
+      className="mb-10 w-full md:w-auto h-auto px-10 py-6 rounded-2xl flex flex-col gap-1 items-center border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors"
+      onClick={handleEditClick}
     >
-      {getPickButtonContent()}
-    </button>
+      <PenLine className="w-6 h-6 text-primary mb-1" />
+      <span className="font-display text-xl tracking-widest text-primary uppercase">EDIT YOUR PICKS</span>
+      <span className="font-body text-[11px] text-muted-foreground/60 uppercase tracking-[0.2em] font-medium">
+        {locked ? "LOCKED" : "Tap to Change"}
+      </span>
+      {locked && monologueIndex >= 0 && (
+        <p className="mt-2 text-primary font-body text-xs animate-in fade-in slide-in-from-top-1">
+          {ALL_MONOLOGUE_LINES[monologueIndex]}
+        </p>
+      )}
+    </Button>
   );
 
   const viewTabs = (
-    <div className="flex border-b border-border/40 mb-6">
+    <div className="flex border-b border-border/40 mb-11">
       <button
         onClick={() => setShowBracket(true)}
         className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-sm font-medium transition-all duration-200 border-b-2 -mb-px ${
@@ -367,7 +341,7 @@ const MyPicks = () => {
             : "border-transparent text-muted-foreground hover:text-foreground"
         }`}
       >
-        <Network size={16} className="rotate-90" />
+        <LayoutGrid size={16} />
         Bracket
       </button>
       <button
@@ -378,8 +352,8 @@ const MyPicks = () => {
             : "border-transparent text-muted-foreground hover:text-foreground"
         }`}
       >
-        <LayoutGrid size={16} />
-        Cards
+        <Network size={16} />
+        Series List
       </button>
     </div>
   );
@@ -387,7 +361,7 @@ const MyPicks = () => {
   if (bets.length === 0) {
     return (
       <div className="min-h-screen bg-background pb-28">
-        <HeroBanner title="MY PICKS" subtitle="NBA Playoffs 2026" />
+        <HeroBanner title="MY PICKS" subtitle="Playoffs Picks 2026" />
         <section className="container py-10">
           {editPicksButton}
           <div className="flex items-center justify-center py-8">

@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import TeamLogo from "@/components/TeamLogo";
 import { teamMeta } from "@/lib/nbaApi";
 
@@ -7,6 +8,7 @@ import { teamMeta } from "@/lib/nbaApi";
  * data dependencies. Used on the Admin page for testing layout/styles.
  */
 const DemoMatchCard = () => {
+  const navigate = useNavigate();
   const away = {
     abbreviation: "SAC",
     name: "Kings",
@@ -28,7 +30,10 @@ const DemoMatchCard = () => {
   const date = "Apr 28";
 
   return (
-    <div className="block rounded-lg bg-[#1A1E24]/80 backdrop-blur-md select-none">
+    <div
+      onClick={() => navigate("/admin/demo-match")}
+      className="block rounded-lg bg-[#1A1E24]/80 backdrop-blur-md select-none cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-primary/5"
+    >
       <div className="px-4 py-2 flex items-center justify-center border-b border-transparent">
         <span className="text-xs text-white font-body uppercase tracking-wider text-center font-normal">
           EAST  Conf. Semifinals · Game {gameNumber} · {date}

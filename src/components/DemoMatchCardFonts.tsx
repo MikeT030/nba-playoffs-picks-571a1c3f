@@ -44,7 +44,7 @@ const DemoMatchCardFont = ({ fontFamily, fontLabel }: DemoMatchCardFontProps) =>
           </span>
         </div>
 
-        <div className="p-5 flex items-center gap-4 pt-[20px]">
+        <div className="p-5 flex items-center gap-4 pt-[20px] px-[10px]">
           {/* Away Team */}
           <div className="flex-1 flex items-center gap-2 -translate-y-2">
             <span className="text-xs text-muted-foreground font-body font-semibold w-4 text-center shrink-0">

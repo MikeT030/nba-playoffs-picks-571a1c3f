@@ -15,6 +15,7 @@ import MyPicks from "./pages/MyPicks.tsx";
 import Auth from "./pages/Auth.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import Settings from "./pages/Settings.tsx";
+import Admin from "./pages/Admin.tsx";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="/my-picks" element={<MyPicks />} />
             <Route path="/make-your-bets" element={<MakeYourBets />} />
             <Route path="/scoreboard" element={<Scoreboard />} />

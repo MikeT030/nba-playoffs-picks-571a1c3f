@@ -312,23 +312,21 @@ const MyPicks = () => {
   };
 
   const editPicksButton = (
-    <Button
-      variant="outline"
-      size="lg"
-      className="mb-10 w-full md:w-auto h-auto px-10 py-6 rounded-2xl flex flex-col gap-1 items-center border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors"
-      onClick={handleEditClick}
-    >
-      <PenLine className="w-6 h-6 text-primary mb-1" />
-      <span className="font-display text-xl tracking-widest text-primary uppercase">EDIT YOUR PICKS</span>
-      <span className="font-body text-[11px] text-muted-foreground/60 uppercase tracking-[0.2em] font-medium">
-        {locked ? "LOCKED" : "Tap to Change"}
-      </span>
+    <div className="mb-10">
+      <Button
+        variant="outline"
+        className="border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary font-display tracking-widest uppercase"
+        onClick={handleEditClick}
+      >
+        {locked ? <Lock className="w-4 h-4" /> : <PenLine className="w-4 h-4" />}
+        MAKE YOUR PICKS
+      </Button>
       {locked && monologueIndex >= 0 && (
         <p className="mt-2 text-primary font-body text-xs animate-in fade-in slide-in-from-top-1">
           {ALL_MONOLOGUE_LINES[monologueIndex]}
         </p>
       )}
-    </Button>
+    </div>
   );
 
   const viewTabs = (

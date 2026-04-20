@@ -64,7 +64,7 @@ const HeroBanner = ({ title = "NBA PLAYOFFS, BABY!", subtitle = "2026" }: HeroBa
         </div>
       )}
 
-      <div className="container -mt-2 pb-3 flex items-center justify-center gap-2">
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-3 z-20 flex items-center justify-center gap-2 rounded-full bg-background/70 backdrop-blur-sm px-3 py-1.5 border border-border/40">
         {[0, 1].map((i) => (
           <button
             key={i}
@@ -73,7 +73,7 @@ const HeroBanner = ({ title = "NBA PLAYOFFS, BABY!", subtitle = "2026" }: HeroBa
             aria-label={`Show header version ${i + 1}`}
             aria-current={version === i}
             className={`h-2 rounded-full transition-all ${
-              version === i ? "w-6 bg-primary" : "w-2 bg-muted-foreground/40 hover:bg-muted-foreground/70"
+              version === i ? "w-6 bg-primary" : "w-2 bg-foreground/40 hover:bg-foreground/70"
             }`}
           />
         ))}

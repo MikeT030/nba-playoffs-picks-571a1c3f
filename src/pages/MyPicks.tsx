@@ -270,9 +270,97 @@ const MyPicks = () => {
     return (
       <div className="min-h-screen bg-background pb-28">
         <HeroBanner title="MY PICKS" subtitle="Playoffs Picks 2026" />
-...
+        <section className="container py-10 text-center">
+          <p className="text-muted-foreground font-body">Loading...</p>
+        </section>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-background pb-28">
         <HeroBanner title="MY PICKS" subtitle="Playoffs Picks 2026" />
-...
+        <section className="container py-10">
+          <div className="flex flex-col items-center justify-center py-8 gap-4">
+            <p className="font-display text-2xl tracking-wider">SIGN IN TO VIEW PICKS</p>
+            <p className="text-muted-foreground font-body text-sm">
+              Create an account to save and view your playoff predictions.
+            </p>
+            <button
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
+              onClick={() => navigate("/auth")}
+            >
+              <LogIn size={18} />
+              SIGN IN
+            </button>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  const handleEditClick = () => {
+    if (locked) {
+      setMonologueIndex((prev) => {
+        const next = prev + 1;
+        return next >= ALL_MONOLOGUE_LINES.length ? 0 : next;
+      });
+    } else {
+      setBetsOpen(true);
+    }
+  };
+
+  const editPicksButton = (
+    <Button
+      variant="outline"
+      size="lg"
+      className="mb-10 w-full md:w-auto h-auto px-10 py-6 rounded-2xl flex flex-col gap-1 items-center border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors"
+      onClick={handleEditClick}
+    >
+      <PenLine className="w-6 h-6 text-primary mb-1" />
+      <span className="font-display text-xl tracking-widest text-primary uppercase">EDIT YOUR PICKS</span>
+      <span className="font-body text-[11px] text-muted-foreground/60 uppercase tracking-[0.2em] font-medium">
+        {locked ? "LOCKED" : "Tap to Change"}
+      </span>
+      {locked && monologueIndex >= 0 && (
+        <p className="mt-2 text-primary font-body text-xs animate-in fade-in slide-in-from-top-1">
+          {ALL_MONOLOGUE_LINES[monologueIndex]}
+        </p>
+      )}
+    </Button>
+  );
+
+  const viewTabs = (
+    <div className="flex border-b border-border/40 mb-11">
+      <button
+        onClick={() => setShowBracket(true)}
+        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-sm font-medium transition-all duration-200 border-b-2 -mb-px ${
+          showBracket
+            ? "border-primary text-primary"
+            : "border-transparent text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        <LayoutGrid size={16} />
+        Bracket
+      </button>
+      <button
+        onClick={() => setShowBracket(false)}
+        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-sm font-medium transition-all duration-200 border-b-2 -mb-px ${
+          !showBracket
+            ? "border-primary text-primary"
+            : "border-transparent text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        <Network size={16} />
+        Series List
+      </button>
+    </div>
+  );
+
+  if (bets.length === 0) {
+    return (
+      <div className="min-h-screen bg-background pb-28">
         <HeroBanner title="MY PICKS" subtitle="Playoffs Picks 2026" />
         <section className="container py-10">
           {editPicksButton}

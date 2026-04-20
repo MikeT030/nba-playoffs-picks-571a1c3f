@@ -4,7 +4,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { LogOut, Mail, ArrowLeft, LogIn, PenLine, CheckCircle, Pencil, Check, Lock } from "lucide-react";
+import { LogOut, Mail, ArrowLeft, LogIn, PenLine, CheckCircle, Pencil, Check, Lock, Shield } from "lucide-react";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { ALL_MONOLOGUE_LINES } from "@/data/buttonMonologue";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -23,6 +24,7 @@ import { useBracketData } from "@/hooks/useBracketData";
 const Settings = () => {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
+  const { isAdmin } = useIsAdmin();
   const { data: resolvedBracket } = useBracketData();
   const activeBracket = resolvedBracket ?? bracketSeries;
   const { assignedCardId, loading: cardLoading, assignRandomCard } = usePlayerCard();
@@ -271,6 +273,16 @@ const Settings = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {isAdmin && (
+              <button
+                className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20"
+                onClick={() => navigate("/admin")}
+              >
+                <Shield size={18} />
+                ADMIN SETTINGS
+              </button>
+            )}
 
             <button
               className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-destructive/15 text-destructive border border-destructive/40 hover:bg-destructive/20"

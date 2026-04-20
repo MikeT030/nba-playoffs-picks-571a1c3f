@@ -125,6 +125,33 @@ const Index = () => {
       })
     : [];
 
+  // Split matches into "Today" (current US slate) vs "Next days".
+  // A match belongs to "Today" if it's live, or if we've crossed its
+  // slate flip moment (day-before 20:00 CET) and tip-off is still ahead.
+  const now = Date.now();
+  const todayMatches: typeof sortedMatches = [];
+  const nextDaysMatches: typeof sortedMatches = [];
+  for (const m of sortedMatches) {
+    if (m.status === "live") {
+      todayMatches.push(m);
+      continue;
+    }
+    const ts = m.startsAt ? new Date(m.startsAt).getTime() : undefined;
+    if (ts && ts > now && now >= flipMomentForSlate(ts)) {
+      todayMatches.push(m);
+    } else {
+      nextDaysMatches.push(m);
+    }
+  }
+
+  const renderMatchGrid = (list: typeof sortedMatches) => (
+    <div className="grid gap-4 md:grid-cols-2">
+      {list.map((match) => (
+        <MatchCard key={match.id} match={match} />
+      ))}
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-background pb-28">
       <HeroBanner />
@@ -161,10 +188,23 @@ const Index = () => {
             ))}
           </div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2">
-            {sortedMatches.map((match) => (
-              <MatchCard key={match.id} match={match} />
-            ))}
+          <div className="space-y-8">
+            {todayMatches.length > 0 && (
+              <div>
+                <h2 className="mb-3 font-display text-xl tracking-wider text-foreground/90">
+                  Today
+                </h2>
+                {renderMatchGrid(todayMatches)}
+              </div>
+            )}
+            {nextDaysMatches.length > 0 && (
+              <div>
+                <h2 className="mb-3 font-display text-xl tracking-wider text-foreground/90">
+                  Next days
+                </h2>
+                {renderMatchGrid(nextDaysMatches)}
+              </div>
+            )}
           </div>
         )}
       </section>

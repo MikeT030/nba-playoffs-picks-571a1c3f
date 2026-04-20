@@ -133,14 +133,12 @@ const Index = () => {
         <CountdownTimer />
 
 
-        <h2 className="font-display text-3xl tracking-wider mb-4">
-          All Matchups
-        </h2>
-
-
         <Select value={selectedRound} onValueChange={setSelectedRound}>
-          <SelectTrigger className="w-[220px] mb-6">
-            <SelectValue placeholder="Select round" />
+          <SelectTrigger
+            className="mb-6 w-auto max-w-full gap-3 border-0 bg-transparent p-0 h-auto font-display text-3xl tracking-wider text-foreground hover:text-foreground focus:ring-0 focus:ring-offset-0 shadow-none [&>svg]:h-6 [&>svg]:w-6 [&>svg]:opacity-70"
+            aria-label="Select round"
+          >
+            <SelectValue />
           </SelectTrigger>
           <SelectContent position="popper" sideOffset={4}>
             {rounds.map((r) => (

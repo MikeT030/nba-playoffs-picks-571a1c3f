@@ -4,7 +4,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { LogOut, Mail, ArrowLeft, LogIn, PenLine, CheckCircle, Pencil, Check } from "lucide-react";
+import { LogOut, Mail, ArrowLeft, LogIn, PenLine, CheckCircle, Pencil, Check, Lock } from "lucide-react";
+import { ALL_MONOLOGUE_LINES } from "@/data/buttonMonologue";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import BetsDrawer from "@/components/BetsDrawer";
@@ -33,6 +34,52 @@ const Settings = () => {
   const [nameInput, setNameInput] = useState("");
   const [savingName, setSavingName] = useState(false);
   const [rouletteCardId, setRouletteCardId] = useState<string | null>(null);
+  const [monologueIndex, setMonologueIndex] = useState(-1);
+
+  const locked = true; // Picks button shows monologue-only inactive state
+  const TOTAL_GAMES = 15;
+  const pickCount = picks.length;
+  const gamesLeft = TOTAL_GAMES - pickCount;
+
+  const handlePicksButtonClick = () => {
+    if (locked) {
+      setMonologueIndex((prev) => {
+        const next = prev + 1;
+        return next >= ALL_MONOLOGUE_LINES.length ? 0 : next;
+      });
+    } else {
+      setBetsOpen(true);
+    }
+  };
+
+  const getPicksButtonContent = () => {
+    if (locked && monologueIndex >= 0) {
+      return (
+        <>
+          <Lock size={18} />
+          {ALL_MONOLOGUE_LINES[monologueIndex]}
+        </>
+      );
+    }
+    const infoLine =
+      pickCount === 0
+        ? "Go, bro. You have games to pick."
+        : pickCount < TOTAL_GAMES
+          ? `WTF, bro. There are still ${gamesLeft} picks to make.`
+          : "You did it, bro. Picks are legit and logged in.";
+
+    return pickCount >= TOTAL_GAMES ? (
+      <>
+        <CheckCircle size={18} />
+        {infoLine}
+      </>
+    ) : (
+      <>
+        <PenLine size={18} />
+        {infoLine}
+      </>
+    );
+  };
 
   const assignedCard = assignedCardId ? playerCards.find((c) => c.id === assignedCardId) : null;
 
@@ -184,20 +231,10 @@ const Settings = () => {
                 )}
 
                 <button
-                  onClick={() => setBetsOpen(true)}
-                  className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 w-full"
+                  onClick={handlePicksButtonClick}
+                  className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-muted/50 text-muted-foreground border border-border hover:bg-muted/70 w-full"
                 >
-                  {hasPicks ? (
-                    <>
-                      <CheckCircle size={18} />
-                      Edit Your Picks
-                    </>
-                  ) : (
-                    <>
-                      <PenLine size={18} />
-                      Make Your Picks
-                    </>
-                  )}
+                  {getPicksButtonContent()}
                 </button>
               </CardContent>
             </Card>

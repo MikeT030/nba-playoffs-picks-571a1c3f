@@ -351,7 +351,7 @@ const MyPicks = () => {
         }`}
       >
         <Network size={16} />
-        Series List
+        Cards
       </button>
     </div>
   );

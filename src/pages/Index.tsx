@@ -23,7 +23,7 @@ import {
 const TOTAL_GAMES = 15;
 
 const rounds = [
-  { value: "all", label: "All Rounds" },
+  { value: "all", label: "All Matchups" },
   { value: "First Round", label: "First Round" },
   { value: "Conference Semifinals", label: "Conference Semifinals" },
   { value: "Conference Finals", label: "Conference Finals" },

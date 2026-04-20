@@ -11,6 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { toast } from "sonner";
+import DemoMatchCard from "@/components/DemoMatchCard";
 
 interface AdminUser {
   id: string;
@@ -151,6 +152,11 @@ const Admin = () => {
             </AccordionContent>
           </AccordionItem>
         </Accordion>
+
+        <div className="space-y-2">
+          <h2 className="font-display text-lg tracking-wider text-muted-foreground">DEMO MATCH CARD</h2>
+          <DemoMatchCard />
+        </div>
       </div>
     </div>
   );

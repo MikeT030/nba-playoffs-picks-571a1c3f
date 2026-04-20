@@ -335,8 +335,7 @@ const MyPicks = () => {
     <div className="flex border-b border-border/40 mb-11">
       <button
         onClick={() => setShowBracket(true)}
-        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-sm font-medium transition-all duration-200 border-b-2 -mb-px ${
-          showBracket
+        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-base font-medium transition-all duration-200 border-b-2 -mb-px ${
             ? "border-primary text-primary"
             : "border-transparent text-muted-foreground hover:text-foreground"
         }`}
@@ -346,8 +345,7 @@ const MyPicks = () => {
       </button>
       <button
         onClick={() => setShowBracket(false)}
-        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-sm font-medium transition-all duration-200 border-b-2 -mb-px ${
-          !showBracket
+        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-base font-medium transition-all duration-200 border-b-2 -mb-px ${
             ? "border-primary text-primary"
             : "border-transparent text-muted-foreground hover:text-foreground"
         }`}

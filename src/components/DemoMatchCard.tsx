@@ -61,9 +61,9 @@ const DemoMatchCard = () => {
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="font-display text-2xl">{awayScore}</span>
+            <span className="text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{awayScore}</span>
             <span className="text-muted-foreground font-body text-sm">—</span>
-            <span className="font-display text-2xl">{homeScore}</span>
+            <span className="text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{homeScore}</span>
           </div>
           <p className="text-xs font-body mt-1 font-medium text-muted-foreground">
             Series {seriesAway} – {seriesHome}

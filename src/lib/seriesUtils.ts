@@ -27,20 +27,106 @@ export function isSameLocalDay(startsAt: number | undefined): boolean {
 }
 
 /**
- * True if we should surface a scheduled game as "Next Up":
- * - it's later today (game day), OR
- * - tip-off is within the next 24h
+ * Returns Y/M/D parts of `ts` as observed in the given IANA timezone.
  */
-export function isNextUp(startsAt: number | undefined): boolean {
+function getZonedYMD(ts: number, timeZone: string): { y: number; m: number; d: number } {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date(ts));
+  const y = Number(parts.find((p) => p.type === "year")!.value);
+  const m = Number(parts.find((p) => p.type === "month")!.value);
+  const d = Number(parts.find((p) => p.type === "day")!.value);
+  return { y, m, d };
+}
+
+/**
+ * Returns the UTC ms timestamp for a given wall-clock (Y, M, D, H, Min)
+ * interpreted in `timeZone`. Handles DST automatically (so it works for
+ * both CET (UTC+1) and CEST (UTC+2) for Europe/Berlin).
+ */
+function zonedWallTimeToUtcMs(
+  y: number,
+  m: number,
+  d: number,
+  h: number,
+  min: number,
+  timeZone: string,
+): number {
+  // First guess: pretend the wall time is UTC.
+  const guess = Date.UTC(y, m - 1, d, h, min, 0);
+  // Find what wall time `guess` actually represents in the target zone.
+  const zoned = getZonedYMD(guess, timeZone);
+  const zonedTimeParts = new Intl.DateTimeFormat("en-GB", {
+    timeZone,
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(new Date(guess));
+  const zh = Number(zonedTimeParts.find((p) => p.type === "hour")!.value) % 24;
+  const zmin = Number(zonedTimeParts.find((p) => p.type === "minute")!.value);
+  // Difference between desired wall time and what guess produced (in minutes).
+  const desiredMin = ((Date.UTC(y, m - 1, d) - Date.UTC(zoned.y, zoned.m - 1, zoned.d)) / 60_000)
+    + (h - zh) * 60 + (min - zmin);
+  return guess + desiredMin * 60_000;
+}
+
+/**
+ * Flip moment for the "US slate" containing `startsAt`:
+ *   1. Determine the game's US Eastern calendar date (the NBA "game day").
+ *   2. Step back to the previous CET/CEST calendar day.
+ *   3. Anchor at 20:00 Europe/Berlin on that day.
+ *
+ * All games on the same US-Eastern game day share the same flip moment, so
+ * a full night's slate flips to "Next Up" together regardless of which game
+ * is earliest in CET wall time.
+ */
+export function flipMomentForSlate(startsAt: number): number {
+  // 1) US-Eastern game day for this tip-off.
+  const et = getZonedYMD(startsAt, "America/New_York");
+  // Anchor noon ET on that game day so we have a stable timestamp inside the day.
+  const noonEtUtc = zonedWallTimeToUtcMs(et.y, et.m, et.d, 12, 0, "America/New_York");
+  // 2) Convert that anchor to its CET calendar date, then step back one day.
+  const cet = getZonedYMD(noonEtUtc, "Europe/Berlin");
+  const prev = new Date(Date.UTC(cet.y, cet.m - 1, cet.d));
+  prev.setUTCDate(prev.getUTCDate() - 1);
+  // 3) 20:00 Europe/Berlin on the previous CET day.
+  return zonedWallTimeToUtcMs(
+    prev.getUTCFullYear(),
+    prev.getUTCMonth() + 1,
+    prev.getUTCDate(),
+    20,
+    0,
+    "Europe/Berlin",
+  );
+}
+
+/**
+ * True once we've crossed the "day before at 20:00 CET" flip moment for the
+ * US slate this game belongs to (and the game hasn't started yet).
+ */
+export function isPastSlateFlip(startsAt: number | undefined): boolean {
   if (!startsAt) return false;
   if (startsAt < Date.now()) return false;
-  return isSameLocalDay(startsAt) || isWithin24h(startsAt);
+  return Date.now() >= flipMomentForSlate(startsAt);
+}
+
+/**
+ * True if we should surface a scheduled game as "Next Up":
+ * we've crossed the "day before, 20:00 CET" flip moment for this game's
+ * US-Eastern slate, and tip-off is still in the future.
+ */
+export function isNextUp(startsAt: number | undefined): boolean {
+  return isPastSlateFlip(startsAt);
 }
 
 /**
  * Default slide rule for a series:
  * 1. live game
- * 2. next upcoming on game day or within 24h of tip-off
+ * 2. next upcoming once we've crossed the slate flip moment
+ *    (day before tip-off, 20:00 Europe/Berlin)
  * 3. most recent played (final)
  * 4. first scheduled game (Game 1)
  */
@@ -50,14 +136,8 @@ export function pickDefaultGameIdx(games: SeriesGame[]): number {
   const liveIdx = games.findIndex((g) => g.status === "live");
   if (liveIdx >= 0) return liveIdx;
 
-  // Surface the next upcoming game once tip-off is within 12 hours, so users
-  // see the next game earlier instead of staying on the most recent final.
   const nextUpcomingIdx = games.findIndex((g) => g.status === "upcoming");
-  if (
-    nextUpcomingIdx >= 0 &&
-    (isSameLocalDay(games[nextUpcomingIdx].startsAt) ||
-      isWithin12h(games[nextUpcomingIdx].startsAt))
-  ) {
+  if (nextUpcomingIdx >= 0 && isPastSlateFlip(games[nextUpcomingIdx].startsAt)) {
     return nextUpcomingIdx;
   }
 

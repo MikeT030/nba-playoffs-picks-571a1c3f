@@ -444,7 +444,8 @@ const MyPicks = () => {
 
         {showBracket ? (
           <>
-            <div className="flex justify-center mb-4">
+            <PlayoffBracket ref={bracketRef} picks={picks} bets={bets} seriesList={activeBracket} />
+            <div className="flex justify-start mt-4 mb-4">
               <button
                 onClick={handleShareBracket}
                 disabled={downloading}
@@ -456,7 +457,6 @@ const MyPicks = () => {
                 {downloading ? "Generating..." : "Share Bracket"}
               </button>
             </div>
-            <PlayoffBracket ref={bracketRef} picks={picks} bets={bets} seriesList={activeBracket} />
 
             <Accordion type="single" collapsible className="mt-8">
               <AccordionItem value="scoring" className="rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md px-5 py-0 border-none">

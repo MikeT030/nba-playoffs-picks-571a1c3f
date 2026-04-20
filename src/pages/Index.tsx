@@ -128,7 +128,7 @@ const Index = () => {
     <div className="min-h-screen bg-background pb-28">
       <HeroBanner />
 
-      <section className="container py-10">
+      <section className="container py-10 pt-[20px]">
 
         <CountdownTimer />
 

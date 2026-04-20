@@ -12,6 +12,7 @@ import { usePlayerCard } from "@/hooks/usePlayerCard";
 import { useAllUserPicks } from "@/hooks/useAllUserPicks";
 import { useQueryClient } from "@tanstack/react-query";
 import { ALL_MONOLOGUE_LINES, isPlayoffsStarted } from "@/data/buttonMonologue";
+import { flipMomentForSlate } from "@/lib/seriesUtils";
 import {
   Select,
   SelectContent,

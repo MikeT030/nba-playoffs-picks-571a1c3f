@@ -178,7 +178,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
           )}
           <TeamLogo src={displayAway.logo} alt={displayAway.name} className="w-10 h-10" />
           <div>
-            <p className="tracking-wide text-lg" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{displayAway.abbreviation}</p>
+            <p className="tracking-wide text-lg" style={{ fontFamily: "'Black Ops One', sans-serif" }}>{displayAway.abbreviation}</p>
             <p className="text-xs text-muted-foreground font-body hidden sm:block">{displayAway.name}</p>
           </div>
         </div>
@@ -231,7 +231,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
         {/* Home Team */}
         <div className="flex-1 flex items-center gap-1.5 justify-end text-right -translate-y-2">
           <div>
-            <p className="tracking-wide text-lg" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{displayHome.abbreviation}</p>
+            <p className="tracking-wide text-lg" style={{ fontFamily: "'Black Ops One', sans-serif" }}>{displayHome.abbreviation}</p>
             <p className="text-xs text-muted-foreground font-body hidden sm:block">{displayHome.name}</p>
           </div>
           <TeamLogo src={displayHome.logo} alt={displayHome.name} className="w-10 h-10" />

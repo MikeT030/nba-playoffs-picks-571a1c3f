@@ -170,21 +170,21 @@ const MatchCard = ({ match }: MatchCardProps) => {
         </span>
       </div>
 
-      <div className="p-5 flex items-center gap-4 pt-[20px]">
+      <div className="p-5 flex items-center justify-between gap-2 pt-[20px]">
         {/* Away Team */}
-        <div className="flex-1 flex items-center gap-2 -translate-y-2">
+        <div className="flex-1 flex items-center gap-1.5 -translate-y-2">
           {displayAway.seed && (
             <span className="text-xs text-muted-foreground font-body font-semibold w-4 text-center shrink-0">{displayAway.seed}</span>
           )}
           <TeamLogo src={displayAway.logo} alt={displayAway.name} className="w-10 h-10" />
           <div>
-            <p className="font-display text-xl tracking-wide">{displayAway.abbreviation}</p>
+            <p className="tracking-wide text-lg" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{displayAway.abbreviation}</p>
             <p className="text-xs text-muted-foreground font-body hidden sm:block">{displayAway.name}</p>
           </div>
         </div>
 
         {/* Score & Series */}
-        <div className="text-center px-4">
+        <div className="text-center shrink-0">
           <div className="h-0">
             {displayStatus === "live" && (
               <span className="inline-flex items-center gap-1.5 text-[10px] font-body font-semibold uppercase tracking-widest -translate-y-5 whitespace-nowrap text-[#fe953e]">
@@ -208,7 +208,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
               </span>
             )}
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {isUpcoming ? (
               <>
                 <span className="font-display text-2xl text-muted-foreground">—</span>
@@ -229,9 +229,9 @@ const MatchCard = ({ match }: MatchCardProps) => {
         </div>
 
         {/* Home Team */}
-        <div className="flex-1 flex items-center gap-2 justify-end text-right -translate-y-2">
+        <div className="flex-1 flex items-center gap-1.5 justify-end text-right -translate-y-2">
           <div>
-            <p className="font-display text-xl tracking-wide">{displayHome.abbreviation}</p>
+            <p className="tracking-wide text-lg" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{displayHome.abbreviation}</p>
             <p className="text-xs text-muted-foreground font-body hidden sm:block">{displayHome.name}</p>
           </div>
           <TeamLogo src={displayHome.logo} alt={displayHome.name} className="w-10 h-10" />

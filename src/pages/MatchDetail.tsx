@@ -349,20 +349,17 @@ const MatchDetail = () => {
                     idx !== allPicks.length - 1 ? "border-b border-[#2B2F37]" : ""
                   }`}
                 >
-                  <div className="flex-1 min-w-0">
-                    <p className="font-body text-sm">
-                      <span className="font-semibold text-foreground">
-                        {pick.profile_name || "Anonymous"}
-                      </span>
+                  <div className="flex-1">
+                    <p className="font-body font-semibold">
+                      {pick.profile_name || "Anonymous"}
                       {isCurrentUser && <span className="text-xs text-primary ml-2">(You)</span>}
-                      <span className="text-muted-foreground">
-                        {" · Picks "}
-                        <span className="font-semibold text-white">
-                          {pickedTeam.abbreviation}
-                        </span>
-                        {" in "}
-                        <span className="font-bold text-white">{pick.games_in_series}</span>
-                      </span>
+                    </p>
+                    <p className="text-sm text-muted-foreground font-body">
+                      Picks{" "}
+                      <span className="font-semibold text-white">
+                        {pickedTeam.abbreviation}
+                      </span>{" "}
+                      in <span className="font-bold text-white">{pick.games_in_series}</span>
                       {pts !== null && (
                         <span className="ml-2 text-primary font-bold">· {pts} pts</span>
                       )}

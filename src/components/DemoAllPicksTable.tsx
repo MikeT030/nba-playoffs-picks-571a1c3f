@@ -358,7 +358,7 @@ const DemoAllPicksTable = () => {
                               key={i}
                               className="p-3 align-middle text-center font-body text-xs whitespace-nowrap"
                             >
-                              <div className="flex flex-col items-center gap-0.5">
+                              <div className="inline-flex items-baseline gap-1.5">
                                 <span>
                                   <span className="font-bold text-foreground">
                                     {cell.pick.winner}
@@ -372,7 +372,7 @@ const DemoAllPicksTable = () => {
                                 >
                                   {total}
                                   {cell.championBonus && (
-                                    <span className="ml-1 text-[9px] font-body text-amber-300/80 align-top">
+                                    <span className="ml-0.5 text-[9px] font-body text-amber-300/80 align-top">
                                       +4
                                     </span>
                                   )}

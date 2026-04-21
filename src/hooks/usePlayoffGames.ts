@@ -164,8 +164,8 @@ function groupIntoSeries(games: NbaGame[], bracket: BracketSeries[]): Match[] {
       homeWins: homeAbbr === teamA ? teamAWins : teamBWins,
       awayWins: awayAbbr === teamA ? teamAWins : teamBWins,
       status: localStatus,
-      homeScore: latestGame.home_team_score,
-      awayScore: latestGame.visitor_team_score,
+      homeScore: latestPlayedGame.home_team_score,
+      awayScore: latestPlayedGame.visitor_team_score,
       tips: makeTips(homeAbbr, awayAbbr),
     });
   }

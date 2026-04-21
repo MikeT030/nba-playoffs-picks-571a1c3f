@@ -149,7 +149,8 @@ const TeamSlot = ({
           <span
             className={`font-display text-sm tracking-wide flex-1 whitespace-nowrap ${
               isActualLoser ? "text-muted-foreground/50 line-through" : ""
-            } ${isActualWinner ? "text-emerald-300" : ""}`}
+            }`}
+            style={{ color: isActualWinner ? "#EEEEEE" : undefined }}
           >
             {isPlayInPlaceholder(team.abbreviation)
               ? "TBD"

@@ -138,6 +138,18 @@ const Index = () => {
   // tonight's tip-off), so European morning viewers can still see results.
   const TWENTY_HOURS_MS = 20 * 60 * 60 * 1000;
   const nowMs = Date.now();
+  // Compute "tonight's flip moment" = today's 20:00 in Europe/Berlin (local
+  // viewer's evening). Until we cross this, last night's ET slate finals
+  // remain in the Today section.
+  const berlinNow = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "Europe/Berlin" }),
+  );
+  const tonightFlipBerlin = new Date(berlinNow);
+  tonightFlipBerlin.setHours(20, 0, 0, 0);
+  // Difference between Berlin local time and UTC for "now":
+  const berlinOffsetMs = berlinNow.getTime() - nowMs;
+  const tonightFlipUtcMs = tonightFlipBerlin.getTime() - berlinOffsetMs;
+
   const todayMatches: typeof sortedMatches = [];
   const nextDaysMatches: typeof sortedMatches = [];
   for (const m of sortedMatches) {
@@ -153,11 +165,10 @@ const Index = () => {
     const withinTonight = ts - nowMs <= TWENTY_HOURS_MS;
     const isUpcomingToday =
       ts > nowMs && (isTodaySlateET(ts) || isSameLocalDay(ts) || withinTonight);
-    // Recently finished game from the active ET slate: keep visible until the
-    // next slate's flip moment (the day-before-tip-off 20:00 Europe/Berlin
-    // anchor returned by flipMomentForSlate).
+    // Recently finished game from the active ET slate: keep visible until
+    // tonight's 20:00 Europe/Berlin flip moment.
     const isRecentSlateFinal =
-      ts <= nowMs && isTodaySlateET(ts) && nowMs < flipMomentForSlate(ts + 24 * 60 * 60 * 1000);
+      ts <= nowMs && isTodaySlateET(ts) && nowMs < tonightFlipUtcMs;
     if (isUpcomingToday || isRecentSlateFinal) {
       todayMatches.push(m);
     } else {

@@ -321,6 +321,8 @@ interface PlayoffBracketProps {
   variant?: BracketVariant;
   /** Map of seriesId → series score string (e.g. "4-2") shown as the actual matchup standing. */
   seriesScores?: Record<string, string>;
+  /** Optional champion team name shown above the Finals card, aligned to the Finals column. */
+  championName?: string;
 }
 
 const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
@@ -331,6 +333,7 @@ const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
   pickPoints = {},
   variant = "badge",
   seriesScores = {},
+  championName,
 }, ref) => {
   const bracket = seriesList ?? defaultBracketSeries;
 
@@ -410,6 +413,24 @@ const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
           {renderCard("east-conf-finals", COLS.cfe, CF_Y)}
           {eastSemiIds.map((id, i) => renderCard(id, COLS.se, SEMI_Y[i]))}
           {eastR1Ids.map((id, i) => renderCard(id, COLS.r1e, R1_Y[i]))}
+
+          {championName && (
+            <div
+              className="absolute pointer-events-none text-center"
+              style={{
+                left: COLS.finals,
+                width: CARD_W,
+                top: FINALS_Y / 2 - 18,
+              }}
+            >
+              <p className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">
+                Champion
+              </p>
+              <p className="font-display text-base tracking-wider" style={{ color: "#EEEEEE" }}>
+                {championName}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

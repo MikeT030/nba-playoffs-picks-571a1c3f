@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Trophy } from "lucide-react";
+
 import PlayoffBracket from "@/components/PlayoffBracket";
 import { useBracketData } from "@/hooks/useBracketData";
 import {
@@ -131,29 +131,13 @@ const DemoBracketPlayedOut = () => {
       {isLoading ? (
         <p className="text-sm text-muted-foreground font-body">Loading bracket…</p>
       ) : (
-        <div className="rounded-lg bg-[#1A1E24] p-3 relative">
+        <div className="rounded-lg bg-[#1A1E24] p-3">
           <PlayoffBracket
             seriesList={bracket}
             actualWinners={winners}
             seriesScores={seriesScores}
+            championName={champion}
           />
-
-          {/* Champion banner — positioned between top of bracket area and the Finals card */}
-          {champion && (
-            <div
-              className="absolute left-1/2 -translate-x-1/2 pointer-events-none flex items-center justify-center gap-2 py-2 px-3"
-              style={{ top: 120 }}
-            >
-              <div className="text-center">
-                <p className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">
-                  Champion
-                </p>
-                <p className="font-display text-base tracking-wider" style={{ color: "#EEEEEE" }}>
-                  {champion}
-                </p>
-              </div>
-            </div>
-          )}
         </div>
       )}
     </div>

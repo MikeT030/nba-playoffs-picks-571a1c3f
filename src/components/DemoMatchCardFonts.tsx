@@ -107,7 +107,6 @@ const DemoMatchCardFonts = () => {
   const fonts = [
     { fontFamily: "'Saira Stencil One', sans-serif", fontLabel: "Saira Stencil One" },
     { fontFamily: "'Black Ops One', sans-serif", fontLabel: "Black Ops One" },
-    { fontFamily: "'Wallpoet', sans-serif", fontLabel: "Wallpoet" },
     { fontFamily: "'Faster One', sans-serif", fontLabel: "Faster One" },
   ];
 

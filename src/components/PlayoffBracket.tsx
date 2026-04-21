@@ -323,6 +323,8 @@ interface PlayoffBracketProps {
   seriesScores?: Record<string, string>;
   /** Optional champion team name shown above the Finals card, aligned to the Finals column. */
   championName?: string;
+  /** Optional champion team logo URL shown next to the champion name. */
+  championLogoSrc?: string;
 }
 
 const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
@@ -334,6 +336,7 @@ const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
   variant = "badge",
   seriesScores = {},
   championName,
+  championLogoSrc,
 }, ref) => {
   const bracket = seriesList ?? defaultBracketSeries;
 

@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { teamMeta, type NbaGame } from "@/lib/nbaApi";
 import { type Team, getTeamSeed, type BracketSeries } from "@/data/playoffsData";
 import { usePlayoffGamesRaw } from "./usePlayoffGamesRaw";
@@ -14,7 +14,6 @@ export interface SeriesGame {
   awayScore: number;
   seriesRecord: [number, number];
   ot?: number;
-  /** Tip-off timestamp in ms (UTC). Undefined if API has no precise time. */
   startsAt?: number;
 }
 
@@ -34,7 +33,6 @@ function nbaTeamToTeam(t: { full_name: string; abbreviation: string }, bracket: 
 function classifyStatus(g: NbaGame): "final" | "live" | "upcoming" {
   if (g.status === "Final") return "final";
   if (LIVE_STATUS_RE.test(g.status)) return "live";
-  // Anything else (date, "7:00 PM ET", scheduled) treat as upcoming
   return "upcoming";
 }
 
@@ -43,7 +41,6 @@ function gamesToSeriesGames(games: NbaGame[], bracket: BracketSeries[]): SeriesG
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
 
-  // Find clinching final (if any). Filter out scheduled games AFTER the clinch.
   const wins: Record<string, number> = {};
   let clinchDate: number | null = null;
   for (const g of sorted) {
@@ -66,7 +63,6 @@ function gamesToSeriesGames(games: NbaGame[], bracket: BracketSeries[]): SeriesG
         return new Date(g.date).getTime() <= clinchDate!;
       });
 
-  // Re-walk to compute running record per visible game
   const runningWins: Record<string, number> = {};
   const result: SeriesGame[] = [];
 
@@ -91,11 +87,6 @@ function gamesToSeriesGames(games: NbaGame[], bracket: BracketSeries[]): SeriesG
 
     const ot = g.period > 4 ? g.period - 4 : undefined;
 
-    // startsAt: prefer the precise ISO `datetime` field (with tip-off time).
-    // The API also stores an ISO string in `status` for scheduled games
-    // (e.g. "2026-04-19T17:00:00Z"). Fall back to `g.date` only as a last
-    // resort — that's date-only and parses to midnight UTC, which would
-    // make every upcoming game look like it tips off at midnight local.
     let startsAt: number | undefined;
     if (g.datetime) {
       const t = new Date(g.datetime).getTime();
@@ -135,23 +126,24 @@ export function useSeriesGames(
   awayAbbr: string | undefined,
   season: number = 2025
 ) {
-  usePlayoffGamesRaw(season);
+  const rawQuery = usePlayoffGamesRaw(season);
   const { data: bracket = [] } = useBracketData(season);
 
-  return useQuery<NbaGame[], Error, SeriesGame[]>({
-    queryKey: ["playoff-games-raw", season],
-    enabled: false,
-    initialData: [],
-    select: (allGames) => {
-      if (!matchId || !homeAbbr || !awayAbbr) return [];
-      const teamSet = new Set([homeAbbr, awayAbbr]);
-      const seriesGames = allGames.filter(
-        (g) =>
-          teamSet.has(g.home_team.abbreviation) &&
-          teamSet.has(g.visitor_team.abbreviation)
-      );
-      if (seriesGames.length === 0) return [];
-      return gamesToSeriesGames(seriesGames, bracket);
-    },
-  });
+  const data = useMemo(() => {
+    const allGames = rawQuery.data ?? [];
+    if (!matchId || !homeAbbr || !awayAbbr) return [];
+    const teamSet = new Set([homeAbbr, awayAbbr]);
+    const seriesGames = allGames.filter(
+      (g) =>
+        teamSet.has(g.home_team.abbreviation) &&
+        teamSet.has(g.visitor_team.abbreviation)
+    );
+    if (seriesGames.length === 0) return [];
+    return gamesToSeriesGames(seriesGames, bracket);
+  }, [rawQuery.data, matchId, homeAbbr, awayAbbr, bracket]);
+
+  return {
+    ...rawQuery,
+    data,
+  };
 }

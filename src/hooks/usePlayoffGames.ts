@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { teamMeta, type NbaGame } from "@/lib/nbaApi";
 import { type Match, type Team, makeTips, buildFallbackMatches, getConference, getTeamSeed, type BracketSeries } from "@/data/playoffsData";
 import { usePlayoffGamesRaw } from "./usePlayoffGamesRaw";
@@ -90,11 +90,6 @@ function groupIntoSeries(games: NbaGame[], bracket: BracketSeries[]): Match[] {
     const awayTeam = nbaTeamToTeam(firstGame.visitor_team, bracket);
 
     const localStatus = gameStatusToLocal(latestGame.status);
-
-    // Pick the game whose tip-off should drive sorting:
-    // - live: the live game itself
-    // - upcoming: the next upcoming game (latestGame is the first upcoming)
-    // - final (series ongoing): the next scheduled game after the latest final
     const upcomingGames = seriesGames.filter((g) => gameStatusToLocal(g.status) === "upcoming");
     const sortGame =
       localStatus === "live"
@@ -114,11 +109,11 @@ function groupIntoSeries(games: NbaGame[], bracket: BracketSeries[]): Match[] {
       }
       return undefined;
     };
-    const startsAt = extractStartsAt(sortGame);
+    // For finished cards, group/sort the series by the latest played game's
+    // actual tip-off so last night's slate stays under Today until the flip.
+    // For live/upcoming cards, keep using the active or next scheduled game.
+    const startsAt = extractStartsAt(localStatus === "final" ? latestGame : sortGame);
 
-    // For upcoming games, the API's `time` field is null. Derive a local
-    // tip-off label from `datetime` (or an ISO timestamp stored in `status`)
-    // so cards display + sort by their actual scheduled time, not "TBD".
     const formatUpcomingTime = (g: NbaGame): string => {
       let ts: number | undefined;
       if (g.datetime) {
@@ -167,8 +162,6 @@ function groupIntoSeries(games: NbaGame[], bracket: BracketSeries[]): Match[] {
 }
 
 function deriveMatches(games: NbaGame[] | undefined, bracket: BracketSeries[]): Match[] {
-  // Always derive fallbacks from the resolved bracket so PIW7/PIW8
-  // placeholders are replaced as soon as play-in winners are known.
   const fallbacks = buildFallbackMatches(bracket);
   if (!games || games.length === 0) return fallbacks;
   const apiMatches = groupIntoSeries(games, bracket);
@@ -188,13 +181,13 @@ function deriveMatches(games: NbaGame[] | undefined, bracket: BracketSeries[]): 
 }
 
 export function usePlayoffGames(season: number = 2025) {
-  usePlayoffGamesRaw(season);
+  const rawQuery = usePlayoffGamesRaw(season);
   const { data: bracket = [] } = useBracketData(season);
 
-  return useQuery<NbaGame[], Error, Match[]>({
-    queryKey: ["playoff-games-raw", season],
-    enabled: false,
-    initialData: [],
-    select: (games) => deriveMatches(games, bracket),
-  });
+  const data = useMemo(() => deriveMatches(rawQuery.data, bracket), [rawQuery.data, bracket]);
+
+  return {
+    ...rawQuery,
+    data,
+  };
 }

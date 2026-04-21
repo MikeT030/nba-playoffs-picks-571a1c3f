@@ -167,6 +167,8 @@ const Admin = () => {
         </div>
 
         <DemoBracketPlayedOut />
+
+        <DemoAllPicksTable />
       </div>
     </div>
   );

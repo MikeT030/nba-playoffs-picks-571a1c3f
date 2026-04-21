@@ -127,9 +127,13 @@ const Index = () => {
 
   // Split matches into "Today" (current US-Eastern slate) vs "Next days".
   // A match belongs to "Today" if it's live, or if its tip-off is still upcoming
-  // AND either (a) it's part of the active ET slate, or (b) it falls on the
-  // viewer's local calendar day (so European morning viewers see tonight's
-  // games immediately, before the noon-ET slate flip).
+  // AND any of:
+  //   (a) it's part of the active ET slate,
+  //   (b) it falls on the viewer's local calendar day,
+  //   (c) it tips off within the next ~20h (covers tonight's NBA slate as
+  //       seen from a European morning, where tip-off is technically the next
+  //       local calendar day past midnight).
+  const TWENTY_HOURS_MS = 20 * 60 * 60 * 1000;
   const todayMatches: typeof sortedMatches = [];
   const nextDaysMatches: typeof sortedMatches = [];
   for (const m of sortedMatches) {
@@ -138,7 +142,12 @@ const Index = () => {
       continue;
     }
     const ts = m.startsAt ? new Date(m.startsAt).getTime() : undefined;
-    if (ts && ts > Date.now() && (isTodaySlateET(ts) || isSameLocalDay(ts))) {
+    const withinTonight = ts ? ts - Date.now() <= TWENTY_HOURS_MS : false;
+    if (
+      ts &&
+      ts > Date.now() &&
+      (isTodaySlateET(ts) || isSameLocalDay(ts) || withinTonight)
+    ) {
       todayMatches.push(m);
     } else {
       nextDaysMatches.push(m);

@@ -13,6 +13,7 @@ import {
 import { toast } from "sonner";
 import DemoMatchCard from "@/components/DemoMatchCard";
 import DemoMatchCardFonts from "@/components/DemoMatchCardFonts";
+import DemoBracketPlayedOut from "@/components/DemoBracketPlayedOut";
 
 interface AdminUser {
   id: string;
@@ -163,6 +164,8 @@ const Admin = () => {
           <h2 className="font-display text-lg tracking-wider text-muted-foreground">FONT VARIANTS</h2>
           <DemoMatchCardFonts />
         </div>
+
+        <DemoBracketPlayedOut />
       </div>
     </div>
   );

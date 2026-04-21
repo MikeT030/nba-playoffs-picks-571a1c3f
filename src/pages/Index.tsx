@@ -12,7 +12,7 @@ import { usePlayerCard } from "@/hooks/usePlayerCard";
 import { useAllUserPicks } from "@/hooks/useAllUserPicks";
 import { useQueryClient } from "@tanstack/react-query";
 import { ALL_MONOLOGUE_LINES, isPlayoffsStarted } from "@/data/buttonMonologue";
-import { isTodaySlateET, isSameLocalDay } from "@/lib/seriesUtils";
+import { isTodaySlateET, isSameLocalDay, flipMomentForSlate } from "@/lib/seriesUtils";
 import {
   Select,
   SelectContent,
@@ -133,7 +133,11 @@ const Index = () => {
   //   (c) it tips off within the next ~20h (covers tonight's NBA slate as
   //       seen from a European morning, where tip-off is technically the next
   //       local calendar day past midnight).
+  // Finished games from last night's ET slate also stay in "Today" until we
+  // cross the next slate's flip moment (20:00 Europe/Berlin the day before
+  // tonight's tip-off), so European morning viewers can still see results.
   const TWENTY_HOURS_MS = 20 * 60 * 60 * 1000;
+  const nowMs = Date.now();
   const todayMatches: typeof sortedMatches = [];
   const nextDaysMatches: typeof sortedMatches = [];
   for (const m of sortedMatches) {
@@ -142,12 +146,19 @@ const Index = () => {
       continue;
     }
     const ts = m.startsAt ? new Date(m.startsAt).getTime() : undefined;
-    const withinTonight = ts ? ts - Date.now() <= TWENTY_HOURS_MS : false;
-    if (
-      ts &&
-      ts > Date.now() &&
-      (isTodaySlateET(ts) || isSameLocalDay(ts) || withinTonight)
-    ) {
+    if (!ts) {
+      nextDaysMatches.push(m);
+      continue;
+    }
+    const withinTonight = ts - nowMs <= TWENTY_HOURS_MS;
+    const isUpcomingToday =
+      ts > nowMs && (isTodaySlateET(ts) || isSameLocalDay(ts) || withinTonight);
+    // Recently finished game from the active ET slate: keep visible until the
+    // next slate's flip moment (the day-before-tip-off 20:00 Europe/Berlin
+    // anchor returned by flipMomentForSlate).
+    const isRecentSlateFinal =
+      ts <= nowMs && isTodaySlateET(ts) && nowMs < flipMomentForSlate(ts + 24 * 60 * 60 * 1000);
+    if (isUpcomingToday || isRecentSlateFinal) {
       todayMatches.push(m);
     } else {
       nextDaysMatches.push(m);

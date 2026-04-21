@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import DemoMatchCard from "@/components/DemoMatchCard";
 import DemoMatchCardFonts from "@/components/DemoMatchCardFonts";
 import DemoBracketPlayedOut from "@/components/DemoBracketPlayedOut";
+import DemoAllPicksTable from "@/components/DemoAllPicksTable";
 
 interface AdminUser {
   id: string;
@@ -166,6 +167,8 @@ const Admin = () => {
         </div>
 
         <DemoBracketPlayedOut />
+
+        <DemoAllPicksTable />
       </div>
     </div>
   );

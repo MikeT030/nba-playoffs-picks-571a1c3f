@@ -12,7 +12,7 @@ import { usePlayerCard } from "@/hooks/usePlayerCard";
 import { useAllUserPicks } from "@/hooks/useAllUserPicks";
 import { useQueryClient } from "@tanstack/react-query";
 import { ALL_MONOLOGUE_LINES, isPlayoffsStarted } from "@/data/buttonMonologue";
-import { isTodaySlateET } from "@/lib/seriesUtils";
+import { isTodaySlateET, isSameLocalDay } from "@/lib/seriesUtils";
 import {
   Select,
   SelectContent,
@@ -126,8 +126,10 @@ const Index = () => {
     : [];
 
   // Split matches into "Today" (current US-Eastern slate) vs "Next days".
-  // A match belongs to "Today" if it's live, or if its US-Eastern game date
-  // matches the active ET slate (today ET after noon, yesterday ET before noon).
+  // A match belongs to "Today" if it's live, or if its tip-off is still upcoming
+  // AND either (a) it's part of the active ET slate, or (b) it falls on the
+  // viewer's local calendar day (so European morning viewers see tonight's
+  // games immediately, before the noon-ET slate flip).
   const todayMatches: typeof sortedMatches = [];
   const nextDaysMatches: typeof sortedMatches = [];
   for (const m of sortedMatches) {
@@ -136,7 +138,7 @@ const Index = () => {
       continue;
     }
     const ts = m.startsAt ? new Date(m.startsAt).getTime() : undefined;
-    if (ts && ts > Date.now() && isTodaySlateET(ts)) {
+    if (ts && ts > Date.now() && (isTodaySlateET(ts) || isSameLocalDay(ts))) {
       todayMatches.push(m);
     } else {
       nextDaysMatches.push(m);

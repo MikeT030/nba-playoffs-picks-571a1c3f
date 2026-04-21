@@ -79,10 +79,31 @@ function buildPlayedOutResults(bracket: BracketSeries[]) {
   return { winners, games };
 }
 
+// Series IDs where the fake user picked the LOSING team (an "upset call").
+// Everywhere else, the fake user picks the actual winner.
+const WRONG_PICK_SERIES = new Set<string>([
+  "west-r1-3v6",
+  "east-r1-2v7",
+  "west-semi-bottom",
+  "east-conf-finals",
+]);
+
+// Series IDs where the fake user's "in N" guess differs from the actual length.
+// Maps series ID → offset to apply to actual games-played to get the picked N.
+// Result is clamped to [4, 7].
+const PICK_GAMES_OFFSET: Record<string, number> = {
+  "west-r1-1v8": 1,
+  "east-r1-4v5": -1,
+  "west-semi-top": 1,
+  "east-semi-top": -1,
+  "west-conf-finals": 1,
+  "nba-finals": -1,
+};
+
 const DemoBracketPlayedOut = () => {
   const { data: bracket, isLoading } = useBracketData(2025);
 
-  const { winners, games, champion, seriesScores } = useMemo(() => {
+  const { winners, champion, seriesScores, picks, bets } = useMemo(() => {
     const { winners, games } = buildPlayedOutResults(bracket);
 
     // Build "topWins-bottomWins" per series for the score readout
@@ -115,7 +136,39 @@ const DemoBracketPlayedOut = () => {
       else if (w === bottomTeam?.abbreviation) champion = bottomTeam?.name;
     }
 
-    return { winners, games, champion, seriesScores };
+    // Build fake picks + bets that align with (or intentionally diverge from)
+    // the played-out winners. picks resolves the bracket downstream the same
+    // way actualWinners does, so picks must be set per round using winners
+    // (the propagated bracket) — not the user's own bracket.
+    const picks: Record<string, string> = {};
+    const bets: { seriesId: string; winner: string; gamesInSeries: number }[] = [];
+
+    for (const s of bracket) {
+      const w = winners[s.id];
+      if (!w) continue;
+      const { topTeam, bottomTeam } = resolveSeriesTeams(s.id, winners, bracket);
+      const top = topTeam ?? s.topTeam;
+      const bottom = bottomTeam ?? s.bottomTeam;
+      if (!top || !bottom) continue;
+
+      // Pick the loser if this series is in the wrong-pick set, else the winner.
+      const loserAbbr =
+        w === top.abbreviation ? bottom.abbreviation : top.abbreviation;
+      const pickedWinner = WRONG_PICK_SERIES.has(s.id) ? loserAbbr : w;
+
+      const actualGames = games[s.id] ?? 6;
+      const offset = PICK_GAMES_OFFSET[s.id] ?? 0;
+      const pickedGames = Math.max(4, Math.min(7, actualGames + offset));
+
+      picks[s.id] = pickedWinner;
+      bets.push({
+        seriesId: s.id,
+        winner: pickedWinner,
+        gamesInSeries: pickedGames,
+      });
+    }
+
+    return { winners, champion, seriesScores, picks, bets };
   }, [bracket]);
 
   return (
@@ -123,8 +176,9 @@ const DemoBracketPlayedOut = () => {
       <div>
         <h2 className="font-display text-lg tracking-wider">PLAYED-OUT BRACKET</h2>
         <p className="text-xs text-muted-foreground font-body">
-          Demo of how the playoffs could play out. Higher seeds advance to a
-          fake Finals champion. No user picks involved.
+          Demo of how the playoffs could play out, with sample user picks.
+          Higher seeds advance; a few intentional upsets show how wrong picks
+          appear in the bracket.
         </p>
       </div>
 
@@ -136,6 +190,8 @@ const DemoBracketPlayedOut = () => {
             seriesList={bracket}
             actualWinners={winners}
             seriesScores={seriesScores}
+            picks={picks}
+            bets={bets}
             championName={champion}
           />
         </div>

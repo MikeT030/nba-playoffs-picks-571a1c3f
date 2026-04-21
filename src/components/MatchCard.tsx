@@ -178,60 +178,9 @@ const MatchCard = ({ match }: MatchCardProps) => {
           )}
           <TeamLogo src={displayAway.logo} alt={displayAway.name} className="w-10 h-10" />
           <div>
-            <p className="tracking-wide text-base" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{displayAway.abbreviation}</p>
-            <p className="text-xs text-muted-foreground font-body hidden sm:block">{displayAway.name}</p>
-          </div>
-        </div>
-
-        {/* Score & Series */}
-        <div className="text-center shrink-0">
-          <div className="h-0">
-            {displayStatus === "live" && (
-              <span className="inline-flex items-center gap-1.5 text-[10px] font-body font-semibold uppercase tracking-widest -translate-y-5 whitespace-nowrap text-[#fe953e]">
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#FE943E] animate-pulse" />
-                {match.time ?? ""}
-              </span>
-            )}
-            {displayStatus === "final" && (
-              <span className="text-muted-foreground font-body font-semibold uppercase tracking-widest block -translate-y-5 text-xs">
-                Final{displayOt ? `/${displayOt > 1 ? displayOt : ""}OT` : ""}
-              </span>
-            )}
-            {isNextUp && (
-              <span className="text-[10px] font-body font-semibold uppercase tracking-widest block -translate-y-5 whitespace-nowrap text-primary">
-                {formatTipOff(activeGame?.startsAt)}
-              </span>
-            )}
-            {isUpcoming && !isNextUp && (
-              <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest block -translate-y-5 whitespace-nowrap">
-                {formatTipOff(activeGame?.startsAt)}
-              </span>
-            )}
-          </div>
-          <div className="flex items-center gap-2">
-            {isUpcoming ? (
-              <>
-                <span className="text-2xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
-                <span className="text-muted-foreground font-body text-sm">—</span>
-                <span className="text-2xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
-              </>
-            ) : (
-              <>
-                <span className="text-lg" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayAwayScore}</span>
-                <span className="text-muted-foreground font-body text-sm">—</span>
-                <span className="text-lg" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayHomeScore}</span>
-              </>
-            )}
-          </div>
-          <p className="text-xs font-body mt-1 font-medium text-muted-foreground">
-            Series {displaySeriesAway} – {displaySeriesHome}
-          </p>
-        </div>
-
-        {/* Home Team */}
-        <div className="flex-1 flex items-center gap-1.5 justify-end text-right -translate-y-2">
-          <div>
-            <p className="tracking-wide text-base" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{displayHome.abbreviation}</p>
+            <p className="tracking-wide text-base font-light" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{displayAway.abbreviation}</p>
+...
+            <p className="tracking-wide text-base font-light" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{displayHome.abbreviation}</p>
             <p className="text-xs text-muted-foreground font-body hidden sm:block">{displayHome.name}</p>
           </div>
           <TeamLogo src={displayHome.logo} alt={displayHome.name} className="w-10 h-10" />

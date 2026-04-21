@@ -150,6 +150,7 @@ const TeamSlot = ({
             className={`font-display text-sm tracking-wide flex-1 whitespace-nowrap ${
               isActualLoser ? "text-muted-foreground/50 line-through" : ""
             } ${isActualWinner ? "text-emerald-300" : ""}`}
+            style={!isActualLoser && !isActualWinner ? { color: "#EEEEEE" } : undefined}
           >
             {isPlayInPlaceholder(team.abbreviation)
               ? "TBD"

@@ -423,18 +423,18 @@ const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
               style={{
                 left: COLS.finals,
                 width: CARD_W,
-                top: FINALS_Y / 2 - 18,
+                top: 40,
               }}
             >
               <p className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">
                 Champion
               </p>
-              <div className="flex items-center justify-center gap-1.5">
+              <div className="flex flex-col items-center justify-center gap-1 mt-1">
                 {championLogoSrc && (
                   <TeamLogo
                     src={championLogoSrc}
                     alt={`${championName} logo`}
-                    className="w-5 h-5"
+                    className="w-12 h-12"
                   />
                 )}
                 <p className="font-display text-base tracking-wider" style={{ color: "#EEEEEE" }}>

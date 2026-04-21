@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Trophy } from "lucide-react";
+
 import PlayoffBracket from "@/components/PlayoffBracket";
 import { useBracketData } from "@/hooks/useBracketData";
 import {

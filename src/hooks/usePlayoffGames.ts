@@ -77,10 +77,8 @@ function groupIntoSeries(games: NbaGame[], bracket: BracketSeries[]): Match[] {
     }
 
     const playedGames = seriesGames.filter((g) => gameStatusToLocal(g.status) !== "upcoming");
-    const latestGame = playedGames.length > 0 ? playedGames[playedGames.length - 1] : seriesGames[0];
+    const latestPlayedGame = playedGames.length > 0 ? playedGames[playedGames.length - 1] : seriesGames[0];
     const gameNumber = playedGames.length > 0 ? playedGames.length : 1;
-    const dateObj = new Date(latestGame.date);
-    const dateStr = dateObj.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 
     const firstGame = seriesGames[0];
     const homeAbbr = firstGame.home_team.abbreviation;
@@ -89,14 +87,29 @@ function groupIntoSeries(games: NbaGame[], bracket: BracketSeries[]): Match[] {
     const homeTeam = nbaTeamToTeam(firstGame.home_team, bracket);
     const awayTeam = nbaTeamToTeam(firstGame.visitor_team, bracket);
 
-    const localStatus = gameStatusToLocal(latestGame.status);
     const upcomingGames = seriesGames.filter((g) => gameStatusToLocal(g.status) === "upcoming");
-    const sortGame =
-      localStatus === "live"
-        ? latestGame
-        : localStatus === "upcoming"
-          ? latestGame
-          : (upcomingGames[0] ?? latestGame);
+    const liveGame = seriesGames.find((g) => gameStatusToLocal(g.status) === "live");
+    const nextUpcomingGame = upcomingGames[0];
+
+    // The "display state" of the card is determined by what's happening RIGHT NOW
+    // in the series, prioritizing live > upcoming > final. This way a series with
+    // one finished game and one game tonight is shown as upcoming (in Today),
+    // not as final (stuck in Next days).
+    let localStatus: "upcoming" | "live" | "final";
+    let anchorGame: NbaGame;
+    if (liveGame) {
+      localStatus = "live";
+      anchorGame = liveGame;
+    } else if (nextUpcomingGame) {
+      localStatus = "upcoming";
+      anchorGame = nextUpcomingGame;
+    } else {
+      localStatus = "final";
+      anchorGame = latestPlayedGame;
+    }
+
+    const dateObj = new Date(anchorGame.date);
+    const dateStr = dateObj.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 
     const extractStartsAt = (g: NbaGame): string | undefined => {
       if (g.datetime) {
@@ -109,10 +122,9 @@ function groupIntoSeries(games: NbaGame[], bracket: BracketSeries[]): Match[] {
       }
       return undefined;
     };
-    // For finished cards, group/sort the series by the latest played game's
-    // actual tip-off so last night's slate stays under Today until the flip.
-    // For live/upcoming cards, keep using the active or next scheduled game.
-    const startsAt = extractStartsAt(localStatus === "final" ? latestGame : sortGame);
+    // Anchor sorting/bucketing on the active or next scheduled game, so a series
+    // with a game tonight lands in "Today" even if an earlier game already finished.
+    const startsAt = extractStartsAt(anchorGame);
 
     const formatUpcomingTime = (g: NbaGame): string => {
       let ts: number | undefined;
@@ -136,8 +148,8 @@ function groupIntoSeries(games: NbaGame[], bracket: BracketSeries[]): Match[] {
       localStatus === "final"
         ? "Final"
         : localStatus === "live"
-          ? formatLiveIndicator(latestGame.status, latestGame.period, latestGame.time)
-          : formatUpcomingTime(latestGame);
+          ? formatLiveIndicator(liveGame!.status, liveGame!.period, liveGame!.time)
+          : formatUpcomingTime(nextUpcomingGame);
 
     matches.push({
       id: key.toLowerCase(),

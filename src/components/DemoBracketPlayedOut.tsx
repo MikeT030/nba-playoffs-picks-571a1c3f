@@ -154,7 +154,6 @@ const DemoBracketPlayedOut = () => {
             seriesList={bracket}
             actualWinners={winners}
             seriesScores={seriesScores}
-            variant="trophy"
           />
         </div>
       )}

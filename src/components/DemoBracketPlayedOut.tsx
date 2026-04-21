@@ -135,7 +135,6 @@ const DemoBracketPlayedOut = () => {
           {/* Champion banner */}
           {champion && (
             <div className="flex items-center justify-center gap-2 py-2 px-3">
-              <Trophy size={16} className="text-emerald-400" />
               <div className="text-center">
                 <p className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">
                   Champion
@@ -144,7 +143,6 @@ const DemoBracketPlayedOut = () => {
                   {champion}
                 </p>
               </div>
-              <Trophy size={16} className="text-emerald-400" />
             </div>
           )}
 

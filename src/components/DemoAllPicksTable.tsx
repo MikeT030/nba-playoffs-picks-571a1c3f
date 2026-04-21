@@ -256,7 +256,8 @@ const DemoAllPicksTable = () => {
       const cells = players.map(({ picks }) => {
         const pick = picks.find((p) => p.series_id === seriesId);
         if (!pick) return null;
-        return scorePick(pick, winners, games, actualWinnerSet);
+        const score = scorePick(pick, winners, games, actualWinnerSet);
+        return { pick, ...score };
       });
       return { seriesId, round, label, cells };
     });
@@ -277,10 +278,10 @@ const DemoAllPicksTable = () => {
       <div>
         <h2 className="font-display text-lg tracking-wider">DEMO ALL-POINTS TABLE</h2>
         <p className="text-xs text-muted-foreground font-body">
-          Same played-out results as the demo bracket. Each cell shows only the
-          points that pick earned (3 = perfect, 2 = winner, 1 = right team /
-          wrong series, 0 = miss). The Finals cell includes the +4 champion
-          bonus when correct.
+          Same played-out results as the demo bracket. Each cell shows the
+          pick (e.g. "OKC in 6") and the points it earned (3 = perfect,
+          2 = winner, 1 = right team / wrong series, 0 = miss). The Finals
+          cell adds a +4 champion bonus when correct.
         </p>
       </div>
 
@@ -355,14 +356,28 @@ const DemoAllPicksTable = () => {
                           return (
                             <td
                               key={i}
-                              className={`p-3 align-middle text-center font-display text-base ${colorCls}`}
+                              className="p-3 align-middle text-center font-body text-xs whitespace-nowrap"
                             >
-                              {total}
-                              {cell.championBonus && (
-                                <span className="ml-1 text-[9px] font-body text-amber-300/80 align-top">
-                                  +4
+                              <div className="flex flex-col items-center gap-0.5">
+                                <span>
+                                  <span className="font-bold text-foreground">
+                                    {cell.pick.winner}
+                                  </span>
+                                  <span className="ml-1 text-white">
+                                    in {cell.pick.games_in_series}
+                                  </span>
                                 </span>
-                              )}
+                                <span
+                                  className={`font-display text-sm ${colorCls}`}
+                                >
+                                  {total}
+                                  {cell.championBonus && (
+                                    <span className="ml-1 text-[9px] font-body text-amber-300/80 align-top">
+                                      +4
+                                    </span>
+                                  )}
+                                </span>
+                              </div>
                             </td>
                           );
                         })}

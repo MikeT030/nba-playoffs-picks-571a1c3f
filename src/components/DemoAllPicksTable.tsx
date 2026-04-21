@@ -356,14 +356,28 @@ const DemoAllPicksTable = () => {
                           return (
                             <td
                               key={i}
-                              className={`p-3 align-middle text-center font-display text-base ${colorCls}`}
+                              className="p-3 align-middle text-center font-body text-xs whitespace-nowrap"
                             >
-                              {total}
-                              {cell.championBonus && (
-                                <span className="ml-1 text-[9px] font-body text-amber-300/80 align-top">
-                                  +4
+                              <div className="flex flex-col items-center gap-0.5">
+                                <span>
+                                  <span className="font-bold text-foreground">
+                                    {cell.pick.winner}
+                                  </span>
+                                  <span className="ml-1 text-white">
+                                    in {cell.pick.games_in_series}
+                                  </span>
                                 </span>
-                              )}
+                                <span
+                                  className={`font-display text-sm ${colorCls}`}
+                                >
+                                  {total}
+                                  {cell.championBonus && (
+                                    <span className="ml-1 text-[9px] font-body text-amber-300/80 align-top">
+                                      +4
+                                    </span>
+                                  )}
+                                </span>
+                              </div>
                             </td>
                           );
                         })}

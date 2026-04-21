@@ -413,6 +413,24 @@ const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
           {renderCard("east-conf-finals", COLS.cfe, CF_Y)}
           {eastSemiIds.map((id, i) => renderCard(id, COLS.se, SEMI_Y[i]))}
           {eastR1Ids.map((id, i) => renderCard(id, COLS.r1e, R1_Y[i]))}
+
+          {championName && (
+            <div
+              className="absolute pointer-events-none text-center"
+              style={{
+                left: COLS.finals,
+                width: CARD_W,
+                top: FINALS_Y / 2 - 18,
+              }}
+            >
+              <p className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">
+                Champion
+              </p>
+              <p className="font-display text-base tracking-wider" style={{ color: "#EEEEEE" }}>
+                {championName}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

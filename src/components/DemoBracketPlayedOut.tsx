@@ -79,62 +79,7 @@ function buildPlayedOutResults(bracket: BracketSeries[]) {
   return { winners, games };
 }
 
-// Series IDs where the fake user picked the LOSING team (an "upset call").
-// Everywhere else, the fake user picks the actual winner.
-const WRONG_PICK_SERIES = new Set<string>([
-  "west-r1-3v6",
-  "east-r1-2v7",
-  "west-semi-bottom",
-  "east-conf-finals",
-]);
-
-// Series IDs where the fake user's "in N" guess differs from the actual length.
-// Maps series ID → offset to apply to actual games-played to get the picked N.
-// Result is clamped to [4, 7].
-const PICK_GAMES_OFFSET: Record<string, number> = {
-  "west-r1-1v8": 1,
-  "east-r1-4v5": -1,
-  "west-semi-top": 1,
-  "east-semi-top": -1,
-  "west-conf-finals": 1,
-  "nba-finals": -1,
-};
-
-const DemoBracketPlayedOut = () => {
-  const { data: bracket, isLoading } = useBracketData(2025);
-
-  const { winners, champion, seriesScores, picks, bets } = useMemo(() => {
-    const { winners, games } = buildPlayedOutResults(bracket);
-
-    // Build "topWins-bottomWins" per series for the score readout
-    const seriesScores: Record<string, string> = {};
-    for (const s of bracket) {
-      const w = winners[s.id];
-      if (!w) continue;
-      const { topTeam, bottomTeam } = resolveSeriesTeams(s.id, winners, bracket);
-      const top = topTeam ?? s.topTeam;
-      const bottom = bottomTeam ?? s.bottomTeam;
-      if (!top || !bottom) continue;
-      const total = games[s.id] ?? 6;
-      const loserWins = Math.max(0, total - 4);
-      const topWins = w === top.abbreviation ? 4 : loserWins;
-      const bottomWins = w === bottom.abbreviation ? 4 : loserWins;
-      seriesScores[s.id] = `${topWins}-${bottomWins}`;
-    }
-
-    // Champion = winner of nba-finals, resolved to its team object for name
-    const finalsSeries = bracket.find((s) => s.id === "nba-finals");
-    let champion: string | undefined;
-    if (finalsSeries) {
-      const { topTeam, bottomTeam } = resolveSeriesTeams(
-        "nba-finals",
-        winners,
-        bracket
-      );
-      const w = winners["nba-finals"];
-      if (w === topTeam?.abbreviation) champion = topTeam?.name;
-      else if (w === bottomTeam?.abbreviation) champion = bottomTeam?.name;
-    }
+// ... keep existing code (WRONG_PICK_SERIES + PICK_GAMES_OFFSET constants and the start of the component) the same
 
     // Build fake picks + bets that align with (or intentionally diverge from)
     // the played-out winners. picks resolves the bracket downstream the same

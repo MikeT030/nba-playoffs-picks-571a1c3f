@@ -388,13 +388,13 @@ const DemoAllPicksTable = () => {
                 {/* Total row */}
                 <tr className="bg-[#1A1E24]/40">
                   <td className="bg-[#1A1E24]/30 p-3 min-w-[100px]"></td>
-                  <td className="sticky left-0 z-10 bg-[#1A1E24]/50 backdrop-blur-sm p-3 align-middle font-display tracking-wide whitespace-nowrap text-sm text-primary">
+                  <td className="sticky left-0 z-10 bg-[#1A1E24]/50 backdrop-blur-sm p-3 align-middle font-display tracking-wide whitespace-nowrap text-sm text-[#ededed]">
                     Total
                   </td>
                   {totals.map((t, i) => (
                     <td
                       key={i}
-                      className="p-3 align-middle text-center font-display text-base text-primary"
+                      className="p-3 align-middle text-center font-display text-base text-[#ededed]"
                     >
                       {t}
                     </td>

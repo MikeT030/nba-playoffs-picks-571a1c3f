@@ -256,7 +256,8 @@ const DemoAllPicksTable = () => {
       const cells = players.map(({ picks }) => {
         const pick = picks.find((p) => p.series_id === seriesId);
         if (!pick) return null;
-        return scorePick(pick, winners, games, actualWinnerSet);
+        const score = scorePick(pick, winners, games, actualWinnerSet);
+        return { pick, ...score };
       });
       return { seriesId, round, label, cells };
     });

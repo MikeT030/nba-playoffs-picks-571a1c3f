@@ -109,7 +109,10 @@ function groupIntoSeries(games: NbaGame[], bracket: BracketSeries[]): Match[] {
       }
       return undefined;
     };
-    const startsAt = extractStartsAt(sortGame);
+    // For finished cards, group/sort the series by the latest played game's
+    // actual tip-off so last night's slate stays under Today until the flip.
+    // For live/upcoming cards, keep using the active or next scheduled game.
+    const startsAt = extractStartsAt(localStatus === "final" ? latestGame : sortGame);
 
     const formatUpcomingTime = (g: NbaGame): string => {
       let ts: number | undefined;

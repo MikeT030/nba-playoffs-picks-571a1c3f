@@ -278,10 +278,10 @@ const DemoAllPicksTable = () => {
       <div>
         <h2 className="font-display text-lg tracking-wider">DEMO ALL-POINTS TABLE</h2>
         <p className="text-xs text-muted-foreground font-body">
-          Same played-out results as the demo bracket. Each cell shows only the
-          points that pick earned (3 = perfect, 2 = winner, 1 = right team /
-          wrong series, 0 = miss). The Finals cell includes the +4 champion
-          bonus when correct.
+          Same played-out results as the demo bracket. Each cell shows the
+          pick (e.g. "OKC in 6") and the points it earned (3 = perfect,
+          2 = winner, 1 = right team / wrong series, 0 = miss). The Finals
+          cell adds a +4 champion bonus when correct.
         </p>
       </div>
 

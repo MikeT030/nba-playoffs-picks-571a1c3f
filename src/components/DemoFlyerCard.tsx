@@ -3,6 +3,10 @@ import flyerLogo from "@/assets/flyer-the-shot.png";
 import TeamLogo from "@/components/TeamLogo";
 import { teamMeta } from "@/lib/nbaApi";
 
+// Phoenix Suns (PHX in teamMeta) and Seattle SuperSonics (defunct — use NBA CDN id 1610612745, now OKC's lineage)
+const PHX_LOGO = teamMeta.PHX.logo;
+const SEA_LOGO = "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg";
+
 const DemoFlyerCard = () => {
   return (
     <div className="space-y-2">
@@ -32,19 +36,11 @@ const DemoFlyerCard = () => {
 
           {/* Matchup badge, top-right */}
           <div className="absolute top-3 right-3 flex items-center gap-2 rounded-full bg-black/60 backdrop-blur-sm px-2.5 py-1.5 border border-white/10">
-            <TeamLogo
-              src={teamMeta.PHO?.logo ?? teamMeta.PHX.logo}
-              alt="Phoenix Suns"
-              className="w-5 h-5"
-            />
+            <TeamLogo src={PHX_LOGO} alt="Phoenix Suns" className="w-5 h-5" />
             <span className="font-display text-xs tracking-wider text-white/80">
               vs
             </span>
-            <TeamLogo
-              src={teamMeta.SEA?.logo ?? "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg"}
-              alt="Seattle SuperSonics"
-              className="w-5 h-5"
-            />
+            <TeamLogo src={SEA_LOGO} alt="Seattle SuperSonics" className="w-5 h-5" />
           </div>
         </div>
 

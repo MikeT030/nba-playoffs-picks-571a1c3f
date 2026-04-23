@@ -151,7 +151,7 @@ const FlyerCardV3 = ({
               <br />
               {matchup}
               <br />
-              {awayAlt} vs. {homeAlt}
+              {game} · {awayAlt} vs. {homeAlt}
             </p>
             <h3 className="font-display text-4xl leading-[0.9] tracking-wider text-[#ededed]">
               {firstName}

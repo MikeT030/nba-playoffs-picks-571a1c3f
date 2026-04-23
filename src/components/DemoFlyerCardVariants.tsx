@@ -128,16 +128,8 @@ const FlyerCardV3 = ({
           {/* Letterbox + heavy gradient */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/10 to-black/95" />
 
-          {/* Top: matchup pill */}
-          <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <div className="rounded-l-full rounded-r-none bg-[#E4E2F1]/65 px-[14px] py-[9px] shadow-md">
-                <TeamLogo src={awayLogo} alt={awayAlt} className="w-[37px] h-[37px]" />
-              </div>
-              <div className="rounded-r-full rounded-l-none bg-[#E4E2F1]/65 px-[14px] py-[9px] shadow-md">
-                <TeamLogo src={homeLogo} alt={homeAlt} className="w-[37px] h-[37px]" />
-              </div>
-            </div>
+          {/* Top: FLYER logo only */}
+          <div className="absolute top-4 left-4 right-4 flex items-center justify-end">
             <img
               src={flyerLogo}
               alt="FLYER The Shot"

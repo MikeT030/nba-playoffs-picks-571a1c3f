@@ -1,14 +1,20 @@
 import rexChapmanImg from "@/assets/rex-chapman.jpg";
+import johnPaxsonImg from "@/assets/john-paxson.png";
 import flyerLogo from "@/assets/flyer-the-shot.png";
 import seaSonicsLogo from "@/assets/sea-sonics-logo.png";
 import phoenixSunsLogo from "@/assets/phoenix-suns-logo.png";
 import TeamLogo from "@/components/TeamLogo";
+import { teamMeta } from "@/lib/nbaApi";
 
 const PHX_LOGO = phoenixSunsLogo;
 const SEA_LOGO = seaSonicsLogo;
+const CHI_LOGO = teamMeta.CHI.logo;
 
 const QUOTE =
   "Trailing by three points with only seconds left in the fourth quarter, Chapman caught a deflected pass while flying out of bounds and launched a one-legged, fading three-pointer that somehow tied the game and took it into overtime.";
+
+const PAXSON_QUOTE =
+  "With the Bulls trailing late in Game 6, Paxson spotted up beyond the arc, caught the kick-out from Horace Grant, and calmly drained a three-pointer with 3.9 seconds left to clinch Chicago's third straight championship.";
 
 /* ──────────────────────────────────────────────────────────────
    V2 — Polaroid / trading-card vibe

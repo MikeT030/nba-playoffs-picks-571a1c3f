@@ -115,7 +115,7 @@ const Auth = () => {
           </div>
 
           {step === "forgot" ? (
-            <form key="forgot-form" onSubmit={handleForgotPassword} className="space-y-4">
+            <form key="forgot-form" onSubmit={handleForgotPassword} className="space-y-8">
               <Input
                 type="email"
                 placeholder="Email"
@@ -142,7 +142,7 @@ const Auth = () => {
               </p>
             </form>
           ) : step === "email" ? (
-            <form key="email-form" onSubmit={handleEmailSubmit} className="space-y-4">
+            <form key="email-form" onSubmit={handleEmailSubmit} className="space-y-8">
               <Input
                 type="email"
                 placeholder="Email"
@@ -161,7 +161,7 @@ const Auth = () => {
               </button>
             </form>
           ) : (
-            <form key="password-form" onSubmit={handlePasswordSubmit} className="space-y-4">
+            <form key="password-form" onSubmit={handlePasswordSubmit} className="space-y-8">
               <div className="text-center">
                 <p className="text-sm text-muted-foreground font-body">{email}</p>
                 <button

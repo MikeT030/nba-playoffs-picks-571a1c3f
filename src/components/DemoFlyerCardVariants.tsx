@@ -120,9 +120,12 @@ export const DemoFlyerCardV3 = () => {
               <br />
               <span className="text-primary">CHAPMAN</span>
             </h3>
-            <p className="font-body text-xs leading-relaxed text-white/80 max-w-[34ch] font-medium">
-              {QUOTE}
-            </p>
+            <div className="relative max-w-[34ch]">
+              <div className="absolute inset-0 -inset-x-2 -inset-y-1.5 rounded-md bg-[#141129]/65" />
+              <p className="relative font-body text-xs leading-relaxed text-white/80 font-medium">
+                {QUOTE}
+              </p>
+            </div>
           </div>
         </div>
       </article>

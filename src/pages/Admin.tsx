@@ -15,12 +15,7 @@ import DemoMatchCard from "@/components/DemoMatchCard";
 import DemoMatchCardFonts from "@/components/DemoMatchCardFonts";
 import DemoBracketPlayedOut from "@/components/DemoBracketPlayedOut";
 import DemoAllPicksTable from "@/components/DemoAllPicksTable";
-import DemoFlyerCard from "@/components/DemoFlyerCard";
-import {
-  DemoFlyerCardV2,
-  DemoFlyerCardV3,
-  DemoFlyerCardV4,
-} from "@/components/DemoFlyerCardVariants";
+import { DemoFlyerCardV3 } from "@/components/DemoFlyerCardVariants";
 
 interface AdminUser {
   id: string;
@@ -162,10 +157,7 @@ const Admin = () => {
           </AccordionItem>
         </Accordion>
 
-        <DemoFlyerCard />
-        <DemoFlyerCardV2 />
         <DemoFlyerCardV3 />
-        <DemoFlyerCardV4 />
 
         <div className="space-y-2">
           <h2 className="font-display text-lg tracking-wider text-muted-foreground">DEMO MATCH CARD</h2>

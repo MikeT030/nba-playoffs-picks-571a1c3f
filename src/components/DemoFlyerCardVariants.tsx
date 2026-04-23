@@ -108,7 +108,7 @@ export const DemoFlyerCardV3 = () => {
 
           {/* Bottom: large title block */}
           <div className="absolute bottom-0 left-0 right-0 p-5 space-y-2">
-            <p className="font-body text-[10px] uppercase tracking-[0.25em] text-primary">
+            <p className="font-body text-[10px] uppercase tracking-[0.25em] text-primary font-bold">
               1997 · West First Round · Game 4
             </p>
             <h3 className="font-display text-4xl leading-[0.9] tracking-wider text-[#ededed]">
@@ -116,7 +116,7 @@ export const DemoFlyerCardV3 = () => {
               <br />
               <span className="text-primary">CHAPMAN</span>
             </h3>
-            <p className="font-body text-xs leading-relaxed text-white/80 max-w-[34ch]">
+            <p className="font-body text-xs leading-relaxed text-white/80 max-w-[34ch] font-medium">
               {QUOTE}
             </p>
           </div>

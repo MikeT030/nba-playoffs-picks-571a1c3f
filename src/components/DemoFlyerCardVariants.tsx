@@ -1,6 +1,6 @@
 import rexChapmanImg from "@/assets/rex-chapman.jpg";
 import johnPaxsonImg from "@/assets/john-paxson.png";
-import glenDavisImg from "@/assets/glen-davis-v2.jpg";
+import glenDavisImg from "@/assets/glen-davis-v3.png";
 import flyerLogo from "@/assets/flyer-the-shot.png";
 import seaSonicsLogo from "@/assets/sea-sonics-logo.png";
 import phoenixSunsLogo from "@/assets/phoenix-suns-logo.png";

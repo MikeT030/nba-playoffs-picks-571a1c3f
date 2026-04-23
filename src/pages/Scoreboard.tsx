@@ -420,7 +420,7 @@ const Scoreboard = () => {
 
   return (
     <div className="min-h-screen bg-background pb-28">
-      <HeroBanner title="SCOREBOARD" subtitle="2026" />
+      <HeroBanner title="SCOREBOARD" subtitle="2026 Playoffs Picks" />
 
       <section className="container py-8">
         {viewTabs}

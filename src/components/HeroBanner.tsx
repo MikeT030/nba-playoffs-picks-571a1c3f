@@ -5,7 +5,7 @@ interface HeroBannerProps {
   subtitle?: string;
 }
 
-const HeroBanner = ({ title = "NBA PLAYOFFS, BABY!", subtitle = "Playoffs Picks 2026" }: HeroBannerProps) => {
+const HeroBanner = ({ title = "NBA PLAYOFFS, BABY!", subtitle = "2026" }: HeroBannerProps) => {
   return (
     <div className="relative w-full">
       <div className="w-full bg-background">

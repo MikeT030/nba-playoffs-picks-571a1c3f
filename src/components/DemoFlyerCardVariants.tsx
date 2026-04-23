@@ -203,7 +203,7 @@ export const DemoFlyerCardPaxson = () => (
     firstName="JOHN"
     lastName="PAXSON"
     quote={PAXSON_QUOTE}
-    quoteBgColor="rgba(206, 17, 65, 0.55)"
+    quoteBgColor="rgba(206, 17, 65, 0.35)"
   />
 );
 

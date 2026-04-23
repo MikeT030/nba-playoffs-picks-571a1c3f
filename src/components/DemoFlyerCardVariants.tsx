@@ -94,7 +94,7 @@ export const DemoFlyerCardV3 = () => {
           <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
             <div className="flex items-center gap-1.5 rounded-full bg-[#2D1E59] backdrop-blur-md px-2.5 py-1.5 border border-white/15">
               <TeamLogo src={PHX_LOGO} alt="PHX" className="w-7 h-7" />
-              <span className="font-display text-[10px] tracking-widest text-white/80">
+              <span className="font-display text-[10px] tracking-widest font-semibold text-[#ededed]">
                 PHO vs. SEA
               </span>
               <TeamLogo src={SEA_LOGO} alt="SEA" className="w-7 h-7" />

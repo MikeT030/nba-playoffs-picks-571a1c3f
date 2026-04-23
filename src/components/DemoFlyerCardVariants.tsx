@@ -170,7 +170,7 @@ const FlyerCardV3 = ({
 
 export const DemoFlyerCardV3 = () => (
   <FlyerCardV3
-    heading="FLYER — V3 (CINEMATIC)"
+    heading="FLYER — CHAPMAN"
     image={rexChapmanImg}
     imageAlt="Rex Chapman fading three-pointer, 1997 Playoffs"
     awayLogo={PHX_LOGO}

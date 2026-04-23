@@ -34,7 +34,7 @@ const TopRightAuth = () => {
   const location = useLocation();
   const { assignedCardId } = usePlayerCard();
 
-  if (location.pathname.startsWith("/match/")) return null;
+  if (location.pathname.startsWith("/match/") || location.pathname === "/auth") return null;
 
   const card = assignedCardId ? playerCards.find((c) => c.id === assignedCardId) : null;
   const playerImage = card ? images[card.image] : null;

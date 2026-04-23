@@ -182,6 +182,7 @@ export const DemoFlyerCardV3 = () => (
   <FlyerCardV3
     heading="FLYER — CHAPMAN"
     borderColor="#FF5C00"
+    borderWidth="2px"
     image={rexChapmanImg}
     imageAlt="Rex Chapman fading three-pointer, 1997 Playoffs"
     awayLogo={PHX_LOGO}

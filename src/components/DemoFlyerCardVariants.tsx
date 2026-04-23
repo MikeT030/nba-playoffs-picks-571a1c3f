@@ -154,7 +154,7 @@ const FlyerCardV3 = ({
               <br />
               <span className="text-primary">{lastName}</span>
             </h3>
-            <div className="relative max-w-[34ch]">
+            <div className="relative max-w-[40ch]">
               <div className="absolute inset-0 -inset-x-2 -inset-y-1.5 rounded-md bg-[#141129]/55" />
               <p className="relative font-body text-xs leading-relaxed text-white/80 font-medium">
                 {quote}

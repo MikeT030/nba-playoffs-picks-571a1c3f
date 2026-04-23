@@ -109,7 +109,7 @@ const Auth = () => {
               className="text-3xl md:text-4xl tracking-wider leading-tight text-center"
               style={{ fontFamily: "'Archivo Black', sans-serif" }}
             >
-              the 2026 Playoffs Picks
+              THE 2026 PLAYOFFS PICKS
             </h1>
             <p className="text-muted-foreground font-body text-sm mt-3">{subtitle}</p>
           </div>

@@ -88,6 +88,7 @@ interface FlyerCardV3Props {
   homeAlt: string;
   era: string;
   matchup: string;
+  game: string;
   firstName: string;
   lastName: string;
   quote: string;
@@ -104,6 +105,7 @@ const FlyerCardV3 = ({
   homeAlt,
   era,
   matchup,
+  game,
   firstName,
   lastName,
   quote,
@@ -151,7 +153,7 @@ const FlyerCardV3 = ({
               <br />
               {matchup}
               <br />
-              {awayAlt} vs. {homeAlt}
+              {game} · {awayAlt} vs. {homeAlt}
             </p>
             <h3 className="font-display text-4xl leading-[0.9] tracking-wider text-[#ededed]">
               {firstName}
@@ -184,7 +186,8 @@ export const DemoFlyerCardV3 = () => (
     homeLogo={SEA_LOGO}
     homeAlt="SEA"
     era="1997"
-    matchup="West First Round · Game 4"
+    matchup="West First Round"
+    game="Game 4"
     firstName="REX"
     lastName="CHAPMAN"
     quote={QUOTE}
@@ -201,7 +204,8 @@ export const DemoFlyerCardPaxson = () => (
     homeLogo={PHX_LOGO}
     homeAlt="PHX"
     era="1993"
-    matchup="NBA Finals · Game 6"
+    matchup="NBA Finals"
+    game="Game 6"
     firstName="JOHN"
     lastName="PAXSON"
     quote={PAXSON_QUOTE}

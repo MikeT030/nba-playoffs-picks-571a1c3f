@@ -94,7 +94,7 @@ export const DemoFlyerCardV3 = () => {
             <div className="flex items-center gap-1.5 rounded-full bg-white/10 backdrop-blur-md px-2.5 py-1.5 border border-white/15">
               <TeamLogo src={PHX_LOGO} alt="PHX" className="w-4 h-4" />
               <span className="font-display text-[10px] tracking-widest text-white/80">
-                PHO · SEA
+                PHO vs. SEA
               </span>
               <TeamLogo src={SEA_LOGO} alt="SEA" className="w-4 h-4" />
             </div>
@@ -108,7 +108,7 @@ export const DemoFlyerCardV3 = () => {
 
           {/* Bottom: large title block */}
           <div className="absolute bottom-0 left-0 right-0 p-5 space-y-2">
-            <p className="font-body text-[10px] uppercase tracking-[0.25em] text-primary font-bold">
+            <p className="font-body text-[10px] uppercase tracking-[0.25em] font-bold text-primary-foreground">
               1997 · West First Round · Game 4
             </p>
             <h3 className="font-display text-4xl leading-[0.9] tracking-wider text-[#ededed]">

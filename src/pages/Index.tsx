@@ -35,7 +35,8 @@ const rounds = [
 const Index = () => {
   const { data: matches, isLoading } = usePlayoffGames();
   const { data: resolvedBracket } = useBracketData();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const { assignedCardId, loading: cardLoading, assignRandomCard } = usePlayerCard();
   const { data: userPicks } = useAllUserPicks();
   const queryClient = useQueryClient();
@@ -43,6 +44,13 @@ const Index = () => {
   const [betsOpen, setBetsOpen] = useState(false);
   const [monologueIndex, setMonologueIndex] = useState(-1);
   const [rouletteCardId, setRouletteCardId] = useState<string | null>(null);
+
+  // Redirect signed-out users to the auth page
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/auth", { replace: true });
+    }
+  }, [user, authLoading, navigate]);
 
   const locked = true; // Picks button shows monologue-only inactive state
   const pickCount = userPicks?.length ?? 0;

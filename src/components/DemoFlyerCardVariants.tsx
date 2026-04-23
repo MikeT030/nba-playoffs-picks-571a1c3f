@@ -194,7 +194,7 @@ export const DemoFlyerCardPaxson = () => (
     homeLogo={PHX_LOGO}
     homeAlt="PHX"
     era="1993"
-    matchup="NBA Finals · Game 6 · CHI at PHX"
+    matchup="NBA Finals · Game 6"
     firstName="JOHN"
     lastName="PAXSON"
     quote={PAXSON_QUOTE}

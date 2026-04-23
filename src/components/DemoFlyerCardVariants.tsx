@@ -8,7 +8,7 @@ const PHX_LOGO = teamMeta.PHX.logo;
 const SEA_LOGO = seaSonicsLogo;
 
 const QUOTE =
-  "Down three with seconds left, Chapman caught a deflected pass while flying out of bounds and flung a one-legged, fading three-pointer that somehow tied the game.";
+  "Down 3 points with only seconds left in the 4th, Chapman caught a deflected pass while flying out of bounds and flung a one-legged, fading three-pointer that somehow tied the game and sent it to overtime.";
 
 /* ──────────────────────────────────────────────────────────────
    V2 — Polaroid / trading-card vibe

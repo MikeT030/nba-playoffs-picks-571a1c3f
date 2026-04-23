@@ -93,6 +93,7 @@ interface FlyerCardV3Props {
   lastName: string;
   quote: string;
   quoteBgColor?: string;
+  borderColor?: string;
 }
 
 const FlyerCardV3 = ({
@@ -110,6 +111,7 @@ const FlyerCardV3 = ({
   lastName,
   quote,
   quoteBgColor = "hsl(var(--background) / 0.55)",
+  borderColor,
 }: FlyerCardV3Props) => {
   return (
     <div className="space-y-2">
@@ -117,7 +119,10 @@ const FlyerCardV3 = ({
         {heading}
       </h2>
 
-      <article className="relative overflow-hidden rounded-xl bg-black border border-white/10 shadow-xl">
+      <article
+        className="relative overflow-hidden rounded-xl bg-black border shadow-xl"
+        style={{ borderColor: borderColor ?? "hsl(var(--border))" }}
+      >
         <div className="relative aspect-[3/4] w-full">
           <img
             src={image}
@@ -171,6 +176,7 @@ const FlyerCardV3 = ({
 export const DemoFlyerCardV3 = () => (
   <FlyerCardV3
     heading="FLYER — CHAPMAN"
+    borderColor="#FF5C00"
     image={rexChapmanImg}
     imageAlt="Rex Chapman fading three-pointer, 1997 Playoffs"
     awayLogo={PHX_LOGO}

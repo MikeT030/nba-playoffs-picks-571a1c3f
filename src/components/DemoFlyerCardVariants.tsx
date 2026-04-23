@@ -1,10 +1,10 @@
 import rexChapmanImg from "@/assets/rex-chapman.jpg";
 import flyerLogo from "@/assets/flyer-the-shot.png";
 import seaSonicsLogo from "@/assets/sea-sonics-logo.png";
+import phoenixSunsLogo from "@/assets/phoenix-suns-logo.png";
 import TeamLogo from "@/components/TeamLogo";
-import { teamMeta } from "@/lib/nbaApi";
 
-const PHX_LOGO = teamMeta.PHX.logo;
+const PHX_LOGO = phoenixSunsLogo;
 const SEA_LOGO = seaSonicsLogo;
 
 const QUOTE =

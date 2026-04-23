@@ -122,64 +122,15 @@ const Auth = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="font-body border-0 border-b border-white rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="font-body border-0 border-b border-white rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-center"
               />
               <button
-                type="submit"
-                disabled={loading}
-                className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 disabled:opacity-50"
-              >
-                {loading ? "..." : "SEND RESET LINK"}
-              </button>
-              <p className="text-center text-sm text-muted-foreground font-body">
-                <button
-                  type="button"
-                  onClick={() => setStep("password")}
-                  className="text-primary underline"
-                >
-                  Back to sign in
-                </button>
-              </p>
-            </form>
-          ) : step === "email" ? (
-            <form key="email-form" onSubmit={handleEmailSubmit} className="space-y-8">
-              <Input
-                type="email"
-                placeholder="Type your email, buddy"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="font-body border-0 border-b border-white rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+...
+                className="font-body border-0 border-b border-white rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-center"
                 autoFocus
               />
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 disabled:opacity-50"
-              >
-                {loading ? "..." : "CONTINUE"}
-              </button>
-            </form>
-          ) : (
-            <form key="password-form" onSubmit={handlePasswordSubmit} className="space-y-8">
-              <div className="text-center">
-                <p className="text-sm text-muted-foreground font-body">{email}</p>
-                <button
-                  type="button"
-                  onClick={() => { setStep("email"); setPassword(""); }}
-                  className="text-primary underline text-xs font-body mt-1"
-                >
-                  Change email
-                </button>
-              </div>
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-                className="font-body border-0 border-b border-white rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+...
+                className="font-body border-0 border-b border-white rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-center"
                 autoFocus
               />
               <button

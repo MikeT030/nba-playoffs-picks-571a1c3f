@@ -94,6 +94,7 @@ interface FlyerCardV3Props {
   quote: string;
   quoteBgColor?: string;
   borderColor?: string;
+  borderWidth?: string;
 }
 
 const FlyerCardV3 = ({
@@ -112,6 +113,7 @@ const FlyerCardV3 = ({
   quote,
   quoteBgColor = "hsl(var(--background) / 0.55)",
   borderColor,
+  borderWidth,
 }: FlyerCardV3Props) => {
   return (
     <div className="space-y-2">
@@ -121,7 +123,10 @@ const FlyerCardV3 = ({
 
       <article
         className="relative overflow-hidden rounded-xl bg-black border shadow-xl"
-        style={{ borderColor: borderColor ?? "hsl(var(--border))" }}
+        style={{
+          borderColor: borderColor ?? "hsl(var(--border))",
+          borderWidth: borderWidth,
+        }}
       >
         <div className="relative aspect-[3/4] w-full">
           <img
@@ -195,6 +200,8 @@ export const DemoFlyerCardV3 = () => (
 export const DemoFlyerCardPaxson = () => (
   <FlyerCardV3
     heading="FLYER — PAXSON"
+    borderColor="#CE1141"
+    borderWidth="2px"
     image={johnPaxsonImg}
     imageAlt="John Paxson hitting the championship-winning three-pointer, 1993 NBA Finals Game 6"
     awayLogo={CHI_LOGO}

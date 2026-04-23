@@ -269,7 +269,7 @@ const MyPicks = () => {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-background pb-28">
-        <HeroBanner title="MY PICKS" subtitle="Playoffs Picks 2026" />
+        <HeroBanner title="MY PICKS" subtitle="2026" />
         <section className="container py-10 text-center">
           <p className="text-muted-foreground font-body">Loading...</p>
         </section>

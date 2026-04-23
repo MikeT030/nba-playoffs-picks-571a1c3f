@@ -121,7 +121,7 @@ export const DemoFlyerCardV3 = () => {
               <span className="text-primary">CHAPMAN</span>
             </h3>
             <div className="relative max-w-[34ch]">
-              <div className="absolute inset-0 -inset-x-2 -inset-y-1.5 rounded-md bg-[#141129]/65" />
+              <div className="absolute inset-0 -inset-x-2 -inset-y-1.5 rounded-md bg-[#141129]/55" />
               <p className="relative font-body text-xs leading-relaxed text-white/80 font-medium">
                 {QUOTE}
               </p>

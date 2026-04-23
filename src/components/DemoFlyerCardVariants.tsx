@@ -1,10 +1,11 @@
 import rexChapmanImg from "@/assets/rex-chapman.jpg";
 import flyerLogo from "@/assets/flyer-the-shot.png";
+import seaSonicsLogo from "@/assets/sea-sonics-logo.png";
 import TeamLogo from "@/components/TeamLogo";
 import { teamMeta } from "@/lib/nbaApi";
 
 const PHX_LOGO = teamMeta.PHX.logo;
-const SEA_LOGO = "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg";
+const SEA_LOGO = seaSonicsLogo;
 
 const QUOTE =
   "Down three with seconds left, Chapman caught a deflected pass while flying out of bounds and flung a one-legged, fading three-pointer that somehow tied the game.";
@@ -92,11 +93,11 @@ export const DemoFlyerCardV3 = () => {
           {/* Top: matchup pill */}
           <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
             <div className="flex items-center gap-1.5 rounded-full bg-white/10 backdrop-blur-md px-2.5 py-1.5 border border-white/15">
-              <TeamLogo src={PHX_LOGO} alt="PHX" className="w-4 h-4" />
+              <TeamLogo src={PHX_LOGO} alt="PHX" className="w-7 h-7" />
               <span className="font-display text-[10px] tracking-widest text-white/80">
                 PHO vs. SEA
               </span>
-              <TeamLogo src={SEA_LOGO} alt="SEA" className="w-4 h-4" />
+              <TeamLogo src={SEA_LOGO} alt="SEA" className="w-7 h-7" />
             </div>
             <img
               src={flyerLogo}

@@ -145,7 +145,7 @@ const Auth = () => {
             <form key="email-form" onSubmit={handleEmailSubmit} className="space-y-8">
               <Input
                 type="email"
-                placeholder="Email"
+                placeholder="Type your email, buddy"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required

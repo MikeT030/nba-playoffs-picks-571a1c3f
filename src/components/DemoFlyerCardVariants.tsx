@@ -110,7 +110,9 @@ export const DemoFlyerCardV3 = () => {
           {/* Bottom: large title block */}
           <div className="absolute bottom-0 left-0 right-0 p-5 space-y-2">
             <p className="font-body text-[10px] uppercase tracking-[0.25em] font-bold text-primary-foreground">
-              1997 · West First Round · Game 4
+              1997
+              <br />
+              West First Round · Game 4
             </p>
             <h3 className="font-display text-4xl leading-[0.9] tracking-wider text-[#ededed]">
               REX

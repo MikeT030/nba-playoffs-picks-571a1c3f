@@ -127,11 +127,11 @@ const FlyerCardV3 = ({
           {/* Top: matchup pill */}
           <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
             <div className="flex items-center gap-1.5">
-              <div className="rounded-l-full rounded-r-none bg-[#E4E2F1]/65 px-3 py-2 shadow-md">
-                <TeamLogo src={awayLogo} alt={awayAlt} className="w-8 h-8" />
+              <div className="rounded-l-full rounded-r-none bg-[#E4E2F1]/65 px-[14px] py-[9px] shadow-md">
+                <TeamLogo src={awayLogo} alt={awayAlt} className="w-[37px] h-[37px]" />
               </div>
-              <div className="rounded-r-full rounded-l-none bg-[#E4E2F1]/65 px-3 py-2 shadow-md">
-                <TeamLogo src={homeLogo} alt={homeAlt} className="w-8 h-8" />
+              <div className="rounded-r-full rounded-l-none bg-[#E4E2F1]/65 px-[14px] py-[9px] shadow-md">
+                <TeamLogo src={homeLogo} alt={homeAlt} className="w-[37px] h-[37px]" />
               </div>
             </div>
             <img

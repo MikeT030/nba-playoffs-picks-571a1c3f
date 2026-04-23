@@ -94,6 +94,7 @@ interface FlyerCardV3Props {
   quote: string;
   quoteBgColor?: string;
   borderColor?: string;
+  borderWidth?: string;
 }
 
 const FlyerCardV3 = ({
@@ -112,6 +113,7 @@ const FlyerCardV3 = ({
   quote,
   quoteBgColor = "hsl(var(--background) / 0.55)",
   borderColor,
+  borderWidth,
 }: FlyerCardV3Props) => {
   return (
     <div className="space-y-2">
@@ -121,7 +123,10 @@ const FlyerCardV3 = ({
 
       <article
         className="relative overflow-hidden rounded-xl bg-black border shadow-xl"
-        style={{ borderColor: borderColor ?? "hsl(var(--border))" }}
+        style={{
+          borderColor: borderColor ?? "hsl(var(--border))",
+          borderWidth: borderWidth,
+        }}
       >
         <div className="relative aspect-[3/4] w-full">
           <img

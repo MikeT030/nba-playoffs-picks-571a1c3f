@@ -1,14 +1,20 @@
 import rexChapmanImg from "@/assets/rex-chapman.jpg";
+import johnPaxsonImg from "@/assets/john-paxson.png";
 import flyerLogo from "@/assets/flyer-the-shot.png";
 import seaSonicsLogo from "@/assets/sea-sonics-logo.png";
 import phoenixSunsLogo from "@/assets/phoenix-suns-logo.png";
 import TeamLogo from "@/components/TeamLogo";
+import { teamMeta } from "@/lib/nbaApi";
 
 const PHX_LOGO = phoenixSunsLogo;
 const SEA_LOGO = seaSonicsLogo;
+const CHI_LOGO = teamMeta.CHI.logo;
 
 const QUOTE =
   "Trailing by three points with only seconds left in the fourth quarter, Chapman caught a deflected pass while flying out of bounds and launched a one-legged, fading three-pointer that somehow tied the game and took it into overtime.";
+
+const PAXSON_QUOTE =
+  "With the Bulls trailing late in Game 6, Paxson spotted up beyond the arc, caught the kick-out from Horace Grant, and calmly drained a three-pointer with 3.9 seconds left to clinch Chicago's third straight championship.";
 
 /* ──────────────────────────────────────────────────────────────
    V2 — Polaroid / trading-card vibe
@@ -72,18 +78,46 @@ export const DemoFlyerCardV2 = () => {
    V3 — Cinematic letterbox
    Tall hero with letterbox bars, large overlay typography.
    ────────────────────────────────────────────────────────────── */
-export const DemoFlyerCardV3 = () => {
+interface FlyerCardV3Props {
+  heading: string;
+  image: string;
+  imageAlt: string;
+  awayLogo: string;
+  awayAlt: string;
+  homeLogo: string;
+  homeAlt: string;
+  era: string;
+  matchup: string;
+  firstName: string;
+  lastName: string;
+  quote: string;
+}
+
+const FlyerCardV3 = ({
+  heading,
+  image,
+  imageAlt,
+  awayLogo,
+  awayAlt,
+  homeLogo,
+  homeAlt,
+  era,
+  matchup,
+  firstName,
+  lastName,
+  quote,
+}: FlyerCardV3Props) => {
   return (
     <div className="space-y-2">
       <h2 className="font-display text-lg tracking-wider text-muted-foreground">
-        FLYER — V3 (CINEMATIC)
+        {heading}
       </h2>
 
       <article className="relative overflow-hidden rounded-xl bg-black border border-white/10 shadow-xl">
         <div className="relative aspect-[3/4] w-full">
           <img
-            src={rexChapmanImg}
-            alt="Rex Chapman fading three-pointer, 1997 Playoffs"
+            src={image}
+            alt={imageAlt}
             className="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
           />
@@ -94,10 +128,10 @@ export const DemoFlyerCardV3 = () => {
           <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
             <div className="flex items-center gap-1.5">
               <div className="rounded-l-full rounded-r-none bg-[#E4E2F1]/65 px-3 py-2 shadow-md">
-                <TeamLogo src={PHX_LOGO} alt="PHX" className="w-8 h-8" />
+                <TeamLogo src={awayLogo} alt={awayAlt} className="w-8 h-8" />
               </div>
               <div className="rounded-r-full rounded-l-none bg-[#E4E2F1]/65 px-3 py-2 shadow-md">
-                <TeamLogo src={SEA_LOGO} alt="SEA" className="w-8 h-8" />
+                <TeamLogo src={homeLogo} alt={homeAlt} className="w-8 h-8" />
               </div>
             </div>
             <img
@@ -111,19 +145,19 @@ export const DemoFlyerCardV3 = () => {
           {/* Bottom: large title block */}
           <div className="absolute bottom-0 left-0 right-0 p-5 space-y-2">
             <p className="font-body text-[10px] uppercase tracking-[0.25em] font-bold text-primary-foreground">
-              1997
+              {era}
               <br />
-              West First Round · Game 4
+              {matchup}
             </p>
             <h3 className="font-display text-4xl leading-[0.9] tracking-wider text-[#ededed]">
-              REX
+              {firstName}
               <br />
-              <span className="text-primary">CHAPMAN</span>
+              <span className="text-primary">{lastName}</span>
             </h3>
             <div className="relative max-w-[34ch]">
               <div className="absolute inset-0 -inset-x-2 -inset-y-1.5 rounded-md bg-[#141129]/55" />
               <p className="relative font-body text-xs leading-relaxed text-white/80 font-medium">
-                {QUOTE}
+                {quote}
               </p>
             </div>
           </div>
@@ -132,6 +166,40 @@ export const DemoFlyerCardV3 = () => {
     </div>
   );
 };
+
+export const DemoFlyerCardV3 = () => (
+  <FlyerCardV3
+    heading="FLYER — V3 (CINEMATIC)"
+    image={rexChapmanImg}
+    imageAlt="Rex Chapman fading three-pointer, 1997 Playoffs"
+    awayLogo={PHX_LOGO}
+    awayAlt="PHX"
+    homeLogo={SEA_LOGO}
+    homeAlt="SEA"
+    era="1997"
+    matchup="West First Round · Game 4"
+    firstName="REX"
+    lastName="CHAPMAN"
+    quote={QUOTE}
+  />
+);
+
+export const DemoFlyerCardPaxson = () => (
+  <FlyerCardV3
+    heading="FLYER — PAXSON"
+    image={johnPaxsonImg}
+    imageAlt="John Paxson hitting the championship-winning three-pointer, 1993 NBA Finals Game 6"
+    awayLogo={CHI_LOGO}
+    awayAlt="CHI"
+    homeLogo={PHX_LOGO}
+    homeAlt="PHX"
+    era="1993"
+    matchup="NBA Finals · Game 6 · CHI at PHX"
+    firstName="JOHN"
+    lastName="PAXSON"
+    quote={PAXSON_QUOTE}
+  />
+);
 
 /* ──────────────────────────────────────────────────────────────
    V4 — Newspaper / box-score vibe

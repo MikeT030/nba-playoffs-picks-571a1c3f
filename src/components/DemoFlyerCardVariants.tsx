@@ -14,7 +14,7 @@ const BOS_LOGO = teamMeta.BOS.logo;
 const ORL_LOGO = teamMeta.ORL.logo;
 
 const DAVIS_QUOTE =
-  "With Kevin Garnett out, the 289-pound Davis stepped out to the perimeter and hit a walk-off jumper as time expired to beat the Magic, then proceeded to nearly tackle a small child in the front row during his celebration.";
+  "With Kevin Garnett out, Glen \"Big Baby\" Davis stepped out to the perimeter and hit a walk-off jumper as time expired to beat the Magic, then proceeded to nearly tackle a small child in the front row during his celebration.";
 
 const QUOTE =
   "Trailing by three points with only seconds left in the fourth quarter, Chapman caught a deflected pass while flying out of bounds and launched a one-legged, fading three-pointer that somehow tied the game and took it into overtime. Phoenix still lost the game and the series.";

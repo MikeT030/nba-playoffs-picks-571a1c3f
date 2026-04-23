@@ -189,8 +189,8 @@ const Index = () => {
       <HeroBanner
         subtitle={
           pickCount >= TOTAL_GAMES
-            ? "2026"
-            : "2026"
+            ? "2026 Playoffs Picks"
+            : "2026 Playoffs Picks"
         }
       />
 

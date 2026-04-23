@@ -91,6 +91,7 @@ interface FlyerCardV3Props {
   firstName: string;
   lastName: string;
   quote: string;
+  quoteBgColor?: string;
 }
 
 const FlyerCardV3 = ({
@@ -106,6 +107,7 @@ const FlyerCardV3 = ({
   firstName,
   lastName,
   quote,
+  quoteBgColor = "hsl(var(--background) / 0.55)",
 }: FlyerCardV3Props) => {
   return (
     <div className="space-y-2">
@@ -155,7 +157,10 @@ const FlyerCardV3 = ({
               <span className="text-primary">{lastName}</span>
             </h3>
             <div className="relative w-[200px]">
-              <div className="absolute inset-0 -inset-x-2 -inset-y-1.5 rounded-md bg-[#141129]/55" />
+              <div
+                className="absolute inset-0 -inset-x-2 -inset-y-1.5 rounded-md"
+                style={{ backgroundColor: quoteBgColor }}
+              />
               <p className="relative font-body text-[11px] leading-relaxed text-white/80 font-medium">
                 {quote}
               </p>
@@ -198,6 +203,7 @@ export const DemoFlyerCardPaxson = () => (
     firstName="JOHN"
     lastName="PAXSON"
     quote={PAXSON_QUOTE}
+    quoteBgColor="rgba(206, 17, 65, 0.55)"
   />
 );
 

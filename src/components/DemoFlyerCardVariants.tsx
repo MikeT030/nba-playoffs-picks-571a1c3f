@@ -1,10 +1,11 @@
 import rexChapmanImg from "@/assets/rex-chapman.jpg";
 import flyerLogo from "@/assets/flyer-the-shot.png";
+import seaSonicsLogo from "@/assets/sea-sonics-logo.png";
 import TeamLogo from "@/components/TeamLogo";
 import { teamMeta } from "@/lib/nbaApi";
 
 const PHX_LOGO = teamMeta.PHX.logo;
-const SEA_LOGO = "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg";
+const SEA_LOGO = seaSonicsLogo;
 
 const QUOTE =
   "Down three with seconds left, Chapman caught a deflected pass while flying out of bounds and flung a one-legged, fading three-pointer that somehow tied the game.";

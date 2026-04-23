@@ -106,7 +106,7 @@ const Auth = () => {
         <div className="w-full max-w-sm space-y-8">
           <div className="text-center">
             <h1
-              className="text-3xl md:text-4xl tracking-wider leading-tight text-center"
+              className="md:text-4xl tracking-wider leading-tight text-center text-4xl"
               style={{ fontFamily: "'Archivo Black', sans-serif" }}
             >
               THE 2026 PLAYOFFS PICKS

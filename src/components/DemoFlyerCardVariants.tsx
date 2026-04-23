@@ -145,7 +145,7 @@ const FlyerCardV3 = ({
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/10 to-black/95" />
 
           {/* Top: FLYER logo only */}
-          <div className="absolute top-4 left-4 right-4 flex items-center justify-end">
+          <div className="absolute top-4 left-4 right-4 flex items-center justify-start">
             <img
               src={flyerLogo}
               alt="FLYER The Shot"

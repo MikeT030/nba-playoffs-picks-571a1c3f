@@ -25,6 +25,8 @@ const navItems = [
 const FloatingNav = () => {
   const location = useLocation();
 
+  if (location.pathname === "/auth") return null;
+
   return (
     <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
       <div className="flex items-center justify-between rounded-full bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)] min-w-[240px] px-[4px] py-[4px]">

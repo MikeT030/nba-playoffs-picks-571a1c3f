@@ -1,5 +1,6 @@
 import rexChapmanImg from "@/assets/rex-chapman.jpg";
 import johnPaxsonImg from "@/assets/john-paxson.png";
+import glenDavisImg from "@/assets/glen-davis.jpg";
 import flyerLogo from "@/assets/flyer-the-shot.png";
 import seaSonicsLogo from "@/assets/sea-sonics-logo.png";
 import phoenixSunsLogo from "@/assets/phoenix-suns-logo.png";
@@ -9,6 +10,11 @@ import { teamMeta } from "@/lib/nbaApi";
 const PHX_LOGO = phoenixSunsLogo;
 const SEA_LOGO = seaSonicsLogo;
 const CHI_LOGO = teamMeta.CHI.logo;
+const BOS_LOGO = teamMeta.BOS.logo;
+const ORL_LOGO = teamMeta.ORL.logo;
+
+const DAVIS_QUOTE =
+  "With Kevin Garnett out, the 289-pound Davis stepped out to the perimeter and hit a walk-off jumper as time expired to beat the Magic, then proceeded to nearly tackle a small child in the front row during his celebration.";
 
 const QUOTE =
   "Trailing by three points with only seconds left in the fourth quarter, Chapman caught a deflected pass while flying out of bounds and launched a one-legged, fading three-pointer that somehow tied the game and took it into overtime. Phoenix still lost the game and the series.";
@@ -216,6 +222,27 @@ export const DemoFlyerCardPaxson = () => (
     lastName="PAXSON"
     quote={PAXSON_QUOTE}
     quoteBgColor="rgba(206, 17, 65, 0.25)"
+  />
+);
+
+export const DemoFlyerCardDavis = () => (
+  <FlyerCardV3
+    heading="FLYER — DAVIS"
+    borderColor="#007A33"
+    borderWidth="2px"
+    image={glenDavisImg}
+    imageAlt="Glen 'Big Baby' Davis driving in the 2009 Eastern Conference Semifinals"
+    awayLogo={ORL_LOGO}
+    awayAlt="ORL"
+    homeLogo={BOS_LOGO}
+    homeAlt="BOS"
+    era="2009"
+    matchup="East Conf. Semifinals"
+    game="Game 4"
+    firstName="GLEN"
+    lastName="DAVIS"
+    quote={DAVIS_QUOTE}
+    quoteBgColor="rgba(0, 122, 51, 0.3)"
   />
 );
 

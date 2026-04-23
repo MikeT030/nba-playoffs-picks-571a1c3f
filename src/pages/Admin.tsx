@@ -15,7 +15,7 @@ import DemoMatchCard from "@/components/DemoMatchCard";
 import DemoMatchCardFonts from "@/components/DemoMatchCardFonts";
 import DemoBracketPlayedOut from "@/components/DemoBracketPlayedOut";
 import DemoAllPicksTable from "@/components/DemoAllPicksTable";
-import { DemoFlyerCardV3, DemoFlyerCardPaxson } from "@/components/DemoFlyerCardVariants";
+import { DemoFlyerCardV3, DemoFlyerCardPaxson, DemoFlyerCardDavis } from "@/components/DemoFlyerCardVariants";
 
 interface AdminUser {
   id: string;
@@ -160,6 +160,8 @@ const Admin = () => {
         <DemoFlyerCardV3 />
 
         <DemoFlyerCardPaxson />
+
+        <DemoFlyerCardDavis />
 
         <div className="space-y-2">
           <h2 className="font-display text-lg tracking-wider text-muted-foreground">DEMO MATCH CARD</h2>

@@ -92,10 +92,13 @@ export const DemoFlyerCardV3 = () => {
 
           {/* Top: matchup pill */}
           <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
-            <div className="flex items-center gap-3 rounded-full bg-[#E4E2F1] px-3 py-1.5 shadow-md">
-              <TeamLogo src={PHX_LOGO} alt="PHX" className="w-7 h-7" />
-              <div className="w-px h-5 bg-[#1A1E24]/15" />
-              <TeamLogo src={SEA_LOGO} alt="SEA" className="w-7 h-7" />
+            <div className="flex items-center gap-1.5">
+              <div className="rounded-full bg-[#E4E2F1] px-2.5 py-1.5 shadow-md">
+                <TeamLogo src={PHX_LOGO} alt="PHX" className="w-7 h-7" />
+              </div>
+              <div className="rounded-full bg-[#E4E2F1] px-2.5 py-1.5 shadow-md">
+                <TeamLogo src={SEA_LOGO} alt="SEA" className="w-7 h-7" />
+              </div>
             </div>
             <img
               src={flyerLogo}

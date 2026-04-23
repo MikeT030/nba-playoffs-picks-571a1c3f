@@ -200,6 +200,8 @@ export const DemoFlyerCardV3 = () => (
 export const DemoFlyerCardPaxson = () => (
   <FlyerCardV3
     heading="FLYER — PAXSON"
+    borderColor="#CE1141"
+    borderWidth="2px"
     image={johnPaxsonImg}
     imageAlt="John Paxson hitting the championship-winning three-pointer, 1993 NBA Finals Game 6"
     awayLogo={CHI_LOGO}

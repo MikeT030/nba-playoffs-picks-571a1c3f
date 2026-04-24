@@ -111,7 +111,6 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
             </div>
           </div>
         </div>
-      </div>
     </button>
   );
 };

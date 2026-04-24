@@ -87,7 +87,7 @@ const Auth = () => {
         ? "Enter your email to receive a reset link"
         : isExistingUser
           ? "Welcome back"
-          : "You're new around here.\nJust follow along the 30-step sign-up flow.\nI got you.";
+          : "A newbie.";
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

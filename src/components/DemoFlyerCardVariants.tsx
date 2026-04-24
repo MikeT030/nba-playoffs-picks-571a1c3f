@@ -164,14 +164,14 @@ const FlyerCardV3 = ({
           {stats && (
             <div className="absolute top-0 bottom-0 right-0 w-6 flex items-center justify-center pointer-events-none">
               <div
-                className="flex items-center gap-3 font-display text-[10px] tracking-[0.25em] text-white/90 whitespace-nowrap"
+                className="flex items-center gap-3 font-display text-[10px] tracking-[0.25em] text-amber-400 whitespace-nowrap"
                 style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
               >
-                <span><span className="text-white/50">PTS</span> {stats.pts}</span>
-                <span><span className="text-white/50">TRB</span> {stats.trb}</span>
-                <span><span className="text-white/50">3P</span> {stats.threeP}</span>
-                <span><span className="text-white/50">3PA</span> {stats.threePA}</span>
-                <span><span className="text-white/50">MP</span> {stats.mp}</span>
+                <span><span className="text-amber-400/60">PTS</span> {stats.pts}</span>
+                <span><span className="text-amber-400/60">TRB</span> {stats.trb}</span>
+                <span><span className="text-amber-400/60">3P</span> {stats.threeP}</span>
+                <span><span className="text-amber-400/60">3PA</span> {stats.threePA}</span>
+                <span><span className="text-amber-400/60">MP</span> {stats.mp}</span>
               </div>
             </div>
           )}

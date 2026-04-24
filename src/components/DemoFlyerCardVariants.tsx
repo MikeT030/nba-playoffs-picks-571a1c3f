@@ -300,7 +300,12 @@ export const DemoFlyerCardDavis = () => (
     lastName="DAVIS"
     quote={DAVIS_QUOTE}
     quoteBgColor="rgba(0, 122, 51, 0.3)"
-    stats={{ pts: 21, trb: 6, threeP: 9, threePA: 14, mp: "33:11" }}
+    stats={[
+      { label: "PTS", value: 21 },
+      { label: "TRB", value: 6 },
+      { label: "FG", value: 9 },
+      { label: "FGA", value: 14 },
+    ]}
   />
 );
 

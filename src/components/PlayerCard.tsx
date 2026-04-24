@@ -55,6 +55,18 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
             {/* Card content */}
             <div className="relative bg-gradient-to-b from-[#0a1628] via-[#0d1f3c] to-[#0a1628] rounded-sm overflow-hidden">
 
+              {/* Vertical stat strip on the right edge */}
+              <div className="pointer-events-none absolute top-0 right-0 bottom-0 w-5 z-30 flex items-center justify-center">
+                <div className="flex items-center gap-3 font-display text-[10px] tracking-[0.2em] text-white/80 whitespace-nowrap drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)] [writing-mode:vertical-rl] rotate-180">
+                  {boxStats.map((s) => (
+                    <span key={s.label} className="flex items-center gap-1">
+                      <span className="text-amber-400/90">{s.label}</span>
+                      <span className="text-white">{s.value}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+
               {/* Background swirls */}
               <div className="absolute inset-0 opacity-30">
                 <div

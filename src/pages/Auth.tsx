@@ -87,7 +87,7 @@ const Auth = () => {
         ? "Enter your email to receive a reset link"
         : isExistingUser
           ? "Welcome back"
-          : "You're new around here. Just follow along the 30-step sign-up flow.  I got you.";
+          : "You're new around here.\nJust follow along the 30-step sign-up flow.\nI got you.";
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -111,7 +111,7 @@ const Auth = () => {
             >
               THE 2026 PLAYOFFS PICKS
             </h1>
-            <p className="font-body mt-3 text-lg font-normal text-secondary-foreground">{subtitle}</p>
+            <p className="font-body mt-3 text-lg font-normal text-secondary-foreground whitespace-pre-line">{subtitle}</p>
           </div>
 
           {step === "forgot" ? (

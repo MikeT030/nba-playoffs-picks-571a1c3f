@@ -31,7 +31,7 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
         {/* Outer border */}
         <div className={`p-[6px] bg-gradient-to-br ${player.accentPrimary}`}>
           {/* Inner border */}
-          <div className={`p-[4px] bg-gradient-to-br ${player.accentSecondary} rounded-sm`}>
+          <div className={`p-[4px] bg-gradient-to-br ${player.accentPrimary} rounded-sm`}>
             {/* Card content */}
             <div className="relative bg-gradient-to-b from-[#0a1628] via-[#0d1f3c] to-[#0a1628] rounded-sm overflow-hidden">
 

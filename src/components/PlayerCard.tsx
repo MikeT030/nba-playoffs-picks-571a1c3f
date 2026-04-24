@@ -16,6 +16,26 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
   const img = images[player.image] || images.westbrook;
   const teamLogo = player.logoOverride ?? teamMeta[player.teamAbbr]?.logo ?? "";
 
+  // Derive box-score stats from the existing player data.
+  // PTS comes from the headline stat; the rest are parsed out of statLine when present.
+  const line = player.statLine;
+  const pts = player.stat;
+  const matchTRB = line.match(/(\d+)\s*(?:REB|TRB)/i);
+  const match3 = line.match(/(\d+)\s*\/\s*(\d+)\s*3PT/i);
+  const matchMP = line.match(/(\d+)\s*MIN/i);
+  const trb = matchTRB?.[1] ?? "—";
+  const p3m = match3?.[1] ?? "—";
+  const p3a = match3?.[2] ?? "—";
+  const mp = matchMP?.[1] ?? "—";
+
+  const boxStats: { label: string; value: string }[] = [
+    { label: "PTS", value: pts },
+    { label: "TRB", value: trb },
+    { label: "3P", value: p3m },
+    { label: "3PA", value: p3a },
+    { label: "MP", value: mp },
+  ];
+
   return (
     <button
       type="button"
@@ -34,6 +54,18 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
           <div className={`p-[4px] bg-gradient-to-br ${player.accentSecondary} rounded-sm`}>
             {/* Card content */}
             <div className="relative bg-gradient-to-b from-[#0a1628] via-[#0d1f3c] to-[#0a1628] rounded-sm overflow-hidden">
+
+              {/* Vertical stat strip on the right edge */}
+              <div className="pointer-events-none absolute top-0 right-0 bottom-0 w-5 z-30 flex items-center justify-center">
+                <div className="flex items-center gap-3 font-display text-[10px] tracking-[0.2em] text-white/80 whitespace-nowrap drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)] [writing-mode:vertical-rl] rotate-180">
+                  {boxStats.map((s) => (
+                    <span key={s.label} className="flex items-center gap-1">
+                      <span className="text-amber-400/90">{s.label}</span>
+                      <span className="text-white">{s.value}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
 
               {/* Background swirls */}
               <div className="absolute inset-0 opacity-30">

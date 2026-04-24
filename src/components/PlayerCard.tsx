@@ -29,10 +29,8 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
       {/* Card outer frame */}
       <div className="relative rounded-lg overflow-hidden shadow-[0_0_30px_rgba(0,100,255,0.3)]">
         {/* Outer border */}
-        <div className={`p-[6px] bg-gradient-to-br ${player.accentPrimary}`}>
-          {/* Inner border */}
-          <div className={`p-[4px] bg-gradient-to-br ${player.accentPrimary} rounded-sm`}>
-            {/* Card content */}
+        <div className={`p-[4px] bg-gradient-to-br ${player.accentPrimary} rounded-sm`}>
+          {/* Card content */}
             <div className="relative bg-gradient-to-b from-[#0a1628] via-[#0d1f3c] to-[#0a1628] rounded-sm overflow-hidden">
 
               {/* Background swirls */}
@@ -113,7 +111,6 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
             </div>
           </div>
         </div>
-      </div>
     </button>
   );
 };

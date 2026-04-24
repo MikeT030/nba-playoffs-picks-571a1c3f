@@ -90,12 +90,9 @@ export const DemoFlyerCardV2 = () => {
    V3 — Cinematic letterbox
    Tall hero with letterbox bars, large overlay typography.
    ────────────────────────────────────────────────────────────── */
-interface StatLine {
-  pts: string | number;
-  trb: string | number;
-  threeP: string | number;
-  threePA: string | number;
-  mp: string;
+interface StatItem {
+  label: string;
+  value: string | number;
 }
 
 interface FlyerCardV3Props {

@@ -101,11 +101,6 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
                     {player.lastName}
                   </h3>
                 </div>
-                <img
-                  src={playoffBricksLogo}
-                  alt="Playoff Bricks"
-                  className="h-16 w-auto flex-shrink-0 drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]"
-                />
               </div>
 
 

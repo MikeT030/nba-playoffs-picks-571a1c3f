@@ -272,7 +272,13 @@ export const DemoFlyerCardMiller = () => (
     lastName="MILLER"
     quote={MILLER_QUOTE}
     quoteBgColor="rgba(152, 1, 46, 0.3)"
-    stats={{ pts: 23, trb: 5, threeP: 7, threePA: 8, mp: "23:14" }}
+    stats={[
+      { label: "PTS", value: 23 },
+      { label: "TRB", value: 5 },
+      { label: "3P", value: 7 },
+      { label: "3PA", value: 8 },
+      { label: "MP", value: "23:14" },
+    ]}
   />
 );
 

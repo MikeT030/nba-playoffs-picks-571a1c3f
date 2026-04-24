@@ -172,22 +172,24 @@ const Auth = () => {
                   Change email
                 </button>
               </div>
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-                className="font-body border-0 rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-center text-xl font-normal text-primary-foreground fade-underline md:text-lg"
-                autoFocus
-              />
+              {isExistingUser && (
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                  className="font-body border-0 rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-center text-xl font-normal text-primary-foreground fade-underline md:text-lg"
+                  autoFocus
+                />
+              )}
               <button
                 type="submit"
-                disabled={loading}
-                className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 disabled:opacity-50"
+                disabled={loading || !isExistingUser}
+                className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? "..." : isExistingUser ? "SIGN IN" : "SIGN UP"}
+                {loading ? "..." : isExistingUser ? "SIGN IN" : "SIGNUPS ARE CLOSED"}
               </button>
               {isExistingUser && (
                 <p className="text-center text-sm text-muted-foreground font-body">

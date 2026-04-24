@@ -248,7 +248,7 @@ export const DemoFlyerCardMiller = () => (
     firstName="MIKE"
     lastName="MILLER"
     quote={MILLER_QUOTE}
-    quoteBgColor="rgba(152, 0, 46, 0.3)"
+    quoteBgColor="#98012E"
   />
 );
 

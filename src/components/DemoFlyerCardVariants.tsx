@@ -251,6 +251,14 @@ export const DemoFlyerCardPaxson = () => (
     lastName="PAXSON"
     quote={PAXSON_QUOTE}
     quoteBgColor="rgba(206, 17, 65, 0.25)"
+    stats={[
+      { label: "PTS", value: 8 },
+      { label: "AST", value: 1 },
+      { label: "TRB", value: 1 },
+      { label: "3P", value: 2 },
+      { label: "3PA", value: 3 },
+      { label: "MP", value: "22:00" },
+    ]}
   />
 );
 

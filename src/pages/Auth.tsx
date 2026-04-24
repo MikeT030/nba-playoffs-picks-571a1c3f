@@ -111,7 +111,7 @@ const Auth = () => {
             >
               THE 2026 PLAYOFFS PICKS
             </h1>
-            <p className="text-muted-foreground font-body mt-3 text-lg font-normal">{subtitle}</p>
+            <p className="font-body mt-3 text-lg font-normal text-secondary-foreground">{subtitle}</p>
           </div>
 
           {step === "forgot" ? (

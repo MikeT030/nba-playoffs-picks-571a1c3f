@@ -313,6 +313,7 @@ export const DemoFlyerCardDavis = () => (
       { label: "TRB", value: 6 },
       { label: "FG", value: 9 },
       { label: "FGA", value: 14 },
+      { label: "MP", value: "33:11" },
     ]}
   />
 );

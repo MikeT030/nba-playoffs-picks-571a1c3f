@@ -112,7 +112,7 @@ interface FlyerCardV3Props {
   quoteBgColor?: string;
   borderColor?: string;
   borderWidth?: string;
-  stats?: StatLine;
+  stats?: StatItem[];
 }
 
 const FlyerCardV3 = ({

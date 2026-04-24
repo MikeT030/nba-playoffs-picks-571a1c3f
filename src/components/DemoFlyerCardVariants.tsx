@@ -297,6 +297,7 @@ export const DemoFlyerCardDavis = () => (
     lastName="DAVIS"
     quote={DAVIS_QUOTE}
     quoteBgColor="rgba(0, 122, 51, 0.3)"
+    stats={{ pts: 21, trb: 6, threeP: 9, threePA: 14, mp: "33:11" }}
   />
 );
 

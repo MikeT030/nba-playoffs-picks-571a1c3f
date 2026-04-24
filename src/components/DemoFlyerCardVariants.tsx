@@ -1,6 +1,7 @@
 import rexChapmanImg from "@/assets/rex-chapman.png";
 import johnPaxsonImg from "@/assets/john-paxson.png";
 import glenDavisImg from "@/assets/glen-davis.jpg";
+import mikeMillerImg from "@/assets/mike-miller.jpeg";
 import flyerLogo from "@/assets/flyer-the-shot.png";
 import seaSonicsLogo from "@/assets/sea-sonics-logo.png";
 import phoenixSunsLogo from "@/assets/phoenix-suns-logo.png";
@@ -12,6 +13,11 @@ const SEA_LOGO = seaSonicsLogo;
 const CHI_LOGO = teamMeta.CHI.logo;
 const BOS_LOGO = teamMeta.BOS.logo;
 const ORL_LOGO = teamMeta.ORL.logo;
+const MIA_LOGO = teamMeta.MIA.logo;
+const OKC_LOGO = teamMeta.OKC.logo;
+
+const MILLER_QUOTE =
+  "Miller was barely able to walk due to back injuries. He came off the bench and went 7-for-8 from three, destroying the Thunder's spirit and securing LeBron's first ring.";
 
 const DAVIS_QUOTE =
   "With Kevin Garnett out, Glen \"Big Baby\" Davis stepped out to the perimeter and hit a walk-off jumper as time expired to beat the Magic, then proceeded to nearly tackle a small child in the front row during his celebration.";
@@ -222,6 +228,27 @@ export const DemoFlyerCardPaxson = () => (
     lastName="PAXSON"
     quote={PAXSON_QUOTE}
     quoteBgColor="rgba(206, 17, 65, 0.25)"
+  />
+);
+
+export const DemoFlyerCardMiller = () => (
+  <FlyerCardV3
+    heading="FLYER — MILLER"
+    borderColor="#98002E"
+    borderWidth="2px"
+    image={mikeMillerImg}
+    imageAlt="Mike Miller shooting a three-pointer in the 2012 NBA Finals Game 5"
+    awayLogo={OKC_LOGO}
+    awayAlt="OKC"
+    homeLogo={MIA_LOGO}
+    homeAlt="MIA"
+    era="2012"
+    matchup="NBA Finals"
+    game="Game 5"
+    firstName="MIKE"
+    lastName="MILLER"
+    quote={MILLER_QUOTE}
+    quoteBgColor="rgba(152, 0, 46, 0.3)"
   />
 );
 

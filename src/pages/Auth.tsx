@@ -145,11 +145,11 @@ const Auth = () => {
             <form key="email-form" onSubmit={handleEmailSubmit} className="space-y-8">
               <Input
                 type="email"
-                placeholder="Type your email, buddy"
+                placeholder="Type your email, buddy."
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="font-body border-0 rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-center text-xl font-normal text-primary-foreground fade-underline md:text-lg"
+                className="font-body border-0 rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-center font-normal fade-underline md:text-lg text-xl text-primary-foreground opacity-90"
                 autoFocus
               />
               <button

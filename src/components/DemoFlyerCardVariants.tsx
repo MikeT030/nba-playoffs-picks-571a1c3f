@@ -90,6 +90,14 @@ export const DemoFlyerCardV2 = () => {
    V3 — Cinematic letterbox
    Tall hero with letterbox bars, large overlay typography.
    ────────────────────────────────────────────────────────────── */
+interface StatLine {
+  pts: string | number;
+  trb: string | number;
+  threeP: string | number;
+  threePA: string | number;
+  mp: string;
+}
+
 interface FlyerCardV3Props {
   heading: string;
   image: string;
@@ -107,6 +115,7 @@ interface FlyerCardV3Props {
   quoteBgColor?: string;
   borderColor?: string;
   borderWidth?: string;
+  stats?: StatLine;
 }
 
 const FlyerCardV3 = ({
@@ -126,6 +135,7 @@ const FlyerCardV3 = ({
   quoteBgColor = "hsl(var(--background) / 0.55)",
   borderColor,
   borderWidth,
+  stats,
 }: FlyerCardV3Props) => {
   return (
     <div className="space-y-2">

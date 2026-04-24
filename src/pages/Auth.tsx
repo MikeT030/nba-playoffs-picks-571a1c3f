@@ -189,7 +189,7 @@ const Auth = () => {
                 disabled={loading || !isExistingUser}
                 className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-body font-medium transition-all duration-200 bg-primary/15 text-primary border border-primary/40 hover:bg-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? "..." : isExistingUser ? "SIGN IN" : "SIGNUPS ARE CLOSED"}
+                {loading ? "..." : isExistingUser ? "SIGN IN" : "SORRY, SIGNUPS ARE CLOSED"}
               </button>
               {isExistingUser && (
                 <p className="text-center text-sm text-muted-foreground font-body">

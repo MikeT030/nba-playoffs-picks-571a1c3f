@@ -163,7 +163,7 @@ const Auth = () => {
           ) : (
             <form key="password-form" onSubmit={handlePasswordSubmit} className="space-y-8">
               <div className="text-center">
-                <p className="text-sm text-muted-foreground font-body">{email}</p>
+                <p className="text-muted-foreground font-body text-xl">{email}</p>
                 <button
                   type="button"
                   onClick={() => { setStep("email"); setPassword(""); }}

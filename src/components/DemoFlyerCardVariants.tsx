@@ -1,4 +1,4 @@
-import rexChapmanImg from "@/assets/rex-chapman.jpg";
+import rexChapmanImg from "@/assets/rex-chapman.png";
 import johnPaxsonImg from "@/assets/john-paxson.png";
 import glenDavisImg from "@/assets/glen-davis.jpg";
 import flyerLogo from "@/assets/flyer-the-shot.png";

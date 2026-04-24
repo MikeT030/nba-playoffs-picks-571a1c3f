@@ -176,7 +176,7 @@ const FlyerCardV3 = ({
             </h3>
             <div className="relative w-[200px]">
               <div
-                className="absolute inset-0 -inset-x-2 -inset-y-1.5 rounded-md"
+                className="absolute inset-0 -inset-x-2 -inset-y-1.5"
                 style={{ backgroundColor: quoteBgColor }}
               />
               <p className="relative font-body text-[11px] leading-relaxed text-white/80 font-medium">

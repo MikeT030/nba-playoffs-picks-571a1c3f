@@ -122,7 +122,7 @@ const Auth = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="font-body border-0 rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-center text-xl font-normal text-primary-foreground fade-underline"
+                className="font-body border-0 rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-center text-xl font-normal text-primary-foreground fade-underline md:text-lg"
               />
               <button
                 type="submit"
@@ -149,7 +149,7 @@ const Auth = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="font-body border-0 rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-center text-xl font-normal text-primary-foreground fade-underline"
+                className="font-body border-0 rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-center text-xl font-normal text-primary-foreground fade-underline md:text-lg"
                 autoFocus
               />
               <button
@@ -179,7 +179,7 @@ const Auth = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="font-body border-0 rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-center text-xl font-normal text-primary-foreground fade-underline"
+                className="font-body border-0 rounded-none bg-transparent px-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-center text-xl font-normal text-primary-foreground fade-underline md:text-lg"
                 autoFocus
               />
               <button

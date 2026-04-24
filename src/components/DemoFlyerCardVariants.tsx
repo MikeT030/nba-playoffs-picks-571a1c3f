@@ -230,6 +230,14 @@ export const DemoFlyerCardV3 = () => (
     firstName="REX"
     lastName="CHAPMAN"
     quote={QUOTE}
+    stats={[
+      { label: "PTS", value: 22 },
+      { label: "AST", value: 4 },
+      { label: "TRB", value: 5 },
+      { label: "3P", value: 4 },
+      { label: "3PA", value: 12 },
+      { label: "MP", value: "44:20" },
+    ]}
   />
 );
 

@@ -90,12 +90,9 @@ export const DemoFlyerCardV2 = () => {
    V3 — Cinematic letterbox
    Tall hero with letterbox bars, large overlay typography.
    ────────────────────────────────────────────────────────────── */
-interface StatLine {
-  pts: string | number;
-  trb: string | number;
-  threeP: string | number;
-  threePA: string | number;
-  mp: string;
+interface StatItem {
+  label: string;
+  value: string | number;
 }
 
 interface FlyerCardV3Props {
@@ -115,7 +112,7 @@ interface FlyerCardV3Props {
   quoteBgColor?: string;
   borderColor?: string;
   borderWidth?: string;
-  stats?: StatLine;
+  stats?: StatItem[];
 }
 
 const FlyerCardV3 = ({
@@ -161,17 +158,17 @@ const FlyerCardV3 = ({
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/10 to-black/95" />
 
           {/* Vertical stat line on right edge */}
-          {stats && (
+          {stats && stats.length > 0 && (
             <div className="absolute top-0 bottom-0 right-0 w-6 flex items-center justify-center pointer-events-none">
               <div
                 className="flex items-center gap-3 font-display text-xs tracking-[0.25em] text-amber-400 whitespace-nowrap"
                 style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
               >
-                <span><span className="text-amber-400/60">PTS</span> {stats.pts}</span>
-                <span><span className="text-amber-400/60">TRB</span> {stats.trb}</span>
-                <span><span className="text-amber-400/60">3P</span> {stats.threeP}</span>
-                <span><span className="text-amber-400/60">3PA</span> {stats.threePA}</span>
-                <span><span className="text-amber-400/60">MP</span> {stats.mp}</span>
+                {stats.map((s) => (
+                  <span key={s.label}>
+                    <span className="text-amber-400/60">{s.label}</span> {s.value}
+                  </span>
+                ))}
               </div>
             </div>
           )}
@@ -275,7 +272,13 @@ export const DemoFlyerCardMiller = () => (
     lastName="MILLER"
     quote={MILLER_QUOTE}
     quoteBgColor="rgba(152, 1, 46, 0.3)"
-    stats={{ pts: 23, trb: 5, threeP: 7, threePA: 8, mp: "23:14" }}
+    stats={[
+      { label: "PTS", value: 23 },
+      { label: "TRB", value: 5 },
+      { label: "3P", value: 7 },
+      { label: "3PA", value: 8 },
+      { label: "MP", value: "23:14" },
+    ]}
   />
 );
 
@@ -297,6 +300,12 @@ export const DemoFlyerCardDavis = () => (
     lastName="DAVIS"
     quote={DAVIS_QUOTE}
     quoteBgColor="rgba(0, 122, 51, 0.3)"
+    stats={[
+      { label: "PTS", value: 21 },
+      { label: "TRB", value: 6 },
+      { label: "FG", value: 9 },
+      { label: "FGA", value: 14 },
+    ]}
   />
 );
 

@@ -166,7 +166,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
     >
       {/* Team color gradient overlay (matches MatchDetail header) */}
       {(() => {
-        const alpha = displayStatus === "live" ? "66" : "4D";
+        const alpha = displayStatus === "live" ? "80" : "4D";
         return (
           <div
             className="absolute inset-0 pointer-events-none"

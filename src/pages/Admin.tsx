@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/accordion";
 import { toast } from "sonner";
 import DemoMatchCard from "@/components/DemoMatchCard";
+import DemoMatchCardColored from "@/components/DemoMatchCardColored";
 import DemoMatchCardFonts from "@/components/DemoMatchCardFonts";
 import DemoBracketPlayedOut from "@/components/DemoBracketPlayedOut";
 import DemoAllPicksTable from "@/components/DemoAllPicksTable";
@@ -168,6 +169,11 @@ const Admin = () => {
         <div className="space-y-2">
           <h2 className="font-display text-lg tracking-wider text-muted-foreground">DEMO MATCH CARD</h2>
           <DemoMatchCard />
+        </div>
+
+        <div className="space-y-2">
+          <h2 className="font-display text-lg tracking-wider text-muted-foreground">DEMO MATCH CARD — TEAM COLORS</h2>
+          <DemoMatchCardColored />
         </div>
 
         <div className="space-y-2">

@@ -179,6 +179,42 @@ const Admin = () => {
 
         <DemoMatchDetailDialog />
 
+        <DemoMatchDetailDialog
+          heading="DEMO MATCH DETAIL — WAS vs UTA"
+          data={{
+            away: {
+              abbreviation: "WAS",
+              name: "Wizards",
+              seed: 7,
+              color: "#002B5C",
+            },
+            home: {
+              abbreviation: "UTA",
+              name: "Jazz",
+              seed: 2,
+              color: "#F9A01B",
+            },
+            awayScore: 96,
+            homeScore: 104,
+            seriesAway: 1,
+            seriesHome: 4,
+            gameNumber: 5,
+            date: "May 02",
+            conference: "WEST",
+            round: "First Round",
+            yourPick: { winner: "UTA", games_in_series: 5 },
+            yourPickResult: "Shiiiiit 3 Points",
+          }}
+          seriesResult={{ winner: "UTA", games_played: 5 }}
+          picks={[
+            { user_id: "w1", profile_name: "Erik", winner: "UTA", games_in_series: 5 },
+            { user_id: "w2", profile_name: "Alexander", winner: "UTA", games_in_series: 6 },
+            { user_id: "w3", profile_name: "David", winner: "WAS", games_in_series: 7 },
+            { user_id: "w4", profile_name: "Fabian", winner: "UTA", games_in_series: 4 },
+            { user_id: "w5", profile_name: "Hannes", winner: "UTA", games_in_series: 5 },
+          ]}
+        />
+
         <div className="space-y-2">
           <h2 className="font-display text-lg tracking-wider text-muted-foreground">FONT VARIANTS</h2>
           <DemoMatchCardFonts />

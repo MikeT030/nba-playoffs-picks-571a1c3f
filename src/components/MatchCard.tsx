@@ -165,12 +165,17 @@ const MatchCard = ({ match }: MatchCardProps) => {
       className="relative block rounded-lg overflow-hidden bg-[#1A1E24]/80 backdrop-blur-md transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 group cursor-pointer select-none"
     >
       {/* Team color gradient overlay (matches MatchDetail header) */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: `linear-gradient(135deg, ${displayAway.color}4D 0%, ${displayAway.color}4D 50%, ${displayHome.color}4D 50%, ${displayHome.color}4D 100%)`,
-        }}
-      />
+      {(() => {
+        const alpha = displayStatus === "live" ? "66" : "4D";
+        return (
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: `linear-gradient(135deg, ${displayAway.color}${alpha} 0%, ${displayAway.color}${alpha} 50%, ${displayHome.color}${alpha} 50%, ${displayHome.color}${alpha} 100%)`,
+            }}
+          />
+        );
+      })()}
 
       <div className="relative">
       <div className="px-4 py-2 flex items-center justify-center border-b border-transparent">

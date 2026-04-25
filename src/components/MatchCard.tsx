@@ -168,7 +168,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `linear-gradient(135deg, ${displayAway.color}66 0%, ${displayAway.color}66 50%, ${displayHome.color}66 50%, ${displayHome.color}66 100%)`,
+          background: `linear-gradient(135deg, ${displayAway.color}99 0%, ${displayAway.color}99 50%, ${displayHome.color}99 50%, ${displayHome.color}99 100%)`,
         }}
       />
 

@@ -86,7 +86,7 @@ const DemoMatchCardColored = ({
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `linear-gradient(135deg, ${away.color}66 0%, ${away.color}66 50%, ${home.color}66 50%, ${home.color}66 100%)`,
+          background: `linear-gradient(135deg, ${away.color}99 0%, ${away.color}99 50%, ${home.color}99 50%, ${home.color}99 100%)`,
         }}
       />
 

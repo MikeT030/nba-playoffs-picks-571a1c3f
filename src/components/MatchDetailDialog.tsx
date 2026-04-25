@@ -226,7 +226,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
                       </p>
                     </div>
                     <div
-                      className="self-stretch -my-3 -mr-3 flex items-center justify-center px-2 shrink-0 relative overflow-hidden"
+                      className="self-stretch -my-3 -mr-3 shrink-0 relative overflow-hidden"
                       style={{ width: "100px", maxWidth: "100px" }}
                     >
                       <div
@@ -236,7 +236,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
                         }}
                       />
                       <span
-                        className="relative tracking-wide text-xl text-white text-center leading-tight"
+                        className="absolute top-1 right-2 tracking-wide text-sm text-white leading-none"
                         style={{ fontFamily: "'Saira Stencil One', sans-serif" }}
                       >
                         {pickedTeam.abbreviation}

@@ -159,15 +159,15 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
                 <div className="flex items-center gap-2">
                   {isUpcoming ? (
                     <>
-                      <span className="text-lg text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
+                      <span className="text-2xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
                       <span className="text-muted-foreground font-body text-sm">—</span>
-                      <span className="text-lg text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
+                      <span className="text-2xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
                     </>
                   ) : (
                     <>
-                      <span className="font-medium text-lg" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayAwayScore}</span>
+                      <span className="font-medium text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayAwayScore}</span>
                       <span className="text-muted-foreground font-body text-sm">—</span>
-                      <span className="font-medium text-lg" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayHomeScore}</span>
+                      <span className="font-medium text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayHomeScore}</span>
                     </>
                   )}
                 </div>

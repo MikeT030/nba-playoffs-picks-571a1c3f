@@ -5,7 +5,11 @@ import { teamMeta } from "@/lib/nbaApi";
  * Demo MatchCard variant: uses the team-color gradient from the matchup
  * detail card and hides team logos. Hardcoded SAC vs PAC dummy data.
  */
-const DemoMatchCardColored = () => {
+interface DemoMatchCardColoredProps {
+  onClick?: () => void;
+}
+
+const DemoMatchCardColored = ({ onClick }: DemoMatchCardColoredProps = {}) => {
   const navigate = useNavigate();
   const away = {
     abbreviation: "SAC",
@@ -29,7 +33,7 @@ const DemoMatchCardColored = () => {
 
   return (
     <div
-      onClick={() => navigate("/admin/demo-match")}
+      onClick={onClick ?? (() => navigate("/admin/demo-match"))}
       className="relative block rounded-lg overflow-hidden backdrop-blur-md select-none cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 bg-[#1A1E24]/80"
     >
       {/* Team color gradient overlay (matches MatchDetail header) */}

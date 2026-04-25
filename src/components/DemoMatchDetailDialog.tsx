@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { teamMeta } from "@/lib/nbaApi";
+import DemoMatchCardColored from "@/components/DemoMatchCardColored";
 
 /**
  * Demo modal/layer matchup detail.
@@ -53,12 +54,7 @@ const DemoMatchDetailDialog = () => {
       <h2 className="font-display text-lg tracking-wider text-muted-foreground">
         DEMO MATCH DETAIL — LAYER
       </h2>
-      <button
-        onClick={() => setOpen(true)}
-        className="w-full rounded-lg bg-primary text-primary-foreground font-body font-semibold py-3 hover:bg-primary/90 transition-colors"
-      >
-        Open demo match detail
-      </button>
+      <DemoMatchCardColored onClick={() => setOpen(true)} />
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-md p-0 gap-0 bg-[#1A1E24]/95 backdrop-blur-md border-white/10 overflow-hidden">

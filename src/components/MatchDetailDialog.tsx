@@ -237,7 +237,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
                       />
                       <span
                         className="absolute right-2 tracking-wide text-sm text-white leading-none"
-                        style={{ fontFamily: "'Saira Stencil One', sans-serif", top: "14px" }}
+                        style={{ fontFamily: "'Saira Stencil One', sans-serif", top: "12px" }}
                       >
                         {pickedTeam.abbreviation}
                       </span>

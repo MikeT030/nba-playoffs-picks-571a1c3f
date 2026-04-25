@@ -61,7 +61,7 @@ const DemoMatchDetail = () => {
         <div
           className="absolute inset-0"
           style={{
-            background: `linear-gradient(135deg, ${away.color}66 0%, transparent 50%, ${home.color}66 100%)`,
+            background: `linear-gradient(135deg, ${away.color}66 0%, ${away.color}66 50%, ${home.color}66 50%, ${home.color}66 100%)`,
           }}
         />
         <div className="relative container py-6">

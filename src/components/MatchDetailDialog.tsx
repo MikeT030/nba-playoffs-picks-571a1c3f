@@ -207,11 +207,11 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
                 return (
                   <div
                     key={pick.user_id}
-                    className={`flex items-center gap-4 p-3 ${
+                    className={`flex items-stretch gap-4 p-3 ${
                       idx !== allPicks.length - 1 ? "border-b border-[#2B2F37]" : ""
                     }`}
                   >
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0 self-center">
                       <p className="font-body font-semibold text-sm">
                         {pick.profile_name || "Anonymous"}
                         {isCurrentUser && <span className="text-xs text-primary ml-2">(You)</span>}
@@ -226,10 +226,13 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
                       </p>
                     </div>
                     <div
-                      className="h-6 rounded shrink-0"
+                      className="self-stretch -my-3 -mr-3 flex items-center justify-center px-2 shrink-0"
                       style={{ width: "100px", maxWidth: "100px", backgroundColor: `${pickedTeam.color}4D` }}
-                      aria-hidden="true"
-                    />
+                    >
+                      <span className="font-body font-semibold text-xs text-white text-center leading-tight truncate">
+                        {pickedTeam.name}
+                      </span>
+                    </div>
                   </div>
                 );
               })}

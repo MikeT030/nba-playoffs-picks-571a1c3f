@@ -1,29 +1,33 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { teamMeta } from "@/lib/nbaApi";
-import DemoMatchCardColored from "@/components/DemoMatchCardColored";
+import DemoMatchCardColored, {
+  DEFAULT_MATCH_DATA,
+  type DemoMatchData,
+} from "@/components/DemoMatchCardColored";
 
 /**
  * Demo modal/layer matchup detail.
- * Header is a smaller version of the matchup card (DemoMatchCardColored style).
+ * Trigger is the DemoMatchCardColored card itself.
+ * Header is a smaller version of the matchup card.
  * Body shows the "All Picks" list (mirrors DemoMatchDetail / MatchDetail).
  * Closes on X click or click outside.
  */
 
-const away = {
-  abbreviation: "SAC",
-  name: "Kings",
-  seed: 5,
-  color: teamMeta.SAC?.color ?? "#5A2D81",
-};
-const home = {
-  abbreviation: "PAC",
-  name: "Pacers",
-  seed: 4,
-  color: teamMeta.IND?.color ?? "#002D62",
-};
+export interface DemoPick {
+  user_id: string;
+  profile_name: string;
+  winner: string;
+  games_in_series: number;
+}
 
-const dummyPicks = [
+interface DemoMatchDetailDialogProps {
+  data?: DemoMatchData;
+  picks?: DemoPick[];
+  seriesResult?: { winner: string; games_played: number };
+  heading?: string;
+}
+
+const DEFAULT_PICKS: DemoPick[] = [
   { user_id: "u1", profile_name: "Erik", winner: "PAC", games_in_series: 6 },
   { user_id: "u2", profile_name: "Alexander", winner: "SAC", games_in_series: 7 },
   { user_id: "u3", profile_name: "David", winner: "PAC", games_in_series: 5 },
@@ -31,30 +35,41 @@ const dummyPicks = [
   { user_id: "u5", profile_name: "Hannes", winner: "SAC", games_in_series: 6 },
 ];
 
-const seriesResult = { winner: "PAC", games_played: 6 };
+const DEFAULT_SERIES_RESULT = { winner: "PAC", games_played: 6 };
 
-const computePts = (pick: { winner: string; games_in_series: number }) => {
-  if (seriesResult.winner === pick.winner) {
-    return seriesResult.games_played === pick.games_in_series ? 3 : 2;
-  }
-  return 0;
-};
-
-const DemoMatchDetailDialog = () => {
+const DemoMatchDetailDialog = ({
+  data = DEFAULT_MATCH_DATA,
+  picks = DEFAULT_PICKS,
+  seriesResult = DEFAULT_SERIES_RESULT,
+  heading = "DEMO MATCH DETAIL — LAYER",
+}: DemoMatchDetailDialogProps = {}) => {
   const [open, setOpen] = useState(false);
-  const awayScore = 108;
-  const homeScore = 112;
-  const seriesAway = 2;
-  const seriesHome = 3;
-  const gameNumber = 6;
-  const date = "Apr 28";
+  const {
+    away,
+    home,
+    awayScore,
+    homeScore,
+    seriesAway,
+    seriesHome,
+    gameNumber,
+    date,
+    conference,
+    round,
+  } = data;
+
+  const computePts = (pick: { winner: string; games_in_series: number }) => {
+    if (seriesResult.winner === pick.winner) {
+      return seriesResult.games_played === pick.games_in_series ? 3 : 2;
+    }
+    return 0;
+  };
 
   return (
     <div className="space-y-2">
       <h2 className="font-display text-lg tracking-wider text-muted-foreground">
-        DEMO MATCH DETAIL — LAYER
+        {heading}
       </h2>
-      <DemoMatchCardColored onClick={() => setOpen(true)} />
+      <DemoMatchCardColored data={data} onClick={() => setOpen(true)} />
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-md p-0 gap-0 bg-[#1A1E24]/95 backdrop-blur-md border-white/10 overflow-hidden">
@@ -71,7 +86,7 @@ const DemoMatchDetailDialog = () => {
             <div className="relative">
               <div className="px-4 py-2 flex items-center justify-center">
                 <span className="text-xs text-white font-body uppercase tracking-wider text-center font-normal">
-                  EAST  Conf. Semifinals · Game {gameNumber} · {date}
+                  {conference}  {round} · Game {gameNumber} · {date}
                 </span>
               </div>
 
@@ -148,14 +163,14 @@ const DemoMatchDetailDialog = () => {
           <div className="px-5 py-5 max-h-[60vh] overflow-y-auto">
             <h3 className="font-display text-xl tracking-wider mb-4">All Picks</h3>
             <div className="rounded-lg border border-white/10 bg-[#22272E]/80 overflow-hidden">
-              {dummyPicks.map((pick, idx) => {
+              {picks.map((pick, idx) => {
                 const pTeam = pick.winner === home.abbreviation ? home : away;
                 const pts = computePts(pick);
                 return (
                   <div
                     key={pick.user_id}
                     className={`flex items-center gap-4 p-3 ${
-                      idx !== dummyPicks.length - 1
+                      idx !== picks.length - 1
                         ? "border-b border-[#2B2F37]"
                         : ""
                     }`}

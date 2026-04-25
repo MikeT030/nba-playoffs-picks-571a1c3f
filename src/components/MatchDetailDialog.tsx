@@ -195,7 +195,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
         </div>
 
         {/* All Picks */}
-        <div className="px-5 py-5 max-h-[60vh] overflow-y-auto">
+        <div className="px-5 py-5 max-h-[calc(60vh+40px)] overflow-y-auto">
           <h3 className="font-display text-xl tracking-wider mb-4">All Picks</h3>
           {allPicks && allPicks.length > 0 ? (
             <div className="rounded-lg border border-white/10 bg-[#22272E]/80 overflow-hidden">

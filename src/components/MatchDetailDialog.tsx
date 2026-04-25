@@ -232,7 +232,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
                       <div
                         className="absolute inset-0 pointer-events-none"
                         style={{
-                          background: `linear-gradient(to top right, transparent 0%, transparent 50%, ${pickedTeam.color} 50%, ${pickedTeam.color} 100%)`,
+                          background: `linear-gradient(to top right, transparent 0%, transparent 50%, ${pickedTeam.color}4D 50%, ${pickedTeam.color}4D 100%)`,
                         }}
                       />
                       <span

@@ -74,8 +74,7 @@ const Index = () => {
   const { pullDistance, isRefreshing, progress } = usePullToRefresh({
     onRefresh: async () => {
       await Promise.all([
-        queryClient.refetchQueries({ queryKey: ["playoff-games"] }),
-        queryClient.refetchQueries({ queryKey: ["bracket-data"] }),
+        queryClient.refetchQueries({ queryKey: ["playoff-games-raw"] }),
         queryClient.refetchQueries({ queryKey: ["user-picks-all", user?.id] }),
       ]);
     },

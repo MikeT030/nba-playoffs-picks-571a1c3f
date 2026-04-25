@@ -226,11 +226,17 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
                       </p>
                     </div>
                     <div
-                      className="self-stretch -my-3 -mr-3 flex items-center justify-center px-2 shrink-0"
-                      style={{ width: "100px", maxWidth: "100px", backgroundColor: `${pickedTeam.color}4D` }}
+                      className="self-stretch -my-3 -mr-3 flex items-center justify-center px-2 shrink-0 relative overflow-hidden"
+                      style={{ width: "100px", maxWidth: "100px" }}
                     >
+                      <div
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          background: `linear-gradient(to top right, transparent 0%, transparent 50%, ${pickedTeam.color} 50%, ${pickedTeam.color} 100%)`,
+                        }}
+                      />
                       <span
-                        className="tracking-wide text-xl text-white text-center leading-tight"
+                        className="relative tracking-wide text-xl text-white text-center leading-tight"
                         style={{ fontFamily: "'Saira Stencil One', sans-serif" }}
                       >
                         {pickedTeam.abbreviation}

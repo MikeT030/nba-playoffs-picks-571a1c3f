@@ -1,12 +1,11 @@
-import { useNavigate } from "react-router-dom";
 import type { Match } from "@/data/playoffsData";
-import TeamLogo from "@/components/TeamLogo";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useAllUserPicks } from "@/hooks/useAllUserPicks";
 import { useAllSeriesResults } from "@/hooks/useAllSeriesResults";
 import { useSeriesGames } from "@/hooks/useSeriesGames";
 import { pickDefaultGameIdx, isNextUp as checkIsNextUp, formatTipOff } from "@/lib/seriesUtils";
 import { useMemo, useRef, useState, useEffect, useCallback } from "react";
+import MatchDetailDialog from "@/components/MatchDetailDialog";
 
 const useUserBet = (match: Match) => {
   const { data: bracketData } = useBracketData();
@@ -57,7 +56,7 @@ interface MatchCardProps {
 
 const MatchCard = ({ match }: MatchCardProps) => {
   const { pick: bet, points } = useUserBet(match);
-  const navigate = useNavigate();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const { data: seriesGames } = useSeriesGames(
     match.id,
@@ -119,9 +118,9 @@ const MatchCard = ({ match }: MatchCardProps) => {
         swipedRef.current = false;
         return;
       }
-      navigate(`/match/${match.id}`);
+      setDialogOpen(true);
     },
-    [navigate, match.id]
+    []
   );
 
   const handleDotClick = useCallback(

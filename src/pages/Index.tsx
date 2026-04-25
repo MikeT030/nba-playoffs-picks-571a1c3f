@@ -12,6 +12,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { usePlayerCard } from "@/hooks/usePlayerCard";
 import { useAllUserPicks } from "@/hooks/useAllUserPicks";
 import { useQueryClient } from "@tanstack/react-query";
+import { usePullToRefresh } from "@/hooks/usePullToRefresh";
+import PullToRefreshIndicator from "@/components/PullToRefreshIndicator";
 import { ALL_MONOLOGUE_LINES, isPlayoffsStarted } from "@/data/buttonMonologue";
 import { isTodaySlateET, isSameLocalDay } from "@/lib/seriesUtils";
 import {
@@ -67,6 +69,16 @@ const Index = () => {
   const handleBetsSaved = () => {
     queryClient.invalidateQueries({ queryKey: ["user-picks-all", user?.id] });
   };
+
+  // Pull-to-refresh: refetch matchup data when the user pulls down at the top.
+  const { pullDistance, isRefreshing, progress } = usePullToRefresh({
+    onRefresh: async () => {
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ["playoff-games-raw"] }),
+        queryClient.refetchQueries({ queryKey: ["user-picks-all", user?.id] }),
+      ]);
+    },
+  });
 
   const handleCardRoulette = async () => {
     // Only show roulette if user doesn't already have a card
@@ -195,6 +207,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background pb-28">
+      <PullToRefreshIndicator
+        pullDistance={pullDistance}
+        isRefreshing={isRefreshing}
+        progress={progress}
+      />
       <HeroBanner
         subtitle={
           pickCount >= TOTAL_GAMES

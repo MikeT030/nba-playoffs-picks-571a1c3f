@@ -7,15 +7,30 @@ import { pickDefaultGameIdx, isNextUp as checkIsNextUp, formatTipOff } from "@/l
 import TeamLogo from "@/components/TeamLogo";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useEffect, useState, useRef, useCallback } from "react";
+import { usePullToRefresh } from "@/hooks/usePullToRefresh";
+import PullToRefreshIndicator from "@/components/PullToRefreshIndicator";
 
 const MatchDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const { data: matches, isLoading } = usePlayoffGames();
   const { data: bracketData } = useBracketData();
   const match = matches?.find((m) => m.id === id);
+
+  // Pull-to-refresh: refetch matchup, series, and picks data on pull-down.
+  const { pullDistance, isRefreshing, progress } = usePullToRefresh({
+    onRefresh: async () => {
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ["playoff-games-raw"] }),
+        queryClient.refetchQueries({ queryKey: ["series-result"] }),
+        queryClient.refetchQueries({ queryKey: ["series-picks"] }),
+        queryClient.refetchQueries({ queryKey: ["user-pick"] }),
+      ]);
+    },
+  });
 
   // Series games from API/data — full timeline (final + live + upcoming)
   const { data: seriesGames } = useSeriesGames(
@@ -165,6 +180,11 @@ const MatchDetail = () => {
 
   return (
     <div className="min-h-screen bg-background pb-24">
+      <PullToRefreshIndicator
+        pullDistance={pullDistance}
+        isRefreshing={isRefreshing}
+        progress={progress}
+      />
       <div
         className="relative overflow-hidden"
         onTouchStart={hasMultipleGames ? handleTouchStart : undefined}

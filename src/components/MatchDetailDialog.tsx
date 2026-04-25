@@ -105,7 +105,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: `linear-gradient(135deg, ${displayAway.color}4D 0%, ${displayAway.color}4D 50%, ${displayHome.color}4D 50%, ${displayHome.color}4D 100%)`,
+              background: `linear-gradient(135deg, ${displayAway.color}${displayStatus === "live" ? "80" : "4D"} 0%, ${displayAway.color}${displayStatus === "live" ? "80" : "4D"} 50%, ${displayHome.color}${displayStatus === "live" ? "80" : "4D"} 50%, ${displayHome.color}${displayStatus === "live" ? "80" : "4D"} 100%)`,
             }}
           />
           <div className="relative">

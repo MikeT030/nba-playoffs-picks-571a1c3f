@@ -230,7 +230,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
                       style={{
                         width: "100px",
                         maxWidth: "100px",
-                        background: `linear-gradient(135deg, ${pickedTeam.color}4D 0%, ${pickedTeam.color}4D 50%, transparent 50%, transparent 100%)`,
+                        background: `linear-gradient(135deg, transparent 0%, transparent 50%, ${pickedTeam.color}4D 50%, ${pickedTeam.color}4D 100%)`,
                       }}
                     >
                       <span

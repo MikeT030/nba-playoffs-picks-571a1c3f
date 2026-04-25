@@ -229,8 +229,11 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
                       className="self-stretch -my-3 -mr-3 flex items-center justify-center px-2 shrink-0"
                       style={{ width: "100px", maxWidth: "100px", backgroundColor: `${pickedTeam.color}4D` }}
                     >
-                      <span className="font-body font-semibold text-xs text-white text-center leading-tight truncate">
-                        {pickedTeam.name}
+                      <span
+                        className="tracking-wide text-xl text-white text-center leading-tight"
+                        style={{ fontFamily: "'Saira Stencil One', sans-serif" }}
+                      >
+                        {pickedTeam.abbreviation}
                       </span>
                     </div>
                   </div>

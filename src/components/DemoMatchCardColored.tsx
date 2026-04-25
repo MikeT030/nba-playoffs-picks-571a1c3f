@@ -1,35 +1,81 @@
 import { useNavigate } from "react-router-dom";
 import { teamMeta } from "@/lib/nbaApi";
 
-/**
- * Demo MatchCard variant: uses the team-color gradient from the matchup
- * detail card and hides team logos. Hardcoded SAC vs PAC dummy data.
- */
-interface DemoMatchCardColoredProps {
-  onClick?: () => void;
+export interface DemoMatchTeam {
+  abbreviation: string;
+  name: string;
+  seed: number;
+  color: string;
 }
 
-const DemoMatchCardColored = ({ onClick }: DemoMatchCardColoredProps = {}) => {
-  const navigate = useNavigate();
-  const away = {
+export interface DemoMatchData {
+  away: DemoMatchTeam;
+  home: DemoMatchTeam;
+  awayScore: number;
+  homeScore: number;
+  seriesAway: number;
+  seriesHome: number;
+  gameNumber: number;
+  date: string;
+  conference: string;
+  round: string;
+  yourPick: { winner: string; games_in_series: number };
+  yourPickResult: string;
+}
+
+interface DemoMatchCardColoredProps {
+  onClick?: () => void;
+  data?: DemoMatchData;
+}
+
+export const DEFAULT_MATCH_DATA: DemoMatchData = {
+  away: {
     abbreviation: "SAC",
     name: "Kings",
     seed: 5,
     color: teamMeta.SAC?.color ?? "#5A2D81",
-  };
-  const home = {
+  },
+  home: {
     abbreviation: "PAC",
     name: "Pacers",
     seed: 4,
     color: teamMeta.IND?.color ?? "#002D62",
-  };
+  },
+  awayScore: 108,
+  homeScore: 112,
+  seriesAway: 2,
+  seriesHome: 3,
+  gameNumber: 6,
+  date: "Apr 28",
+  conference: "EAST",
+  round: "Conf. Semifinals",
+  yourPick: { winner: "PAC", games_in_series: 6 },
+  yourPickResult: "Shiiiiit 3 Points",
+};
 
-  const awayScore = 108;
-  const homeScore = 112;
-  const seriesAway = 2;
-  const seriesHome = 3;
-  const gameNumber = 6;
-  const date = "Apr 28";
+/**
+ * Demo MatchCard variant: uses the team-color gradient from the matchup
+ * detail card and hides team logos.
+ */
+const DemoMatchCardColored = ({
+  onClick,
+  data = DEFAULT_MATCH_DATA,
+}: DemoMatchCardColoredProps = {}) => {
+  const navigate = useNavigate();
+  const {
+    away,
+    home,
+    awayScore,
+    homeScore,
+    seriesAway,
+    seriesHome,
+    gameNumber,
+    date,
+    conference,
+    round,
+    yourPick,
+    yourPickResult,
+  } = data;
 
   return (
     <div
@@ -47,7 +93,7 @@ const DemoMatchCardColored = ({ onClick }: DemoMatchCardColoredProps = {}) => {
       <div className="relative">
         <div className="px-4 py-2 flex items-center justify-center border-b border-transparent">
           <span className="text-xs text-white font-body uppercase tracking-wider text-center font-normal">
-            EAST  Conf. Semifinals · Game {gameNumber} · {date}
+            {conference}  {round} · Game {gameNumber} · {date}
           </span>
         </div>
 
@@ -95,8 +141,8 @@ const DemoMatchCardColored = ({ onClick }: DemoMatchCardColoredProps = {}) => {
         <div className="px-4 pb-3 -mt-1">
           <div className="h-px w-full bg-[#2B2F37] mb-3" />
           <p className="font-body text-white text-center pt-0 text-sm">
-            Your Pick: <span className="font-bold">PAC</span> in <span className="font-bold">6</span>
-            <span className="ml-2 text-primary font-medium">· Shiiiiit 3 Points</span>
+            Your Pick: <span className="font-bold">{yourPick.winner}</span> in <span className="font-bold">{yourPick.games_in_series}</span>
+            <span className="ml-2 text-primary font-medium">· {yourPickResult}</span>
           </p>
         </div>
       </div>

@@ -124,7 +124,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
                   </span>
                 )}
                 <div>
-                  <p className="tracking-wide text-lg" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
+                  <p className="tracking-wide text-xl" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
                     {displayAway.abbreviation}
                   </p>
                   <p className="text-xs text-muted-foreground font-body">{displayAway.name}</p>
@@ -159,15 +159,15 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
                 <div className="flex items-center gap-2">
                   {isUpcoming ? (
                     <>
-                      <span className="text-lg text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
+                      <span className="text-2xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
                       <span className="text-muted-foreground font-body text-sm">—</span>
-                      <span className="text-lg text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
+                      <span className="text-2xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
                     </>
                   ) : (
                     <>
-                      <span className="font-medium text-lg" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayAwayScore}</span>
+                      <span className="font-medium text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayAwayScore}</span>
                       <span className="text-muted-foreground font-body text-sm">—</span>
-                      <span className="font-medium text-lg" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayHomeScore}</span>
+                      <span className="font-medium text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayHomeScore}</span>
                     </>
                   )}
                 </div>
@@ -179,7 +179,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
               {/* Home */}
               <div className="flex-1 flex items-center gap-1.5 justify-end text-right">
                 <div>
-                  <p className="tracking-wide text-lg" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
+                  <p className="tracking-wide text-xl" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
                     {displayHome.abbreviation}
                   </p>
                   <p className="text-xs text-muted-foreground font-body">{displayHome.name}</p>

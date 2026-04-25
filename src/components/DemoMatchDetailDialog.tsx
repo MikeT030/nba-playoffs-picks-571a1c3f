@@ -98,7 +98,7 @@ const DemoMatchDetailDialog = ({
                   </span>
                   <div>
                     <p
-                      className="tracking-wide text-lg"
+                      className="tracking-wide text-xl"
                       style={{ fontFamily: "'Saira Stencil One', sans-serif" }}
                     >
                       {away.abbreviation}
@@ -118,7 +118,7 @@ const DemoMatchDetailDialog = ({
                   </div>
                   <div className="flex items-center gap-2">
                     <span
-                      className="font-medium text-lg"
+                      className="font-medium text-2xl"
                       style={{ fontFamily: "'Orbitron', sans-serif" }}
                     >
                       {awayScore}
@@ -127,7 +127,7 @@ const DemoMatchDetailDialog = ({
                       —
                     </span>
                     <span
-                      className="font-medium text-lg"
+                      className="font-medium text-2xl"
                       style={{ fontFamily: "'Orbitron', sans-serif" }}
                     >
                       {homeScore}
@@ -142,7 +142,7 @@ const DemoMatchDetailDialog = ({
                 <div className="flex-1 flex items-center gap-1.5 justify-end text-right">
                   <div>
                     <p
-                      className="tracking-wide text-lg"
+                      className="tracking-wide text-xl"
                       style={{ fontFamily: "'Saira Stencil One', sans-serif" }}
                     >
                       {home.abbreviation}

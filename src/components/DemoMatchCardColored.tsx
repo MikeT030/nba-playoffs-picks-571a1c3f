@@ -104,7 +104,7 @@ const DemoMatchCardColored = ({
               {away.seed}
             </span>
             <div>
-              <p className="tracking-wide text-lg" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{away.abbreviation}</p>
+              <p className="tracking-wide text-xl" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{away.abbreviation}</p>
               <p className="text-xs text-muted-foreground font-body hidden sm:block">{away.name}</p>
             </div>
           </div>
@@ -117,9 +117,9 @@ const DemoMatchCardColored = ({
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="font-medium text-lg" style={{ fontFamily: "'Orbitron', sans-serif" }}>{awayScore}</span>
+              <span className="font-medium text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{awayScore}</span>
               <span className="text-muted-foreground font-body text-sm">—</span>
-              <span className="font-medium text-lg" style={{ fontFamily: "'Orbitron', sans-serif" }}>{homeScore}</span>
+              <span className="font-medium text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{homeScore}</span>
             </div>
             <p className="text-xs font-body mt-1 font-medium text-muted-foreground">
               Series {seriesAway} – {seriesHome}
@@ -129,7 +129,7 @@ const DemoMatchCardColored = ({
           {/* Home Team */}
           <div className="flex-1 flex items-center gap-1.5 justify-end text-right -translate-y-2">
             <div>
-              <p className="tracking-wide text-lg" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{home.abbreviation}</p>
+              <p className="tracking-wide text-xl" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{home.abbreviation}</p>
               <p className="text-xs text-muted-foreground font-body hidden sm:block">{home.name}</p>
             </div>
             <span className="text-xs text-muted-foreground font-body font-semibold w-4 text-center shrink-0">

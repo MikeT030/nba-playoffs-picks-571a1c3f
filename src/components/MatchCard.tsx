@@ -186,7 +186,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
             <span className="text-xs text-muted-foreground font-body font-semibold w-4 text-center shrink-0">{displayAway.seed}</span>
           )}
           <div>
-            <p className="tracking-wide text-base" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{displayAway.abbreviation}</p>
+            <p className="tracking-wide text-xl" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{displayAway.abbreviation}</p>
             <p className="text-xs text-muted-foreground font-body hidden sm:block">{displayAway.name}</p>
           </div>
         </div>
@@ -225,9 +225,9 @@ const MatchCard = ({ match }: MatchCardProps) => {
               </>
             ) : (
               <>
-                <span className="text-lg" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayAwayScore}</span>
+                <span className="text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayAwayScore}</span>
                 <span className="text-muted-foreground font-body text-sm">—</span>
-                <span className="text-lg" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayHomeScore}</span>
+                <span className="text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{displayHomeScore}</span>
               </>
             )}
           </div>
@@ -239,7 +239,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
         {/* Home Team */}
         <div className="flex-1 flex items-center gap-1.5 justify-end text-right -translate-y-2">
           <div>
-            <p className="tracking-wide text-base" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{displayHome.abbreviation}</p>
+            <p className="tracking-wide text-xl" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{displayHome.abbreviation}</p>
             <p className="text-xs text-muted-foreground font-body hidden sm:block">{displayHome.name}</p>
           </div>
           {displayHome.seed && (

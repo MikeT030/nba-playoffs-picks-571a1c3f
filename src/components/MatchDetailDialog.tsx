@@ -124,7 +124,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
                   </span>
                 )}
                 <div>
-                  <p className="tracking-wide text-lg" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
+                  <p className="tracking-wide text-xl" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
                     {displayAway.abbreviation}
                   </p>
                   <p className="text-xs text-muted-foreground font-body">{displayAway.name}</p>
@@ -179,7 +179,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
               {/* Home */}
               <div className="flex-1 flex items-center gap-1.5 justify-end text-right">
                 <div>
-                  <p className="tracking-wide text-lg" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
+                  <p className="tracking-wide text-xl" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
                     {displayHome.abbreviation}
                   </p>
                   <p className="text-xs text-muted-foreground font-body">{displayHome.name}</p>

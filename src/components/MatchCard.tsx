@@ -1,12 +1,11 @@
-import { useNavigate } from "react-router-dom";
 import type { Match } from "@/data/playoffsData";
-import TeamLogo from "@/components/TeamLogo";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useAllUserPicks } from "@/hooks/useAllUserPicks";
 import { useAllSeriesResults } from "@/hooks/useAllSeriesResults";
 import { useSeriesGames } from "@/hooks/useSeriesGames";
 import { pickDefaultGameIdx, isNextUp as checkIsNextUp, formatTipOff } from "@/lib/seriesUtils";
 import { useMemo, useRef, useState, useEffect, useCallback } from "react";
+import MatchDetailDialog from "@/components/MatchDetailDialog";
 
 const useUserBet = (match: Match) => {
   const { data: bracketData } = useBracketData();
@@ -57,7 +56,7 @@ interface MatchCardProps {
 
 const MatchCard = ({ match }: MatchCardProps) => {
   const { pick: bet, points } = useUserBet(match);
-  const navigate = useNavigate();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const { data: seriesGames } = useSeriesGames(
     match.id,
@@ -119,9 +118,9 @@ const MatchCard = ({ match }: MatchCardProps) => {
         swipedRef.current = false;
         return;
       }
-      navigate(`/match/${match.id}`);
+      setDialogOpen(true);
     },
-    [navigate, match.id]
+    []
   );
 
   const handleDotClick = useCallback(
@@ -157,13 +156,23 @@ const MatchCard = ({ match }: MatchCardProps) => {
     : null;
 
   return (
+    <>
     <div
       onClick={handleClick}
       onTouchStart={hasMultipleGames ? handleTouchStart : undefined}
       onTouchMove={hasMultipleGames ? handleTouchMove : undefined}
       onTouchEnd={hasMultipleGames ? handleTouchEnd : undefined}
-      className="block rounded-lg bg-[#1A1E24]/80 backdrop-blur-md transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 group cursor-pointer select-none"
+      className="relative block rounded-lg overflow-hidden bg-[#1A1E24]/80 backdrop-blur-md transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 group cursor-pointer select-none"
     >
+      {/* Team color gradient overlay (matches MatchDetail header) */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `linear-gradient(135deg, ${displayAway.color}66 0%, transparent 50%, ${displayHome.color}66 100%)`,
+        }}
+      />
+
+      <div className="relative">
       <div className="px-4 py-2 flex items-center justify-center border-b border-transparent">
         <span className="text-xs text-white font-body uppercase tracking-wider text-center font-normal">
           {match.conference !== "Finals" ? `${match.conference === "East" ? "EAST" : "WEST"}  ` : ""}{match.round === "Conference Semifinals" ? "Conf. Semifinals" : match.round === "Conference Finals" ? "Conf. Finals" : match.round} · Game {displayGameNum} · {displayDate}
@@ -176,7 +185,6 @@ const MatchCard = ({ match }: MatchCardProps) => {
           {displayAway.seed && (
             <span className="text-xs text-muted-foreground font-body font-semibold w-4 text-center shrink-0">{displayAway.seed}</span>
           )}
-          <TeamLogo src={displayAway.logo} alt={displayAway.name} className="w-10 h-10" />
           <div>
             <p className="tracking-wide text-base" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{displayAway.abbreviation}</p>
             <p className="text-xs text-muted-foreground font-body hidden sm:block">{displayAway.name}</p>
@@ -234,7 +242,6 @@ const MatchCard = ({ match }: MatchCardProps) => {
             <p className="tracking-wide text-base" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{displayHome.abbreviation}</p>
             <p className="text-xs text-muted-foreground font-body hidden sm:block">{displayHome.name}</p>
           </div>
-          <TeamLogo src={displayHome.logo} alt={displayHome.name} className="w-10 h-10" />
           {displayHome.seed && (
             <span className="text-xs text-muted-foreground font-body font-semibold w-4 text-center shrink-0">{displayHome.seed}</span>
           )}
@@ -286,7 +293,10 @@ const MatchCard = ({ match }: MatchCardProps) => {
           </p>
         </div>
       )}
+      </div>
     </div>
+    <MatchDetailDialog match={match} open={dialogOpen} onOpenChange={setDialogOpen} />
+    </>
   );
 };
 

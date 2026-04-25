@@ -225,6 +225,11 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
                         )}
                       </p>
                     </div>
+                    <div
+                      className="h-6 rounded shrink-0"
+                      style={{ width: "100px", maxWidth: "100px", backgroundColor: `${pickedTeam.color}4D` }}
+                      aria-hidden="true"
+                    />
                   </div>
                 );
               })}

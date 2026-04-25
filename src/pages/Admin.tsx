@@ -13,6 +13,7 @@ import {
 import { toast } from "sonner";
 import DemoMatchCard from "@/components/DemoMatchCard";
 import DemoMatchCardColored from "@/components/DemoMatchCardColored";
+import DemoMatchDetailDialog from "@/components/DemoMatchDetailDialog";
 import DemoMatchCardFonts from "@/components/DemoMatchCardFonts";
 import DemoBracketPlayedOut from "@/components/DemoBracketPlayedOut";
 import DemoAllPicksTable from "@/components/DemoAllPicksTable";
@@ -175,6 +176,8 @@ const Admin = () => {
           <h2 className="font-display text-lg tracking-wider text-muted-foreground">DEMO MATCH CARD — TEAM COLORS</h2>
           <DemoMatchCardColored />
         </div>
+
+        <DemoMatchDetailDialog />
 
         <div className="space-y-2">
           <h2 className="font-display text-lg tracking-wider text-muted-foreground">FONT VARIANTS</h2>

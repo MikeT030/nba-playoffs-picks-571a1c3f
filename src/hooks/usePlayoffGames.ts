@@ -179,14 +179,9 @@ function deriveMatches(games: NbaGame[] | undefined, bracket: BracketSeries[]): 
   const apiMatches = groupIntoSeries(games, bracket);
 
   // Once the API returns any real playoff games, treat it as the source of truth.
-  // Only keep fallback series that still have an unresolved play-in placeholder
-  // (TBD 7/8 seed) — drop all other hardcoded matchups to avoid showing stale
-  // pre-playoff "Apr 19/20" cards alongside live data.
-  const tbdMatches = fallbacks.filter(
-    (fb) => fb.date === "TBD" || fb.time === "TBD"
-  );
-
-  return [...apiMatches, ...tbdMatches];
+  // Drop every fallback, including unresolved play-in placeholders, so stale
+  // pre-playoff cards cannot appear alongside live standings.
+  return apiMatches;
 }
 
 export function usePlayoffGames(season: number = 2025) {

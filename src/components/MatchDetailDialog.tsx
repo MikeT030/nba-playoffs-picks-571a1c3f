@@ -171,7 +171,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
                     </>
                   )}
                 </div>
-                <p className="text-xs font-body mt-1 font-medium text-muted-foreground">
+                <p className="text-xs font-body mt-1 font-medium text-[#dce0e5]">
                   Series {displaySeriesAway} – {displaySeriesHome}
                 </p>
               </div>

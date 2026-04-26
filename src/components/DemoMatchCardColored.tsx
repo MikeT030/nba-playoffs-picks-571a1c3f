@@ -121,7 +121,7 @@ const DemoMatchCardColored = ({
               <span className="text-muted-foreground font-body text-sm">—</span>
               <span className="font-medium text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{homeScore}</span>
             </div>
-            <p className="text-xs font-body mt-1 font-medium text-muted-foreground">
+            <p className="text-xs font-body mt-1 font-medium text-[#dce0e5]">
               Series {seriesAway} – {seriesHome}
             </p>
           </div>

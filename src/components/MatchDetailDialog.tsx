@@ -25,7 +25,17 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
 
   const allGames = useMemo(() => seriesGames ?? [], [seriesGames]);
   const hasMultipleGames = allGames.length > 1;
-  const defaultIdx = useMemo(() => pickDefaultGameIdx(allGames), [allGames]);
+  // Default to the live game if any, otherwise the most recent final game,
+  // otherwise the last game in the series.
+  const defaultIdx = useMemo(() => {
+    if (allGames.length === 0) return 0;
+    const liveIdx = allGames.findIndex((g) => g.status === "live");
+    if (liveIdx >= 0) return liveIdx;
+    for (let i = allGames.length - 1; i >= 0; i--) {
+      if (allGames[i].status === "final") return i;
+    }
+    return allGames.length - 1;
+  }, [allGames]);
   const [activeGameIdx, setActiveGameIdx] = useState(0);
   const [defaultApplied, setDefaultApplied] = useState(false);
 

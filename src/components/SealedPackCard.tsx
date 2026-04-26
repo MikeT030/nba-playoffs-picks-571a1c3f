@@ -20,7 +20,9 @@ interface SealedPackCardProps {
 
 /**
  * A sealed trading-card pack inspired by 90s Topps NBA wax packs.
- * Click to "rip" it down the middle — the foil splits and the card underneath is revealed.
+ * Click to "burn" the pack from the top-left corner to the bottom-right,
+ * revealing the player card underneath. The burn edge sparkles with a
+ * Miami Vice palette (cyan, magenta, hot pink) glitter.
  */
 const SealedPackCard = ({
   children,
@@ -36,64 +38,43 @@ const SealedPackCard = ({
 
   return (
     <div className={`relative w-full ${aspectClass} select-none`}>
-      {/* Card underneath — revealed after the rip */}
-      <div
-        className={`absolute inset-0 transition-opacity duration-700 ${
-          opened ? "opacity-100 delay-300" : "opacity-0 pointer-events-none"
-        }`}
-      >
-        {children}
-      </div>
+      {/* Card underneath — revealed as the pack burns away */}
+      <div className="absolute inset-0">{children}</div>
 
-      {/* Sealed pack overlay */}
+      {/* Sealed pack overlay (burns away on click) */}
       <button
         type="button"
         onClick={() => !opened && setOpened(true)}
-        aria-label={opened ? "Pack opened" : "Tap to rip the pack open"}
+        aria-label={opened ? "Pack opened" : "Tap to burn the pack open"}
         disabled={opened}
         className={`absolute inset-0 ${opened ? "pointer-events-none" : "cursor-pointer"}`}
       >
-        {/* Two halves of foil, jagged tear edges down the middle */}
         <div className="absolute inset-0 overflow-hidden rounded-md">
-          {/* LEFT half — extends well past the centerline so the jagged inner
-              edge always overlaps the right half (no gaps in the dips) */}
+          {/* Full pack face — masked diagonally so it disappears from
+              top-left to bottom-right when `opened` flips on. */}
           <div
-            className={`absolute inset-y-0 left-0 w-[60%] origin-left transition-all ease-[cubic-bezier(0.7,0,0.3,1)] ${
-              opened
-                ? "duration-[900ms] -translate-x-[120%] -rotate-[14deg] opacity-0"
-                : "duration-300 hover:-translate-x-[1px]"
-            }`}
-            style={{
-              // Right edge zig-zags between 92% and 100% of this half's width.
-              // Because the half is 60% of the pack, the inner edge sits
-              // roughly at 55–60% of the pack — past the right half's inner edge.
-              clipPath:
-                "polygon(0 0, 100% 0, 96% 8%, 100% 16%, 95% 26%, 99% 36%, 94% 46%, 100% 56%, 95% 66%, 99% 76%, 94% 86%, 100% 94%, 96% 100%, 0 100%)",
-            }}
+            className={`absolute inset-0 sealed-pack-burn ${opened ? "is-open" : ""}`}
           >
-            <PackFace side="left" topBanner={topBanner} title={title} yearLabel={yearLabel} midLine={midLine} tierLine={tierLine} seriesLabel={seriesLabel} />
+            <FullPackFace
+              topBanner={topBanner}
+              title={title}
+              yearLabel={yearLabel}
+              midLine={midLine}
+              tierLine={tierLine}
+              seriesLabel={seriesLabel}
+            />
           </div>
 
-          {/* RIGHT half — also 60% wide, overlaps the left half */}
-          <div
-            className={`absolute inset-y-0 right-0 w-[60%] origin-right transition-all ease-[cubic-bezier(0.7,0,0.3,1)] ${
-              opened
-                ? "duration-[900ms] translate-x-[120%] rotate-[14deg] opacity-0"
-                : "duration-300 hover:translate-x-[1px]"
-            }`}
-            style={{
-              clipPath:
-                "polygon(4% 0, 100% 0, 100% 100%, 4% 100%, 0 94%, 6% 86%, 1% 76%, 5% 66%, 0 56%, 6% 46%, 1% 36%, 5% 26%, 0 16%, 4% 8%)",
-            }}
-          >
-            <PackFace side="right" topBanner={topBanner} title={title} yearLabel={yearLabel} midLine={midLine} tierLine={tierLine} seriesLabel={seriesLabel} />
-          </div>
+          {/* Glittering Miami Vice burn edge — only visible while burning */}
+          {opened && (
+            <div className="absolute inset-0 pointer-events-none sealed-pack-ember" aria-hidden />
+          )}
 
           {/* Tap hint */}
           {!opened && (
             <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
               <div className="font-display text-[10px] tracking-[0.3em] text-white bg-black/55 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/25 animate-pulse">
-                TAP TO RIP
+                TAP TO BURN
               </div>
             </div>
           )}
@@ -116,6 +97,89 @@ const SealedPackCard = ({
           @keyframes pack-shine {
             0%, 100% { background-position: 220% 0; }
             50% { background-position: -120% 0; }
+          }
+
+          /* The pack face is masked with a diagonal gradient. The mask's
+             "position" slides from before the top-left corner all the way
+             past the bottom-right, eating the foil away as it goes. */
+          .sealed-pack-burn {
+            -webkit-mask-image: linear-gradient(
+              135deg,
+              transparent 0%,
+              transparent 6%,
+              rgba(0,0,0,0.4) 8%,
+              #000 12%,
+              #000 100%
+            );
+            mask-image: linear-gradient(
+              135deg,
+              transparent 0%,
+              transparent 6%,
+              rgba(0,0,0,0.4) 8%,
+              #000 12%,
+              #000 100%
+            );
+            -webkit-mask-size: 260% 260%;
+            mask-size: 260% 260%;
+            -webkit-mask-position: 100% 100%; /* fully covered */
+            mask-position: 100% 100%;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            transition: -webkit-mask-position 1600ms cubic-bezier(0.65, 0, 0.35, 1),
+                        mask-position 1600ms cubic-bezier(0.65, 0, 0.35, 1);
+          }
+          .sealed-pack-burn.is-open {
+            -webkit-mask-position: 0% 0%; /* fully burned away */
+            mask-position: 0% 0%;
+          }
+
+          /* Miami Vice glittering ember sliding along the same diagonal. */
+          .sealed-pack-ember {
+            background:
+              /* sparkle dots layer */
+              radial-gradient(circle at 20% 30%, #fff 0 1px, transparent 2px),
+              radial-gradient(circle at 70% 60%, #22d3ee 0 1px, transparent 2px),
+              radial-gradient(circle at 40% 80%, #ec4899 0 1px, transparent 2px),
+              radial-gradient(circle at 85% 20%, #f0abfc 0 1px, transparent 2px),
+              radial-gradient(circle at 10% 70%, #fff 0 1px, transparent 2px),
+              /* glowing ember band — cyan -> magenta -> hot pink */
+              linear-gradient(
+                135deg,
+                transparent 0%,
+                transparent 4%,
+                rgba(34, 211, 238, 0.9) 6%,
+                rgba(236, 72, 153, 1) 9%,
+                rgba(244, 114, 182, 0.9) 11%,
+                rgba(255, 200, 120, 0.6) 13%,
+                transparent 16%,
+                transparent 100%
+              );
+            background-size: 18px 18px, 22px 22px, 26px 26px, 20px 20px, 24px 24px, 260% 260%;
+            background-repeat: repeat, repeat, repeat, repeat, repeat, no-repeat;
+            background-position:
+              0 0, 0 0, 0 0, 0 0, 0 0,
+              100% 100%;
+            mix-blend-mode: screen;
+            filter: drop-shadow(0 0 6px rgba(236, 72, 153, 0.9))
+                    drop-shadow(0 0 10px rgba(34, 211, 238, 0.6));
+            animation: ember-sweep 1600ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+          }
+
+          @keyframes ember-sweep {
+            from {
+              background-position:
+                0 0, 0 0, 0 0, 0 0, 0 0,
+                100% 100%;
+              opacity: 1;
+            }
+            85% { opacity: 1; }
+            to {
+              background-position:
+                0 0, 0 0, 0 0, 0 0, 0 0,
+                0% 0%;
+              opacity: 0;
+            }
+          }
           }
         `}</style>
       </button>

@@ -145,14 +145,17 @@ const PackFace = ({
   tierLine: string[];
   seriesLabel: string;
 }) => {
-  // The full face is rendered at 2x width then offset so each
-  // half shows the correct portion of the artwork.
+  // Each half is 60% of the pack's width, so the full face must be
+  // rendered at 100/60 ≈ 166.667% of the half so it spans the whole pack.
+  // The left half pins the artwork to its left edge; the right half pins
+  // it to its right edge so the design stays aligned across the rip.
   return (
     <div className="absolute inset-0 overflow-hidden">
       <div
-        className="absolute top-0 h-full w-[200%]"
+        className="absolute top-0 h-full"
         style={{
-          left: side === "left" ? "0%" : "-100%",
+          width: "166.667%",
+          left: side === "left" ? "0%" : "-66.667%",
         }}
       >
         <FullPackFace

@@ -13,12 +13,11 @@ export function usePlayoffGamesRaw(season: number = 2025) {
   return useQuery({
     queryKey: ["playoff-games-raw", season],
     queryFn: async (): Promise<NbaGame[]> => {
-      try {
-        return await getPlayoffGames(season);
-      } catch (error) {
-        console.warn("Failed to fetch NBA playoff games:", error);
-        return [];
-      }
+      // Let errors propagate so TanStack Query keeps the previous good data
+      // in `data` instead of replacing it with an empty array (which would
+      // cause the UI to fall back to pre-playoff placeholder cards on a
+      // transient API failure).
+      return await getPlayoffGames(season);
     },
     staleTime: 5 * 60 * 1000,
     retry: 2,

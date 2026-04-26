@@ -180,10 +180,6 @@ const SealedPackCard = ({
               opacity: 0;
             }
           }
-
-          @keyframes ember-sparkle {
-            0%   { background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px, var(--bp, 100% 100%); }
-            100% { background-position: 9px 5px, -7px 4px, 6px -8px, -4px 7px, 8px -6px, var(--bp, 100% 100%); }
           }
         `}</style>
       </button>

@@ -95,7 +95,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md p-0 gap-0 bg-[#1A1E24]/95 backdrop-blur-md border-white/10 overflow-hidden">
+      <DialogContent className="max-w-md p-0 gap-0 bg-[#1A1E24]/95 backdrop-blur-md border-white/10 overflow-hidden [&>button[type=button]_svg]:h-6 [&>button[type=button]_svg]:w-6">
         <DialogTitle className="sr-only">
           {displayAway.abbreviation} vs {displayHome.abbreviation}
         </DialogTitle>

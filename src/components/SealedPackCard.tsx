@@ -162,9 +162,7 @@ const SealedPackCard = ({
             mix-blend-mode: screen;
             filter: drop-shadow(0 0 6px rgba(236, 72, 153, 0.9))
                     drop-shadow(0 0 10px rgba(34, 211, 238, 0.6));
-            animation:
-              ember-sweep 1600ms cubic-bezier(0.65, 0, 0.35, 1) forwards,
-              ember-sparkle 600ms steps(6) infinite;
+            animation: ember-sweep 1600ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
           }
 
           @keyframes ember-sweep {

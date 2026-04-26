@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,8 +24,58 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
   );
 
   const allGames = useMemo(() => seriesGames ?? [], [seriesGames]);
+  const hasMultipleGames = allGames.length > 1;
   const defaultIdx = useMemo(() => pickDefaultGameIdx(allGames), [allGames]);
-  const activeGame = allGames.length > 0 ? allGames[defaultIdx] : null;
+  const [activeGameIdx, setActiveGameIdx] = useState(0);
+  const [defaultApplied, setDefaultApplied] = useState(false);
+
+  useEffect(() => {
+    if (allGames.length === 0) return;
+    if (!defaultApplied) {
+      setActiveGameIdx(defaultIdx);
+      setDefaultApplied(true);
+    }
+  }, [allGames.length, defaultIdx, defaultApplied]);
+
+  // Reset when dialog closes so it re-applies default next open
+  useEffect(() => {
+    if (!open) {
+      setDefaultApplied(false);
+      setActiveGameIdx(0);
+    }
+  }, [open]);
+
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    if (!hasMultipleGames) return;
+    const diff = touchStartX.current - touchEndX.current;
+    const threshold = 50;
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0 && activeGameIdx < allGames.length - 1) {
+        setActiveGameIdx((i) => i + 1);
+      } else if (diff < 0 && activeGameIdx > 0) {
+        setActiveGameIdx((i) => i - 1);
+      }
+    }
+  }, [allGames.length, activeGameIdx, hasMultipleGames]);
+
+  const handleDotClick = useCallback((e: React.MouseEvent, idx: number) => {
+    e.stopPropagation();
+    setActiveGameIdx(idx);
+  }, []);
+
+  const activeGame = allGames.length > 0 ? allGames[activeGameIdx] : null;
 
   const bracketSeriesId = useMemo(() => {
     if (!match) return null;
@@ -101,7 +151,12 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
         </DialogTitle>
 
         {/* Header — smaller matchup card with team-color gradient */}
-        <div className="relative overflow-hidden">
+        <div
+          className="relative overflow-hidden select-none"
+          onTouchStart={hasMultipleGames ? handleTouchStart : undefined}
+          onTouchMove={hasMultipleGames ? handleTouchMove : undefined}
+          onTouchEnd={hasMultipleGames ? handleTouchEnd : undefined}
+        >
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
@@ -191,6 +246,31 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
                 )}
               </div>
             </div>
+
+            {hasMultipleGames && (
+              <div className="flex items-center justify-center gap-1.5 pb-3 -mt-1">
+                {allGames.map((g, i) => {
+                  const isActive = i === activeGameIdx;
+                  const isPlayed = g.status === "final" || g.status === "live";
+                  let cls = "h-1.5 rounded-full transition-all border ";
+                  if (isActive) {
+                    cls += "bg-primary border-primary w-3";
+                  } else if (isPlayed) {
+                    cls += "bg-muted-foreground/40 border-transparent w-1.5";
+                  } else {
+                    cls += "bg-transparent border-muted-foreground/40 w-1.5";
+                  }
+                  return (
+                    <button
+                      key={i}
+                      onClick={(e) => handleDotClick(e, i)}
+                      className={cls}
+                      aria-label={`Game ${i + 1}${g.status === "upcoming" ? " (scheduled)" : ""}`}
+                    />
+                  );
+                })}
+              </div>
+            )}
 
             {(() => {
               const userPick = user && allPicks ? allPicks.find((p) => p.user_id === user.id) : null;

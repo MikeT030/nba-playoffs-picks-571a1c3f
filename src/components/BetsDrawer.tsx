@@ -69,11 +69,8 @@ const SeriesCard = ({
   const renderTeamSlot = (team: Team | undefined, isSelected: boolean) => {
     if (!team) {
       return (
-        <div className="flex-1 flex flex-col items-center gap-1.5 p-2 rounded-lg border-2 border-dashed border-muted-foreground/20">
-          <span className="text-2xl opacity-30">🏀</span>
-          <div className="flex items-center gap-1">
-            <span className="font-display text-base tracking-wide text-muted-foreground/50">TBD</span>
-          </div>
+        <div className="flex-1 flex items-center justify-center p-3 rounded-lg border-2 border-dashed border-muted-foreground/20">
+          <span className="font-display text-base tracking-wide text-muted-foreground/50">TBD</span>
         </div>
       );
     }
@@ -82,19 +79,17 @@ const SeriesCard = ({
       <button
         onClick={() => handlePickWinner(team.abbreviation)}
         disabled={locked}
-        className={`flex-1 flex flex-col items-center gap-1.5 p-2 rounded-lg border-2 transition-all duration-200 ${
+        className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-lg border-2 transition-all duration-200 ${
           isSelected
-            ? "border-primary bg-primary/10"
+            ? "border-primary"
             : locked
               ? "border-transparent opacity-60"
               : "border-transparent hover:border-muted-foreground/30"
         }`}
+        style={isSelected ? { backgroundColor: `${team.color}66` } : undefined}
       >
-        <TeamLogo src={team.logo} alt={team.name} className="w-10 h-10" />
-        <div className="flex items-center gap-1">
-          {team.seed && <span className="text-[11px] text-muted-foreground font-body font-semibold">{team.seed}</span>}
-          <span className="font-display text-base tracking-wide">{team.abbreviation}</span>
-        </div>
+        {team.seed && <span className="text-[11px] text-muted-foreground font-body font-semibold">{team.seed}</span>}
+        <span className="tracking-wide text-lg" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{team.abbreviation}</span>
         {isSelected && <Check size={14} className="text-primary" />}
       </button>
     );

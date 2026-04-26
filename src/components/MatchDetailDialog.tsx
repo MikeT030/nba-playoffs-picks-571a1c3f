@@ -194,6 +194,30 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
           </div>
         </div>
 
+        {(() => {
+          const userPick = user && allPicks ? allPicks.find((p) => p.user_id === user.id) : null;
+          if (!userPick) return null;
+          const pts = computePts(userPick);
+          return (
+            <div className="px-4 pt-3 pb-1">
+              <p className="font-body text-white text-center text-sm">
+                Your Pick: <span className="font-bold">{userPick.winner}</span> in <span className="font-bold">{userPick.games_in_series}</span>
+                {pts !== null && (
+                  <span className="ml-2 text-primary font-medium">
+                    ·{" "}
+                    {pts === 3
+                      ? "Shiiiiit 3 Points"
+                      : pts === 2
+                        ? "That's 2 Points"
+                        : "0 Points, Bro"}
+                    {match.id === "nba-finals" && pts > 0 && " And 4 for the Champ"}
+                  </span>
+                )}
+              </p>
+            </div>
+          );
+        })()}
+
         {/* All Picks */}
         <div className="px-5 py-5 max-h-[calc(60vh+40px)] overflow-y-auto">
           <h3 className="font-display text-xl tracking-wider mb-4">All Picks</h3>

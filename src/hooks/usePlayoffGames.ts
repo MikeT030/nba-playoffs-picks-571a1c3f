@@ -175,6 +175,14 @@ function groupIntoSeries(games: NbaGame[], bracket: BracketSeries[]): Match[] {
 }
 
 function deriveMatches(games: NbaGame[] | undefined, bracket: BracketSeries[]): Match[] {
+  // Once playoffs have started, never show pre-playoff fallback cards. If the
+  // API hasn't returned yet (or just failed), return an empty list so the UI
+  // can render a loading/empty state instead of stale placeholder matchups.
+  if (isPlayoffsStarted()) {
+    if (!games || games.length === 0) return [];
+    return groupIntoSeries(games, bracket);
+  }
+
   const fallbacks = buildFallbackMatches(bracket);
   if (!games || games.length === 0) return fallbacks;
   const apiMatches = groupIntoSeries(games, bracket);

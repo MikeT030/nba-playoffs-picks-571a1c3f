@@ -127,7 +127,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
                   <p className="tracking-wide text-xl" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
                     {displayAway.abbreviation}
                   </p>
-                  <p className="text-xs text-muted-foreground font-body">{displayAway.name}</p>
+                  
                 </div>
               </div>
 
@@ -182,7 +182,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
                   <p className="tracking-wide text-xl" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
                     {displayHome.abbreviation}
                   </p>
-                  <p className="text-xs text-muted-foreground font-body">{displayHome.name}</p>
+                  
                 </div>
                 {displayHome.seed && (
                   <span className="text-xs text-muted-foreground font-body font-semibold w-4 text-center shrink-0">

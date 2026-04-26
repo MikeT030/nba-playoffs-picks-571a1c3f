@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useSeriesGames } from "@/hooks/useSeriesGames";
-import { pickDefaultGameIdx, isNextUp as checkIsNextUp, formatTipOff } from "@/lib/seriesUtils";
+import { isNextUp as checkIsNextUp, formatTipOff } from "@/lib/seriesUtils";
 import type { Match } from "@/data/playoffsData";
 
 interface MatchDetailDialogProps {

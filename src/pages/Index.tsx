@@ -245,12 +245,16 @@ const Index = () => {
           </SelectContent>
         </Select>
 
-        {isLoading ? (
+        {isLoading || (isFetching && (!matches || matches.length === 0)) ? (
           <div className="grid gap-4 md:grid-cols-2">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="bg-card rounded-lg border border-border h-40 animate-pulse" />
             ))}
           </div>
+        ) : isError && (!matches || matches.length === 0) ? (
+          <p className="text-muted-foreground font-body text-sm">
+            Couldn't load matchups. Pull down to refresh.
+          </p>
         ) : (
           <div className="space-y-8">
             {todayMatches.length > 0 && (

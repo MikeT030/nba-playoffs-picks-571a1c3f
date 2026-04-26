@@ -6,6 +6,7 @@ import flyerLogo from "@/assets/flyer-the-shot.png";
 import seaSonicsLogo from "@/assets/sea-sonics-logo.png";
 import phoenixSunsLogo from "@/assets/phoenix-suns-logo.png";
 import TeamLogo from "@/components/TeamLogo";
+import SealedPackCard from "@/components/SealedPackCard";
 import { teamMeta } from "@/lib/nbaApi";
 
 const PHX_LOGO = phoenixSunsLogo;

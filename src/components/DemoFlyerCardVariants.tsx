@@ -259,6 +259,15 @@ export const DemoFlyerCardV3 = () => (
       { label: "3PA", value: 12 },
       { label: "MP", value: "44:20" },
     ]}
+    sealed
+    sealedConfig={{
+      topBanner: "FLYER · CLUB",
+      title: "NBA Flyer",
+      yearLabel: "1996-97",
+      midLine: "FLYER SUPER COLOR",
+      tierLine: ["1", "PREMIUM", "FLYER", "CARD"],
+      seriesLabel: "SERIES 2",
+    }}
   />
 );
 

@@ -151,7 +151,12 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
         </DialogTitle>
 
         {/* Header — smaller matchup card with team-color gradient */}
-        <div className="relative overflow-hidden">
+        <div
+          className="relative overflow-hidden select-none"
+          onTouchStart={hasMultipleGames ? handleTouchStart : undefined}
+          onTouchMove={hasMultipleGames ? handleTouchMove : undefined}
+          onTouchEnd={hasMultipleGames ? handleTouchEnd : undefined}
+        >
           <div
             className="absolute inset-0 pointer-events-none"
             style={{

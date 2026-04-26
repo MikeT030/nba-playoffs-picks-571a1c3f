@@ -82,44 +82,46 @@ const PickCard = ({
 
       <div className="flex items-center gap-3 mb-2 pb-[4px]">
         <div
-          className={`flex-1 flex flex-col items-center gap-1.5 p-2 rounded-lg border-2 transition-all ${
+          className={`flex-1 flex items-center justify-center p-3 rounded-lg border-2 transition-all ${
             bet?.winner === topTeam?.abbreviation
-              ? "border-primary bg-primary/10"
+              ? "border-primary"
               : "border-transparent opacity-50"
           }`}
+          style={
+            bet?.winner === topTeam?.abbreviation && topTeam
+              ? { backgroundColor: `${topTeam.color}66` }
+              : undefined
+          }
         >
           {topTeam ? (
-            <>
-              <TeamLogo src={topTeam.logo} alt={topTeam.name} className="w-10 h-10" />
-              <span className="font-display text-base tracking-wide">{isPlayInPlaceholder(topTeam.abbreviation) ? topTeam.name : topTeam.abbreviation}</span>
-            </>
+            <span className="tracking-wide text-lg" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
+              {isPlayInPlaceholder(topTeam.abbreviation) ? topTeam.name : topTeam.abbreviation}
+            </span>
           ) : (
-            <>
-              <span className="text-2xl opacity-30">🏀</span>
-              <span className="font-display text-base tracking-wide text-muted-foreground/50">TBD</span>
-            </>
+            <span className="font-display text-base tracking-wide text-muted-foreground/50">TBD</span>
           )}
         </div>
 
         <span className="text-muted-foreground font-body text-xs">VS</span>
 
         <div
-          className={`flex-1 flex flex-col items-center gap-1.5 p-2 rounded-lg border-2 transition-all ${
+          className={`flex-1 flex items-center justify-center p-3 rounded-lg border-2 transition-all ${
             bet?.winner === bottomTeam?.abbreviation
-              ? "border-primary bg-primary/10"
+              ? "border-primary"
               : "border-transparent opacity-50"
           }`}
+          style={
+            bet?.winner === bottomTeam?.abbreviation && bottomTeam
+              ? { backgroundColor: `${bottomTeam.color}66` }
+              : undefined
+          }
         >
           {bottomTeam ? (
-            <>
-              <TeamLogo src={bottomTeam.logo} alt={bottomTeam.name} className="w-10 h-10" />
-              <span className="font-display text-base tracking-wide">{isPlayInPlaceholder(bottomTeam.abbreviation) ? bottomTeam.name : bottomTeam.abbreviation}</span>
-            </>
+            <span className="tracking-wide text-lg" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
+              {isPlayInPlaceholder(bottomTeam.abbreviation) ? bottomTeam.name : bottomTeam.abbreviation}
+            </span>
           ) : (
-            <>
-              <span className="text-2xl opacity-30">🏀</span>
-              <span className="font-display text-base tracking-wide text-muted-foreground/50">TBD</span>
-            </>
+            <span className="font-display text-base tracking-wide text-muted-foreground/50">TBD</span>
           )}
         </div>
       </div>

@@ -111,7 +111,7 @@ export const teamMeta: Record<string, { color: string; logo: string }> = {
   MIN: { color: "#0C2340", logo: nbaLogoUrl("MIN") },
   NOP: { color: "#0C2340", logo: nbaLogoUrl("NOP") },
   NYK: { color: "#006BB6", logo: nbaLogoUrl("NYK") },
-  OKC: { color: "#007AC1", logo: nbaLogoUrl("OKC") },
+  OKC: { color: "#EE3B25", logo: nbaLogoUrl("OKC") },
   ORL: { color: "#0077C0", logo: nbaLogoUrl("ORL") },
   PHI: { color: "#006BB6", logo: nbaLogoUrl("PHI") },
   PHX: { color: "#1D1160", logo: nbaLogoUrl("PHX") },

@@ -144,82 +144,92 @@ const FlyerCardV3 = ({
   borderColor,
   borderWidth,
   stats,
+  sealed,
+  sealedConfig,
 }: FlyerCardV3Props) => {
+  const cardArticle = (
+    <article
+      className="relative overflow-hidden rounded-xl bg-black border shadow-xl h-full"
+      style={{
+        borderColor: borderColor ?? "hsl(var(--border))",
+        borderWidth: borderWidth,
+      }}
+    >
+      <div className="relative aspect-[3/4] w-full">
+        <img
+          src={image}
+          alt={imageAlt}
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
+        />
+        {/* Letterbox + heavy gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/10 to-black/95" />
+
+        {/* Vertical stat line on right edge */}
+        {stats && stats.length > 0 && (
+          <div className="absolute top-0 bottom-0 right-0 w-6 flex items-center justify-center pointer-events-none">
+            <div
+              className="flex items-center gap-3 font-display text-xs tracking-[0.25em] text-amber-400 whitespace-nowrap"
+              style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
+            >
+              {stats.map((s) => (
+                <span key={s.label}>
+                  <span className="text-amber-400/60">{s.label}</span> {s.value}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Top: FLYER logo only */}
+        <div className="absolute top-4 left-4 right-4 flex items-center justify-start">
+          <img
+            src={flyerLogo}
+            alt="FLYER The Shot"
+            className="w-20 drop-shadow-[0_4px_10px_rgba(0,0,0,0.7)]"
+            loading="lazy"
+          />
+        </div>
+
+        {/* Bottom: large title block */}
+        <div className="absolute bottom-0 left-0 right-0 p-5 space-y-2">
+          <p className="font-body text-[10px] uppercase tracking-[0.25em] font-bold text-primary-foreground">
+            {era}
+            <br />
+            {matchup}
+            <br />
+            {game} · {awayAlt} vs. {homeAlt}
+          </p>
+          <h3 className="font-display text-4xl leading-[0.9] tracking-wider text-[#ededed]">
+            {firstName}
+            <br />
+            <span className="text-primary">{lastName}</span>
+          </h3>
+          <div className="relative w-[200px]">
+            <div
+              className="absolute inset-0 -inset-x-2 -inset-y-1.5"
+              style={{ backgroundColor: quoteBgColor }}
+            />
+            <p className="relative font-body text-[11px] leading-relaxed text-white/80 font-medium">
+              {quote}
+            </p>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+
   return (
     <div className="space-y-2">
       <h2 className="font-display text-lg tracking-wider text-muted-foreground">
         {heading}
       </h2>
 
-      <article
-        className="relative overflow-hidden rounded-xl bg-black border shadow-xl"
-        style={{
-          borderColor: borderColor ?? "hsl(var(--border))",
-          borderWidth: borderWidth,
-        }}
-      >
-        <div className="relative aspect-[3/4] w-full">
-          <img
-            src={image}
-            alt={imageAlt}
-            className="absolute inset-0 w-full h-full object-cover"
-            loading="lazy"
-          />
-          {/* Letterbox + heavy gradient */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/10 to-black/95" />
-
-          {/* Vertical stat line on right edge */}
-          {stats && stats.length > 0 && (
-            <div className="absolute top-0 bottom-0 right-0 w-6 flex items-center justify-center pointer-events-none">
-              <div
-                className="flex items-center gap-3 font-display text-xs tracking-[0.25em] text-amber-400 whitespace-nowrap"
-                style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
-              >
-                {stats.map((s) => (
-                  <span key={s.label}>
-                    <span className="text-amber-400/60">{s.label}</span> {s.value}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Top: FLYER logo only */}
-          <div className="absolute top-4 left-4 right-4 flex items-center justify-start">
-            <img
-              src={flyerLogo}
-              alt="FLYER The Shot"
-              className="w-20 drop-shadow-[0_4px_10px_rgba(0,0,0,0.7)]"
-              loading="lazy"
-            />
-          </div>
-
-          {/* Bottom: large title block */}
-          <div className="absolute bottom-0 left-0 right-0 p-5 space-y-2">
-            <p className="font-body text-[10px] uppercase tracking-[0.25em] font-bold text-primary-foreground">
-              {era}
-              <br />
-              {matchup}
-              <br />
-              {game} · {awayAlt} vs. {homeAlt}
-            </p>
-            <h3 className="font-display text-4xl leading-[0.9] tracking-wider text-[#ededed]">
-              {firstName}
-              <br />
-              <span className="text-primary">{lastName}</span>
-            </h3>
-            <div className="relative w-[200px]">
-              <div
-                className="absolute inset-0 -inset-x-2 -inset-y-1.5"
-                style={{ backgroundColor: quoteBgColor }}
-              />
-              <p className="relative font-body text-[11px] leading-relaxed text-white/80 font-medium">
-                {quote}
-              </p>
-            </div>
-          </div>
-        </div>
-      </article>
+      {sealed ? (
+        <SealedPackCard {...sealedConfig}>{cardArticle}</SealedPackCard>
+      ) : (
+        cardArticle
+      )}
     </div>
   );
 };

@@ -194,7 +194,7 @@ const MatchDetail = () => {
         <div
           className="absolute inset-0"
           style={{
-            background: `linear-gradient(135deg, ${displayAway.color}${displayStatus === "live" ? "80" : "4D"} 0%, ${displayAway.color}${displayStatus === "live" ? "80" : "4D"} 50%, ${displayHome.color}${displayStatus === "live" ? "80" : "4D"} 50%, ${displayHome.color}${displayStatus === "live" ? "80" : "4D"} 100%)`,
+            background: `linear-gradient(135deg, ${displayAway.color}${displayStatus === "live" ? "80" : "66"} 0%, ${displayAway.color}${displayStatus === "live" ? "80" : "66"} 50%, ${displayHome.color}${displayStatus === "live" ? "80" : "66"} 50%, ${displayHome.color}${displayStatus === "live" ? "80" : "66"} 100%)`,
           }}
         />
         <div className="relative container py-6">

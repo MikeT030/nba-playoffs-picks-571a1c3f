@@ -35,7 +35,7 @@ const rounds = [
 ];
 
 const Index = () => {
-  const { data: matches, isLoading } = usePlayoffGames();
+  const { data: matches, isLoading, isFetching, isError } = usePlayoffGames();
   const { data: resolvedBracket } = useBracketData();
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();

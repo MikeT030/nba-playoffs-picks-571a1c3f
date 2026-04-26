@@ -114,6 +114,16 @@ interface FlyerCardV3Props {
   borderColor?: string;
   borderWidth?: string;
   stats?: StatItem[];
+  /** Wrap the card in a sealed pack that the user clicks to rip open. */
+  sealed?: boolean;
+  sealedConfig?: {
+    topBanner?: string;
+    title?: string;
+    yearLabel?: string;
+    midLine?: string;
+    tierLine?: string[];
+    seriesLabel?: string;
+  };
 }
 
 const FlyerCardV3 = ({

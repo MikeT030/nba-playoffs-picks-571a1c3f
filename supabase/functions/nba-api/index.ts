@@ -34,13 +34,30 @@ Deno.serve(async (req) => {
     const apiUrl = `${API_BASE}/${endpoint}?${params.toString()}`;
     console.log("Fetching:", apiUrl);
 
-    const response = await fetch(apiUrl, {
-      headers: {
-        "Authorization": apiKey,
-        "x-access-token": apiKey,
-        "Content-Type": "application/json",
-      },
-    });
+    // Abort upstream fetch if it hangs — prevents the edge runtime from
+    // exhausting CPU/wall time and returning a 503 SUPABASE_EDGE_RUNTIME_ERROR.
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+    let response: Response;
+    try {
+      response = await fetch(apiUrl, {
+        headers: {
+          "Authorization": apiKey,
+          "x-access-token": apiKey,
+          "Content-Type": "application/json",
+        },
+        signal: controller.signal,
+      });
+    } catch (fetchErr) {
+      clearTimeout(timeoutId);
+      console.error("Upstream fetch failed/timeout:", fetchErr);
+      return new Response(
+        JSON.stringify({ error: "API_TIMEOUT", fallback: true, data: [], meta: { per_page: 100 } }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+    clearTimeout(timeoutId);
 
     const text = await response.text();
     let data;

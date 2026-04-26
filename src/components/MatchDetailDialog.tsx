@@ -24,8 +24,58 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
   );
 
   const allGames = useMemo(() => seriesGames ?? [], [seriesGames]);
+  const hasMultipleGames = allGames.length > 1;
   const defaultIdx = useMemo(() => pickDefaultGameIdx(allGames), [allGames]);
-  const activeGame = allGames.length > 0 ? allGames[defaultIdx] : null;
+  const [activeGameIdx, setActiveGameIdx] = useState(0);
+  const [defaultApplied, setDefaultApplied] = useState(false);
+
+  useEffect(() => {
+    if (allGames.length === 0) return;
+    if (!defaultApplied) {
+      setActiveGameIdx(defaultIdx);
+      setDefaultApplied(true);
+    }
+  }, [allGames.length, defaultIdx, defaultApplied]);
+
+  // Reset when dialog closes so it re-applies default next open
+  useEffect(() => {
+    if (!open) {
+      setDefaultApplied(false);
+      setActiveGameIdx(0);
+    }
+  }, [open]);
+
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    if (!hasMultipleGames) return;
+    const diff = touchStartX.current - touchEndX.current;
+    const threshold = 50;
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0 && activeGameIdx < allGames.length - 1) {
+        setActiveGameIdx((i) => i + 1);
+      } else if (diff < 0 && activeGameIdx > 0) {
+        setActiveGameIdx((i) => i - 1);
+      }
+    }
+  }, [allGames.length, activeGameIdx, hasMultipleGames]);
+
+  const handleDotClick = useCallback((e: React.MouseEvent, idx: number) => {
+    e.stopPropagation();
+    setActiveGameIdx(idx);
+  }, []);
+
+  const activeGame = allGames.length > 0 ? allGames[activeGameIdx] : null;
 
   const bracketSeriesId = useMemo(() => {
     if (!match) return null;

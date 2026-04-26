@@ -247,6 +247,31 @@ const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps
               </div>
             </div>
 
+            {hasMultipleGames && (
+              <div className="flex items-center justify-center gap-1.5 pb-3 -mt-1">
+                {allGames.map((g, i) => {
+                  const isActive = i === activeGameIdx;
+                  const isPlayed = g.status === "final" || g.status === "live";
+                  let cls = "h-1.5 rounded-full transition-all border ";
+                  if (isActive) {
+                    cls += "bg-primary border-primary w-3";
+                  } else if (isPlayed) {
+                    cls += "bg-muted-foreground/40 border-transparent w-1.5";
+                  } else {
+                    cls += "bg-transparent border-muted-foreground/40 w-1.5";
+                  }
+                  return (
+                    <button
+                      key={i}
+                      onClick={(e) => handleDotClick(e, i)}
+                      className={cls}
+                      aria-label={`Game ${i + 1}${g.status === "upcoming" ? " (scheduled)" : ""}`}
+                    />
+                  );
+                })}
+              </div>
+            )}
+
             {(() => {
               const userPick = user && allPicks ? allPicks.find((p) => p.user_id === user.id) : null;
               if (!userPick) return null;

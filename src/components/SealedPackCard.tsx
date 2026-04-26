@@ -55,14 +55,18 @@ const SealedPackCard = ({
       >
         {/* Two halves of foil, jagged tear edges down the middle */}
         <div className="absolute inset-0 overflow-hidden rounded-md">
-          {/* LEFT half */}
+          {/* LEFT half — extends well past the centerline so the jagged inner
+              edge always overlaps the right half (no gaps in the dips) */}
           <div
-            className={`absolute inset-y-0 left-0 w-[51%] origin-left transition-all ease-[cubic-bezier(0.7,0,0.3,1)] ${
+            className={`absolute inset-y-0 left-0 w-[60%] origin-left transition-all ease-[cubic-bezier(0.7,0,0.3,1)] ${
               opened
                 ? "duration-[900ms] -translate-x-[120%] -rotate-[14deg] opacity-0"
                 : "duration-300 hover:-translate-x-[1px]"
             }`}
             style={{
+              // Right edge zig-zags between 92% and 100% of this half's width.
+              // Because the half is 60% of the pack, the inner edge sits
+              // roughly at 55–60% of the pack — past the right half's inner edge.
               clipPath:
                 "polygon(0 0, 100% 0, 96% 8%, 100% 16%, 95% 26%, 99% 36%, 94% 46%, 100% 56%, 95% 66%, 99% 76%, 94% 86%, 100% 94%, 96% 100%, 0 100%)",
             }}
@@ -70,9 +74,9 @@ const SealedPackCard = ({
             <PackFace side="left" topBanner={topBanner} title={title} yearLabel={yearLabel} midLine={midLine} tierLine={tierLine} seriesLabel={seriesLabel} />
           </div>
 
-          {/* RIGHT half */}
+          {/* RIGHT half — also 60% wide, overlaps the left half */}
           <div
-            className={`absolute inset-y-0 right-0 w-[51%] origin-right transition-all ease-[cubic-bezier(0.7,0,0.3,1)] ${
+            className={`absolute inset-y-0 right-0 w-[60%] origin-right transition-all ease-[cubic-bezier(0.7,0,0.3,1)] ${
               opened
                 ? "duration-[900ms] translate-x-[120%] rotate-[14deg] opacity-0"
                 : "duration-300 hover:translate-x-[1px]"

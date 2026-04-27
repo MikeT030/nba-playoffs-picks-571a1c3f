@@ -29,7 +29,7 @@ const SealedPackCard = ({
   children,
   aspectClass = "aspect-[3/4]",
   topBanner = "FLYER · CLUB",
-  title = "Supreme Premium Cards",
+  title = "Supreme premium platinum player cards",
   yearLabel = "1996-97",
   midLine = "FLYER SUPER COLOR",
   tierLine = ["1", "PREMIUM", "FLYER", "CARD"],

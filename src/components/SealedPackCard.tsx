@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import flyerCouchClubLogo from "@/assets/flyer-couch-club-logo.png";
 
 interface SealedPackCardProps {
   children: ReactNode;
@@ -284,22 +285,16 @@ const FullPackFace = ({
       {/* Top serrated edge */}
       <SerratedEdge position="top" />
 
-      {/* Top banner — chunky black bar with terrazzo speckle */}
-      <div className="absolute top-[6%] left-1/2 -translate-x-1/2 w-[82%]">
-        <div
-          className="relative text-center font-display tracking-[0.22em] py-1.5 px-2 text-[11px]"
+      {/* Top banner — Flyer Couch Club logo */}
+      <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-[60%] flex justify-center">
+        <img
+          src={flyerCouchClubLogo}
+          alt={topBanner}
+          className="w-full h-auto"
           style={{
-            background: INK,
-            color: YELLOW,
-            fontWeight: 800,
-            boxShadow: `4px 4px 0 ${PINK}`,
-            backgroundImage:
-              "radial-gradient(circle at 15% 40%, rgba(255,255,255,0.5) 0 1px, transparent 2px), radial-gradient(circle at 60% 70%, rgba(255,210,63,0.6) 0 1px, transparent 2px), radial-gradient(circle at 85% 30%, rgba(61,218,215,0.6) 0 1px, transparent 2px)",
-            backgroundSize: "14px 14px, 18px 18px, 22px 22px",
+            filter: `drop-shadow(3px 3px 0 ${PINK}) drop-shadow(0 2px 4px rgba(0,0,0,0.4))`,
           }}
-        >
-          {topBanner}
-        </div>
+        />
       </div>
 
       {/* Big title — Memphis stacked shadow */}

@@ -262,7 +262,7 @@ export const DemoFlyerCardV3 = () => (
     sealed
     sealedConfig={{
       topBanner: "FLYER · CLUB",
-      title: "NBA Flyer",
+      title: "Supreme Flyer",
       yearLabel: "1996-97",
       midLine: "FLYER SUPER COLOR",
       tierLine: ["1", "PREMIUM", "FLYER", "CARD"],

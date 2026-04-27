@@ -37,14 +37,41 @@ export interface NbaApiResponse<T> {
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
+const TRANSIENT_NBA_FALLBACK: NbaApiResponse<any> = {
+  data: [],
+  meta: { per_page: 100 },
+};
+
+function readCachedNbaResponse<T>(cacheKey: string): NbaApiResponse<T> | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const cached = window.sessionStorage.getItem(cacheKey);
+    if (!cached) return null;
+    return JSON.parse(cached) as NbaApiResponse<T>;
+  } catch {
+    return null;
+  }
+}
+
+function writeCachedNbaResponse<T>(cacheKey: string, payload: NbaApiResponse<T>) {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.setItem(cacheKey, JSON.stringify(payload));
+  } catch {
+    // Ignore storage quota/privacy-mode failures; the live response still works.
+  }
+}
+
 async function callNbaApi<T>(params: Record<string, string>): Promise<NbaApiResponse<T>> {
   const searchParams = new URLSearchParams(params);
   const url = `${SUPABASE_URL}/functions/v1/nba-api?${searchParams.toString()}`;
+  const cacheKey = `nba-api:${searchParams.toString()}`;
 
   // Retry transient edge-runtime boot failures (503 / SUPABASE_EDGE_RUNTIME_ERROR)
   // with short exponential backoff so a cold start doesn't surface as a hard error.
   const MAX_ATTEMPTS = 3;
   let lastErr: unknown;
+  let sawTransientFailure = false;
 
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
     try {
@@ -64,10 +91,15 @@ async function callNbaApi<T>(params: Record<string, string>): Promise<NbaApiResp
         response.status === 503 ||
         response.status === 504 ||
         body?.code === "SUPABASE_EDGE_RUNTIME_ERROR";
+      sawTransientFailure = sawTransientFailure || isTransient;
 
       if (isTransient && attempt < MAX_ATTEMPTS - 1) {
         await new Promise((r) => setTimeout(r, 400 * Math.pow(2, attempt)));
         continue;
+      }
+
+      if (isTransient) {
+        return readCachedNbaResponse<T>(cacheKey) ?? TRANSIENT_NBA_FALLBACK;
       }
 
       throw new Error(body?.error || body?.message || `API error: ${response.status}`);
@@ -78,20 +110,28 @@ async function callNbaApi<T>(params: Record<string, string>): Promise<NbaApiResp
         await new Promise((r) => setTimeout(r, 400 * Math.pow(2, attempt)));
         continue;
       }
-      throw err;
+      return readCachedNbaResponse<T>(cacheKey) ?? TRANSIENT_NBA_FALLBACK;
     }
+  }
+
+  if (sawTransientFailure) {
+    return readCachedNbaResponse<T>(cacheKey) ?? TRANSIENT_NBA_FALLBACK;
   }
 
   throw lastErr instanceof Error ? lastErr : new Error("API error");
 }
 
 export async function getPlayoffGames(season: number = 2024): Promise<NbaGame[]> {
-  const result = await callNbaApi<NbaGame>({
+  const params = {
     endpoint: "games",
     postseason: "true",
     "seasons[]": String(season),
     per_page: "100",
-  });
+  };
+  const result = await callNbaApi<NbaGame>(params);
+  if (result.data.length > 0) {
+    writeCachedNbaResponse(`nba-api:${new URLSearchParams(params).toString()}`, result);
+  }
   return result.data;
 }
 

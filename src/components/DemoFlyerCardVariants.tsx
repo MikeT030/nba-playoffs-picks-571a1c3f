@@ -156,6 +156,8 @@ const FlyerCardV3 = ({
   stats,
   sealed,
   sealedConfig,
+  sealedToppsStyle,
+  sealedToppsConfig,
 }: FlyerCardV3Props) => {
   const cardArticle = (
     <article
@@ -235,7 +237,9 @@ const FlyerCardV3 = ({
         PLATINUM — CHAPMAN
       </h2>
 
-      {sealed ? (
+      {sealedToppsStyle ? (
+        <SealedPackCardToppsStyle {...sealedToppsConfig}>{cardArticle}</SealedPackCardToppsStyle>
+      ) : sealed ? (
         <SealedPackCard {...sealedConfig}>{cardArticle}</SealedPackCard>
       ) : (
         cardArticle

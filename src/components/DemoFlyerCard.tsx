@@ -19,7 +19,7 @@ const DemoFlyerCard = () => {
         <div className="relative aspect-video w-full overflow-hidden">
           <img
             src={rexChapmanImg}
-            alt="Rex Chapman launching a fading three-pointer against the Seattle SuperSonics, 1997 NBA Playoffs"
+            alt="Rex Chapman launching a fading three-pointer against the Seattle SuperSonics, 1997 Supreme Playoffs"
             className="w-full h-full object-cover"
             loading="lazy"
           />

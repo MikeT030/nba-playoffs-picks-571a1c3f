@@ -416,7 +416,44 @@ const MyPicks = () => {
 
         {showBracket ? (
           <>
-            <PlayoffBracket ref={bracketRef} picks={picks} bets={bets} seriesList={activeBracket} />
+            {(() => {
+              const actualWinners: Record<string, string> = {};
+              const seriesScores: Record<string, string> = {};
+              const pickPoints: Record<string, import("@/lib/pickScoring").PickPointInfo> = {};
+              const userPicksLite = bets.map((b) => ({
+                series_id: b.seriesId,
+                winner: b.winner,
+                games_in_series: b.gamesInSeries,
+              }));
+              for (const r of seriesResults) {
+                actualWinners[r.series_id] = r.winner;
+                const { topTeam, bottomTeam } = resolveSeriesTeams(r.series_id, picks, activeBracket);
+                const winnerWins = Math.min(4, Math.max(0, r.games_played - (r.games_played - 4 < 0 ? 0 : r.games_played - 4)));
+                // games_played = winner wins (4) + loser wins. Winner always has 4 in NBA playoffs.
+                const wWins = 4;
+                const lWins = Math.max(0, r.games_played - 4);
+                if (topTeam?.abbreviation === r.winner) {
+                  seriesScores[r.series_id] = `${wWins}-${lWins}`;
+                } else if (bottomTeam?.abbreviation === r.winner) {
+                  seriesScores[r.series_id] = `${lWins}-${wWins}`;
+                }
+              }
+              for (const p of userPicksLite) {
+                pickPoints[p.series_id] = scorePick(p, userPicksLite, seriesResults);
+              }
+              return (
+                <PlayoffBracket
+                  ref={bracketRef}
+                  picks={picks}
+                  bets={bets}
+                  seriesList={activeBracket}
+                  actualWinners={actualWinners}
+                  pickPoints={pickPoints}
+                  seriesScores={seriesScores}
+                  variant="badge"
+                />
+              );
+            })()}
             <div className="flex justify-start mt-4 mb-4">
               <button
                 onClick={handleShareBracket}

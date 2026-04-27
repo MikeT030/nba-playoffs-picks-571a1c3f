@@ -107,17 +107,17 @@ const SealedPackCard = ({
             -webkit-mask-image: linear-gradient(
               135deg,
               transparent 0%,
-              transparent 6%,
-              rgba(0,0,0,0.4) 8%,
-              #000 12%,
+              transparent 38%,
+              rgba(0,0,0,0.4) 40%,
+              #000 44%,
               #000 100%
             );
             mask-image: linear-gradient(
               135deg,
               transparent 0%,
-              transparent 6%,
-              rgba(0,0,0,0.4) 8%,
-              #000 12%,
+              transparent 38%,
+              rgba(0,0,0,0.4) 40%,
+              #000 44%,
               #000 100%
             );
             -webkit-mask-size: 260% 260%;
@@ -130,8 +130,8 @@ const SealedPackCard = ({
                         mask-position 1600ms cubic-bezier(0.65, 0, 0.35, 1);
           }
           .sealed-pack-burn.is-open {
-            -webkit-mask-position: 0% 0%; /* fully burned away */
-            mask-position: 0% 0%;
+            -webkit-mask-position: -100% -100%; /* fully burned away past top-left */
+            mask-position: -100% -100%;
           }
 
           /* Miami Vice ember band sweeping diagonally from top-left to bottom-right. */
@@ -164,7 +164,7 @@ const SealedPackCard = ({
             }
             85% { opacity: 1; }
             to {
-              background-position: 0% 0%;
+              background-position: -100% -100%;
               opacity: 0;
             }
           }

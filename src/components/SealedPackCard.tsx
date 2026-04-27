@@ -392,23 +392,7 @@ const FullPackFace = ({
         </div>
       </div>
 
-      {/* Memphis triangle accent bottom-left */}
-      <div
-        className="absolute bottom-[20%] left-[6%] w-[12%] aspect-square pointer-events-none"
-        style={{
-          background: CYAN,
-          clipPath: "polygon(0 100%, 100% 100%, 50% 0)",
-          filter: `drop-shadow(2px 2px 0 ${INK})`,
-        }}
-      />
-      {/* Memphis dot cluster bottom-right */}
-      <div
-        className="absolute bottom-[22%] right-[6%] w-[14%] aspect-square pointer-events-none"
-        style={{
-          backgroundImage: `radial-gradient(circle, ${PINK} 1.5px, transparent 2.5px)`,
-          backgroundSize: "8px 8px",
-        }}
-      />
+      {/* (Memphis triangle/dot accents removed — replaced by basketball line-art icons) */}
 
       {/* Bottom series banner — chunky Memphis tab */}
       <div className="absolute bottom-[7%] left-0 right-0">

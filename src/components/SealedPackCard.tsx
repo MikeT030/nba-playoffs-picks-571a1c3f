@@ -269,7 +269,7 @@ const FullPackFace = ({
   const YELLOW = "#ffd23f";
   const CORAL = "#ff7a5c";
   const LILAC = "#b39ddb";
-  const BLUE = "#0a0e2e"; // very dark navy background (Memphis hallmark)
+  const BLUE = "#1e2761"; // lighter navy background (Memphis hallmark)
   const INK = "#0f0f1a";
 
   return (

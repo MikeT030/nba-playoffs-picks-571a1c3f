@@ -110,9 +110,9 @@ const SeriesCard = ({
       </div>
 
       <div className="flex items-center gap-3 mb-2">
-        {renderTeamSlot(topTeam, selectedWinner === topTeam?.abbreviation)}
+        {renderTeamSlot(topTeam, selectedWinner === topTeam?.abbreviation, "left")}
         <span className="text-muted-foreground font-body text-xs">VS</span>
-        {renderTeamSlot(bottomTeam, selectedWinner === bottomTeam?.abbreviation)}
+        {renderTeamSlot(bottomTeam, selectedWinner === bottomTeam?.abbreviation, "right")}
       </div>
 
       {teamsReady && !locked && (

@@ -186,7 +186,7 @@ const DemoBracketPlayedOut = () => {
       {isLoading ? (
         <p className="text-sm text-muted-foreground font-body">Loading bracket…</p>
       ) : (
-        <div className="rounded-lg bg-[#1A1E24] p-3">
+        <div className="rounded-lg bg-[#181C23] p-3">
           <PlayoffBracket
             seriesList={bracket}
             actualWinners={winners}

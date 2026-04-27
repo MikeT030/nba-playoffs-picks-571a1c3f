@@ -299,7 +299,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
       )}
       </div>
     </div>
-    <MatchDetailDialog match={match} open={dialogOpen} onOpenChange={setDialogOpen} />
+    <MatchDetailDialog match={match} open={dialogOpen} onOpenChange={setDialogOpen} initialGameIdx={activeGameIdx} />
     </>
   );
 };

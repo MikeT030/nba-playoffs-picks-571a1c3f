@@ -379,7 +379,7 @@ const MyPicks = () => {
 
   return (
     <div className="min-h-screen bg-background pb-28">
-      <HeroBanner title={"MY\nPICKS"} subtitle={profileName ? `${profileName} ${bets.length}` : `2026 Playoffs · ${bets.length} picks`} />
+      <HeroBanner title={"MY\nPICKS"} subtitle={profileName ? `${profileName}'s ${bets.length}` : `2026 Playoffs · ${bets.length} picks`} />
 
       <section className="container py-8 pb-24">
 

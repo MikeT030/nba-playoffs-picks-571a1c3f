@@ -7,7 +7,7 @@ interface SealedPackCardProps {
   aspectClass?: string;
   /** Top banner line (small caps, e.g. "FLYER · CLUB"). */
   topBanner?: string;
-  /** Big title (e.g. "NBA Flyer"). */
+  /** Big title (e.g. "Supreme Flyer"). */
   title?: string;
   /** Year range (e.g. "1996-97"). */
   yearLabel?: string;

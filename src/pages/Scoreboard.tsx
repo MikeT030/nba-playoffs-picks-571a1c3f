@@ -444,20 +444,30 @@ const Scoreboard = () => {
           </>
         ) : (
           /* Leaderboard */
-          <div className="rounded-lg bg-transparent overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-12">#</TableHead>
-                  <TableHead>Player</TableHead>
-                  <TableHead className="text-right">Points</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+          <div className="rounded-lg bg-transparent overflow-visible">
+            <table className="w-full caption-bottom text-sm border-separate border-spacing-y-2">
+              <thead>
+                <tr>
+                  <th className="h-12 px-4 text-left align-middle font-medium text-[#dce0e5] w-12">#</th>
+                  <th className="h-12 px-4 text-left align-middle font-medium text-[#dce0e5]">Player</th>
+                  <th className="h-12 px-4 text-right align-middle font-medium text-[#dce0e5]">Points</th>
+                </tr>
+              </thead>
+              <tbody>
                 {scoreboard.map((player, i) => (
-                  <TableRow key={player.name} className="cursor-pointer border-b-[#2B2F37]" onClick={() => openCardDialog(player.name)}>
-                    <TableCell>{getRankIcon(i)}</TableCell>
-                    <TableCell>
+                  <tr
+                    key={player.name}
+                    onClick={() => openCardDialog(player.name)}
+                    className="cursor-pointer transition-colors group"
+                  >
+                    <td
+                      className="p-4 align-middle rounded-l-xl border-y border-l border-white/10 bg-white/[0.06] backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] group-hover:bg-white/[0.10] transition-colors"
+                    >
+                      {getRankIcon(i)}
+                    </td>
+                    <td
+                      className="p-4 align-middle border-y border-white/10 bg-white/[0.06] backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] group-hover:bg-white/[0.10] transition-colors"
+                    >
                       <div className="flex items-center gap-2.5">
                         {(() => {
                           const cardId = cardMap[player.name];
@@ -475,12 +485,16 @@ const Scoreboard = () => {
                         })()}
                         <span className="font-body font-medium text-foreground">{player.name}</span>
                       </div>
-                    </TableCell>
-                    <TableCell className="text-right font-display text-lg text-foreground">{player.totalPoints}</TableCell>
-                  </TableRow>
+                    </td>
+                    <td
+                      className="p-4 align-middle text-right font-display text-lg text-foreground rounded-r-xl border-y border-r border-white/10 bg-white/[0.06] backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] group-hover:bg-white/[0.10] transition-colors"
+                    >
+                      {player.totalPoints}
+                    </td>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
           </div>
         )}
 

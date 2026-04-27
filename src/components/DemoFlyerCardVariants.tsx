@@ -181,11 +181,11 @@ const FlyerCardV3 = ({
           </div>
         )}
 
-        {/* Top: FLYER logo only */}
+        {/* Top: PLATINUM logo only */}
         <div className="absolute top-4 left-4 right-4 flex items-center justify-start">
           <img
             src={flyerLogo}
-            alt="FLYER The Shot"
+            alt="PLATINUM The Shot"
             className="w-20 drop-shadow-[0_4px_10px_rgba(0,0,0,0.7)]"
             loading="lazy"
           />

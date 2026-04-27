@@ -261,11 +261,11 @@ export const DemoFlyerCardV3 = () => (
     ]}
     sealed
     sealedConfig={{
-      topBanner: "FLYER · CLUB",
-      title: "Supreme Flyer",
+      topBanner: "PLATINUM · CLUB",
+      title: "Supreme Platinum",
       yearLabel: "1996-97",
-      midLine: "FLYER SUPER COLOR",
-      tierLine: ["1", "PREMIUM", "FLYER", "CARD"],
+      midLine: "PLATINUM SUPER COLOR",
+      tierLine: ["1", "PREMIUM", "PLATINUM", "CARD"],
       seriesLabel: "SERIES 2",
     }}
   />

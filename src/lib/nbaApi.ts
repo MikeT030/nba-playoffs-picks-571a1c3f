@@ -40,20 +40,49 @@ const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 async function callNbaApi<T>(params: Record<string, string>): Promise<NbaApiResponse<T>> {
   const searchParams = new URLSearchParams(params);
   const url = `${SUPABASE_URL}/functions/v1/nba-api?${searchParams.toString()}`;
-  
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${SUPABASE_KEY}`,
-      apikey: SUPABASE_KEY,
-    },
-  });
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: "Unknown error" }));
-    throw new Error(error.error || `API error: ${response.status}`);
+  // Retry transient edge-runtime boot failures (503 / SUPABASE_EDGE_RUNTIME_ERROR)
+  // with short exponential backoff so a cold start doesn't surface as a hard error.
+  const MAX_ATTEMPTS = 3;
+  let lastErr: unknown;
+
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+    try {
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          apikey: SUPABASE_KEY,
+        },
+      });
+
+      if (response.ok) {
+        return await response.json();
+      }
+
+      const body = await response.json().catch(() => ({} as any));
+      const isTransient =
+        response.status === 503 ||
+        response.status === 504 ||
+        body?.code === "SUPABASE_EDGE_RUNTIME_ERROR";
+
+      if (isTransient && attempt < MAX_ATTEMPTS - 1) {
+        await new Promise((r) => setTimeout(r, 400 * Math.pow(2, attempt)));
+        continue;
+      }
+
+      throw new Error(body?.error || body?.message || `API error: ${response.status}`);
+    } catch (err) {
+      lastErr = err;
+      // Network-level failure → retry too
+      if (attempt < MAX_ATTEMPTS - 1) {
+        await new Promise((r) => setTimeout(r, 400 * Math.pow(2, attempt)));
+        continue;
+      }
+      throw err;
+    }
   }
 
-  return response.json();
+  throw lastErr instanceof Error ? lastErr : new Error("API error");
 }
 
 export async function getPlayoffGames(season: number = 2024): Promise<NbaGame[]> {

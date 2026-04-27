@@ -222,7 +222,7 @@ const FlyerCardV3 = ({
   return (
     <div className="space-y-2">
       <h2 className="font-display text-lg tracking-wider text-muted-foreground">
-        {heading}
+        PLATINUM — CHAPMAN
       </h2>
 
       {sealed ? (

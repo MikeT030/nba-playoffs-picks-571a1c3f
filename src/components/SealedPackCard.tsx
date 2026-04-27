@@ -29,7 +29,7 @@ const SealedPackCard = ({
   children,
   aspectClass = "aspect-[3/4]",
   topBanner = "FLYER · CLUB",
-  title = "NBA Flyer",
+  title = "Supreme Premium Cards",
   yearLabel = "1996-97",
   midLine = "FLYER SUPER COLOR",
   tierLine = ["1", "PREMIUM", "FLYER", "CARD"],
@@ -300,7 +300,7 @@ const FullPackFace = ({
       {/* Big title — Memphis stacked shadow */}
       <div className="absolute top-[13%] left-0 right-0 text-center px-2">
         <h1
-          className="font-display italic leading-none tracking-tight"
+          className="font-display italic leading-none tracking-tight text-2xl"
           style={{
             fontSize: "clamp(28px, 10cqw, 64px)",
             color: YELLOW,

@@ -1,5 +1,15 @@
 import { useState, type ReactNode } from "react";
 import flyerCouchClubLogo from "@/assets/flyer-couch-club-logo.png";
+import iconWhistle from "@/assets/icon-whistle.png";
+
+// CSS filter recipes to recolor the black-line PNG icon into Memphis palette colors.
+const COLOR_FILTERS: Record<string, string> = {
+  "#ff4fa3": "brightness(0) saturate(100%) invert(45%) sepia(88%) saturate(2476%) hue-rotate(310deg) brightness(102%) contrast(101%)", // PINK
+  "#3ddad7": "brightness(0) saturate(100%) invert(78%) sepia(48%) saturate(457%) hue-rotate(125deg) brightness(95%) contrast(88%)",   // CYAN
+  "#ffd23f": "brightness(0) saturate(100%) invert(83%) sepia(76%) saturate(1015%) hue-rotate(346deg) brightness(102%) contrast(102%)", // YELLOW
+  "#ff7a5c": "brightness(0) saturate(100%) invert(58%) sepia(57%) saturate(1844%) hue-rotate(326deg) brightness(101%) contrast(101%)", // CORAL
+  "#b39ddb": "brightness(0) saturate(100%) invert(72%) sepia(15%) saturate(870%) hue-rotate(217deg) brightness(94%) contrast(88%)",   // LILAC
+};
 
 interface SealedPackCardProps {
   children: ReactNode;

@@ -450,7 +450,7 @@ const Scoreboard = () => {
               src={scoreboardArenaBg}
               alt=""
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-70"
+              className="pointer-events-none absolute inset-0 h-full w-full object-contain object-center opacity-50"
             />
             <div className="relative">
             <Table>

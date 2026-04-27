@@ -286,7 +286,7 @@ const FullPackFace = ({
       <SerratedEdge position="top" />
 
       {/* Top banner — Flyer Couch Club logo */}
-      <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-[12%] flex justify-center">
+      <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-[13.8%] flex justify-center">
         <img
           src={flyerCouchClubLogo}
           alt={topBanner}

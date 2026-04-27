@@ -414,8 +414,8 @@ const BetsDrawer = ({ open, onOpenChange, onBetsSaved, onCardRoulette, resolvedB
                       selectedRound === round
                         ? "bg-primary/15 text-primary border border-primary/40"
                         : unlocked
-                          ? "bg-card text-[#dce0e5] border border-transparent"
-                          : "bg-muted/50 text-[#dce0e5]/50 cursor-not-allowed border border-transparent"
+                          ? "bg-transparent text-[#dce0e5] border border-[#dce0e5]"
+                          : "bg-transparent text-[#dce0e5]/50 cursor-not-allowed border border-[#dce0e5]/50"
                     }`}
                   >
                     {round}

@@ -11,7 +11,7 @@ const DemoFlyerCard = () => {
   return (
     <div className="space-y-2">
       <h2 className="font-display text-lg tracking-wider text-muted-foreground">
-        FLYER — THE SHOT
+        PLATINUM — THE SHOT
       </h2>
 
       <article className="relative overflow-hidden rounded-xl bg-[#1A1E24] border border-white/5 shadow-xl">

@@ -288,7 +288,7 @@ const FullPackFace = ({
         <h1
           className="font-display italic leading-[0.95] tracking-tight flex flex-col items-center"
           style={{
-            fontSize: "clamp(18px, 7.5cqw, 46px)",
+            fontSize: "clamp(22px, 9.5cqw, 56px)",
             color: YELLOW,
             WebkitTextStroke: `1px ${INK}`,
             textShadow: `2px 2px 0 ${PINK}, 4px 4px 0 ${CYAN}, 6px 6px 0 ${INK}`,

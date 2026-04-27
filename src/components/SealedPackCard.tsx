@@ -330,33 +330,12 @@ const FullPackFace = ({
         </div>
       </div>
 
-      {/* Basketball — kept but framed by Memphis shapes */}
+      {/* Center: line-icon basketball (matches reference icon style) */}
       <div className="absolute top-[34%] left-1/2 -translate-x-1/2 w-[58%] aspect-square">
-        {/* squiggle accent behind ball */}
-        <svg viewBox="0 0 100 100" className="absolute -inset-4 w-[calc(100%+2rem)] h-[calc(100%+2rem)] pointer-events-none" aria-hidden>
-          <path d="M 5 20 Q 15 5 25 20 T 45 20" fill="none" stroke={PINK} strokeWidth="2.5" strokeLinecap="round" />
-          <path d="M 60 90 Q 70 75 80 90 T 100 90" fill="none" stroke={YELLOW} strokeWidth="2.5" strokeLinecap="round" />
-        </svg>
-        <div
-          className="absolute inset-0 rounded-full"
-          style={{
-            background: `radial-gradient(circle at 38% 35%, #fdba74 0%, ${CORAL} 50%, #9a3412 95%)`,
-            boxShadow: `inset -8px -10px 22px rgba(0,0,0,0.5), 6px 6px 0 ${INK}`,
-            border: `3px solid ${INK}`,
-          }}
-        />
-        {/* Seams */}
-        <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full" aria-hidden>
-          <g fill="none" stroke={INK} strokeWidth="2" strokeLinecap="round">
-            <line x1="50" y1="2" x2="50" y2="98" />
-            <line x1="2" y1="50" x2="98" y2="50" />
-            <path d="M 12 18 Q 50 50 12 82" />
-            <path d="M 88 18 Q 50 50 88 82" />
-          </g>
-        </svg>
+        <BasketballIcon className="absolute inset-0 w-full h-full" stroke={INK} />
 
         {/* Mid label across basketball */}
-        <div className="absolute top-[38%] left-1/2 -translate-x-1/2 w-[115%]">
+        <div className="absolute top-[42%] left-1/2 -translate-x-1/2 w-[115%]">
           <div
             className="text-center font-display tracking-[0.18em] py-0.5"
             style={{
@@ -373,7 +352,7 @@ const FullPackFace = ({
         </div>
 
         {/* Tier panel */}
-        <div className="absolute top-[56%] left-1/2 -translate-x-1/2 w-[55%]">
+        <div className="absolute top-[60%] left-1/2 -translate-x-1/2 w-[55%]">
           <div
             className="text-center font-display tracking-[0.1em] py-1 px-1 leading-[1.05]"
             style={{
@@ -392,23 +371,13 @@ const FullPackFace = ({
         </div>
       </div>
 
-      {/* Memphis triangle accent bottom-left */}
-      <div
-        className="absolute bottom-[20%] left-[6%] w-[12%] aspect-square pointer-events-none"
-        style={{
-          background: CYAN,
-          clipPath: "polygon(0 100%, 100% 100%, 50% 0)",
-          filter: `drop-shadow(2px 2px 0 ${INK})`,
-        }}
-      />
-      {/* Memphis dot cluster bottom-right */}
-      <div
-        className="absolute bottom-[22%] right-[6%] w-[14%] aspect-square pointer-events-none"
-        style={{
-          backgroundImage: `radial-gradient(circle, ${PINK} 1.5px, transparent 2.5px)`,
-          backgroundSize: "8px 8px",
-        }}
-      />
+      {/* Decorative line-icons bottom corners (replaces triangle + dot cluster) */}
+      <div className="absolute bottom-[20%] left-[5%] w-[14%] aspect-square pointer-events-none">
+        <HoopIcon className="w-full h-full" stroke={INK} />
+      </div>
+      <div className="absolute bottom-[21%] right-[5%] w-[14%] aspect-square pointer-events-none">
+        <SneakerIcon className="w-full h-full" stroke={INK} />
+      </div>
 
       {/* Bottom series banner — chunky Memphis tab */}
       <div className="absolute bottom-[7%] left-0 right-0">

@@ -100,7 +100,7 @@ const Admin = () => {
           Internal area for testing new features.
         </p>
 
-        <Accordion type="single" collapsible className="bg-[#1A1E24] rounded-lg px-5">
+        <Accordion type="single" collapsible className="bg-[#181C23] rounded-lg px-5">
           <AccordionItem value="roles" className="border-b-0">
             <AccordionTrigger className="hover:no-underline">
               <div className="flex items-center gap-2">

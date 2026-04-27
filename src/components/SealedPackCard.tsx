@@ -317,22 +317,7 @@ const FullPackFace = ({
         </h1>
       </div>
 
-      {/* Year ribbon — angled cyan tab */}
-      <div className="absolute top-[27%] left-1/2 -translate-x-1/2">
-        <div
-          className="font-display text-[11px] tracking-[0.25em] px-4 py-1"
-          style={{
-            background: CYAN,
-            color: INK,
-            fontWeight: 800,
-            transform: "skew(-10deg) rotate(-2deg)",
-            boxShadow: `3px 3px 0 ${INK}`,
-            border: `2px solid ${INK}`,
-          }}
-        >
-          <span className="inline-block" style={{ transform: "skew(10deg)" }}>{yearLabel}</span>
-        </div>
-      </div>
+      {/* Year ribbon hidden */}
 
       {/* Basketball — kept but framed by Memphis shapes */}
       <div className="absolute top-[34%] left-1/2 -translate-x-1/2 w-[58%] aspect-square">

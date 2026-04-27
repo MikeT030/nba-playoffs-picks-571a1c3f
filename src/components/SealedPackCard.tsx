@@ -330,12 +330,33 @@ const FullPackFace = ({
         </div>
       </div>
 
-      {/* Center: line-icon basketball (matches reference icon style) */}
+      {/* Basketball — kept but framed by Memphis shapes */}
       <div className="absolute top-[34%] left-1/2 -translate-x-1/2 w-[58%] aspect-square">
-        <BasketballIcon className="absolute inset-0 w-full h-full" stroke={INK} />
+        {/* squiggle accent behind ball */}
+        <svg viewBox="0 0 100 100" className="absolute -inset-4 w-[calc(100%+2rem)] h-[calc(100%+2rem)] pointer-events-none" aria-hidden>
+          <path d="M 5 20 Q 15 5 25 20 T 45 20" fill="none" stroke={PINK} strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M 60 90 Q 70 75 80 90 T 100 90" fill="none" stroke={YELLOW} strokeWidth="2.5" strokeLinecap="round" />
+        </svg>
+        <div
+          className="absolute inset-0 rounded-full"
+          style={{
+            background: `radial-gradient(circle at 38% 35%, #fdba74 0%, ${CORAL} 50%, #9a3412 95%)`,
+            boxShadow: `inset -8px -10px 22px rgba(0,0,0,0.5), 6px 6px 0 ${INK}`,
+            border: `3px solid ${INK}`,
+          }}
+        />
+        {/* Seams */}
+        <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full" aria-hidden>
+          <g fill="none" stroke={INK} strokeWidth="2" strokeLinecap="round">
+            <line x1="50" y1="2" x2="50" y2="98" />
+            <line x1="2" y1="50" x2="98" y2="50" />
+            <path d="M 12 18 Q 50 50 12 82" />
+            <path d="M 88 18 Q 50 50 88 82" />
+          </g>
+        </svg>
 
         {/* Mid label across basketball */}
-        <div className="absolute top-[42%] left-1/2 -translate-x-1/2 w-[115%]">
+        <div className="absolute top-[38%] left-1/2 -translate-x-1/2 w-[115%]">
           <div
             className="text-center font-display tracking-[0.18em] py-0.5"
             style={{
@@ -352,7 +373,7 @@ const FullPackFace = ({
         </div>
 
         {/* Tier panel */}
-        <div className="absolute top-[60%] left-1/2 -translate-x-1/2 w-[55%]">
+        <div className="absolute top-[56%] left-1/2 -translate-x-1/2 w-[55%]">
           <div
             className="text-center font-display tracking-[0.1em] py-1 px-1 leading-[1.05]"
             style={{
@@ -371,13 +392,23 @@ const FullPackFace = ({
         </div>
       </div>
 
-      {/* Decorative line-icons bottom corners (replaces triangle + dot cluster) */}
-      <div className="absolute bottom-[20%] left-[5%] w-[14%] aspect-square pointer-events-none">
-        <HoopIcon className="w-full h-full" stroke={INK} />
-      </div>
-      <div className="absolute bottom-[21%] right-[5%] w-[14%] aspect-square pointer-events-none">
-        <SneakerIcon className="w-full h-full" stroke={INK} />
-      </div>
+      {/* Memphis triangle accent bottom-left */}
+      <div
+        className="absolute bottom-[20%] left-[6%] w-[12%] aspect-square pointer-events-none"
+        style={{
+          background: CYAN,
+          clipPath: "polygon(0 100%, 100% 100%, 50% 0)",
+          filter: `drop-shadow(2px 2px 0 ${INK})`,
+        }}
+      />
+      {/* Memphis dot cluster bottom-right */}
+      <div
+        className="absolute bottom-[22%] right-[6%] w-[14%] aspect-square pointer-events-none"
+        style={{
+          backgroundImage: `radial-gradient(circle, ${PINK} 1.5px, transparent 2.5px)`,
+          backgroundSize: "8px 8px",
+        }}
+      />
 
       {/* Bottom series banner — chunky Memphis tab */}
       <div className="absolute bottom-[7%] left-0 right-0">
@@ -405,103 +436,49 @@ const FullPackFace = ({
   );
 };
 
-/* Background pattern: scattered hand-drawn line-icons (basketball / hoop /
-   whistle / sneaker / jersey / scoreboard / trophy / court). */
+/* Memphis-style background pattern: triangles, squiggles, dots, zigzags. */
 const MemphisPattern = () => {
+  const PINK = "#ff4fa3";
+  const CYAN = "#3ddad7";
+  const YELLOW = "#ffd23f";
+  const CORAL = "#ff7a5c";
+  const LILAC = "#b39ddb";
   const INK = "#0f0f1a";
   return (
     <svg
       viewBox="0 0 200 280"
       preserveAspectRatio="xMidYMid slice"
-      className="absolute inset-0 w-full h-full opacity-[0.18] pointer-events-none"
+      className="absolute inset-0 w-full h-full opacity-90 pointer-events-none"
       aria-hidden
     >
-      <g fill="none" stroke={INK} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        {/* basketball — top left */}
-        <g transform="translate(14 22)">
-          <circle cx="9" cy="9" r="9" />
-          <path d="M 0 9 H 18 M 9 0 V 18 M 2 3 Q 9 9 2 15 M 16 3 Q 9 9 16 15" />
-        </g>
-        {/* hoop — top right */}
-        <g transform="translate(168 14)">
-          <rect x="0" y="0" width="18" height="10" />
-          <path d="M 4 10 Q 9 22 14 10" />
-          <path d="M 6 10 L 7 20 M 12 10 L 11 20 M 9 10 V 22" />
-        </g>
-        {/* whistle — middle left */}
-        <g transform="translate(8 130)">
-          <circle cx="6" cy="6" r="5" />
-          <path d="M 11 6 H 18 L 18 10 H 11" />
-          <path d="M 6 1 Q 11 -3 14 0" />
-        </g>
-        {/* sneaker — middle right */}
-        <g transform="translate(170 132)">
-          <path d="M 0 10 L 0 6 L 6 4 L 10 0 L 14 4 L 20 6 L 20 10 Z" />
-          <path d="M 4 6 L 6 8 M 8 4 L 10 6 M 12 4 L 14 6" />
-        </g>
-        {/* jersey — top middle */}
-        <g transform="translate(95 4)">
-          <path d="M 4 2 L 0 6 L 3 9 L 5 7 V 16 H 13 V 7 L 15 9 L 18 6 L 14 2 L 11 4 Q 9 6 7 4 Z" />
-        </g>
-        {/* scoreboard — bottom left */}
-        <g transform="translate(10 240)">
-          <rect x="0" y="0" width="22" height="14" rx="1.5" />
-          <path d="M 0 7 H 22 M 11 0 V 14" />
-          <text x="5.5" y="5.5" fontSize="4" fill={INK} stroke="none" textAnchor="middle">17</text>
-          <text x="16.5" y="5.5" fontSize="4" fill={INK} stroke="none" textAnchor="middle">30</text>
-        </g>
-        {/* trophy — bottom right */}
-        <g transform="translate(170 248)">
-          <path d="M 4 0 H 14 V 5 Q 14 9 9 9 Q 4 9 4 5 Z" />
-          <path d="M 4 2 H 1 V 4 Q 1 7 4 7 M 14 2 H 17 V 4 Q 17 7 14 7" />
-          <path d="M 9 9 V 12 M 6 14 H 12 M 9 12 L 6 14 M 9 12 L 12 14" />
-        </g>
-        {/* small basketball — bottom middle */}
-        <g transform="translate(95 252)">
-          <circle cx="6" cy="6" r="6" />
-          <path d="M 0 6 H 12 M 6 0 V 12" />
-        </g>
-      </g>
+      {/* squiggles */}
+      <path d="M 8 50 q 6 -10 12 0 t 12 0 t 12 0" fill="none" stroke={PINK} strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M 150 30 q 6 -10 12 0 t 12 0" fill="none" stroke={YELLOW} strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M 20 220 q 6 -10 12 0 t 12 0 t 12 0" fill="none" stroke={CYAN} strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M 140 250 q 6 -10 12 0 t 12 0" fill="none" stroke={CORAL} strokeWidth="2.5" strokeLinecap="round" />
+
+      {/* zigzags */}
+      <polyline points="170,80 175,72 180,80 185,72 190,80" fill="none" stroke={YELLOW} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <polyline points="10,160 15,152 20,160 25,152 30,160" fill="none" stroke={PINK} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <polyline points="110,265 115,257 120,265 125,257 130,265" fill="none" stroke={CYAN} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+
+      {/* triangles */}
+      <polygon points="180,180 192,180 186,168" fill={LILAC} stroke={INK} strokeWidth="0.8" />
+      <polygon points="6,90 18,90 12,78" fill={CORAL} stroke={INK} strokeWidth="0.8" />
+      <polygon points="160,140 170,140 165,132" fill={YELLOW} stroke={INK} strokeWidth="0.8" />
+
+      {/* dots / circles */}
+      <circle cx="40" cy="20" r="3" fill={YELLOW} />
+      <circle cx="180" cy="220" r="3" fill={PINK} />
+      <circle cx="100" cy="10" r="2.5" fill={CYAN} />
+      <circle cx="14" cy="270" r="2.5" fill={LILAC} />
+
+      {/* small rings */}
+      <circle cx="170" cy="200" r="3" fill="none" stroke={CYAN} strokeWidth="1.2" />
+      <circle cx="30" cy="120" r="3" fill="none" stroke={YELLOW} strokeWidth="1.2" />
     </svg>
   );
 };
-
-/* Center basketball drawn as a thin line-icon. */
-const BasketballIcon = ({ className, stroke }: { className?: string; stroke: string }) => (
-  <svg viewBox="0 0 100 100" className={className} aria-hidden>
-    <g fill="none" stroke={stroke} strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="50" cy="50" r="44" />
-      <line x1="50" y1="6" x2="50" y2="94" />
-      <line x1="6" y1="50" x2="94" y2="50" />
-      <path d="M 14 18 Q 50 50 14 82" />
-      <path d="M 86 18 Q 50 50 86 82" />
-    </g>
-  </svg>
-);
-
-/* Hoop line-icon (matches reference style). */
-const HoopIcon = ({ className, stroke }: { className?: string; stroke: string }) => (
-  <svg viewBox="0 0 60 60" className={className} aria-hidden>
-    <g fill="none" stroke={stroke} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="8" y="6" width="44" height="22" rx="1" />
-      <line x1="30" y1="28" x2="30" y2="36" />
-      <path d="M 14 36 Q 30 56 46 36 Z" />
-      <path d="M 18 36 L 22 52 M 30 36 V 54 M 42 36 L 38 52 M 24 36 L 26 53 M 36 36 L 34 53" />
-    </g>
-  </svg>
-);
-
-/* Sneaker line-icon. */
-const SneakerIcon = ({ className, stroke }: { className?: string; stroke: string }) => (
-  <svg viewBox="0 0 60 40" className={className} aria-hidden>
-    <g fill="none" stroke={stroke} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M 4 30 L 4 22 Q 10 22 14 18 L 22 10 Q 26 6 30 10 L 36 16 Q 42 22 52 22 Q 58 22 58 28 V 32 Q 58 34 56 34 H 6 Q 4 34 4 32 Z" />
-      <path d="M 16 18 L 20 22 M 24 14 L 28 18 M 30 12 L 34 16 M 38 18 L 42 22" />
-      <line x1="4" y1="34" x2="58" y2="34" />
-    </g>
-  </svg>
-);
-
 
 const SerratedEdge = ({ position }: { position: "top" | "bottom" }) => {
   return (

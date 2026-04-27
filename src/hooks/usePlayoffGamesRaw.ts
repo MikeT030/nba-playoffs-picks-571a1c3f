@@ -20,8 +20,10 @@ export function usePlayoffGamesRaw(season: number = 2025) {
       return await getPlayoffGames(season);
     },
     staleTime: 5 * 60 * 1000,
-    retry: 2,
-    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 8000),
+    // Retry/backoff is handled inside getPlayoffGames. Avoid layering TanStack
+    // retries on top, which can create bursts of edge-function calls during a
+    // transient 503 and make the runtime error more likely to surface.
+    retry: false,
     // Auto-refresh:
     //  - every 30s when at least one game is live
     //  - every 60s when the soonest upcoming tip-off is within ~25h, so the

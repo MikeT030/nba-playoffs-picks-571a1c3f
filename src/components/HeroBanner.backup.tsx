@@ -10,7 +10,7 @@ interface HeroBannerProps {
   subtitle?: string;
 }
 
-const HeroBannerBackup = ({ title = "NBA PLAYOFFS, BABY!", subtitle = "2026" }: HeroBannerProps) => {
+const HeroBannerBackup = ({ title = "SUPREME PLAYOFFS, BABY!", subtitle = "2026" }: HeroBannerProps) => {
   const [version, setVersion] = useState<0 | 1>(0);
 
   return (

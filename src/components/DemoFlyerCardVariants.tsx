@@ -306,13 +306,13 @@ export const DemoFlyerCardMiller = () => (
     borderColor="#98002E"
     borderWidth="2px"
     image={mikeMillerImg}
-    imageAlt="Mike Miller shooting a three-pointer in the 2012 NBA Finals Game 5"
+    imageAlt="Mike Miller shooting a three-pointer in the 2012 Supreme Finals Game 5"
     awayLogo={OKC_LOGO}
     awayAlt="OKC"
     homeLogo={MIA_LOGO}
     homeAlt="MIA"
     era="2012"
-    matchup="NBA Finals"
+    matchup="Supreme Finals"
     game="Game 5"
     firstName="MIKE"
     lastName="MILLER"

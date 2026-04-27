@@ -37,14 +37,14 @@ export const DemoFlyerCardV2 = () => {
   return (
     <div className="space-y-2">
       <h2 className="font-display text-lg tracking-wider text-muted-foreground">
-        FLYER — V2 (CARD)
+        PLATINUM — V2 (CARD)
       </h2>
 
       <article className="relative rounded-xl bg-[#ededed] text-[#1A1E24] shadow-2xl p-3 pb-4 rotate-[-1deg]">
-        {/* FLYER sticker */}
+        {/* PLATINUM sticker */}
         <img
           src={flyerLogo}
-          alt="FLYER The Shot logo"
+          alt="PLATINUM The Shot logo"
           className="absolute -top-4 -right-3 w-20 rotate-[8deg] drop-shadow-[0_6px_12px_rgba(0,0,0,0.4)] z-10"
           loading="lazy"
         />
@@ -181,11 +181,11 @@ const FlyerCardV3 = ({
           </div>
         )}
 
-        {/* Top: FLYER logo only */}
+        {/* Top: PLATINUM logo only */}
         <div className="absolute top-4 left-4 right-4 flex items-center justify-start">
           <img
             src={flyerLogo}
-            alt="FLYER The Shot"
+            alt="PLATINUM The Shot"
             className="w-20 drop-shadow-[0_4px_10px_rgba(0,0,0,0.7)]"
             loading="lazy"
           />
@@ -222,7 +222,7 @@ const FlyerCardV3 = ({
   return (
     <div className="space-y-2">
       <h2 className="font-display text-lg tracking-wider text-muted-foreground">
-        {heading}
+        PLATINUM — CHAPMAN
       </h2>
 
       {sealed ? (
@@ -236,7 +236,7 @@ const FlyerCardV3 = ({
 
 export const DemoFlyerCardV3 = () => (
   <FlyerCardV3
-    heading="FLYER — CHAPMAN"
+    heading="PLATINUM — CHAPMAN"
     borderColor="#FF5C00"
     borderWidth="2px"
     image={rexChapmanImg}
@@ -261,11 +261,11 @@ export const DemoFlyerCardV3 = () => (
     ]}
     sealed
     sealedConfig={{
-      topBanner: "FLYER · CLUB",
-      title: "Supreme Flyer",
+      topBanner: "PLATINUM · CLUB",
+      title: "Supreme Platinum",
       yearLabel: "1996-97",
-      midLine: "FLYER SUPER COLOR",
-      tierLine: ["1", "PREMIUM", "FLYER", "CARD"],
+      midLine: "PLATINUM SUPER COLOR",
+      tierLine: ["1", "PREMIUM", "PLATINUM", "CARD"],
       seriesLabel: "SERIES 2",
     }}
   />
@@ -273,7 +273,7 @@ export const DemoFlyerCardV3 = () => (
 
 export const DemoFlyerCardPaxson = () => (
   <FlyerCardV3
-    heading="FLYER — PAXSON"
+    heading="PLATINUM — PAXSON"
     borderColor="#CE1141"
     borderWidth="2px"
     image={johnPaxsonImg}
@@ -302,7 +302,7 @@ export const DemoFlyerCardPaxson = () => (
 
 export const DemoFlyerCardMiller = () => (
   <FlyerCardV3
-    heading="FLYER — MILLER"
+    heading="PLATINUM — MILLER"
     borderColor="#98002E"
     borderWidth="2px"
     image={mikeMillerImg}
@@ -330,7 +330,7 @@ export const DemoFlyerCardMiller = () => (
 
 export const DemoFlyerCardDavis = () => (
   <FlyerCardV3
-    heading="FLYER — DAVIS"
+    heading="PLATINUM — DAVIS"
     borderColor="#007A33"
     borderWidth="2px"
     image={glenDavisImg}
@@ -364,7 +364,7 @@ export const DemoFlyerCardV4 = () => {
   return (
     <div className="space-y-2">
       <h2 className="font-display text-lg tracking-wider text-muted-foreground">
-        FLYER — V4 (BOX SCORE)
+        PLATINUM — V4 (BOX SCORE)
       </h2>
 
       <article className="relative overflow-hidden rounded-xl bg-[#1A1E24] border border-white/10 shadow-xl">
@@ -372,7 +372,7 @@ export const DemoFlyerCardV4 = () => {
         <div className="flex items-center justify-between gap-2 px-4 py-2.5 border-b border-white/10 bg-black/30">
           <img
             src={flyerLogo}
-            alt="FLYER The Shot"
+            alt="PLATINUM The Shot"
             className="h-7 w-auto"
             loading="lazy"
           />

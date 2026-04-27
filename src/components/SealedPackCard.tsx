@@ -7,7 +7,7 @@ interface SealedPackCardProps {
   aspectClass?: string;
   /** Top banner line (small caps, e.g. "FLYER · CLUB"). */
   topBanner?: string;
-  /** Big title (e.g. "Supreme Flyer"). */
+  /** Big title (e.g. "Supreme Platinum"). */
   title?: string;
   /** Year range (e.g. "1996-97"). */
   yearLabel?: string;
@@ -28,11 +28,11 @@ interface SealedPackCardProps {
 const SealedPackCard = ({
   children,
   aspectClass = "aspect-[3/4]",
-  topBanner = "FLYER · CLUB",
+  topBanner = "PLATINUM · CLUB",
   title = "Supreme Premium Platinum Player Cards",
   yearLabel = "1996-97",
-  midLine = "FLYER SUPER COLOR",
-  tierLine = ["1", "PREMIUM", "FLYER", "CARD"],
+  midLine = "PLATINUM SUPER COLOR",
+  tierLine = ["1", "PREMIUM", "PLATINUM", "CARD"],
   seriesLabel = "SERIES 2",
 }: SealedPackCardProps) => {
   const [opened, setOpened] = useState(false);
@@ -285,7 +285,7 @@ const FullPackFace = ({
       {/* Top serrated edge */}
       <SerratedEdge position="top" />
 
-      {/* Top banner — Flyer Couch Club logo */}
+      {/* Top banner — PLATINUM Couch Club logo */}
       <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-[19.87%] flex justify-center">
         <img
           src={flyerCouchClubLogo}

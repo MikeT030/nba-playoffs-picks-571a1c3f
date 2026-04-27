@@ -28,8 +28,8 @@ const DemoFlyerCard = () => {
 
           {/* FLYER logo, top-left */}
           <img
-            src={flyerLogo}
-            alt="FLYER The Shot logo"
+          src={flyerLogo}
+          alt="PLATINUM The Shot logo"
             className="absolute top-3 left-3 w-24 sm:w-28 drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]"
             loading="lazy"
           />

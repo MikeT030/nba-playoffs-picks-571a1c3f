@@ -392,7 +392,23 @@ const FullPackFace = ({
         </div>
       </div>
 
-      {/* (Memphis triangle/dot accents removed — replaced by basketball line-art icons) */}
+      {/* Memphis triangle accent bottom-left */}
+      <div
+        className="absolute bottom-[20%] left-[6%] w-[12%] aspect-square pointer-events-none"
+        style={{
+          background: CYAN,
+          clipPath: "polygon(0 100%, 100% 100%, 50% 0)",
+          filter: `drop-shadow(2px 2px 0 ${INK})`,
+        }}
+      />
+      {/* Memphis dot cluster bottom-right */}
+      <div
+        className="absolute bottom-[22%] right-[6%] w-[14%] aspect-square pointer-events-none"
+        style={{
+          backgroundImage: `radial-gradient(circle, ${PINK} 1.5px, transparent 2.5px)`,
+          backgroundSize: "8px 8px",
+        }}
+      />
 
       {/* Bottom series banner — chunky Memphis tab */}
       <div className="absolute bottom-[7%] left-0 right-0">
@@ -420,166 +436,47 @@ const FullPackFace = ({
   );
 };
 
-/* Basketball line-art icons scattered across the pack, Memphis-colored.
-   Each icon is drawn in a 24x24 viewBox and placed at various positions/rotations. */
-const BasketballIcon = ({ name, color }: { name: string; color: string }) => {
-  const sw = 1.6;
-  const common = {
-    fill: "none",
-    stroke: color,
-    strokeWidth: sw,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-  };
-  switch (name) {
-    case "clipboard": // playbook clipboard with X/O strategy
-      return (
-        <svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden>
-          <rect x="4" y="4" width="16" height="18" rx="1.2" {...common} />
-          <rect x="9" y="2.5" width="6" height="3" rx="0.6" {...common} />
-          <path d="M 8 10 L 11 13 M 11 10 L 8 13" {...common} />
-          <circle cx="15" cy="11.5" r="1.6" {...common} />
-          <path d="M 9.5 16 Q 12 14 14.5 17.5" {...common} strokeDasharray="1.2 1.2" />
-          <circle cx="14.5" cy="17.5" r="0.6" fill={color} stroke="none" />
-        </svg>
-      );
-    case "dribble": // hand dribbling a ball with arrows
-      return (
-        <svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden>
-          <path d="M 4 8 Q 7 6 10 8 L 14 8 Q 16 8 16 10" {...common} />
-          <circle cx="11" cy="14" r="3.2" {...common} />
-          <path d="M 11 10.8 V 17.2 M 7.8 14 H 14.2 M 8.7 11.7 Q 11 14 8.7 16.3 M 13.3 11.7 Q 11 14 13.3 16.3" {...common} strokeWidth="1.1" />
-          <path d="M 5 18 V 22 M 4 21 L 5 22 L 6 21" {...common} />
-          <path d="M 17 11 V 7 M 16 8 L 17 7 L 18 8" {...common} />
-        </svg>
-      );
-    case "shot": // figure shooting an arc to hoop
-      return (
-        <svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden>
-          <circle cx="6" cy="6" r="1.4" {...common} />
-          <path d="M 6 7.4 V 13 L 4 18 M 6 13 L 9 17" {...common} />
-          <path d="M 6 11 L 9 9" {...common} />
-          <path d="M 9 9 Q 16 4 20 12" {...common} strokeDasharray="1.4 1.4" />
-          <path d="M 19 13 H 22 M 20.5 13 V 16" {...common} />
-        </svg>
-      );
-    case "whistle":
-      return (
-        <svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden>
-          <path d="M 4 14 Q 4 10 8 10 H 17 L 20 8 V 13 L 17 11 H 11" {...common} />
-          <circle cx="9" cy="14" r="3.6" {...common} />
-          <circle cx="9" cy="14" r="0.7" fill={color} stroke="none" />
-          <path d="M 12 7 Q 14 3 19 4" {...common} />
-        </svg>
-      );
-    case "hoop": // backboard, rim, net, post
-      return (
-        <svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden>
-          <rect x="4" y="3" width="16" height="9" {...common} />
-          <path d="M 9 12 H 15 L 14 17 H 10 Z" {...common} />
-          <path d="M 10 17 L 10.5 19 M 12 17 V 19.3 M 14 17 L 13.5 19" {...common} strokeWidth="1.1" />
-          <path d="M 12 7.5 V 12 M 12 19.3 V 22 M 10 22 H 14" {...common} />
-        </svg>
-      );
-    case "court":
-      return (
-        <svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden>
-          <rect x="3" y="6" width="18" height="12" rx="0.6" {...common} />
-          <line x1="12" y1="6" x2="12" y2="18" {...common} />
-          <circle cx="12" cy="12" r="2" {...common} />
-          <path d="M 3 9 H 6 V 15 H 3" {...common} />
-          <path d="M 21 9 H 18 V 15 H 21" {...common} />
-          <circle cx="6" cy="12" r="0.7" fill={color} stroke="none" />
-          <circle cx="18" cy="12" r="0.7" fill={color} stroke="none" />
-        </svg>
-      );
-    case "ballhand": // ball balanced on a hand
-      return (
-        <svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden>
-          <circle cx="12" cy="9" r="4.5" {...common} />
-          <path d="M 7.6 9 H 16.4 M 12 4.5 V 13.5 M 8.4 6.4 Q 12 9 8.4 11.6 M 15.6 6.4 Q 12 9 15.6 11.6" {...common} strokeWidth="1.1" />
-          <path d="M 4 17 Q 7 15 9 17 Q 12 19 15 17 Q 17 15 20 17" {...common} />
-          <path d="M 5 18 V 21 M 19 18 V 21" {...common} />
-        </svg>
-      );
-    case "play": // tactic board on easel
-      return (
-        <svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden>
-          <rect x="3.5" y="5" width="17" height="11" rx="0.6" {...common} />
-          <path d="M 6 16 L 4 21 M 18 16 L 20 21 M 12 16 V 21" {...common} />
-          <path d="M 7 9 L 9 11 M 9 9 L 7 11" {...common} />
-          <circle cx="13" cy="10" r="1.2" {...common} />
-          <path d="M 8 13 Q 12 11 16 13.5" {...common} strokeDasharray="1.2 1.2" />
-          <path d="M 16 13.5 L 17 12.5 M 16 13.5 L 17 14.5" {...common} />
-        </svg>
-      );
-    case "jump": // figure jumping with ball
-      return (
-        <svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden>
-          <circle cx="9" cy="5" r="1.4" {...common} />
-          <path d="M 9 6.5 L 8 11 L 5 14 M 8 11 L 12 13 L 14 17 M 12 13 L 11 18" {...common} />
-          <circle cx="15" cy="8" r="1.8" {...common} />
-          <path d="M 13.4 8 H 16.6 M 15 6.4 V 9.6" {...common} strokeWidth="1" />
-        </svg>
-      );
-    default:
-      return null;
-  }
-};
-
+/* Memphis-style background pattern: triangles, squiggles, dots, zigzags. */
 const MemphisPattern = () => {
   const PINK = "#ff4fa3";
   const CYAN = "#3ddad7";
   const YELLOW = "#ffd23f";
   const CORAL = "#ff7a5c";
   const LILAC = "#b39ddb";
-
-  // Scattered icon placements — top zone, mid sides (around ball), bottom zone.
-  // Avoid the central column (title/ball/tier) and bottom banner area.
-  const icons: Array<{
-    name: string;
-    color: string;
-    top: string;
-    left: string;
-    size: string;
-    rotate: number;
-  }> = [
-    // Top row (under serrated edge, above title)
-    { name: "clipboard", color: YELLOW, top: "5%", left: "6%", size: "13%", rotate: -12 },
-    { name: "whistle", color: CYAN, top: "5.5%", left: "82%", size: "14%", rotate: 10 },
-
-    // Upper-mid corners (flanking title)
-    { name: "play", color: PINK, top: "17%", left: "4%", size: "13%", rotate: 8 },
-    { name: "court", color: LILAC, top: "16%", left: "83%", size: "14%", rotate: -6 },
-
-    // Mid sides (flanking the basketball)
-    { name: "hoop", color: PINK, top: "40%", left: "3%", size: "14%", rotate: -8 },
-    { name: "shot", color: YELLOW, top: "40%", left: "83%", size: "14%", rotate: 6 },
-    { name: "dribble", color: CYAN, top: "55%", left: "3%", size: "13%", rotate: 10 },
-    { name: "ballhand", color: CORAL, top: "55%", left: "83%", size: "14%", rotate: -10 },
-
-    // Lower zone (above bottom banner)
-    { name: "jump", color: YELLOW, top: "76%", left: "8%", size: "13%", rotate: -6 },
-    { name: "court", color: CYAN, top: "76%", left: "78%", size: "14%", rotate: 8 },
-  ];
-
+  const INK = "#0f0f1a";
   return (
-    <div className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden>
-      {icons.map((ic, i) => (
-        <div
-          key={i}
-          className="absolute"
-          style={{
-            top: ic.top,
-            left: ic.left,
-            width: ic.size,
-            transform: `rotate(${ic.rotate}deg)`,
-          }}
-        >
-          <BasketballIcon name={ic.name} color={ic.color} />
-        </div>
-      ))}
-    </div>
+    <svg
+      viewBox="0 0 200 280"
+      preserveAspectRatio="xMidYMid slice"
+      className="absolute inset-0 w-full h-full opacity-90 pointer-events-none"
+      aria-hidden
+    >
+      {/* squiggles */}
+      <path d="M 8 50 q 6 -10 12 0 t 12 0 t 12 0" fill="none" stroke={PINK} strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M 150 30 q 6 -10 12 0 t 12 0" fill="none" stroke={YELLOW} strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M 20 220 q 6 -10 12 0 t 12 0 t 12 0" fill="none" stroke={CYAN} strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M 140 250 q 6 -10 12 0 t 12 0" fill="none" stroke={CORAL} strokeWidth="2.5" strokeLinecap="round" />
+
+      {/* zigzags */}
+      <polyline points="170,80 175,72 180,80 185,72 190,80" fill="none" stroke={YELLOW} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <polyline points="10,160 15,152 20,160 25,152 30,160" fill="none" stroke={PINK} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <polyline points="110,265 115,257 120,265 125,257 130,265" fill="none" stroke={CYAN} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+
+      {/* triangles */}
+      <polygon points="180,180 192,180 186,168" fill={LILAC} stroke={INK} strokeWidth="0.8" />
+      <polygon points="6,90 18,90 12,78" fill={CORAL} stroke={INK} strokeWidth="0.8" />
+      <polygon points="160,140 170,140 165,132" fill={YELLOW} stroke={INK} strokeWidth="0.8" />
+
+      {/* dots / circles */}
+      <circle cx="40" cy="20" r="3" fill={YELLOW} />
+      <circle cx="180" cy="220" r="3" fill={PINK} />
+      <circle cx="100" cy="10" r="2.5" fill={CYAN} />
+      <circle cx="14" cy="270" r="2.5" fill={LILAC} />
+
+      {/* small rings */}
+      <circle cx="170" cy="200" r="3" fill="none" stroke={CYAN} strokeWidth="1.2" />
+      <circle cx="30" cy="120" r="3" fill="none" stroke={YELLOW} strokeWidth="1.2" />
+    </svg>
   );
 };
 

@@ -28,11 +28,11 @@ interface SealedPackCardProps {
 const SealedPackCard = ({
   children,
   aspectClass = "aspect-[3/4]",
-  topBanner = "FLYER · CLUB",
+  topBanner = "PLATINUM · CLUB",
   title = "Supreme Premium Platinum Player Cards",
   yearLabel = "1996-97",
-  midLine = "FLYER SUPER COLOR",
-  tierLine = ["1", "PREMIUM", "FLYER", "CARD"],
+  midLine = "PLATINUM SUPER COLOR",
+  tierLine = ["1", "PREMIUM", "PLATINUM", "CARD"],
   seriesLabel = "SERIES 2",
 }: SealedPackCardProps) => {
   const [opened, setOpened] = useState(false);

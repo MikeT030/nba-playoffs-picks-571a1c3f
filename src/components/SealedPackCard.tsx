@@ -15,7 +15,7 @@ interface SealedPackCardProps {
   midLine?: string;
   /** Bottom-left tier line (e.g. "1 PREMIUM FLYER CARD"). */
   tierLine?: string[];
-  /** Bottom banner (e.g. "Sizzling hot series"). */
+  /** Bottom banner (e.g. "Sizzling hot 2026 series"). */
   seriesLabel?: string;
 }
 
@@ -33,7 +33,7 @@ const SealedPackCard = ({
   yearLabel = "1996-97",
   midLine = "PLATINUM SUPER COLOR",
   tierLine = ["1", "PREMIUM", "PLATINUM", "CARD"],
-  seriesLabel = "Sizzling hot series",
+  seriesLabel = "Sizzling hot 2026 series",
 }: SealedPackCardProps) => {
   const [opened, setOpened] = useState(false);
 

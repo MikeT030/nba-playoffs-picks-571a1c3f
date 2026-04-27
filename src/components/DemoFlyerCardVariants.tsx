@@ -266,7 +266,7 @@ export const DemoFlyerCardV3 = () => (
       yearLabel: "1996-97",
       midLine: "PLATINUM SUPER COLOR",
       tierLine: ["1", "PREMIUM", "PLATINUM", "CARD"],
-      seriesLabel: "Sizzling hot series",
+      seriesLabel: "Sizzling hot 2026 series",
     }}
   />
 );

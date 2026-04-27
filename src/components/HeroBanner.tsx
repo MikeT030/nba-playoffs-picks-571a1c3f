@@ -17,7 +17,7 @@ const HeroBanner = ({ title = "PLAYOFFS PICKS,\nBABY!", subtitle = "2026 Playoff
               width={1024}
               height={1024}
               loading="lazy"
-              className="w-24 h-24 md:w-32 md:h-32 rounded-2xl object-cover flex-shrink-0"
+              className="w-[6.6rem] h-[6.6rem] md:w-[8.8rem] md:h-[8.8rem] rounded-2xl object-cover flex-shrink-0"
             />
             <div className="min-w-0">
               <p className="text-primary font-body md:text-sm tracking-widest uppercase mb-1 font-extrabold text-sm">

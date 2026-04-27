@@ -96,7 +96,7 @@ const SeriesCard = ({
   };
 
   return (
-    <div className={`rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md p-3.5 ${locked ? "opacity-50" : ""}`}>
+    <div className={`rounded-lg border border-white/10 backdrop-blur-md p-3.5 bg-[#191d24] ${locked ? "opacity-50" : ""}`}>
       <div className="flex items-center justify-between mb-2.5">
         <p className="text-[11px] text-muted-foreground font-body font-medium uppercase tracking-wider">
           {series.round} · {series.conference}

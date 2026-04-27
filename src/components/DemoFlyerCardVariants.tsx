@@ -37,7 +37,7 @@ export const DemoFlyerCardV2 = () => {
   return (
     <div className="space-y-2">
       <h2 className="font-display text-lg tracking-wider text-muted-foreground">
-        FLYER — V2 (CARD)
+        PLATINUM — V2 (CARD)
       </h2>
 
       <article className="relative rounded-xl bg-[#ededed] text-[#1A1E24] shadow-2xl p-3 pb-4 rotate-[-1deg]">

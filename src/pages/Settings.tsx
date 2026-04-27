@@ -210,7 +210,7 @@ const Settings = () => {
           const isPlaceholder = championAbbr ? isPlayInPlaceholder(championAbbr) : false;
 
           return (
-            <Card className="mt-3 mb-3 border-0 bg-[#1A1E24] relative">
+            <Card className="mt-3 mb-3 border-0 bg-[#181C23] relative">
               <ChampionConfetti active={!!(championPick && championFullName)} />
               <CardHeader>
                 <CardTitle className="font-display text-lg tracking-wider">YOUR CHAMPION</CardTitle>

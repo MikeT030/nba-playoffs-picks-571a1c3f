@@ -298,11 +298,11 @@ const FullPackFace = ({
       </div>
 
       {/* Big title — Memphis stacked shadow, words stacked into a block */}
-      <div className="absolute left-0 right-0 text-center px-2 z-10" style={{ top: "calc(18% + 90px)" }}>
+      <div className="absolute left-0 right-0 text-center px-2 z-10" style={{ top: "55.75%", transform: "translateY(-50%)" }}>
         <h1
           className="font-display italic leading-[0.95] tracking-tight flex flex-col items-center"
           style={{
-            fontSize: "clamp(14px, 5.5cqw, 34px)",
+            fontSize: "clamp(18px, 7.5cqw, 46px)",
             color: YELLOW,
             WebkitTextStroke: `1px ${INK}`,
             textShadow: `2px 2px 0 ${PINK}, 4px 4px 0 ${CYAN}, 6px 6px 0 ${INK}`,

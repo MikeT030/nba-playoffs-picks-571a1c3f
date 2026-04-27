@@ -29,7 +29,7 @@ const SealedPackCard = ({
   children,
   aspectClass = "aspect-[3/4]",
   topBanner = "FLYER · CLUB",
-  title = "Supreme premium platinum player cards",
+  title = "Supreme Premium Platinum Player Cards",
   yearLabel = "1996-97",
   midLine = "FLYER SUPER COLOR",
   tierLine = ["1", "PREMIUM", "FLYER", "CARD"],
@@ -297,19 +297,21 @@ const FullPackFace = ({
         />
       </div>
 
-      {/* Big title — Memphis stacked shadow */}
+      {/* Big title — Memphis stacked shadow, words stacked into a block */}
       <div className="absolute top-[16%] left-0 right-0 text-center px-2">
         <h1
-          className="font-display italic leading-none tracking-tight text-xl"
+          className="font-display italic leading-[0.95] tracking-tight flex flex-col items-center"
           style={{
-            fontSize: "clamp(28px, 10cqw, 64px)",
+            fontSize: "clamp(14px, 5.5cqw, 34px)",
             color: YELLOW,
-            WebkitTextStroke: `1.5px ${INK}`,
-            textShadow: `3px 3px 0 ${PINK}, 6px 6px 0 ${CYAN}, 9px 9px 0 ${INK}`,
+            WebkitTextStroke: `1px ${INK}`,
+            textShadow: `2px 2px 0 ${PINK}, 4px 4px 0 ${CYAN}, 6px 6px 0 ${INK}`,
             transform: "skew(-6deg)",
           }}
         >
-          {title}
+          {title.split(" ").map((word, i) => (
+            <span key={i} className="block">{word}</span>
+          ))}
         </h1>
       </div>
 

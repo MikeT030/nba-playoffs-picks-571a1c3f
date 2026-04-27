@@ -164,6 +164,65 @@ const Admin = () => {
         <DemoBracketPlayedOut />
 
         <DemoAllPicksTable />
+
+        <Accordion type="single" collapsible className="bg-[#181C23] rounded-lg px-5">
+          <AccordionItem value="roles" className="border-b-0">
+            <AccordionTrigger className="hover:no-underline">
+              <div className="flex items-center gap-2">
+                <Shield size={18} className="text-primary" />
+                <h2 className="font-display text-lg tracking-wider">ROLES</h2>
+                {!loadingAdmins && admins.length > 0 && (
+                  <span className="font-body text-xs text-muted-foreground ml-1">
+                    ({admins.length})
+                  </span>
+                )}
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              {loadingAdmins ? (
+                <p className="font-body text-sm text-muted-foreground">Loading…</p>
+              ) : admins.length === 0 ? (
+                <p className="font-body text-sm text-muted-foreground">
+                  No admins found.
+                </p>
+              ) : (
+                <ul className="space-y-2">
+                  {admins.map((admin) => {
+                    const isSelf = admin.user_id === user.id;
+                    return (
+                      <li
+                        key={admin.id}
+                        className="flex items-center justify-between gap-3 bg-background/40 rounded-md px-3 py-2"
+                      >
+                        <div className="min-w-0">
+                          <p className="font-body text-sm truncate">
+                            {admin.email}
+                            {isSelf && (
+                              <span className="text-muted-foreground text-xs ml-2">
+                                (you)
+                              </span>
+                            )}
+                          </p>
+                          <p className="font-body text-xs text-muted-foreground">
+                            admin
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => handleRemove(admin)}
+                          disabled={isSelf || removingId === admin.id}
+                          className="text-destructive hover:text-destructive/80 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                          aria-label={`Remove admin role from ${admin.email}`}
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
     </div>
   );

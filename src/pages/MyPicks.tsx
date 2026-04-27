@@ -453,7 +453,7 @@ const MyPicks = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">4 pts</span>
-                      <span className="text-foreground">Correctly predicted the NBA Finals champion</span>
+                      <span className="text-foreground">Correctly predicted the Supreme Finals champion</span>
                     </div>
                   </div>
                 </AccordionContent>

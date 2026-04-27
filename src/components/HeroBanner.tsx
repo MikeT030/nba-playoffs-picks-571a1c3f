@@ -5,7 +5,7 @@ interface HeroBannerProps {
   subtitle?: string;
 }
 
-const HeroBanner = ({ title = "NBA PLAYOFFS, BABY!", subtitle = "2026 Playoffs Picks" }: HeroBannerProps) => {
+const HeroBanner = ({ title = "SUPREME PLAYOFFS, BABY!", subtitle = "2026 Playoffs Picks" }: HeroBannerProps) => {
   return (
     <div className="relative w-full">
       <div className="w-full bg-background">
@@ -13,7 +13,7 @@ const HeroBanner = ({ title = "NBA PLAYOFFS, BABY!", subtitle = "2026 Playoffs P
           <div className="flex items-center gap-5 py-[20px]">
             <img
               src={trophyThumb}
-              alt="NBA Championship Trophy"
+              alt="Supreme Championship Trophy"
               width={1024}
               height={1024}
               loading="lazy"

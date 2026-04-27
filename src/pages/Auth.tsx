@@ -95,7 +95,7 @@ const Auth = () => {
       <div className="relative w-full h-[40vh] min-h-[260px] max-h-[420px] overflow-hidden">
         <img
           src={authHero}
-          alt="NBA Championship trophy with confetti"
+          alt="Supreme Championship trophy with confetti"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/40 to-background" />

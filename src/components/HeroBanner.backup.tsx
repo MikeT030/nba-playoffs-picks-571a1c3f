@@ -10,7 +10,7 @@ interface HeroBannerProps {
   subtitle?: string;
 }
 
-const HeroBannerBackup = ({ title = "NBA PLAYOFFS, BABY!", subtitle = "2026" }: HeroBannerProps) => {
+const HeroBannerBackup = ({ title = "SUPREME PLAYOFFS, BABY!", subtitle = "2026" }: HeroBannerProps) => {
   const [version, setVersion] = useState<0 | 1>(0);
 
   return (
@@ -19,7 +19,7 @@ const HeroBannerBackup = ({ title = "NBA PLAYOFFS, BABY!", subtitle = "2026" }: 
         <div className="relative w-full h-[27.5vh] min-h-[198px] overflow-hidden">
           <img
             src={heroImage}
-            alt="NBA Playoffs Arena"
+            alt="Supreme Playoffs Arena"
             className="absolute inset-0 w-full h-full object-cover"
             width={1920}
             height={800}
@@ -45,7 +45,7 @@ const HeroBannerBackup = ({ title = "NBA PLAYOFFS, BABY!", subtitle = "2026" }: 
             <div className="flex items-center gap-5 py-[20px]">
               <img
                 src={trophyThumb}
-                alt="NBA Championship Trophy"
+                alt="Supreme Championship Trophy"
                 width={1024}
                 height={1024}
                 loading="lazy"

@@ -20,7 +20,7 @@ interface SealedPackCardProps {
 }
 
 /**
- * A sealed trading-card pack inspired by 90s Topps NBA wax packs.
+ * A sealed trading-card pack inspired by 90s Topps Supreme wax packs.
  * Click to "burn" the pack from the top-left corner to the bottom-right,
  * revealing the player card underneath. The burn edge sparkles with a
  * Miami Vice palette (cyan, magenta, hot pink) glitter.

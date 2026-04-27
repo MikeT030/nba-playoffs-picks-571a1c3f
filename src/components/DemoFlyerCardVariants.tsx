@@ -236,7 +236,7 @@ const FlyerCardV3 = ({
 
 export const DemoFlyerCardV3 = () => (
   <FlyerCardV3
-    heading="FLYER — CHAPMAN"
+    heading="PLATINUM — CHAPMAN"
     borderColor="#FF5C00"
     borderWidth="2px"
     image={rexChapmanImg}

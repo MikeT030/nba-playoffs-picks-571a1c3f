@@ -19,7 +19,7 @@ const HeroBannerBackup = ({ title = "SUPREME PLAYOFFS, BABY!", subtitle = "2026"
         <div className="relative w-full h-[27.5vh] min-h-[198px] overflow-hidden">
           <img
             src={heroImage}
-            alt="NBA Playoffs Arena"
+            alt="Supreme Playoffs Arena"
             className="absolute inset-0 w-full h-full object-cover"
             width={1920}
             height={800}

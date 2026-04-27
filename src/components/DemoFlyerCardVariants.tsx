@@ -7,6 +7,7 @@ import seaSonicsLogo from "@/assets/sea-sonics-logo.png";
 import phoenixSunsLogo from "@/assets/phoenix-suns-logo.png";
 import TeamLogo from "@/components/TeamLogo";
 import SealedPackCard from "@/components/SealedPackCard";
+import SealedPackCardToppsStyle from "@/components/SealedPackCardToppsStyle";
 import { teamMeta } from "@/lib/nbaApi";
 
 const PHX_LOGO = phoenixSunsLogo;
@@ -123,6 +124,15 @@ interface FlyerCardV3Props {
     midLine?: string;
     tierLine?: string[];
     seriesLabel?: string;
+  };
+  /** Use the alternate Topps-style wax pack wrapper. */
+  sealedToppsStyle?: boolean;
+  sealedToppsConfig?: {
+    sportLabel?: string;
+    yearLabel?: string;
+    seriesLabel?: string;
+    picturesLabel?: string;
+    qualityLabel?: string;
   };
 }
 

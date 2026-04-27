@@ -298,7 +298,7 @@ const FullPackFace = ({
       </div>
 
       {/* Big title — Memphis stacked shadow, words stacked into a block */}
-      <div className="absolute top-[18%] left-0 right-0 text-center px-2">
+      <div className="absolute top-[18%] left-0 right-0 text-center px-2 z-10">
         <h1
           className="font-display italic leading-[0.95] tracking-tight flex flex-col items-center"
           style={{
@@ -320,7 +320,7 @@ const FullPackFace = ({
       {/* Year ribbon hidden */}
 
       {/* Basketball — kept but framed by Memphis shapes */}
-      <div className="absolute top-[34%] left-1/2 -translate-x-1/2 w-[58%] aspect-square">
+      <div className="absolute top-[34%] left-1/2 -translate-x-1/2 w-[58%] aspect-square z-0">
         {/* squiggle accent behind ball */}
         <svg viewBox="0 0 100 100" className="absolute -inset-4 w-[calc(100%+2rem)] h-[calc(100%+2rem)] pointer-events-none" aria-hidden>
           <path d="M 5 20 Q 15 5 25 20 T 45 20" fill="none" stroke={PINK} strokeWidth="2.5" strokeLinecap="round" />

@@ -273,7 +273,7 @@ export const DemoFlyerCardV3 = () => (
 
 export const DemoFlyerCardPaxson = () => (
   <FlyerCardV3
-    heading="FLYER — PAXSON"
+    heading="PLATINUM — PAXSON"
     borderColor="#CE1141"
     borderWidth="2px"
     image={johnPaxsonImg}

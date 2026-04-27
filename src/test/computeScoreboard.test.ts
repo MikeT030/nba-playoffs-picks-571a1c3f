@@ -132,7 +132,7 @@ describe("computeScoreboard", () => {
     expect(scores[0].totalPoints).toBe(1);
   });
 
-  it("awards 4 bonus points for correct NBA Finals champion", () => {
+  it("awards 4 bonus points for correct Supreme Finals champion", () => {
     const picks: PickRow[] = [
       { profile_name: "Dan", series_id: "nba-finals", winner: "BOS", games_in_series: 6 },
     ];

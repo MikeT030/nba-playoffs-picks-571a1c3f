@@ -312,6 +312,8 @@ const FullPackFace = ({
           {title.split(" ").map((word, i) => (
             <span key={i} className="block">{word}</span>
           ))}
+          <span className="block">Premium</span>
+          <span className="block">Cards</span>
         </h1>
       </div>
 

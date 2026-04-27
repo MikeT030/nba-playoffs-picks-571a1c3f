@@ -126,8 +126,8 @@ const SealedPackCard = ({
             mask-position: 100% 100%;
             -webkit-mask-repeat: no-repeat;
             mask-repeat: no-repeat;
-            transition: -webkit-mask-position 3136ms cubic-bezier(0.65, 0, 0.35, 1),
-                        mask-position 3136ms cubic-bezier(0.65, 0, 0.35, 1);
+            transition: -webkit-mask-position 4390ms cubic-bezier(0.65, 0, 0.35, 1),
+                        mask-position 4390ms cubic-bezier(0.65, 0, 0.35, 1);
           }
           .sealed-pack-burn.is-open {
             -webkit-mask-position: -100% -100%; /* fully burned away past top-left */
@@ -154,7 +154,7 @@ const SealedPackCard = ({
             mix-blend-mode: screen;
             filter: drop-shadow(0 0 6px rgba(236, 72, 153, 0.9))
                     drop-shadow(0 0 10px rgba(34, 211, 238, 0.6));
-            animation: ember-sweep 3136ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+            animation: ember-sweep 4390ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
           }
 
           @keyframes ember-sweep {

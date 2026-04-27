@@ -344,41 +344,7 @@ const FullPackFace = ({
           </g>
         </svg>
 
-        {/* Mid label across basketball */}
-        <div className="absolute top-[38%] left-1/2 -translate-x-1/2 w-[115%]">
-          <div
-            className="text-center font-display tracking-[0.18em] py-0.5"
-            style={{
-              fontSize: "clamp(8px, 2.6cqw, 14px)",
-              background: YELLOW,
-              color: INK,
-              fontWeight: 800,
-              border: `2px solid ${INK}`,
-              boxShadow: `2px 2px 0 ${PINK}`,
-            }}
-          >
-            {midLine}
-          </div>
-        </div>
-
-        {/* Tier panel */}
-        <div className="absolute top-[56%] left-1/2 -translate-x-1/2 w-[55%]">
-          <div
-            className="text-center font-display tracking-[0.1em] py-1 px-1 leading-[1.05]"
-            style={{
-              background: "#fff",
-              color: INK,
-              fontWeight: 800,
-              fontSize: "clamp(7px, 1.9cqw, 11px)",
-              border: `2px solid ${INK}`,
-              boxShadow: `2px 2px 0 ${CYAN}`,
-            }}
-          >
-            {tierLine.map((t, i) => (
-              <div key={i}>{t}</div>
-            ))}
-          </div>
-        </div>
+        {/* Mid label and tier panel hidden */}
       </div>
 
       {/* (Memphis triangle/dot accents removed — replaced by basketball line-art icons) */}

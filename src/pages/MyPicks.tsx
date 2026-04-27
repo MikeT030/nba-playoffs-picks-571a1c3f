@@ -30,7 +30,7 @@ import {
 } from "@/data/playoffsData";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useAllSeriesResults } from "@/hooks/useAllSeriesResults";
-import { totalUserPoints } from "@/lib/pickScoring";
+import { totalUserPoints, scorePick } from "@/lib/pickScoring";
 import { ALL_MONOLOGUE_LINES, isPlayoffsStarted } from "@/data/buttonMonologue";
 
 const rounds = [

@@ -428,7 +428,7 @@ const Scoreboard = () => {
 
         {showAllPicks ? (
           <>
-            <div className="rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md overflow-hidden pt-0">
+            <div className="rounded-lg border border-white/10 bg-[#181C23] backdrop-blur-md overflow-hidden pt-0">
               <AllPicksMatrix picks={allPicks} results={allResults} loading={loading} />
             </div>
             {allPicks.length > 0 && (

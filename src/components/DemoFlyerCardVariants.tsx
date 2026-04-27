@@ -364,7 +364,7 @@ export const DemoFlyerCardV4 = () => {
   return (
     <div className="space-y-2">
       <h2 className="font-display text-lg tracking-wider text-muted-foreground">
-        FLYER — V4 (BOX SCORE)
+        PLATINUM — V4 (BOX SCORE)
       </h2>
 
       <article className="relative overflow-hidden rounded-xl bg-[#1A1E24] border border-white/10 shadow-xl">

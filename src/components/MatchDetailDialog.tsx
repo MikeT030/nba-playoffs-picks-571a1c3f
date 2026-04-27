@@ -12,9 +12,10 @@ interface MatchDetailDialogProps {
   match: Match | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  initialGameIdx?: number;
 }
 
-const MatchDetailDialog = ({ match, open, onOpenChange }: MatchDetailDialogProps) => {
+const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchDetailDialogProps) => {
   const { user } = useAuth();
   const { data: bracketData } = useBracketData();
   const { data: seriesGames } = useSeriesGames(

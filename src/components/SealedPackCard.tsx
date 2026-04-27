@@ -66,7 +66,7 @@ const SealedPackCard = ({
             />
           </div>
 
-          {/* Glittering Miami Vice burn edge — only visible while burning */}
+          {/* Miami Vice burn edge — only visible while burning */}
           {opened && (
             <div className="absolute inset-0 pointer-events-none sealed-pack-ember" aria-hidden />
           )}
@@ -134,16 +134,9 @@ const SealedPackCard = ({
             mask-position: 0% 0%;
           }
 
-          /* Miami Vice glittering ember sliding along the same diagonal. */
+          /* Miami Vice ember band sweeping diagonally from top-left to bottom-right. */
           .sealed-pack-ember {
             background:
-              /* sparkle dots layer */
-              radial-gradient(circle at 20% 30%, #fff 0 1px, transparent 2px),
-              radial-gradient(circle at 70% 60%, #22d3ee 0 1px, transparent 2px),
-              radial-gradient(circle at 40% 80%, #ec4899 0 1px, transparent 2px),
-              radial-gradient(circle at 85% 20%, #f0abfc 0 1px, transparent 2px),
-              radial-gradient(circle at 10% 70%, #fff 0 1px, transparent 2px),
-              /* glowing ember band — cyan -> magenta -> hot pink */
               linear-gradient(
                 135deg,
                 transparent 0%,
@@ -155,11 +148,9 @@ const SealedPackCard = ({
                 transparent 16%,
                 transparent 100%
               );
-            background-size: 18px 18px, 22px 22px, 26px 26px, 20px 20px, 24px 24px, 260% 260%;
-            background-repeat: repeat, repeat, repeat, repeat, repeat, no-repeat;
-            background-position:
-              0 0, 0 0, 0 0, 0 0, 0 0,
-              100% 100%;
+            background-size: 260% 260%;
+            background-repeat: no-repeat;
+            background-position: 100% 100%;
             mix-blend-mode: screen;
             filter: drop-shadow(0 0 6px rgba(236, 72, 153, 0.9))
                     drop-shadow(0 0 10px rgba(34, 211, 238, 0.6));
@@ -168,19 +159,14 @@ const SealedPackCard = ({
 
           @keyframes ember-sweep {
             from {
-              background-position:
-                0 0, 0 0, 0 0, 0 0, 0 0,
-                100% 100%;
+              background-position: 100% 100%;
               opacity: 1;
             }
             85% { opacity: 1; }
             to {
-              background-position:
-                0 0, 0 0, 0 0, 0 0, 0 0,
-                0% 0%;
+              background-position: 0% 0%;
               opacity: 0;
             }
-          }
           }
         `}</style>
       </button>

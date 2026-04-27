@@ -41,10 +41,10 @@ export const DemoFlyerCardV2 = () => {
       </h2>
 
       <article className="relative rounded-xl bg-[#ededed] text-[#1A1E24] shadow-2xl p-3 pb-4 rotate-[-1deg]">
-        {/* FLYER sticker */}
+        {/* PLATINUM sticker */}
         <img
           src={flyerLogo}
-          alt="FLYER The Shot logo"
+          alt="PLATINUM The Shot logo"
           className="absolute -top-4 -right-3 w-20 rotate-[8deg] drop-shadow-[0_6px_12px_rgba(0,0,0,0.4)] z-10"
           loading="lazy"
         />

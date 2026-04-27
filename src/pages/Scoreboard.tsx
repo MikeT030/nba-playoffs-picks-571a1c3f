@@ -3,6 +3,7 @@ import * as XLSX from "xlsx";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { LayoutGrid, ChevronLeft, ChevronRight, Download } from "lucide-react";
 import allPicksIcon from "@/assets/all-picks-icon.svg";
+import scoreboardArenaBg from "@/assets/scoreboard-arena-bg.jpg";
 import HeroBanner from "@/components/HeroBanner";
 import {
   Table,
@@ -444,7 +445,14 @@ const Scoreboard = () => {
           </>
         ) : (
           /* Leaderboard */
-          <div className="rounded-lg bg-transparent overflow-hidden">
+          <div className="relative rounded-lg bg-transparent overflow-hidden">
+            <img
+              src={scoreboardArenaBg}
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-70"
+            />
+            <div className="relative">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -481,6 +489,7 @@ const Scoreboard = () => {
                 ))}
               </TableBody>
             </Table>
+            </div>
           </div>
         )}
 

@@ -1,6 +1,5 @@
 import { useState, type ReactNode } from "react";
 import flyerCouchClubLogo from "@/assets/flyer-couch-club-logo.png";
-import basketballPhoto from "@/assets/basketball-photo.png";
 
 interface SealedPackCardProps {
   children: ReactNode;
@@ -313,15 +312,23 @@ const FullPackFace = ({
           <path d="M 5 20 Q 15 5 25 20 T 45 20" fill="none" stroke={PINK} strokeWidth="2.5" strokeLinecap="round" />
           <path d="M 60 90 Q 70 75 80 90 T 100 90" fill="none" stroke={YELLOW} strokeWidth="2.5" strokeLinecap="round" />
         </svg>
-        <img
-          src={basketballPhoto}
-          alt="Basketball"
-          loading="lazy"
-          width={1024}
-          height={1024}
-          className="absolute inset-0 w-full h-full object-contain"
-          style={{ filter: `drop-shadow(6px 6px 0 ${INK})` }}
+        <div
+          className="absolute inset-0 rounded-full"
+          style={{
+            background: `radial-gradient(circle at 38% 35%, #fdba74 0%, ${CORAL} 50%, #9a3412 95%)`,
+            boxShadow: `inset -8px -10px 22px rgba(0,0,0,0.5), 6px 6px 0 ${INK}`,
+            border: `3px solid ${INK}`,
+          }}
         />
+        {/* Seams */}
+        <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full" aria-hidden>
+          <g fill="none" stroke={INK} strokeWidth="2" strokeLinecap="round">
+            <line x1="50" y1="2" x2="50" y2="98" />
+            <line x1="2" y1="50" x2="98" y2="50" />
+            <path d="M 12 18 Q 50 50 12 82" />
+            <path d="M 88 18 Q 50 50 88 82" />
+          </g>
+        </svg>
 
         {/* Mid label and tier panel hidden */}
       </div>

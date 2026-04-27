@@ -330,7 +330,7 @@ export const DemoFlyerCardMiller = () => (
 
 export const DemoFlyerCardDavis = () => (
   <FlyerCardV3
-    heading="FLYER — DAVIS"
+    heading="PLATINUM — DAVIS"
     borderColor="#007A33"
     borderWidth="2px"
     image={glenDavisImg}

@@ -7,6 +7,7 @@ import seaSonicsLogo from "@/assets/sea-sonics-logo.png";
 import phoenixSunsLogo from "@/assets/phoenix-suns-logo.png";
 import TeamLogo from "@/components/TeamLogo";
 import SealedPackCard from "@/components/SealedPackCard";
+import SealedPackCardToppsStyle from "@/components/SealedPackCardToppsStyle";
 import { teamMeta } from "@/lib/nbaApi";
 
 const PHX_LOGO = phoenixSunsLogo;
@@ -124,6 +125,15 @@ interface FlyerCardV3Props {
     tierLine?: string[];
     seriesLabel?: string;
   };
+  /** Use the alternate Topps-style wax pack wrapper. */
+  sealedToppsStyle?: boolean;
+  sealedToppsConfig?: {
+    sportLabel?: string;
+    yearLabel?: string;
+    seriesLabel?: string;
+    picturesLabel?: string;
+    qualityLabel?: string;
+  };
 }
 
 const FlyerCardV3 = ({
@@ -146,6 +156,8 @@ const FlyerCardV3 = ({
   stats,
   sealed,
   sealedConfig,
+  sealedToppsStyle,
+  sealedToppsConfig,
 }: FlyerCardV3Props) => {
   const cardArticle = (
     <article
@@ -225,7 +237,9 @@ const FlyerCardV3 = ({
         PLATINUM — CHAPMAN
       </h2>
 
-      {sealed ? (
+      {sealedToppsStyle ? (
+        <SealedPackCardToppsStyle {...sealedToppsConfig}>{cardArticle}</SealedPackCardToppsStyle>
+      ) : sealed ? (
         <SealedPackCard {...sealedConfig}>{cardArticle}</SealedPackCard>
       ) : (
         cardArticle
@@ -297,6 +311,14 @@ export const DemoFlyerCardPaxson = () => (
       { label: "3PA", value: 3 },
       { label: "MP", value: "22:00" },
     ]}
+    sealedToppsStyle
+    sealedToppsConfig={{
+      sportLabel: "Playoffs",
+      yearLabel: "2026",
+      seriesLabel: "SERIES 1",
+      picturesLabel: "15 PICTURE CARDS",
+      qualityLabel: "PREMIUM QUALITY",
+    }}
   />
 );
 

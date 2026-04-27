@@ -277,13 +277,13 @@ export const DemoFlyerCardPaxson = () => (
     borderColor="#CE1141"
     borderWidth="2px"
     image={johnPaxsonImg}
-    imageAlt="John Paxson hitting the championship-winning three-pointer, 1993 NBA Finals Game 6"
+    imageAlt="John Paxson hitting the championship-winning three-pointer, 1993 Supreme Finals Game 6"
     awayLogo={CHI_LOGO}
     awayAlt="CHI"
     homeLogo={PHX_LOGO}
     homeAlt="PHX"
     era="1993"
-    matchup="NBA Finals"
+    matchup="Supreme Finals"
     game="Game 6"
     firstName="JOHN"
     lastName="PAXSON"

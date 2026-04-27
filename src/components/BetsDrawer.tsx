@@ -66,7 +66,7 @@ const SeriesCard = ({
     }
   };
 
-  const renderTeamSlot = (team: Team | undefined, isSelected: boolean) => {
+  const renderTeamSlot = (team: Team | undefined, isSelected: boolean, seedSide: "left" | "right" = "left") => {
     if (!team) {
       return (
         <div className="flex-1 flex items-center justify-center p-3 rounded-lg border-2 border-dashed border-muted-foreground/20">
@@ -74,6 +74,10 @@ const SeriesCard = ({
         </div>
       );
     }
+
+    const seedEl = team.seed ? (
+      <span className="text-[11px] text-muted-foreground font-body font-semibold">{team.seed}</span>
+    ) : null;
 
     return (
       <button
@@ -88,9 +92,10 @@ const SeriesCard = ({
         }`}
         style={isSelected ? { backgroundColor: `${team.color}66` } : undefined}
       >
-        {team.seed && <span className="text-[11px] text-muted-foreground font-body font-semibold">{team.seed}</span>}
+        {seedSide === "left" && seedEl}
         <span className="tracking-wide text-lg" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>{team.abbreviation}</span>
         {isSelected && <Check size={14} className="text-primary" />}
+        {seedSide === "right" && seedEl}
       </button>
     );
   };

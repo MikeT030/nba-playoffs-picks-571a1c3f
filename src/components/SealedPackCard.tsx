@@ -550,9 +550,17 @@ const MemphisPattern = () => {
 
     // Upper-mid corners (flanking title)
     { name: "play", color: PINK, top: "17%", left: "4%", size: "13%", rotate: 8 },
+    { name: "court", color: LILAC, top: "16%", left: "83%", size: "14%", rotate: -6 },
 
     // Mid sides (flanking the basketball)
+    { name: "hoop", color: PINK, top: "40%", left: "3%", size: "14%", rotate: -8 },
+    { name: "shot", color: YELLOW, top: "40%", left: "83%", size: "14%", rotate: 6 },
     { name: "dribble", color: CYAN, top: "55%", left: "3%", size: "13%", rotate: 10 },
+    { name: "ballhand", color: CORAL, top: "55%", left: "83%", size: "14%", rotate: -10 },
+
+    // Lower zone (above bottom banner)
+    { name: "jump", color: YELLOW, top: "76%", left: "8%", size: "13%", rotate: -6 },
+    { name: "court", color: CYAN, top: "76%", left: "78%", size: "14%", rotate: 8 },
   ];
 
   return (

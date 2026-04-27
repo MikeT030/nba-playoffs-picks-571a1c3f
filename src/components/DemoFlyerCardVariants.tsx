@@ -424,7 +424,7 @@ export const DemoFlyerCardV4 = () => {
             </div>
 
             <p className="font-body text-[10px] uppercase tracking-wider text-muted-foreground">
-              1997 NBA · Western First Round
+              1997 Supreme · Western First Round
             </p>
 
             <p className="font-body text-xs leading-snug text-[#ededed]/90">

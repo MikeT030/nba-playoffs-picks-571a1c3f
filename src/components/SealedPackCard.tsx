@@ -300,7 +300,7 @@ const FullPackFace = ({
       {/* Big title — Memphis stacked shadow */}
       <div className="absolute top-[16%] left-0 right-0 text-center px-2">
         <h1
-          className="font-display italic leading-none tracking-tight text-2xl"
+          className="font-display italic leading-none tracking-tight text-xl"
           style={{
             fontSize: "clamp(28px, 10cqw, 64px)",
             color: YELLOW,

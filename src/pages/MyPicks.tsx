@@ -168,7 +168,7 @@ const MyPicks = () => {
       const wrapper = document.createElement("div");
       wrapper.style.cssText = "position:absolute;left:-9999px;top:0;background:#0a0a0a;padding:32px 40px 48px;";
       const headline = document.createElement("h1");
-      headline.textContent = `${profileName ?? "My"}'s 2026 Playoffs Picks`;
+      headline.textContent = `${profileName ?? "My"}'s 2026 Playoffs`;
       headline.style.cssText = "font-family:'Bebas Neue',sans-serif;font-size:32px;color:#fff;letter-spacing:0.08em;text-align:center;margin-bottom:24px;";
       wrapper.appendChild(headline);
 
@@ -213,7 +213,7 @@ const MyPicks = () => {
 
       if (navigator.share && navigator.canShare?.({ files: [file] })) {
         await navigator.share({
-          title: `${profileName}'s 2026 Playoffs Picks`,
+          title: `${profileName}'s 2026 Playoffs`,
           files: [file],
         });
       } else {
@@ -271,7 +271,7 @@ const MyPicks = () => {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-background pb-28">
-        <HeroBanner title={"MY\nPICKS"} subtitle="2026 Playoffs Picks" />
+        <HeroBanner title={"MY\nPICKS"} subtitle="2026 Playoffs" />
         <section className="container py-10 text-center">
           <p className="text-muted-foreground font-body">Loading...</p>
         </section>
@@ -282,7 +282,7 @@ const MyPicks = () => {
   if (!user) {
     return (
       <div className="min-h-screen bg-background pb-28">
-        <HeroBanner title={"MY\nPICKS"} subtitle="2026 Playoffs Picks" />
+        <HeroBanner title={"MY\nPICKS"} subtitle="2026 Playoffs" />
         <section className="container py-10">
           <div className="flex flex-col items-center justify-center py-8 gap-4">
             <p className="font-display text-2xl tracking-wider">SIGN IN TO VIEW PICKS</p>
@@ -361,7 +361,7 @@ const MyPicks = () => {
   if (bets.length === 0) {
     return (
       <div className="min-h-screen bg-background pb-28">
-        <HeroBanner title={"MY\nPICKS"} subtitle="2026 Playoffs Picks" />
+        <HeroBanner title={"MY\nPICKS"} subtitle="2026 Playoffs" />
         <section className="container py-10">
           <div className="flex items-center justify-center py-8">
             <div className="text-center">

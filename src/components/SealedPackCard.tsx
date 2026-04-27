@@ -475,12 +475,12 @@ const BasketballIcon = ({ name, color }: { name: string; color: string }) => {
       );
     case "whistle":
       return (
-        <svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden>
-          <path d="M 4 14 Q 4 10 8 10 H 17 L 20 8 V 13 L 17 11 H 11" {...common} />
-          <circle cx="9" cy="14" r="3.6" {...common} />
-          <circle cx="9" cy="14" r="0.7" fill={color} stroke="none" />
-          <path d="M 12 7 Q 14 3 19 4" {...common} />
-        </svg>
+        <img
+          src={iconWhistle}
+          alt=""
+          className="w-full h-auto block"
+          style={{ filter: COLOR_FILTERS[color] ?? "none" }}
+        />
       );
     case "hoop": // backboard, rim, net, post
       return (

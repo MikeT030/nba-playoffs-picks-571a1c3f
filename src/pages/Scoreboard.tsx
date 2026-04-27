@@ -444,7 +444,7 @@ const Scoreboard = () => {
           </>
         ) : (
           /* Leaderboard */
-          <div className="rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md overflow-hidden">
+          <div className="rounded-lg border border-white/10 bg-transparent overflow-hidden">
             <Table>
               <TableHeader>
                 <TableRow>

@@ -482,7 +482,6 @@ const Scoreboard = () => {
                 ))}
               </TableBody>
             </Table>
-            </div>
           </div>
         )}
 

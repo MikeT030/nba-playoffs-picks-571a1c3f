@@ -212,13 +212,7 @@ const Index = () => {
         isRefreshing={isRefreshing}
         progress={progress}
       />
-      <HeroBanner
-        subtitle={
-          pickCount >= TOTAL_GAMES
-            ? "2026 Playoffs Picks"
-            : "2026 Playoffs Picks"
-        }
-      />
+      <HeroBanner subtitle="2026" />
 
       <section className="container py-10 pt-[20px]">
 

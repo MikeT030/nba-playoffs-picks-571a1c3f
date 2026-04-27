@@ -262,58 +262,55 @@ const FullPackFace = ({
   tierLine: string[];
   seriesLabel: string;
 }) => {
+  // Memphis palette
+  const PINK = "#ff4fa3";
+  const CYAN = "#3ddad7";
+  const YELLOW = "#ffd23f";
+  const CORAL = "#ff7a5c";
+  const LILAC = "#b39ddb";
+  const BLUE = "#4f5bd5"; // background blue (Memphis hallmark)
+  const INK = "#0f0f1a";
+
   return (
     <div
-      className="relative w-full h-full"
+      className="relative w-full h-full overflow-hidden"
       style={{
-        // Magenta/purple foil base with darker edges (matches the reference pack)
-        background:
-          "radial-gradient(ellipse at 50% 45%, #d946ef 0%, #a21caf 35%, #4a044e 78%, #1a0322 100%)",
+        background: BLUE,
       }}
     >
-      {/* Foil noise / grain */}
-      <div
-        className="absolute inset-0 opacity-30 mix-blend-overlay"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(115deg, rgba(255,255,255,0.12) 0 1px, transparent 1px 3px), repeating-linear-gradient(25deg, rgba(0,0,0,0.18) 0 1px, transparent 1px 4px)",
-        }}
-      />
-
-      {/* Crinkles */}
-      <div
-        className="absolute inset-0 opacity-40 mix-blend-overlay pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse 60% 30% at 30% 20%, rgba(255,255,255,0.35), transparent 60%), radial-gradient(ellipse 50% 25% at 70% 80%, rgba(0,0,0,0.4), transparent 60%)",
-        }}
-      />
+      {/* Memphis confetti pattern: squiggles, triangles, dots, zigzags */}
+      <MemphisPattern />
 
       {/* Top serrated edge */}
       <SerratedEdge position="top" />
 
-      {/* Top banner — TOPPS STADIUM CLUB style */}
-      <div className="absolute top-[7%] left-1/2 -translate-x-1/2 w-[78%]">
+      {/* Top banner — chunky black bar with terrazzo speckle */}
+      <div className="absolute top-[6%] left-1/2 -translate-x-1/2 w-[82%]">
         <div
-          className="text-center font-display tracking-[0.18em] text-white py-1 px-2 text-[11px]"
+          className="relative text-center font-display tracking-[0.22em] py-1.5 px-2 text-[11px]"
           style={{
-            background: "linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%)",
-            boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.25)",
-            color: "#3b0764",
+            background: INK,
+            color: YELLOW,
             fontWeight: 800,
+            boxShadow: `4px 4px 0 ${PINK}`,
+            backgroundImage:
+              "radial-gradient(circle at 15% 40%, rgba(255,255,255,0.5) 0 1px, transparent 2px), radial-gradient(circle at 60% 70%, rgba(255,210,63,0.6) 0 1px, transparent 2px), radial-gradient(circle at 85% 30%, rgba(61,218,215,0.6) 0 1px, transparent 2px)",
+            backgroundSize: "14px 14px, 18px 18px, 22px 22px",
           }}
         >
           {topBanner}
         </div>
       </div>
 
-      {/* Big title in italic display style */}
-      <div className="absolute top-[14%] left-0 right-0 text-center">
+      {/* Big title — Memphis stacked shadow */}
+      <div className="absolute top-[13%] left-0 right-0 text-center px-2">
         <h1
-          className="font-display italic text-white leading-none tracking-tight"
+          className="font-display italic leading-none tracking-tight"
           style={{
-            fontSize: "clamp(28px, 9.5cqw, 64px)",
-            textShadow: "2px 3px 0 rgba(0,0,0,0.55), 0 0 18px rgba(255,255,255,0.25)",
+            fontSize: "clamp(28px, 10cqw, 64px)",
+            color: YELLOW,
+            WebkitTextStroke: `1.5px ${INK}`,
+            textShadow: `3px 3px 0 ${PINK}, 6px 6px 0 ${CYAN}, 9px 9px 0 ${INK}`,
             transform: "skew(-6deg)",
           }}
         >
@@ -321,32 +318,41 @@ const FullPackFace = ({
         </h1>
       </div>
 
-      {/* Year ribbon */}
+      {/* Year ribbon — angled cyan tab */}
       <div className="absolute top-[27%] left-1/2 -translate-x-1/2">
         <div
-          className="font-display text-[11px] tracking-[0.2em] text-white px-3 py-0.5"
+          className="font-display text-[11px] tracking-[0.25em] px-4 py-1"
           style={{
-            background: "linear-gradient(180deg, #ef4444 0%, #b91c1c 100%)",
-            boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.3)",
-            transform: "skew(-8deg)",
+            background: CYAN,
+            color: INK,
+            fontWeight: 800,
+            transform: "skew(-10deg) rotate(-2deg)",
+            boxShadow: `3px 3px 0 ${INK}`,
+            border: `2px solid ${INK}`,
           }}
         >
-          <span className="inline-block" style={{ transform: "skew(8deg)" }}>{yearLabel}</span>
+          <span className="inline-block" style={{ transform: "skew(10deg)" }}>{yearLabel}</span>
         </div>
       </div>
 
-      {/* Basketball */}
-      <div className="absolute top-[33%] left-1/2 -translate-x-1/2 w-[58%] aspect-square">
+      {/* Basketball — kept but framed by Memphis shapes */}
+      <div className="absolute top-[34%] left-1/2 -translate-x-1/2 w-[58%] aspect-square">
+        {/* squiggle accent behind ball */}
+        <svg viewBox="0 0 100 100" className="absolute -inset-4 w-[calc(100%+2rem)] h-[calc(100%+2rem)] pointer-events-none" aria-hidden>
+          <path d="M 5 20 Q 15 5 25 20 T 45 20" fill="none" stroke={PINK} strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M 60 90 Q 70 75 80 90 T 100 90" fill="none" stroke={YELLOW} strokeWidth="2.5" strokeLinecap="round" />
+        </svg>
         <div
           className="absolute inset-0 rounded-full"
           style={{
-            background: "radial-gradient(circle at 38% 35%, #fdba74 0%, #ea580c 45%, #9a3412 90%)",
-            boxShadow: "inset -8px -10px 24px rgba(0,0,0,0.55), 0 6px 14px rgba(0,0,0,0.45)",
+            background: `radial-gradient(circle at 38% 35%, #fdba74 0%, ${CORAL} 50%, #9a3412 95%)`,
+            boxShadow: `inset -8px -10px 22px rgba(0,0,0,0.5), 6px 6px 0 ${INK}`,
+            border: `3px solid ${INK}`,
           }}
         />
         {/* Seams */}
         <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full" aria-hidden>
-          <g fill="none" stroke="#3b0a02" strokeWidth="1.5" strokeLinecap="round">
+          <g fill="none" stroke={INK} strokeWidth="2" strokeLinecap="round">
             <line x1="50" y1="2" x2="50" y2="98" />
             <line x1="2" y1="50" x2="98" y2="50" />
             <path d="M 12 18 Q 50 50 12 82" />
@@ -355,15 +361,16 @@ const FullPackFace = ({
         </svg>
 
         {/* Mid label across basketball */}
-        <div className="absolute top-[38%] left-1/2 -translate-x-1/2 w-[110%]">
+        <div className="absolute top-[38%] left-1/2 -translate-x-1/2 w-[115%]">
           <div
-            className="text-center font-display text-white tracking-[0.15em] py-0.5"
+            className="text-center font-display tracking-[0.18em] py-0.5"
             style={{
               fontSize: "clamp(8px, 2.6cqw, 14px)",
-              background: "linear-gradient(180deg, #fde68a 0%, #f59e0b 100%)",
-              color: "#3b0764",
+              background: YELLOW,
+              color: INK,
               fontWeight: 800,
-              boxShadow: "inset 0 -1px 0 rgba(0,0,0,0.25)",
+              border: `2px solid ${INK}`,
+              boxShadow: `2px 2px 0 ${PINK}`,
             }}
           >
             {midLine}
@@ -371,14 +378,16 @@ const FullPackFace = ({
         </div>
 
         {/* Tier panel */}
-        <div className="absolute top-[55%] left-1/2 -translate-x-1/2 w-[55%]">
+        <div className="absolute top-[56%] left-1/2 -translate-x-1/2 w-[55%]">
           <div
             className="text-center font-display tracking-[0.1em] py-1 px-1 leading-[1.05]"
             style={{
-              background: "rgba(254, 243, 199, 0.95)",
-              color: "#7c2d12",
+              background: "#fff",
+              color: INK,
               fontWeight: 800,
               fontSize: "clamp(7px, 1.9cqw, 11px)",
+              border: `2px solid ${INK}`,
+              boxShadow: `2px 2px 0 ${CYAN}`,
             }}
           >
             {tierLine.map((t, i) => (
@@ -388,29 +397,36 @@ const FullPackFace = ({
         </div>
       </div>
 
-      {/* NBA logo placeholder (small mark) */}
-      <div className="absolute top-[78%] left-[10%] w-[10%] aspect-[3/5] opacity-90">
-        <div
-          className="w-full h-full"
-          style={{
-            background: "linear-gradient(180deg, #1e3a8a 0%, #1e3a8a 50%, #b91c1c 50%, #b91c1c 100%)",
-            clipPath: "polygon(20% 0, 80% 0, 100% 100%, 0 100%)",
-          }}
-        >
-          <div className="w-1/2 h-full bg-white/95" style={{ clipPath: "polygon(40% 15%, 70% 15%, 60% 85%, 30% 85%)" }} />
-        </div>
-      </div>
+      {/* Memphis triangle accent bottom-left */}
+      <div
+        className="absolute bottom-[20%] left-[6%] w-[12%] aspect-square pointer-events-none"
+        style={{
+          background: CYAN,
+          clipPath: "polygon(0 100%, 100% 100%, 50% 0)",
+          filter: `drop-shadow(2px 2px 0 ${INK})`,
+        }}
+      />
+      {/* Memphis dot cluster bottom-right */}
+      <div
+        className="absolute bottom-[22%] right-[6%] w-[14%] aspect-square pointer-events-none"
+        style={{
+          backgroundImage: `radial-gradient(circle, ${PINK} 1.5px, transparent 2.5px)`,
+          backgroundSize: "8px 8px",
+        }}
+      />
 
-      {/* Bottom series banner */}
+      {/* Bottom series banner — chunky Memphis tab */}
       <div className="absolute bottom-[7%] left-0 right-0">
         <div
-          className="mx-auto w-[88%] text-center font-display italic tracking-[0.12em] text-white py-1.5"
+          className="mx-auto w-[88%] text-center font-display italic tracking-[0.14em] py-1.5"
           style={{
-            background: "linear-gradient(180deg, #14b8a6 0%, #0f766e 100%)",
-            boxShadow: "inset 0 -3px 0 rgba(0,0,0,0.3)",
+            background: PINK,
+            color: INK,
             fontSize: "clamp(14px, 4.5cqw, 28px)",
             transform: "skew(-8deg)",
             fontWeight: 800,
+            border: `2.5px solid ${INK}`,
+            boxShadow: `4px 4px 0 ${YELLOW}`,
           }}
         >
           <span className="inline-block" style={{ transform: "skew(8deg)" }}>
@@ -422,6 +438,50 @@ const FullPackFace = ({
       {/* Bottom serrated edge */}
       <SerratedEdge position="bottom" />
     </div>
+  );
+};
+
+/* Memphis-style background pattern: triangles, squiggles, dots, zigzags. */
+const MemphisPattern = () => {
+  const PINK = "#ff4fa3";
+  const CYAN = "#3ddad7";
+  const YELLOW = "#ffd23f";
+  const CORAL = "#ff7a5c";
+  const LILAC = "#b39ddb";
+  const INK = "#0f0f1a";
+  return (
+    <svg
+      viewBox="0 0 200 280"
+      preserveAspectRatio="xMidYMid slice"
+      className="absolute inset-0 w-full h-full opacity-90 pointer-events-none"
+      aria-hidden
+    >
+      {/* squiggles */}
+      <path d="M 8 50 q 6 -10 12 0 t 12 0 t 12 0" fill="none" stroke={PINK} strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M 150 30 q 6 -10 12 0 t 12 0" fill="none" stroke={YELLOW} strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M 20 220 q 6 -10 12 0 t 12 0 t 12 0" fill="none" stroke={CYAN} strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M 140 250 q 6 -10 12 0 t 12 0" fill="none" stroke={CORAL} strokeWidth="2.5" strokeLinecap="round" />
+
+      {/* zigzags */}
+      <polyline points="170,80 175,72 180,80 185,72 190,80" fill="none" stroke={YELLOW} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <polyline points="10,160 15,152 20,160 25,152 30,160" fill="none" stroke={PINK} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <polyline points="110,265 115,257 120,265 125,257 130,265" fill="none" stroke={CYAN} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+
+      {/* triangles */}
+      <polygon points="180,180 192,180 186,168" fill={LILAC} stroke={INK} strokeWidth="0.8" />
+      <polygon points="6,90 18,90 12,78" fill={CORAL} stroke={INK} strokeWidth="0.8" />
+      <polygon points="160,140 170,140 165,132" fill={YELLOW} stroke={INK} strokeWidth="0.8" />
+
+      {/* dots / circles */}
+      <circle cx="40" cy="20" r="3" fill={YELLOW} />
+      <circle cx="180" cy="220" r="3" fill={PINK} />
+      <circle cx="100" cy="10" r="2.5" fill={CYAN} />
+      <circle cx="14" cy="270" r="2.5" fill={LILAC} />
+
+      {/* small rings */}
+      <circle cx="170" cy="200" r="3" fill="none" stroke={CYAN} strokeWidth="1.2" />
+      <circle cx="30" cy="120" r="3" fill="none" stroke={YELLOW} strokeWidth="1.2" />
+    </svg>
   );
 };
 

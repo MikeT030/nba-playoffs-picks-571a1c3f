@@ -428,7 +428,7 @@ const Scoreboard = () => {
 
         {showAllPicks ? (
           <>
-            <div className="rounded-lg border border-white/10 bg-[#181C23] backdrop-blur-md overflow-hidden pt-0">
+            <div className="rounded-lg border border-white/10 bg-[#191d24] backdrop-blur-md overflow-hidden pt-0">
               <AllPicksMatrix picks={allPicks} results={allResults} loading={loading} />
             </div>
             {allPicks.length > 0 && (
@@ -445,7 +445,7 @@ const Scoreboard = () => {
           </>
         ) : (
           /* Leaderboard */
-          <div className="rounded-lg bg-[#181C23] overflow-hidden">
+          <div className="rounded-lg bg-[#191d24] overflow-hidden">
             <Table>
               <TableHeader>
                 <TableRow>

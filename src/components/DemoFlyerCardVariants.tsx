@@ -372,7 +372,7 @@ export const DemoFlyerCardV4 = () => {
         <div className="flex items-center justify-between gap-2 px-4 py-2.5 border-b border-white/10 bg-black/30">
           <img
             src={flyerLogo}
-            alt="FLYER The Shot"
+            alt="PLATINUM The Shot"
             className="h-7 w-auto"
             loading="lazy"
           />

@@ -311,6 +311,14 @@ export const DemoFlyerCardPaxson = () => (
       { label: "3PA", value: 3 },
       { label: "MP", value: "22:00" },
     ]}
+    sealedToppsStyle
+    sealedToppsConfig={{
+      sportLabel: "Playoffs",
+      yearLabel: "2026",
+      seriesLabel: "SERIES 1",
+      picturesLabel: "15 PICTURE CARDS",
+      qualityLabel: "PREMIUM QUALITY",
+    }}
   />
 );
 

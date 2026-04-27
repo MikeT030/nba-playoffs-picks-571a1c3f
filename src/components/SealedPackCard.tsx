@@ -164,7 +164,7 @@ const SealedPackCard = ({
             }
             85% { opacity: 1; }
             to {
-              background-position: 0% 0%;
+              background-position: -100% -100%;
               opacity: 0;
             }
           }

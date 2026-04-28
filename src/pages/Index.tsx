@@ -215,7 +215,7 @@ const Index = () => {
       />
       <HeroBanner subtitle="2026" />
 
-      <section className="container py-10 pt-[20px]">
+      <section className="container py-10 pt-0">
         <HighlightTicker />
         <div className="h-[30px]" aria-hidden />
 

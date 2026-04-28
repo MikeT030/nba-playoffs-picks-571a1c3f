@@ -220,7 +220,7 @@ const HighlightTicker = ({ variant = "default" }: Props) => {
               {item.headline}
             </div>
           </div>
-          <div className="relative z-10 mt-0.5 truncate font-body text-[10px] uppercase tracking-[0.18em] text-white/85">
+          <div className="relative z-10 mt-0.5 truncate font-body uppercase tracking-[0.18em] text-white/85 text-xs font-medium">
             {item.sub}
           </div>
 

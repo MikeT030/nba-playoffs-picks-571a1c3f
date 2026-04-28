@@ -118,10 +118,7 @@ const Index = () => {
     );
   };
 
-  const filteredMatches =
-    selectedRound === "all"
-      ? matches
-      : matches?.filter((m) => m.round === selectedRound);
+  const filteredMatches = matches;
 
   // Sort matches chronologically by actual tip-off timestamp. Series with no
   // known startsAt (TBD) fall to the bottom while preserving relative order.
@@ -205,26 +202,6 @@ const Index = () => {
         <HighlightTicker />
         <div className="h-[30px]" aria-hidden />
 
-        <Select value={selectedRound} onValueChange={setSelectedRound}>
-          <SelectTrigger
-            className="mb-6 w-auto max-w-full gap-3 border-0 bg-transparent p-0 h-auto font-display text-3xl tracking-wider text-foreground hover:text-foreground focus:ring-0 focus:ring-offset-0 shadow-none [&>svg]:h-6 [&>svg]:w-6 [&>svg]:opacity-70"
-            aria-label="Select round"
-          >
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent position="popper" sideOffset={4} className="bg-[#1A1E24] border-[#1A1E24]">
-            {rounds.map((r) => (
-              <SelectItem
-                key={r.value}
-                value={r.value}
-                className="focus:bg-primary/15 focus:text-primary focus:border focus:border-primary/40 focus:rounded-full data-[state=checked]:bg-primary/15 data-[state=checked]:text-primary data-[state=checked]:border data-[state=checked]:border-primary/40 data-[state=checked]:rounded-full my-0.5"
-              >
-                {r.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
         {isLoading || (isFetching && (!matches || matches.length === 0)) ? (
           <div className="grid gap-4 md:grid-cols-2">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -236,24 +213,12 @@ const Index = () => {
             Couldn't load matchups. Pull down to refresh.
           </p>
         ) : (
-          <div className="space-y-8">
-            {todayMatches.length > 0 && (
-              <div>
-                <h2 className="mb-3 font-display text-xl tracking-wider text-foreground/90">
-                  Today
-                </h2>
-                {renderMatchGrid(todayMatches)}
-              </div>
-            )}
-            {nextDaysMatches.length > 0 && (
-              <div>
-                <h2 className="mb-3 font-display text-xl tracking-wider text-foreground/90">
-                  Next days
-                </h2>
-                {renderMatchGrid(nextDaysMatches)}
-              </div>
-            )}
-          </div>
+          <AdvancedRoundView
+            matches={sortedMatches}
+            bracket={resolvedBracket ?? []}
+            todayMatches={todayMatches}
+            nextMatches={nextDaysMatches}
+          />
         )}
       </section>
 

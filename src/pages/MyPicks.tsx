@@ -400,18 +400,6 @@ const MyPicks = () => {
                     <p className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">Your Points</p>
                     <p className="font-display text-2xl text-primary">{totalPoints}</p>
                   </div>
-                  <div className="h-8 w-px bg-border/40" />
-                  <div className="flex items-center gap-3 text-[10px] font-body">
-                    <span className="flex items-center gap-1 text-emerald-300">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400" /> 3 pts perfect
-                    </span>
-                    <span className="flex items-center gap-1 text-amber-300">
-                      <span className="w-2 h-2 rounded-full bg-amber-400" /> 2 pts winner
-                    </span>
-                    <span className="flex items-center gap-1 text-sky-300">
-                      <span className="w-2 h-2 rounded-full bg-sky-400" /> 1 pt loose
-                    </span>
-                  </div>
                 </div>
               );
             })()}

@@ -1,8 +1,18 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 import { isTodaySlateET, isSameLocalDay } from "@/lib/seriesUtils";
+import type { Team } from "@/data/playoffsData";
 
-type Item = { id: string; kind: "live" | "game7" | "winner" | "tonight" | "info"; text: string };
+type Kind = "live" | "game7" | "winner" | "tonight" | "info";
+
+type Item = {
+  id: string;
+  kind: Kind;
+  tag: string;        // short label in the LOGO block (e.g. "FINAL", "LIVE", "G7")
+  headline: string;   // big bold headline
+  sub: string;        // small subline
+  team?: Team;        // featured team — drives accent color
+};
 
 const SERIES_WIN_TARGET = 4;
 
@@ -11,50 +21,65 @@ function buildItems(matches: ReturnType<typeof usePlayoffGames>["data"]): Item[]
   if (!matches || matches.length === 0) return items;
 
   for (const m of matches) {
-    const home = m.homeTeam.name;
-    const away = m.awayTeam.name;
+    const home = m.homeTeam;
+    const away = m.awayTeam;
 
-    // 1) Live right now
     if (m.status === "live") {
+      // Featured team = whoever is currently leading (fallback: home).
+      const leader =
+        (m.homeScore ?? 0) >= (m.awayScore ?? 0) ? home : away;
       items.push({
         id: `${m.id}-live`,
         kind: "live",
-        text: `LIVE — ${away} ${m.awayScore ?? 0} @ ${home} ${m.homeScore ?? 0} · ${m.time}`,
+        tag: "LIVE",
+        headline: `${away.abbreviation} ${m.awayScore ?? 0} — ${m.homeScore ?? 0} ${home.abbreviation}`,
+        sub: `${away.name} at ${home.name} · ${m.time}`,
+        team: leader,
       });
       continue;
     }
 
-    // 2) Series winner (someone reached 4 wins)
     if (m.homeWins >= SERIES_WIN_TARGET || m.awayWins >= SERIES_WIN_TARGET) {
-      const winner = m.homeWins > m.awayWins ? m.homeTeam : m.awayTeam;
-      const loser = m.homeWins > m.awayWins ? m.awayTeam : m.homeTeam;
+      const winner = m.homeWins > m.awayWins ? home : away;
+      const loser = m.homeWins > m.awayWins ? away : home;
       const wins = Math.max(m.homeWins, m.awayWins);
       const losses = Math.min(m.homeWins, m.awayWins);
       items.push({
         id: `${m.id}-winner`,
         kind: "winner",
-        text: `SERIES WIN — ${winner.name} eliminate ${loser.name} ${wins}-${losses}`,
+        tag: "FINAL",
+        headline: `${winner.name.toUpperCase()} ADVANCE`,
+        sub: `Eliminate ${loser.name} ${wins}–${losses}`,
+        team: winner,
       });
       continue;
     }
 
-    // 3) Upcoming game tonight (today's ET slate or same local day)
     const ts = m.startsAt ? new Date(m.startsAt).getTime() : undefined;
     const tipsToday = ts && (isTodaySlateET(ts) || isSameLocalDay(ts));
     if (tipsToday && m.status === "upcoming") {
       const total = m.homeWins + m.awayWins;
       const isGame7 = total === 6 && m.homeWins === 3 && m.awayWins === 3;
+      // Pick the team currently leading the series; if tied, the home team.
+      const featured =
+        m.homeWins > m.awayWins ? home : m.awayWins > m.homeWins ? away : home;
       if (isGame7) {
         items.push({
           id: `${m.id}-g7`,
           kind: "game7",
-          text: `GAME 7 TONIGHT — ${away} at ${home} · ${m.time} · winner takes the series`,
+          tag: "GAME 7",
+          headline: `${away.abbreviation} AT ${home.abbreviation} TONIGHT`,
+          sub: `${m.time} · winner takes the series`,
+          team: featured,
         });
       } else {
         items.push({
           id: `${m.id}-tonight`,
           kind: "tonight",
-          text: `TONIGHT — ${away} at ${home} · Game ${total + 1} · ${m.time} (series ${m.awayWins}-${m.homeWins})`,
+          tag: "TONIGHT",
+          headline: `${away.abbreviation} AT ${home.abbreviation}`,
+          sub: `Game ${total + 1} · ${m.time} · series ${m.awayWins}–${m.homeWins}`,
+          team: featured,
         });
       }
     }
@@ -64,56 +89,162 @@ function buildItems(matches: ReturnType<typeof usePlayoffGames>["data"]): Item[]
     items.push({
       id: "idle",
       kind: "info",
-      text: "No games on the slate right now — check back at tip-off.",
+      tag: "NEWS",
+      headline: "NO GAMES ON THE SLATE",
+      sub: "Check back at tip-off",
     });
   }
 
   return items;
 }
 
-const kindColor: Record<Item["kind"], string> = {
-  live: "text-red-300",
-  game7: "text-amber-200",
-  winner: "text-emerald-200",
-  tonight: "text-sky-200",
-  info: "text-[#bbb]",
+// Convert a hex color to a darker variant for gradients.
+function shade(hex: string, amount: number): string {
+  const h = hex.replace("#", "");
+  const num = parseInt(h.length === 3 ? h.split("").map((c) => c + c).join("") : h, 16);
+  const r = Math.max(0, Math.min(255, ((num >> 16) & 0xff) + amount));
+  const g = Math.max(0, Math.min(255, ((num >> 8) & 0xff) + amount));
+  const b = Math.max(0, Math.min(255, (num & 0xff) + amount));
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
+// Fallback palette per kind when no team color is available.
+const kindFallback: Record<Kind, string> = {
+  live: "#dc2626",
+  game7: "#d97706",
+  winner: "#059669",
+  tonight: "#0284c7",
+  info: "#475569",
 };
 
 type Props = { variant?: "default" | "inset" };
 
+const ROTATE_MS = 5000;
+
 const HighlightTicker = ({ variant = "default" }: Props) => {
   const { data: matches } = usePlayoffGames();
   const items = useMemo(() => buildItems(matches), [matches]);
+  const [idx, setIdx] = useState(0);
 
-  // Duplicate the strip so the marquee loops seamlessly.
-  const strip = (
-    <div className="flex shrink-0 items-center gap-8 px-6">
-      {items.map((it) => (
-        <span key={it.id} className="flex items-center gap-2 whitespace-nowrap font-led text-[10px] tracking-[0.2em] uppercase">
-          <span className={`inline-block h-1.5 w-1.5 rounded-full ${
-            it.kind === "live" ? "bg-red-400 animate-pulse"
-              : it.kind === "game7" ? "bg-amber-300"
-              : it.kind === "winner" ? "bg-emerald-300"
-              : it.kind === "tonight" ? "bg-sky-200"
-              : "bg-[#bbb]"
-          }`} />
-          <span className={kindColor[it.kind]}>{it.text}</span>
-        </span>
-      ))}
-    </div>
-  );
+  // Reset index when item count changes.
+  useEffect(() => {
+    setIdx(0);
+  }, [items.length]);
 
-  const wrapperClass =
-    variant === "inset"
-      ? "w-full overflow-hidden py-1"
-      : "mb-3 w-full max-w-md mx-auto overflow-hidden rounded-md border border-[#3a3a3a] bg-[#0a0a0a] py-2 shadow-[inset_0_0_15px_rgba(0,0,0,0.7)]";
+  // Auto-rotate through items.
+  useEffect(() => {
+    if (items.length <= 1) return;
+    const id = setInterval(() => {
+      setIdx((i) => (i + 1) % items.length);
+    }, ROTATE_MS);
+    return () => clearInterval(id);
+  }, [items.length]);
+
+  if (items.length === 0) return null;
+  const item = items[idx];
+  const accent = item.team?.color ?? kindFallback[item.kind];
+  const accentDark = shade(accent, -40);
+  const accentLight = shade(accent, 30);
 
   return (
-    <div className={wrapperClass}>
-      <div className="flex w-max animate-[ticker_40s_linear_infinite]">
-        {strip}
-        {strip}
+    <div
+      className={
+        variant === "inset"
+          ? "w-full overflow-hidden"
+          : "mb-3 w-full max-w-md mx-auto overflow-hidden"
+      }
+    >
+      <div
+        key={item.id}
+        className="relative flex h-[42px] w-full items-stretch animate-[tickerFade_400ms_ease-out]"
+      >
+        {/* Left "logo" tag block */}
+        <div
+          className="relative flex items-center justify-center px-2.5 text-[10px] font-display tracking-[0.15em] text-white"
+          style={{
+            background: `linear-gradient(135deg, ${accentDark}, #0a0a0a 140%)`,
+            minWidth: 56,
+          }}
+        >
+          {/* live pulse dot */}
+          {item.kind === "live" && (
+            <span className="absolute left-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-red-400 animate-pulse" />
+          )}
+          <span className="leading-tight text-center">{item.tag}</span>
+          {/* slanted divider */}
+          <span
+            aria-hidden
+            className="absolute right-[-6px] top-0 h-full w-3"
+            style={{
+              background: accentDark,
+              clipPath: "polygon(0 0, 100% 0, 0 100%)",
+            }}
+          />
+        </div>
+
+        {/* Headline + subline panel */}
+        <div className="relative flex flex-1 flex-col justify-center overflow-hidden pl-4 pr-2">
+          {/* Background: team-colored gradient with diagonal sheen */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(90deg, ${accent} 0%, ${accentDark} 100%)`,
+            }}
+          />
+          {/* Diagonal highlight stripes (broadcast sheen) */}
+          <div
+            aria-hidden
+            className="absolute inset-0 opacity-25"
+            style={{
+              background: `repeating-linear-gradient(110deg, transparent 0 30px, ${accentLight} 30px 32px, transparent 32px 60px)`,
+            }}
+          />
+          {/* Bottom highlight bar */}
+          <div
+            aria-hidden
+            className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/70"
+          />
+
+          {/* Headline marquee — only animate if it would overflow */}
+          <div className="relative z-10 overflow-hidden">
+            <div className="font-display text-[15px] leading-none tracking-wider text-white whitespace-nowrap drop-shadow-[0_1px_0_rgba(0,0,0,0.4)]">
+              {item.headline}
+            </div>
+          </div>
+          <div className="relative z-10 mt-0.5 truncate font-body text-[10px] uppercase tracking-[0.18em] text-white/85">
+            {item.sub}
+          </div>
+
+          {/* Right edge slants for broadcast feel */}
+          <span
+            aria-hidden
+            className="absolute right-0 top-0 h-full w-4 bg-white/15"
+            style={{ clipPath: "polygon(50% 0, 100% 0, 50% 100%, 0 100%)" }}
+          />
+          <span
+            aria-hidden
+            className="absolute right-3 top-0 h-full w-2 bg-white/25"
+            style={{ clipPath: "polygon(50% 0, 100% 0, 50% 100%, 0 100%)" }}
+          />
+        </div>
       </div>
+
+      {/* Pager dots */}
+      {items.length > 1 && (
+        <div className="mt-1.5 flex justify-center gap-1">
+          {items.map((it, i) => (
+            <button
+              key={it.id}
+              type="button"
+              aria-label={`Show update ${i + 1}`}
+              onClick={() => setIdx(i)}
+              className={`h-1 rounded-full transition-all ${
+                i === idx ? "w-4 bg-white/80" : "w-1 bg-white/30"
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

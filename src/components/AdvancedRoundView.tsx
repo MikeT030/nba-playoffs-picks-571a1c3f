@@ -130,7 +130,7 @@ const AdvancedCard = ({
           <div className="flex-1 flex items-center gap-1.5 justify-end text-right -translate-y-2">
             <div>
               <p className="tracking-wide text-xl text-muted-foreground" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
-                TBD
+                {feederALabel} or {feederBLabel}
               </p>
               <p className="text-[10px] font-body uppercase tracking-widest text-muted-foreground mt-0.5 flex items-center justify-end gap-1">
                 Winner of {feederALabel} <ArrowRight size={9} /> {feederBLabel}

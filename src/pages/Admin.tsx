@@ -107,6 +107,8 @@ const Admin = () => {
 
         <DemoAllMatchupsInnovation />
 
+        <DemoAdvancedRoundView />
+
         <DemoFlyerCardV3 />
 
         <DemoFlyerCardPaxson />

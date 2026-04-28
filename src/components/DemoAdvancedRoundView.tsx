@@ -122,37 +122,104 @@ const CONF_LABEL: Record<Series["conf"], string> = {
 };
 
 /* ---------- Flames (active round button) ---------- */
+const Flame = ({
+  left,
+  width,
+  height,
+  delay,
+  anim,
+  z = 1,
+}: {
+  left: string;
+  width: number;
+  height: number;
+  delay: string;
+  anim: string;
+  z?: number;
+}) => (
+  <svg
+    aria-hidden
+    viewBox="0 0 20 36"
+    preserveAspectRatio="none"
+    className={`absolute bottom-0 -translate-x-1/2 ${anim}`}
+    style={{
+      left,
+      width,
+      height,
+      zIndex: z,
+      animationDelay: delay,
+      transformOrigin: "50% 100%",
+      filter: "drop-shadow(0 0 3px rgba(255,140,30,0.85))",
+      mixBlendMode: "screen",
+      overflow: "visible",
+    }}
+  >
+    <defs>
+      <linearGradient id={`flame-grad-${left}-${width}`} x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0%" stopColor="#c2410c" />
+        <stop offset="35%" stopColor="#ff7a18" />
+        <stop offset="70%" stopColor="#ffd24a" />
+        <stop offset="100%" stopColor="#fff6c2" />
+      </linearGradient>
+    </defs>
+    {/* Outer flame tongue: wide base, pointed top with a gentle S curve */}
+    <path
+      d="M10 36 C 1 30, 1 22, 6 16 C 8 12, 6 8, 9 4 C 10 2, 11 1, 10 0 C 13 3, 15 8, 14 13 C 13 17, 16 20, 17 24 C 18 29, 16 33, 10 36 Z"
+      fill={`url(#flame-grad-${left}-${width})`}
+    />
+    {/* Inner brighter core */}
+    <path
+      d="M10 34 C 6 30, 6 24, 9 19 C 10 16, 9 13, 10 9 C 11 12, 13 15, 12 19 C 11 23, 13 27, 12 30 C 11.5 32, 11 33, 10 34 Z"
+      fill="#fff6c2"
+      opacity="0.85"
+    />
+  </svg>
+);
+
 const FlameRow = () => {
+  // Densely packed flames of varying heights across the whole bottom edge.
   const flames = [
-    { left: "10%", size: 6, delay: "0ms", anim: "animate-flame-flicker-slow" },
-    { left: "24%", size: 9, delay: "120ms", anim: "animate-flame-flicker" },
-    { left: "38%", size: 7, delay: "60ms", anim: "animate-flame-flicker-fast" },
-    { left: "50%", size: 11, delay: "200ms", anim: "animate-flame-flicker" },
-    { left: "62%", size: 7, delay: "40ms", anim: "animate-flame-flicker-fast" },
-    { left: "76%", size: 9, delay: "160ms", anim: "animate-flame-flicker-slow" },
-    { left: "90%", size: 6, delay: "90ms", anim: "animate-flame-flicker" },
+    { left: "4%", w: 7, h: 12, delay: "0ms", anim: "animate-flame-flicker-slow" },
+    { left: "10%", w: 9, h: 18, delay: "120ms", anim: "animate-flame-flicker" },
+    { left: "16%", w: 7, h: 13, delay: "60ms", anim: "animate-flame-flicker-fast" },
+    { left: "22%", w: 10, h: 22, delay: "200ms", anim: "animate-flame-flicker" },
+    { left: "28%", w: 8, h: 15, delay: "40ms", anim: "animate-flame-flicker-fast" },
+    { left: "34%", w: 9, h: 19, delay: "160ms", anim: "animate-flame-flicker-slow" },
+    { left: "40%", w: 8, h: 14, delay: "90ms", anim: "animate-flame-flicker" },
+    { left: "46%", w: 11, h: 24, delay: "30ms", anim: "animate-flame-flicker-fast" },
+    { left: "52%", w: 8, h: 16, delay: "180ms", anim: "animate-flame-flicker-slow" },
+    { left: "58%", w: 10, h: 21, delay: "70ms", anim: "animate-flame-flicker" },
+    { left: "64%", w: 7, h: 13, delay: "150ms", anim: "animate-flame-flicker-fast" },
+    { left: "70%", w: 9, h: 18, delay: "20ms", anim: "animate-flame-flicker-slow" },
+    { left: "76%", w: 8, h: 15, delay: "110ms", anim: "animate-flame-flicker" },
+    { left: "82%", w: 10, h: 20, delay: "190ms", anim: "animate-flame-flicker-fast" },
+    { left: "88%", w: 8, h: 14, delay: "50ms", anim: "animate-flame-flicker-slow" },
+    { left: "94%", w: 7, h: 12, delay: "130ms", anim: "animate-flame-flicker" },
   ];
   return (
     <span
       aria-hidden
-      className="pointer-events-none absolute inset-x-0 bottom-0 h-3 overflow-visible"
+      className="pointer-events-none absolute inset-x-0 -bottom-2 h-7 overflow-visible"
     >
+      {/* Hot ember glow base */}
+      <span
+        className="absolute inset-x-0 bottom-0 h-3"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 100%, rgba(255,180,60,0.7) 0%, rgba(255,90,20,0.35) 45%, transparent 75%)",
+          mixBlendMode: "screen",
+          filter: "blur(2px)",
+        }}
+      />
       {flames.map((f, i) => (
-        <span
+        <Flame
           key={i}
-          className={`absolute bottom-0 -translate-x-1/2 ${f.anim}`}
-          style={{
-            left: f.left,
-            width: f.size,
-            height: f.size * 1.6,
-            animationDelay: f.delay,
-            background:
-              "radial-gradient(ellipse at 50% 90%, #fff6c2 0%, #ffd24a 25%, #ff7a18 60%, #c2410c 85%, transparent 100%)",
-            borderRadius: "50% 50% 45% 45% / 60% 60% 40% 40%",
-            transformOrigin: "50% 100%",
-            filter: "blur(0.4px) drop-shadow(0 0 4px rgba(255,140,40,0.7))",
-            mixBlendMode: "screen",
-          }}
+          left={f.left}
+          width={f.w}
+          height={f.h}
+          delay={f.delay}
+          anim={f.anim}
+          z={i}
         />
       ))}
     </span>

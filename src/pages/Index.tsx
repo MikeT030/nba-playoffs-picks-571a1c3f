@@ -206,6 +206,24 @@ const Index = () => {
     </div>
   );
 
+  // When "All Matchups" is selected, group the non-Today list by round so
+  // Finals games sit above Conference Finals, Semis, and First Round closeouts.
+  // When a single round is selected, the round label would be redundant — render
+  // a single flat list instead.
+  const ROUND_ORDER: Array<{ value: string; label: string }> = [
+    { value: "Finals", label: "Finals" },
+    { value: "Conference Finals", label: "Conference Finals" },
+    { value: "Conference Semifinals", label: "Conference Semifinals" },
+    { value: "First Round", label: "First Round" },
+  ];
+  const nextDaysGroups =
+    selectedRound === "all"
+      ? ROUND_ORDER.map((r) => ({
+          ...r,
+          matches: nextDaysMatches.filter((m) => m.round === r.value),
+        })).filter((g) => g.matches.length > 0)
+      : null;
+
   return (
     <div className="min-h-screen bg-background pb-28">
       <PullToRefreshIndicator

@@ -436,23 +436,23 @@ const DemoAdvancedRoundView = () => {
           let stateClasses: string;
           if (isActive) {
             stateClasses =
-              "border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary";
+              "border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary text-xs";
           } else if (isComplete) {
             stateClasses =
-              "border-secondary/40 bg-secondary/30 hover:bg-secondary/50 text-secondary-foreground";
+              "border-secondary/40 bg-secondary/30 hover:bg-secondary/50 text-secondary-foreground text-lg";
           } else if (hasMatches) {
             stateClasses =
-              "border-border bg-transparent hover:bg-accent/40 text-muted-foreground hover:text-foreground";
+              "border-border bg-transparent hover:bg-accent/40 text-muted-foreground hover:text-foreground text-xs";
           } else {
             stateClasses =
-              "border-transparent bg-transparent text-muted-foreground/60 hover:text-foreground";
+              "border-transparent bg-transparent text-muted-foreground/60 hover:text-foreground text-xs";
           }
 
           return (
             <button
               key={r}
               onClick={() => setActiveRound(r)}
-              className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border font-display tracking-widest uppercase text-xs transition-colors ${stateClasses}`}
+              className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border font-display tracking-widest uppercase transition-colors ${stateClasses}`}
             >
               {ROUND_LABEL[r]}
               {isComplete && <Check className="w-3 h-3" strokeWidth={3} />}

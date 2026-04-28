@@ -17,23 +17,9 @@ import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 import PullToRefreshIndicator from "@/components/PullToRefreshIndicator";
 import { ALL_MONOLOGUE_LINES, isPlayoffsStarted } from "@/data/buttonMonologue";
 import { isTodaySlateET, isSameLocalDay } from "@/lib/seriesUtils";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import AdvancedRoundView from "@/components/AdvancedRoundView";
 
 const TOTAL_GAMES = 15;
-
-const rounds = [
-  { value: "all", label: "All Matchups" },
-  { value: "First Round", label: "First Round" },
-  { value: "Conference Semifinals", label: "Conference Semifinals" },
-  { value: "Conference Finals", label: "Conference Finals" },
-  { value: "Finals", label: "Finals" },
-];
 
 const Index = () => {
   const { data: matches, isLoading, isFetching, isError } = usePlayoffGames();

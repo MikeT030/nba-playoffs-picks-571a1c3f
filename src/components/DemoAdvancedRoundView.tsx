@@ -445,7 +445,7 @@ const DemoAdvancedRoundView = () => {
               "border-border bg-transparent hover:bg-accent/40 text-muted-foreground hover:text-foreground text-xs";
           } else {
             stateClasses =
-              "border-transparent bg-transparent text-muted-foreground/60 hover:text-foreground text-xs";
+              "border-transparent bg-transparent text-muted-foreground/60 hover:text-foreground text-lg";
           }
 
           return (

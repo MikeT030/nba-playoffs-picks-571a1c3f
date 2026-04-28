@@ -205,6 +205,18 @@ interface AllPicksMatrixProps {
 const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
   const { data: resolvedBracket } = useBracketData();
   const seriesList = resolvedBracket ?? bracketSeries;
+  const { data: detected } = useDetectedSeriesResults();
+  const liveMap = useMemo(() => {
+    const m = new Map<string, { topWins: number; bottomWins: number; winner: string | null }>();
+    for (const d of detected ?? []) {
+      m.set(d.series_id, {
+        topWins: d.topWins,
+        bottomWins: d.bottomWins,
+        winner: d.detectedWinner,
+      });
+    }
+    return m;
+  }, [detected]);
 
   if (loading) {
     return <p className="text-center text-muted-foreground font-body py-8">Loading picks…</p>;

@@ -141,6 +141,41 @@ function getSeriesLabel(seriesId: string, seriesList: BracketSeries[]): string {
   return `${top}-${bot}`;
 }
 
+// Render a series label with the loser struck through and series wins shown
+// (e.g. "OKC 4-HOU 1" with HOU struck through). Falls back to plain label
+// when the series isn't decided yet.
+function renderSeriesLabel(
+  seriesId: string,
+  seriesList: BracketSeries[],
+  result: SeriesResult | undefined,
+) {
+  const s = seriesList.find((b) => b.id === seriesId);
+  const top = s?.topTeam?.abbreviation || "TBD";
+  const bot = s?.bottomTeam?.abbreviation || "TBD";
+
+  if (!result || (result.winner !== top && result.winner !== bot)) {
+    return <>{`${top}-${bot}`}</>;
+  }
+
+  const winnerWins = 4;
+  const loserWins = Math.max(0, result.games_played - 4);
+  const topIsWinner = result.winner === top;
+  const topWins = topIsWinner ? winnerWins : loserWins;
+  const botWins = topIsWinner ? loserWins : winnerWins;
+
+  const topCls = topIsWinner ? "" : "line-through text-muted-foreground";
+  const botCls = topIsWinner ? "line-through text-muted-foreground" : "";
+
+  return (
+    <>
+      <span className={topCls}>{top} {topWins}</span>
+      <span>-</span>
+      <span className={botCls}>{bot} {botWins}</span>
+    </>
+  );
+}
+
+
 function getSeriesRound(seriesId: string, seriesList: BracketSeries[]): string {
   const s = seriesList.find((b) => b.id === seriesId);
   return s?.round || "";

@@ -191,6 +191,32 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
     pickMap.set(`${p.profile_name}::${p.series_id}`, p);
   }
 
+  // Result lookup + actual-winner set for per-cell point scoring
+  const resultMap = new Map<string, SeriesResult>();
+  for (const r of results) resultMap.set(r.series_id, r);
+  const actualWinnerSet = new Set(results.map((r) => r.winner));
+
+  const POINTS_COLOR: Record<number, string> = {
+    3: "text-emerald-400",
+    2: "text-sky-400",
+    1: "text-amber-400",
+    0: "text-muted-foreground/50",
+  };
+
+  function scorePick(pick: PickRow): { basePoints: number; championBonus: boolean } | null {
+    const result = resultMap.get(pick.series_id);
+    if (!result) return null; // series not decided yet
+    let basePoints = 0;
+    if (result.winner === pick.winner) {
+      basePoints = result.games_played === pick.games_in_series ? 3 : 2;
+    } else if (actualWinnerSet.has(pick.winner)) {
+      basePoints = 1;
+    }
+    const championBonus =
+      pick.series_id === "nba-finals" && result.winner === pick.winner;
+    return { basePoints, championBonus };
+  }
+
   // Group series by round for row headers
   let lastRound = "";
 
@@ -229,16 +255,36 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
                   </td>
                   {players.map((player) => {
                     const pick = pickMap.get(`${player}::${seriesId}`);
+                    if (!pick) {
+                      return (
+                        <td key={player} className="p-3 align-middle text-center font-body text-xs whitespace-nowrap">
+                          <span className="text-muted-foreground/40">—</span>
+                        </td>
+                      );
+                    }
+                    const score = scorePick(pick);
+                    const total = score
+                      ? score.basePoints + (score.championBonus ? 4 : 0)
+                      : null;
+                    const colorCls = score ? POINTS_COLOR[score.basePoints] ?? "" : "";
                     return (
                       <td key={player} className="p-3 align-middle text-center font-body text-xs whitespace-nowrap">
-                        {pick ? (
+                        <div className="inline-flex items-baseline gap-1.5">
                           <span>
                             <span className="font-bold text-foreground">{pick.winner}</span>
                             <span className="ml-1 text-white">in {pick.games_in_series}</span>
                           </span>
-                        ) : (
-                          <span className="text-muted-foreground/40">—</span>
-                        )}
+                          {score && (
+                            <span className={`font-display text-sm ${colorCls}`}>
+                              {total}
+                              {score.championBonus && (
+                                <span className="ml-0.5 text-[9px] font-body text-amber-300/80 align-top">
+                                  +4
+                                </span>
+                              )}
+                            </span>
+                          )}
+                        </div>
                       </td>
                     );
                   })}

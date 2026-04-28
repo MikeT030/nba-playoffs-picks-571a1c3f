@@ -286,7 +286,7 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
                     })() : ""}
                   </td>
                   <td className="sticky left-0 z-10 bg-[#1A1E24]/80 backdrop-blur-sm p-3 align-middle font-display tracking-wide whitespace-nowrap text-sm">
-                    {getSeriesLabel(seriesId, seriesList)}
+                    {renderSeriesLabel(seriesId, seriesList, resultMap.get(seriesId))}
                   </td>
                   {players.map((player) => {
                     const pick = pickMap.get(`${player}::${seriesId}`);

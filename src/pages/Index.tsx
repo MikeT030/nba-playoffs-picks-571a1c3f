@@ -216,6 +216,7 @@ const Index = () => {
       <HeroBanner subtitle="2026" />
 
       <section className="container py-10 pt-[20px]">
+        <HighlightTicker />
         <CountdownTimer />
 
         <Select value={selectedRound} onValueChange={setSelectedRound}>

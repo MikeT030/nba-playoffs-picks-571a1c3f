@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { ChevronRight, ArrowRight } from "lucide-react";
+import { ChevronRight, ArrowRight, Check } from "lucide-react";
 import { teamMeta } from "@/lib/nbaApi";
 
 /**
@@ -426,19 +426,39 @@ const DemoAdvancedRoundView = () => {
 
       {/* Round select */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
-        {selectableRounds.map((r) => (
-          <button
-            key={r}
-            onClick={() => setActiveRound(r)}
-            className={`shrink-0 px-3 py-1.5 rounded-md font-body text-xs tracking-wider uppercase transition-colors ${
-              activeRound === r
-                ? "bg-primary text-primary-foreground"
-                : "bg-secondary text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {ROUND_LABEL[r]}
-          </button>
-        ))}
+        {selectableRounds.map((r) => {
+          const roundMatches = ALL_SERIES.filter((m) => m.round === r);
+          const hasMatches = roundMatches.length > 0;
+          const isComplete =
+            hasMatches && roundMatches.every((m) => m.status === "final");
+          const isActive = activeRound === r;
+
+          let stateClasses: string;
+          if (isActive) {
+            stateClasses =
+              "border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary";
+          } else if (isComplete) {
+            stateClasses =
+              "border-secondary/40 bg-secondary/30 hover:bg-secondary/50 text-secondary-foreground";
+          } else if (hasMatches) {
+            stateClasses =
+              "border-border bg-transparent hover:bg-accent/40 text-muted-foreground hover:text-foreground";
+          } else {
+            stateClasses =
+              "border-transparent bg-transparent text-muted-foreground/60 hover:text-foreground";
+          }
+
+          return (
+            <button
+              key={r}
+              onClick={() => setActiveRound(r)}
+              className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border font-display tracking-widest uppercase text-xs transition-colors ${stateClasses}`}
+            >
+              {ROUND_LABEL[r]}
+              {isComplete && <Check className="w-3 h-3" strokeWidth={3} />}
+            </button>
+          );
+        })}
       </div>
 
       <p className="font-body text-[10px] text-muted-foreground italic px-1">

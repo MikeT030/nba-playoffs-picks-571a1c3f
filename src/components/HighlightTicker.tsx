@@ -216,7 +216,7 @@ const HighlightTicker = ({ variant = "default" }: Props) => {
 
           {/* Headline marquee — only animate if it would overflow */}
           <div className="relative z-10 overflow-hidden">
-            <div className="font-display text-[15px] leading-none tracking-wider text-white whitespace-nowrap drop-shadow-[0_1px_0_rgba(0,0,0,0.4)]">
+            <div className="font-display leading-none tracking-wider text-white whitespace-nowrap drop-shadow-[0_1px_0_rgba(0,0,0,0.4)] text-lg">
               {item.headline}
             </div>
           </div>

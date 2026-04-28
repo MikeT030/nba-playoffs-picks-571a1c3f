@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { PenLine, CheckCircle, Lock } from "lucide-react";
 import HeroBanner from "@/components/HeroBanner";
-import MatchCard from "@/components/MatchCard";
+
 import BetsDrawer from "@/components/BetsDrawer";
 import CardRouletteOverlay from "@/components/CardRouletteOverlay";
 import CountdownTimer from "@/components/CountdownTimer";
@@ -17,23 +17,9 @@ import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 import PullToRefreshIndicator from "@/components/PullToRefreshIndicator";
 import { ALL_MONOLOGUE_LINES, isPlayoffsStarted } from "@/data/buttonMonologue";
 import { isTodaySlateET, isSameLocalDay } from "@/lib/seriesUtils";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import AdvancedRoundView from "@/components/AdvancedRoundView";
 
 const TOTAL_GAMES = 15;
-
-const rounds = [
-  { value: "all", label: "All Matchups" },
-  { value: "First Round", label: "First Round" },
-  { value: "Conference Semifinals", label: "Conference Semifinals" },
-  { value: "Conference Finals", label: "Conference Finals" },
-  { value: "Finals", label: "Finals" },
-];
 
 const Index = () => {
   const { data: matches, isLoading, isFetching, isError } = usePlayoffGames();
@@ -43,7 +29,6 @@ const Index = () => {
   const { assignedCardId, loading: cardLoading, assignRandomCard } = usePlayerCard();
   const { data: userPicks } = useAllUserPicks();
   const queryClient = useQueryClient();
-  const [selectedRound, setSelectedRound] = useState("all");
   const [betsOpen, setBetsOpen] = useState(false);
   const [monologueIndex, setMonologueIndex] = useState(-1);
   const [rouletteCardId, setRouletteCardId] = useState<string | null>(null);
@@ -132,10 +117,7 @@ const Index = () => {
     );
   };
 
-  const filteredMatches =
-    selectedRound === "all"
-      ? matches
-      : matches?.filter((m) => m.round === selectedRound);
+  const filteredMatches = matches;
 
   // Sort matches chronologically by actual tip-off timestamp. Series with no
   // known startsAt (TBD) fall to the bottom while preserving relative order.
@@ -198,13 +180,7 @@ const Index = () => {
     }
   }
 
-  const renderMatchGrid = (list: typeof sortedMatches) => (
-    <div className="grid gap-4 md:grid-cols-2">
-      {list.map((match) => (
-        <MatchCard key={match.id} match={match} />
-      ))}
-    </div>
-  );
+
 
   return (
     <div className="min-h-screen bg-background pb-28">
@@ -219,26 +195,6 @@ const Index = () => {
         <HighlightTicker />
         <div className="h-[30px]" aria-hidden />
 
-        <Select value={selectedRound} onValueChange={setSelectedRound}>
-          <SelectTrigger
-            className="mb-6 w-auto max-w-full gap-3 border-0 bg-transparent p-0 h-auto font-display text-3xl tracking-wider text-foreground hover:text-foreground focus:ring-0 focus:ring-offset-0 shadow-none [&>svg]:h-6 [&>svg]:w-6 [&>svg]:opacity-70"
-            aria-label="Select round"
-          >
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent position="popper" sideOffset={4} className="bg-[#1A1E24] border-[#1A1E24]">
-            {rounds.map((r) => (
-              <SelectItem
-                key={r.value}
-                value={r.value}
-                className="focus:bg-primary/15 focus:text-primary focus:border focus:border-primary/40 focus:rounded-full data-[state=checked]:bg-primary/15 data-[state=checked]:text-primary data-[state=checked]:border data-[state=checked]:border-primary/40 data-[state=checked]:rounded-full my-0.5"
-              >
-                {r.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
         {isLoading || (isFetching && (!matches || matches.length === 0)) ? (
           <div className="grid gap-4 md:grid-cols-2">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -250,24 +206,12 @@ const Index = () => {
             Couldn't load matchups. Pull down to refresh.
           </p>
         ) : (
-          <div className="space-y-8">
-            {todayMatches.length > 0 && (
-              <div>
-                <h2 className="mb-3 font-display text-xl tracking-wider text-foreground/90">
-                  Today
-                </h2>
-                {renderMatchGrid(todayMatches)}
-              </div>
-            )}
-            {nextDaysMatches.length > 0 && (
-              <div>
-                <h2 className="mb-3 font-display text-xl tracking-wider text-foreground/90">
-                  Next days
-                </h2>
-                {renderMatchGrid(nextDaysMatches)}
-              </div>
-            )}
-          </div>
+          <AdvancedRoundView
+            matches={sortedMatches}
+            bracket={resolvedBracket ?? []}
+            todayMatches={todayMatches}
+            nextMatches={nextDaysMatches}
+          />
         )}
       </section>
 

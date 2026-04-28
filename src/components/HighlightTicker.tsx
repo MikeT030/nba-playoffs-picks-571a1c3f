@@ -15,6 +15,7 @@ type Item = {
 };
 
 const SERIES_WIN_TARGET = 4;
+const NEWS_FRESHNESS_MS = 12 * 60 * 60 * 1000; // keep "FINAL" news for 12h
 
 function buildItems(matches: ReturnType<typeof usePlayoffGames>["data"]): Item[] {
   const items: Item[] = [];
@@ -40,18 +41,26 @@ function buildItems(matches: ReturnType<typeof usePlayoffGames>["data"]): Item[]
     }
 
     if (m.homeWins >= SERIES_WIN_TARGET || m.awayWins >= SERIES_WIN_TARGET) {
-      const winner = m.homeWins > m.awayWins ? home : away;
-      const loser = m.homeWins > m.awayWins ? away : home;
-      const wins = Math.max(m.homeWins, m.awayWins);
-      const losses = Math.min(m.homeWins, m.awayWins);
-      items.push({
-        id: `${m.id}-winner`,
-        kind: "winner",
-        tag: "FINAL",
-        headline: `${winner.name.toUpperCase()} ADVANCE`,
-        sub: `Eliminate ${loser.name} ${wins}–${losses}`,
-        team: winner,
-      });
+      // Only show series-clinch news for 12 hours after the clinching game
+      // (anchored on `startsAt`, which for a completed series is the latest
+      // played game). If we don't know when, keep showing it.
+      const clinchTs = m.startsAt ? new Date(m.startsAt).getTime() : undefined;
+      const isFresh =
+        clinchTs === undefined || Date.now() - clinchTs <= NEWS_FRESHNESS_MS;
+      if (isFresh) {
+        const winner = m.homeWins > m.awayWins ? home : away;
+        const loser = m.homeWins > m.awayWins ? away : home;
+        const wins = Math.max(m.homeWins, m.awayWins);
+        const losses = Math.min(m.homeWins, m.awayWins);
+        items.push({
+          id: `${m.id}-winner`,
+          kind: "winner",
+          tag: "FINAL",
+          headline: `${winner.name.toUpperCase()} ADVANCE`,
+          sub: `Eliminate ${loser.name} ${wins}–${losses}`,
+          team: winner,
+        });
+      }
       continue;
     }
 

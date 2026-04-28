@@ -162,9 +162,6 @@ const MatchCard = ({ match }: { match: Series }) => {
               <p className="tracking-wide text-xl" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
                 {match.away}
               </p>
-              <p className="text-xs text-muted-foreground font-body hidden sm:block">
-                {teamMeta[match.away]?.name ?? match.away}
-              </p>
             </div>
           </div>
 
@@ -213,9 +210,6 @@ const MatchCard = ({ match }: { match: Series }) => {
             <div>
               <p className="tracking-wide text-xl" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
                 {match.home}
-              </p>
-              <p className="text-xs text-muted-foreground font-body hidden sm:block">
-                {teamMeta[match.home]?.name ?? match.home}
               </p>
             </div>
             {match.homeSeed && (
@@ -349,7 +343,7 @@ const DemoAdvancedRoundView = () => {
   const advancedEntries = useMemo(() => {
     if (activeRound === "R1" || activeRound === "CSF") return [];
     const feedersForRound = FEEDERS[activeRound];
-    const entries: { team: string; teamSeed?: number; aLabel: string; bLabel: string; key: string }[] = [];
+    const entries: { team: string; teamSeed?: number; aLabel: string; bLabel: string; key: string; conf: Series["conf"] }[] = [];
 
     Object.entries(feedersForRound).forEach(([slotStr, feeder]) => {
       const slot = Number(slotStr);
@@ -389,6 +383,7 @@ const DemoAdvancedRoundView = () => {
           aLabel: pendingSeries.away,
           bLabel: pendingSeries.home,
           key: `${activeRound}-${slot}`,
+          conf: feeder.conf,
         });
       }
     });
@@ -451,6 +446,8 @@ const DemoAdvancedRoundView = () => {
             {advancedEntries.map((e) => (
               <AdvancedCard
                 key={e.key}
+                round={activeRound}
+                conf={e.conf}
                 team={e.team}
                 teamSeed={e.teamSeed}
                 feederALabel={e.aLabel}

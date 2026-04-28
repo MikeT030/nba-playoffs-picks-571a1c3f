@@ -61,10 +61,7 @@ const CountdownTimer = () => {
           </span>
         </div>
 
-        {/* News ticker — sits inside the panel, above the digits */}
-        <div className="relative mb-3">
-          <HighlightTicker variant="inset" />
-        </div>
+
 
         {/* Main clock display */}
         <div className="relative flex items-center justify-center gap-1">

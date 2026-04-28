@@ -108,108 +108,195 @@ const ROUND_ORDER: RoundKey[] = ["R1", "CSF", "CF", "F"];
 
 const colorFor = (abbr: string) => teamMeta[abbr]?.color ?? "#444";
 
-/* ---------- Match card (compact) ---------- */
+const ROUND_HEADER_LABEL: Record<RoundKey, string> = {
+  R1: "Round 1",
+  CSF: "Conf. Semifinals",
+  CF: "Conf. Finals",
+  F: "Finals",
+};
+
+const CONF_LABEL: Record<Series["conf"], string> = {
+  EAST: "EAST",
+  WEST: "WEST",
+  FINALS: "",
+};
+
+/* ---------- Match card (homepage size) ---------- */
 const MatchCard = ({ match }: { match: Series }) => {
-  const awayWon = match.winner === match.away;
-  const homeWon = match.winner === match.home;
   const isLive = match.status === "live";
+  const isFinal = match.status === "final";
+  const isUpcoming = match.status === "upcoming";
+  const alpha = isLive ? "80" : "66";
+
+  const headerBits = [
+    CONF_LABEL[match.conf],
+    ROUND_HEADER_LABEL[match.round],
+    "Game 1",
+    isFinal ? "Apr 28" : isLive ? "Tonight" : "Apr 29",
+  ].filter(Boolean);
 
   return (
-    <div className="relative rounded-md overflow-hidden bg-[#1A1E24]/80">
+    <div className="relative block rounded-lg overflow-hidden bg-[#1A1E24]/80 backdrop-blur-md">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `linear-gradient(135deg, ${colorFor(match.away)}55 0%, ${colorFor(match.away)}55 50%, ${colorFor(match.home)}55 50%, ${colorFor(match.home)}55 100%)`,
+          background: `linear-gradient(135deg, ${colorFor(match.away)}${alpha} 0%, ${colorFor(match.away)}${alpha} 50%, ${colorFor(match.home)}${alpha} 50%, ${colorFor(match.home)}${alpha} 100%)`,
         }}
       />
-      <div className="relative px-3 py-2.5 flex items-center justify-between gap-2">
-        <div className="flex items-center gap-1.5 flex-1 min-w-0">
-          {match.awaySeed && (
-            <span className="text-[10px] text-muted-foreground font-body font-semibold w-3 text-center">
-              {match.awaySeed}
-            </span>
-          )}
-          <span className={`font-body font-bold text-sm tracking-wider ${awayWon ? "text-white" : homeWon ? "text-muted-foreground" : "text-white"}`}>
-            {match.away}
+      <div className="relative">
+        <div className="px-4 py-2 flex items-center justify-center border-b border-transparent">
+          <span className="text-xs text-white font-body uppercase tracking-wider text-center font-normal">
+            {headerBits.join(" · ")}
           </span>
         </div>
 
-        <div className="text-center shrink-0">
-          {isLive && (
-            <div className="flex items-center gap-1 justify-center">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#FE943E] animate-pulse" />
-              <span className="text-[9px] font-body font-semibold uppercase tracking-widest text-[#fe953e]">
-                LIVE
+        <div className="p-5 flex items-center justify-between gap-2 pt-[20px]">
+          {/* Away */}
+          <div className="flex-1 flex items-center gap-1.5 -translate-y-2">
+            {match.awaySeed && (
+              <span className="text-xs text-muted-foreground font-body font-semibold w-4 text-center shrink-0">
+                {match.awaySeed}
               </span>
+            )}
+            <div>
+              <p className="tracking-wide text-xl" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
+                {match.away}
+              </p>
             </div>
-          )}
-          <p className="font-body text-sm font-semibold tabular-nums">
-            {match.series[0]}–{match.series[1]}
-          </p>
-        </div>
+          </div>
 
-        <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
-          <span className={`font-body font-bold text-sm tracking-wider ${homeWon ? "text-white" : awayWon ? "text-muted-foreground" : "text-white"}`}>
-            {match.home}
-          </span>
-          {match.homeSeed && (
-            <span className="text-[10px] text-muted-foreground font-body font-semibold w-3 text-center">
-              {match.homeSeed}
-            </span>
-          )}
+          {/* Score / Series */}
+          <div className="text-center shrink-0">
+            <div className="h-0">
+              {isLive && (
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-body font-semibold uppercase tracking-widest -translate-y-5 whitespace-nowrap text-[#fe953e]">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#FE943E] animate-pulse" />
+                  Q3 4:21
+                </span>
+              )}
+              {isFinal && (
+                <span className="text-muted-foreground font-body font-semibold uppercase tracking-widest block -translate-y-5 text-xs">
+                  Final
+                </span>
+              )}
+              {isUpcoming && (
+                <span className="text-[10px] text-muted-foreground font-body font-semibold uppercase tracking-widest block -translate-y-5 whitespace-nowrap">
+                  8:30 PM ET
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              {isUpcoming ? (
+                <>
+                  <span className="text-2xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
+                  <span className="text-muted-foreground font-body text-sm">—</span>
+                  <span className="text-2xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
+                </>
+              ) : (
+                <>
+                  <span className="text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{isLive ? 78 : 112}</span>
+                  <span className="text-muted-foreground font-body text-sm">—</span>
+                  <span className="text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>{isLive ? 82 : 104}</span>
+                </>
+              )}
+            </div>
+            <p className="text-xs font-body mt-1 font-medium text-[#dce0e5]">
+              Series {match.series[0]} – {match.series[1]}
+            </p>
+          </div>
+
+          {/* Home */}
+          <div className="flex-1 flex items-center gap-1.5 justify-end text-right -translate-y-2">
+            <div>
+              <p className="tracking-wide text-xl" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
+                {match.home}
+              </p>
+            </div>
+            {match.homeSeed && (
+              <span className="text-xs text-muted-foreground font-body font-semibold w-4 text-center shrink-0">
+                {match.homeSeed}
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-/* ---------- Advanced-to-this-round card (one team confirmed, opponent TBD) ---------- */
+/* ---------- Advanced-to-this-round card (homepage size, TBD opponent) ---------- */
 const AdvancedCard = ({
+  round,
+  conf,
   team,
   teamSeed,
   feederALabel,
   feederBLabel,
 }: {
+  round: RoundKey;
+  conf: Series["conf"];
   team: string;
   teamSeed?: number;
-  feederALabel: string; // e.g. "NYK"
-  feederBLabel: string; // e.g. "IND"
+  feederALabel: string;
+  feederBLabel: string;
 }) => {
+  const headerBits = [CONF_LABEL[conf], ROUND_HEADER_LABEL[round], "Awaiting opponent"].filter(Boolean);
+
   return (
-    <div className="relative rounded-md overflow-hidden bg-[#1A1E24]/80 border border-dashed border-border/60">
+    <div className="relative block rounded-lg overflow-hidden bg-[#1A1E24]/80 backdrop-blur-md border border-dashed border-border/60">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `linear-gradient(135deg, ${colorFor(team)}55 0%, ${colorFor(team)}55 50%, hsl(var(--muted) / 0.15) 50%, hsl(var(--muted) / 0.15) 100%)`,
+          background: `linear-gradient(135deg, ${colorFor(team)}66 0%, ${colorFor(team)}66 50%, hsl(var(--muted) / 0.18) 50%, hsl(var(--muted) / 0.18) 100%)`,
         }}
       />
-      <div className="relative px-3 py-2.5 flex items-center justify-between gap-2">
-        {/* Confirmed team */}
-        <div className="flex items-center gap-1.5 flex-1 min-w-0">
-          {teamSeed && (
-            <span className="text-[10px] text-muted-foreground font-body font-semibold w-3 text-center">
-              {teamSeed}
-            </span>
-          )}
-          <span className="font-body font-bold text-sm tracking-wider text-white">
-            {team}
-          </span>
-          <span className="text-[8px] font-body font-semibold uppercase tracking-widest text-primary/90 ml-1">
-            ✓ Advanced
+      <div className="relative">
+        <div className="px-4 py-2 flex items-center justify-center border-b border-transparent">
+          <span className="text-xs text-white font-body uppercase tracking-wider text-center font-normal">
+            {headerBits.join(" · ")}
           </span>
         </div>
 
-        <ArrowRight size={12} className="text-muted-foreground shrink-0" />
+        <div className="p-5 flex items-center justify-between gap-2 pt-[20px]">
+          {/* Confirmed team */}
+          <div className="flex-1 flex items-center gap-1.5 -translate-y-2">
+            {teamSeed && (
+              <span className="text-xs text-muted-foreground font-body font-semibold w-4 text-center shrink-0">
+                {teamSeed}
+              </span>
+            )}
+            <div>
+              <p className="tracking-wide text-xl" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
+                {team}
+              </p>
+              <p className="text-[10px] font-body uppercase tracking-widest text-primary mt-0.5">
+                ✓ Advanced
+              </p>
+            </div>
+          </div>
 
-        {/* TBD opponent */}
-        <div className="flex items-center gap-1 flex-1 min-w-0 justify-end text-right">
-          <div className="flex flex-col items-end leading-tight">
-            <span className="text-[8px] font-body uppercase tracking-widest text-muted-foreground">
-              Winner of
-            </span>
-            <span className="font-body font-bold text-xs tracking-wider text-muted-foreground">
-              {feederALabel} / {feederBLabel}
-            </span>
+          {/* VS */}
+          <div className="text-center shrink-0">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
+              <span className="text-muted-foreground font-body text-sm">vs</span>
+              <span className="text-2xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>?</span>
+            </div>
+            <p className="text-xs font-body mt-1 font-medium text-muted-foreground">
+              TBD
+            </p>
+          </div>
+
+          {/* TBD opponent */}
+          <div className="flex-1 flex items-center gap-1.5 justify-end text-right -translate-y-2">
+            <div>
+              <p className="tracking-wide text-xl text-muted-foreground" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
+                TBD
+              </p>
+              <p className="text-[10px] font-body uppercase tracking-widest text-muted-foreground mt-0.5 flex items-center justify-end gap-1">
+                Winner of {feederALabel} <ArrowRight size={9} /> {feederBLabel}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -256,7 +343,7 @@ const DemoAdvancedRoundView = () => {
   const advancedEntries = useMemo(() => {
     if (activeRound === "R1" || activeRound === "CSF") return [];
     const feedersForRound = FEEDERS[activeRound];
-    const entries: { team: string; teamSeed?: number; aLabel: string; bLabel: string; key: string }[] = [];
+    const entries: { team: string; teamSeed?: number; aLabel: string; bLabel: string; key: string; conf: Series["conf"] }[] = [];
 
     Object.entries(feedersForRound).forEach(([slotStr, feeder]) => {
       const slot = Number(slotStr);
@@ -296,6 +383,7 @@ const DemoAdvancedRoundView = () => {
           aLabel: pendingSeries.away,
           bLabel: pendingSeries.home,
           key: `${activeRound}-${slot}`,
+          conf: feeder.conf,
         });
       }
     });
@@ -358,6 +446,8 @@ const DemoAdvancedRoundView = () => {
             {advancedEntries.map((e) => (
               <AdvancedCard
                 key={e.key}
+                round={activeRound}
+                conf={e.conf}
                 team={e.team}
                 teamSeed={e.teamSeed}
                 feederALabel={e.aLabel}

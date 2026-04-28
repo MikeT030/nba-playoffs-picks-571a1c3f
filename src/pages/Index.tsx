@@ -29,7 +29,6 @@ const Index = () => {
   const { assignedCardId, loading: cardLoading, assignRandomCard } = usePlayerCard();
   const { data: userPicks } = useAllUserPicks();
   const queryClient = useQueryClient();
-  const [selectedRound, setSelectedRound] = useState("all");
   const [betsOpen, setBetsOpen] = useState(false);
   const [monologueIndex, setMonologueIndex] = useState(-1);
   const [rouletteCardId, setRouletteCardId] = useState<string | null>(null);
@@ -181,13 +180,7 @@ const Index = () => {
     }
   }
 
-  const renderMatchGrid = (list: typeof sortedMatches) => (
-    <div className="grid gap-4 md:grid-cols-2">
-      {list.map((match) => (
-        <MatchCard key={match.id} match={match} />
-      ))}
-    </div>
-  );
+
 
   return (
     <div className="min-h-screen bg-background pb-28">

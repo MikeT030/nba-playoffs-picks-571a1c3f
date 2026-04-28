@@ -6,7 +6,6 @@ import MatchCard from "@/components/MatchCard";
 import BetsDrawer from "@/components/BetsDrawer";
 import CardRouletteOverlay from "@/components/CardRouletteOverlay";
 import CountdownTimer from "@/components/CountdownTimer";
-import HighlightTicker from "@/components/HighlightTicker";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useAuth } from "@/contexts/AuthContext";

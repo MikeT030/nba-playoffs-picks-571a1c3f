@@ -217,6 +217,7 @@ const Index = () => {
 
       <section className="container py-10 pt-[20px]">
         <HighlightTicker />
+        <div className="h-[30px]" aria-hidden />
 
         <Select value={selectedRound} onValueChange={setSelectedRound}>
           <SelectTrigger

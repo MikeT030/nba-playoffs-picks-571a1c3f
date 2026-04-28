@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { PenLine, CheckCircle, Lock } from "lucide-react";
 import HeroBanner from "@/components/HeroBanner";
-import MatchCard from "@/components/MatchCard";
+
 import BetsDrawer from "@/components/BetsDrawer";
 import CardRouletteOverlay from "@/components/CardRouletteOverlay";
 import CountdownTimer from "@/components/CountdownTimer";

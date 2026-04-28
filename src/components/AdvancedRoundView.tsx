@@ -1,10 +1,8 @@
 import { useMemo, useState, useEffect } from "react";
 import { ChevronRight, ArrowRight, Check } from "lucide-react";
-import { ArrowRight as ArrowRightIcon } from "lucide-react";
 import MatchCard from "@/components/MatchCard";
 import { teamMeta } from "@/lib/nbaApi";
-import type { Match } from "@/data/playoffsData";
-import type { BracketSeries } from "@/data/playoffsData";
+import type { Match, BracketSeries } from "@/data/playoffsData";
 
 /**
  * Round-by-round view with auto-advance + "Advanced to this round".

@@ -49,16 +49,6 @@ function buildItems(matches: ReturnType<typeof usePlayoffGames>["data"]): Item[]
     }
   }
 
-  if (items.length === 0) {
-    items.push({
-      id: "idle",
-      kind: "info",
-      tag: "NEWS",
-      headline: "NO GAMES ON THE SLATE",
-      sub: "Check back at tip-off",
-    });
-  }
-
   return items;
 }
 

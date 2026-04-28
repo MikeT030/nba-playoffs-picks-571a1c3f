@@ -15,6 +15,7 @@ type Item = {
 };
 
 const SERIES_WIN_TARGET = 4;
+const NEWS_FRESHNESS_MS = 12 * 60 * 60 * 1000; // keep "FINAL" news for 12h
 
 function buildItems(matches: ReturnType<typeof usePlayoffGames>["data"]): Item[] {
   const items: Item[] = [];

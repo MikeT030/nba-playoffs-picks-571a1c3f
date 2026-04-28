@@ -165,7 +165,7 @@ const HighlightTicker = ({ variant = "default" }: Props) => {
     >
       <div
         key={item.id}
-        className="relative flex h-[42px] w-full items-stretch animate-[tickerFade_400ms_ease-out]"
+        className="relative flex h-[50px] w-full items-stretch animate-[tickerFade_400ms_ease-out]"
       >
         {/* Left "logo" tag block */}
         <div

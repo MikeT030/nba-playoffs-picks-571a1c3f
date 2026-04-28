@@ -255,16 +255,36 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
                   </td>
                   {players.map((player) => {
                     const pick = pickMap.get(`${player}::${seriesId}`);
+                    if (!pick) {
+                      return (
+                        <td key={player} className="p-3 align-middle text-center font-body text-xs whitespace-nowrap">
+                          <span className="text-muted-foreground/40">—</span>
+                        </td>
+                      );
+                    }
+                    const score = scorePick(pick);
+                    const total = score
+                      ? score.basePoints + (score.championBonus ? 4 : 0)
+                      : null;
+                    const colorCls = score ? POINTS_COLOR[score.basePoints] ?? "" : "";
                     return (
                       <td key={player} className="p-3 align-middle text-center font-body text-xs whitespace-nowrap">
-                        {pick ? (
+                        <div className="inline-flex items-baseline gap-1.5">
                           <span>
                             <span className="font-bold text-foreground">{pick.winner}</span>
                             <span className="ml-1 text-white">in {pick.games_in_series}</span>
                           </span>
-                        ) : (
-                          <span className="text-muted-foreground/40">—</span>
-                        )}
+                          {score && (
+                            <span className={`font-display text-sm ${colorCls}`}>
+                              {total}
+                              {score.championBonus && (
+                                <span className="ml-0.5 text-[9px] font-body text-amber-300/80 align-top">
+                                  +4
+                                </span>
+                              )}
+                            </span>
+                          )}
+                        </div>
                       </td>
                     );
                   })}

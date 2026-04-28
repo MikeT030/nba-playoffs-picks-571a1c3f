@@ -217,8 +217,9 @@ const Index = () => {
 
       <section className="container py-10 pt-[20px]">
 
-        <CountdownTimer />
+        <HighlightTicker />
 
+        <CountdownTimer />
 
         <Select value={selectedRound} onValueChange={setSelectedRound}>
           <SelectTrigger

@@ -16,6 +16,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { bracketSeries, type BracketSeries } from "@/data/playoffsData";
 import { useBracketData } from "@/hooks/useBracketData";
+import { useDetectedSeriesResults } from "@/hooks/useDetectedSeriesResults";
 import { playerImages } from "@/lib/playerImages";
 import { playerCards } from "@/data/playerCards";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -313,7 +314,7 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
                     })() : ""}
                   </td>
                   <td className="sticky left-0 z-10 bg-[#1A1E24]/80 backdrop-blur-sm p-3 align-middle font-display tracking-wide whitespace-nowrap text-sm">
-                    {renderSeriesLabel(seriesId, seriesList, resultMap.get(seriesId))}
+                    {renderSeriesLabel(seriesId, seriesList, resultMap.get(seriesId), liveMap.get(seriesId))}
                   </td>
                   {players.map((player) => {
                     const pick = pickMap.get(`${player}::${seriesId}`);

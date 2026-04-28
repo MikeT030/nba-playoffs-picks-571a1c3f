@@ -452,10 +452,13 @@ const DemoAdvancedRoundView = () => {
             <button
               key={r}
               onClick={() => setActiveRound(r)}
-              className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border font-display tracking-widest uppercase transition-colors ${stateClasses}`}
+              className={`relative shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border font-display tracking-widest uppercase transition-colors ${stateClasses}`}
             >
-              {ROUND_LABEL[r]}
-              {isComplete && <Check className="w-3 h-3" strokeWidth={3} />}
+              <span className="relative z-10 inline-flex items-center gap-1.5">
+                {ROUND_LABEL[r]}
+                {isComplete && <Check className="w-3 h-3" strokeWidth={3} />}
+              </span>
+              {isActive && <FlameRow />}
             </button>
           );
         })}

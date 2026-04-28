@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import HighlightTicker from "@/components/HighlightTicker";
 
 const TARGET = new Date("2026-04-18T17:00:00Z"); // 19:00 CET = 17:00 UTC
 
@@ -65,6 +66,11 @@ const CountdownTimer = () => {
             />
             {label}
           </span>
+        </div>
+
+        {/* News ticker — sits inside the panel, above the digits */}
+        <div className="relative mb-3">
+          <HighlightTicker variant="inset" />
         </div>
 
         {/* Main clock display */}

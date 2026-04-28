@@ -4,10 +4,17 @@ const TARGET = new Date("2026-04-18T17:00:00Z"); // 19:00 CET = 17:00 UTC
 
 const CountdownTimer = () => {
   const [now, setNow] = useState(Date.now());
+  const [minimized, setMinimized] = useState(false);
 
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
+  }, []);
+
+  // Auto-minimize 2s after mount, collapsing to just the day count.
+  useEffect(() => {
+    const t = setTimeout(() => setMinimized(true), 2000);
+    return () => clearTimeout(t);
   }, []);
 
   const targetMs = TARGET.getTime();
@@ -21,10 +28,23 @@ const CountdownTimer = () => {
   const pad = (n: number) => String(n).padStart(2, "0");
   const label = isRunning ? "IT'S ON" : "TIP-OFF IN";
 
+  const units = [
+    { val: days, label: "DAYS" },
+    { val: hours, label: "HRS" },
+    { val: minutes, label: "MIN" },
+    { val: seconds, label: "SEC" },
+  ];
+  const visibleUnits = minimized ? units.slice(0, 1) : units;
+
   return (
     <div className="flex flex-col items-center gap-2 mb-6">
       {/* Scoreboard housing */}
-      <div className="relative rounded-lg border-2 border-[#3a3a3a] bg-[#0a0a0a] px-5 py-4 pt-6 shadow-[inset_0_0_30px_rgba(0,0,0,0.8),0_0_20px_rgba(0,0,0,0.5)]">
+      <button
+        type="button"
+        onClick={() => setMinimized((m) => !m)}
+        aria-label={minimized ? "Expand countdown" : "Minimize countdown"}
+        className="relative rounded-lg border-2 border-[#3a3a3a] bg-[#0a0a0a] px-5 py-4 pt-6 shadow-[inset_0_0_30px_rgba(0,0,0,0.8),0_0_20px_rgba(0,0,0,0.5)] transition-all duration-300 cursor-pointer"
+      >
         {/* Wire mesh overlay effect */}
         <div
           className="absolute inset-0 rounded-lg opacity-[0.04] pointer-events-none"
@@ -49,12 +69,7 @@ const CountdownTimer = () => {
 
         {/* Main clock display */}
         <div className="relative flex items-center justify-center gap-1">
-          {[
-            { val: days, label: "DAYS" },
-            { val: hours, label: "HRS" },
-            { val: minutes, label: "MIN" },
-            { val: seconds, label: "SEC" },
-          ].map(({ val, label }, i) => (
+          {visibleUnits.map(({ val, label }, i) => (
             <div key={label} className="flex items-center">
               {/* Separator colon */}
               {i > 0 && (
@@ -78,7 +93,7 @@ const CountdownTimer = () => {
             </div>
           ))}
         </div>
-      </div>
+      </button>
     </div>
   );
 };

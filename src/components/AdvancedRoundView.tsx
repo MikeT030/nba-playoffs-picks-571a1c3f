@@ -62,7 +62,7 @@ const SectionHead = ({ label, accent }: { label: string; accent?: boolean }) => 
     >
       {label}
     </h3>
-    <div className="flex-1 h-px bg-border/40" />
+    
   </div>
 );
 

@@ -11,6 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { toast } from "sonner";
+import AdminSeriesConfirmPanel from "@/components/AdminSeriesConfirmPanel";
 import DemoMatchCard from "@/components/DemoMatchCard";
 import DemoMatchCardColored from "@/components/DemoMatchCardColored";
 import DemoMatchDetailDialog from "@/components/DemoMatchDetailDialog";
@@ -99,6 +100,8 @@ const Admin = () => {
         <p className="font-body text-sm text-muted-foreground">
           Internal area for testing new features.
         </p>
+
+        <AdminSeriesConfirmPanel />
 
         <DemoFlyerCardV3 />
 

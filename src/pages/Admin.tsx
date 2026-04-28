@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/accordion";
 import { toast } from "sonner";
 import AdminSeriesConfirmPanel from "@/components/AdminSeriesConfirmPanel";
+import DemoAllMatchupsInnovation from "@/components/DemoAllMatchupsInnovation";
 import DemoMatchCard from "@/components/DemoMatchCard";
 import DemoMatchCardColored from "@/components/DemoMatchCardColored";
 import DemoMatchDetailDialog from "@/components/DemoMatchDetailDialog";
@@ -102,6 +103,8 @@ const Admin = () => {
         </p>
 
         <AdminSeriesConfirmPanel />
+
+        <DemoAllMatchupsInnovation />
 
         <DemoFlyerCardV3 />
 

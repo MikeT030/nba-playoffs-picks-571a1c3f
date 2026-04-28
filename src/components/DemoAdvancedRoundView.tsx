@@ -391,9 +391,17 @@ const DemoAdvancedRoundView = () => {
     return entries;
   }, [activeRound]);
 
-  const todayMatches = inRound.filter((m) => m.dayBucket === "today");
-  const nextMatches = inRound.filter((m) => m.dayBucket === "next");
-  const otherMatches = inRound.filter((m) => !m.dayBucket);
+  const decidedMatches = inRound.filter((m) => m.status === "final");
+  const roundComplete = inRound.length > 0 && decidedMatches.length === inRound.length;
+  const todayMatches = roundComplete
+    ? []
+    : inRound.filter((m) => m.dayBucket === "today" && m.status !== "final");
+  const nextMatches = roundComplete
+    ? []
+    : inRound.filter((m) => m.dayBucket === "next" && m.status !== "final");
+  const otherMatches = roundComplete
+    ? []
+    : inRound.filter((m) => !m.dayBucket && m.status !== "final");
 
   const availableRounds = ROUND_ORDER.filter((r) =>
     ALL_SERIES.some((m) => m.round === r),

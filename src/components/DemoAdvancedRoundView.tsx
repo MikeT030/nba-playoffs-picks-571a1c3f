@@ -490,12 +490,24 @@ const DemoAdvancedRoundView = () => {
         </section>
       )}
 
-      {/* All other matches in this round (e.g. completed) */}
+      {/* All other matches in this round (e.g. live/upcoming without bucket) */}
       {otherMatches.length > 0 && (
         <section className="space-y-2">
           <SectionHead label={`All ${ROUND_LABEL[activeRound]} matchups`} />
           <div className="space-y-1.5">
             {otherMatches.map((m) => (
+              <MatchCard key={m.id} match={m} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Decisions — every final matchup of this round */}
+      {decidedMatches.length > 0 && (
+        <section className="space-y-2">
+          <SectionHead label="Decisions" />
+          <div className="space-y-1.5">
+            {decidedMatches.map((m) => (
               <MatchCard key={m.id} match={m} />
             ))}
           </div>

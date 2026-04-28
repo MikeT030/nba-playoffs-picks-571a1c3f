@@ -277,14 +277,23 @@ const Index = () => {
                 {renderMatchGrid(todayMatches)}
               </div>
             )}
-            {nextDaysMatches.length > 0 && (
-              <div>
-                <h2 className="mb-3 font-display text-xl tracking-wider text-foreground/90">
-                  Next days
-                </h2>
-                {renderMatchGrid(nextDaysMatches)}
-              </div>
-            )}
+            {nextDaysGroups
+              ? nextDaysGroups.map((g) => (
+                  <div key={g.value}>
+                    <h2 className="mb-3 font-display text-xl tracking-wider text-foreground/90">
+                      {g.label}
+                    </h2>
+                    {renderMatchGrid(g.matches)}
+                  </div>
+                ))
+              : nextDaysMatches.length > 0 && (
+                  <div>
+                    <h2 className="mb-3 font-display text-xl tracking-wider text-foreground/90">
+                      Next days
+                    </h2>
+                    {renderMatchGrid(nextDaysMatches)}
+                  </div>
+                )}
           </div>
         )}
       </section>

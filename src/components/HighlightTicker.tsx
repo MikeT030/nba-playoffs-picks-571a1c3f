@@ -72,14 +72,16 @@ function buildItems(matches: ReturnType<typeof usePlayoffGames>["data"]): Item[]
 }
 
 const kindColor: Record<Item["kind"], string> = {
-  live: "text-red-400",
-  game7: "text-amber-400",
-  winner: "text-emerald-400",
-  tonight: "text-sky-300",
-  info: "text-[#888]",
+  live: "text-red-300",
+  game7: "text-amber-200",
+  winner: "text-emerald-200",
+  tonight: "text-sky-200",
+  info: "text-[#bbb]",
 };
 
-const HighlightTicker = () => {
+type Props = { variant?: "default" | "inset" };
+
+const HighlightTicker = ({ variant = "default" }: Props) => {
   const { data: matches } = usePlayoffGames();
   const items = useMemo(() => buildItems(matches), [matches]);
 
@@ -87,13 +89,13 @@ const HighlightTicker = () => {
   const strip = (
     <div className="flex shrink-0 items-center gap-8 px-6">
       {items.map((it) => (
-        <span key={it.id} className="flex items-center gap-2 whitespace-nowrap font-led text-xs tracking-[0.2em] uppercase">
+        <span key={it.id} className="flex items-center gap-2 whitespace-nowrap font-led text-[10px] tracking-[0.2em] uppercase">
           <span className={`inline-block h-1.5 w-1.5 rounded-full ${
-            it.kind === "live" ? "bg-red-500 animate-pulse"
-              : it.kind === "game7" ? "bg-amber-400"
-              : it.kind === "winner" ? "bg-emerald-400"
-              : it.kind === "tonight" ? "bg-sky-300"
-              : "bg-[#888]"
+            it.kind === "live" ? "bg-red-400 animate-pulse"
+              : it.kind === "game7" ? "bg-amber-300"
+              : it.kind === "winner" ? "bg-emerald-300"
+              : it.kind === "tonight" ? "bg-sky-200"
+              : "bg-[#bbb]"
           }`} />
           <span className={kindColor[it.kind]}>{it.text}</span>
         </span>
@@ -101,8 +103,13 @@ const HighlightTicker = () => {
     </div>
   );
 
+  const wrapperClass =
+    variant === "inset"
+      ? "w-full overflow-hidden py-1"
+      : "mb-3 w-full max-w-md mx-auto overflow-hidden rounded-md border border-[#3a3a3a] bg-[#0a0a0a] py-2 shadow-[inset_0_0_15px_rgba(0,0,0,0.7)]";
+
   return (
-    <div className="mb-3 w-full max-w-md mx-auto overflow-hidden rounded-md border border-[#3a3a3a] bg-[#0a0a0a] py-2 shadow-[inset_0_0_15px_rgba(0,0,0,0.7)]">
+    <div className={wrapperClass}>
       <div className="flex w-max animate-[ticker_40s_linear_infinite]">
         {strip}
         {strip}

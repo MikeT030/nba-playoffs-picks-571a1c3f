@@ -89,12 +89,33 @@ export default {
           "0%": { opacity: "0", transform: "translateY(4px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        flameFlicker: {
+          "0%, 100%": {
+            transform: "translateY(0) scaleY(1) scaleX(1)",
+            opacity: "0.9",
+          },
+          "25%": {
+            transform: "translateY(-1px) scaleY(1.15) scaleX(0.92)",
+            opacity: "1",
+          },
+          "50%": {
+            transform: "translateY(0.5px) scaleY(0.9) scaleX(1.08)",
+            opacity: "0.85",
+          },
+          "75%": {
+            transform: "translateY(-0.5px) scaleY(1.08) scaleX(0.96)",
+            opacity: "1",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         ticker: "ticker 40s linear infinite",
         "ticker-fade": "tickerFade 400ms ease-out",
+        "flame-flicker": "flameFlicker 700ms ease-in-out infinite",
+        "flame-flicker-slow": "flameFlicker 1100ms ease-in-out infinite",
+        "flame-flicker-fast": "flameFlicker 500ms ease-in-out infinite",
       },
     },
   },

@@ -121,6 +121,44 @@ const CONF_LABEL: Record<Series["conf"], string> = {
   FINALS: "",
 };
 
+/* ---------- Flames (active round button) ---------- */
+const FlameRow = () => {
+  const flames = [
+    { left: "10%", size: 6, delay: "0ms", anim: "animate-flame-flicker-slow" },
+    { left: "24%", size: 9, delay: "120ms", anim: "animate-flame-flicker" },
+    { left: "38%", size: 7, delay: "60ms", anim: "animate-flame-flicker-fast" },
+    { left: "50%", size: 11, delay: "200ms", anim: "animate-flame-flicker" },
+    { left: "62%", size: 7, delay: "40ms", anim: "animate-flame-flicker-fast" },
+    { left: "76%", size: 9, delay: "160ms", anim: "animate-flame-flicker-slow" },
+    { left: "90%", size: 6, delay: "90ms", anim: "animate-flame-flicker" },
+  ];
+  return (
+    <span
+      aria-hidden
+      className="pointer-events-none absolute inset-x-0 bottom-0 h-3 overflow-visible"
+    >
+      {flames.map((f, i) => (
+        <span
+          key={i}
+          className={`absolute bottom-0 -translate-x-1/2 ${f.anim}`}
+          style={{
+            left: f.left,
+            width: f.size,
+            height: f.size * 1.6,
+            animationDelay: f.delay,
+            background:
+              "radial-gradient(ellipse at 50% 90%, #fff6c2 0%, #ffd24a 25%, #ff7a18 60%, #c2410c 85%, transparent 100%)",
+            borderRadius: "50% 50% 45% 45% / 60% 60% 40% 40%",
+            transformOrigin: "50% 100%",
+            filter: "blur(0.4px) drop-shadow(0 0 4px rgba(255,140,40,0.7))",
+            mixBlendMode: "screen",
+          }}
+        />
+      ))}
+    </span>
+  );
+};
+
 /* ---------- Match card (homepage size) ---------- */
 const MatchCard = ({ match }: { match: Series }) => {
   const isLive = match.status === "live";
@@ -452,10 +490,13 @@ const DemoAdvancedRoundView = () => {
             <button
               key={r}
               onClick={() => setActiveRound(r)}
-              className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border font-display tracking-widest uppercase transition-colors ${stateClasses}`}
+              className={`relative shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border font-display tracking-widest uppercase transition-colors ${stateClasses}`}
             >
-              {ROUND_LABEL[r]}
-              {isComplete && <Check className="w-3 h-3" strokeWidth={3} />}
+              <span className="relative z-10 inline-flex items-center gap-1.5">
+                {ROUND_LABEL[r]}
+                {isComplete && <Check className="w-3 h-3" strokeWidth={3} />}
+              </span>
+              {isActive && <FlameRow />}
             </button>
           );
         })}

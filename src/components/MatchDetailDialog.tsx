@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBracketData } from "@/hooks/useBracketData";
@@ -159,11 +159,12 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
   const headerLabel = `${match.conference !== "Finals" ? `${match.conference === "East" ? "EAST" : "WEST"}  ` : ""}${match.round === "Conference Semifinals" ? "Conf. Semifinals" : match.round === "Conference Finals" ? "Conf. Finals" : match.round} · Game ${displayGameNum} · ${displayDate}`;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md p-0 gap-0 bg-[#1A1E24]/95 backdrop-blur-md border-white/10 overflow-hidden [&>button[type=button]_svg]:h-6 [&>button[type=button]_svg]:w-6">
-        <DialogTitle className="sr-only">
+    <Drawer open={open} onOpenChange={onOpenChange}>
+      <DrawerContent className="border-none bg-[#1A1E24]/95 backdrop-blur-md max-h-[92vh] p-0 gap-0 overflow-hidden">
+        <DrawerTitle className="sr-only">
           {displayAway.abbreviation} vs {displayHome.abbreviation}
-        </DialogTitle>
+        </DrawerTitle>
+        <div className="overflow-y-auto">
 
         {/* Header — smaller matchup card with team-color gradient */}
         <div
@@ -369,8 +370,9 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
             <p className="text-muted-foreground font-body text-sm">No picks yet for this series.</p>
           )}
         </div>
-      </DialogContent>
-    </Dialog>
+        </div>
+      </DrawerContent>
+    </Drawer>
   );
 };
 

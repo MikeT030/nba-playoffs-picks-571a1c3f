@@ -139,7 +139,7 @@ function getSeriesLabel(seriesId: string, seriesList: BracketSeries[]): string {
   if (!s) return seriesId;
   const top = s.topTeam?.abbreviation || "TBD";
   const bot = s.bottomTeam?.abbreviation || "TBD";
-  return `${top}-${bot}`;
+  return `${top} – ${bot}`;
 }
 
 // Render a series label with current series wins shown per team. If the
@@ -184,7 +184,7 @@ function renderSeriesLabel(
   return (
     <>
       <span className={topCls}>{top} {topWins}</span>
-      <span>-</span>
+      <span> – </span>
       <span className={botCls}>{bot} {botWins}</span>
     </>
   );

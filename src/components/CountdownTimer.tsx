@@ -33,8 +33,7 @@ const CountdownTimer = () => {
 
   return (
     <div className="flex flex-col items-center gap-2 mb-6">
-      {/* Scoreboard housing — scaled to 60% of original size */}
-      <div className="origin-top scale-[0.6]">
+      {/* Scoreboard housing */}
       <button
         type="button"
         onClick={() => setMinimized((m) => !m)}
@@ -95,7 +94,6 @@ const CountdownTimer = () => {
           ))}
         </div>
       </button>
-      </div>
     </div>
   );
 };

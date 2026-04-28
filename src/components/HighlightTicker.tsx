@@ -25,21 +25,6 @@ function buildItems(matches: ReturnType<typeof usePlayoffGames>["data"]): Item[]
     const home = m.homeTeam;
     const away = m.awayTeam;
 
-    if (m.status === "live") {
-      // Featured team = whoever is currently leading (fallback: home).
-      const leader =
-        (m.homeScore ?? 0) >= (m.awayScore ?? 0) ? home : away;
-      items.push({
-        id: `${m.id}-live`,
-        kind: "live",
-        tag: "LIVE",
-        headline: `${away.abbreviation} ${m.awayScore ?? 0} — ${m.homeScore ?? 0} ${home.abbreviation}`,
-        sub: `${away.name} at ${home.name} · ${m.time}`,
-        team: leader,
-      });
-      continue;
-    }
-
     if (m.homeWins >= SERIES_WIN_TARGET || m.awayWins >= SERIES_WIN_TARGET) {
       // Only show series-clinch news for 12 hours after the clinching game
       // (anchored on `startsAt`, which for a completed series is the latest
@@ -59,36 +44,6 @@ function buildItems(matches: ReturnType<typeof usePlayoffGames>["data"]): Item[]
           headline: `${winner.name.toUpperCase()} ADVANCE`,
           sub: `Eliminate ${loser.name} ${wins}–${losses}`,
           team: winner,
-        });
-      }
-      continue;
-    }
-
-    const ts = m.startsAt ? new Date(m.startsAt).getTime() : undefined;
-    const tipsToday = ts && (isTodaySlateET(ts) || isSameLocalDay(ts));
-    if (tipsToday && m.status === "upcoming") {
-      const total = m.homeWins + m.awayWins;
-      const isGame7 = total === 6 && m.homeWins === 3 && m.awayWins === 3;
-      // Pick the team currently leading the series; if tied, the home team.
-      const featured =
-        m.homeWins > m.awayWins ? home : m.awayWins > m.homeWins ? away : home;
-      if (isGame7) {
-        items.push({
-          id: `${m.id}-g7`,
-          kind: "game7",
-          tag: "GAME 7",
-          headline: `${away.abbreviation} AT ${home.abbreviation} TONIGHT`,
-          sub: `${m.time} · winner takes the series`,
-          team: featured,
-        });
-      } else {
-        items.push({
-          id: `${m.id}-tonight`,
-          kind: "tonight",
-          tag: "TONIGHT",
-          headline: `${away.abbreviation} AT ${home.abbreviation}`,
-          sub: `Game ${total + 1} · ${m.time} · series ${m.awayWins}–${m.homeWins}`,
-          team: featured,
         });
       }
     }

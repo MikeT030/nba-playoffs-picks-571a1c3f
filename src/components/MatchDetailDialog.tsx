@@ -164,7 +164,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
         <DrawerTitle className="sr-only">
           {displayAway.abbreviation} vs {displayHome.abbreviation}
         </DrawerTitle>
-        <div className="overflow-y-auto">
+        <div className="overflow-y-auto pt-[10px]">
 
         {/* Header — smaller matchup card with team-color gradient */}
         <div

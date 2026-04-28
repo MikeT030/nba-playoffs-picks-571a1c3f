@@ -16,6 +16,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { bracketSeries, type BracketSeries } from "@/data/playoffsData";
 import { useBracketData } from "@/hooks/useBracketData";
+import { useDetectedSeriesResults } from "@/hooks/useDetectedSeriesResults";
 import { playerImages } from "@/lib/playerImages";
 import { playerCards } from "@/data/playerCards";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -141,30 +142,44 @@ function getSeriesLabel(seriesId: string, seriesList: BracketSeries[]): string {
   return `${top}-${bot}`;
 }
 
-// Render a series label with the loser struck through and series wins shown
-// (e.g. "OKC 4-HOU 1" with HOU struck through). Falls back to plain label
-// when the series isn't decided yet.
+// Render a series label with current series wins shown per team. If the
+// series is decided, the loser is struck through. `live` carries
+// auto-detected per-team wins from the NBA feed and is used whenever it's
+// available (covers in-progress series too).
 function renderSeriesLabel(
   seriesId: string,
   seriesList: BracketSeries[],
   result: SeriesResult | undefined,
+  live: { topWins: number; bottomWins: number; winner: string | null } | undefined,
 ) {
   const s = seriesList.find((b) => b.id === seriesId);
   const top = s?.topTeam?.abbreviation || "TBD";
   const bot = s?.bottomTeam?.abbreviation || "TBD";
 
-  if (!result || (result.winner !== top && result.winner !== bot)) {
+  // Prefer live detected wins; fall back to the confirmed result; finally show plain label.
+  let topWins: number | null = null;
+  let botWins: number | null = null;
+  let winner: string | null = null;
+
+  if (live && (live.topWins > 0 || live.bottomWins > 0 || live.winner)) {
+    topWins = live.topWins;
+    botWins = live.bottomWins;
+    winner = live.winner;
+  } else if (result && (result.winner === top || result.winner === bot)) {
+    const winnerWins = 4;
+    const loserWins = Math.max(0, result.games_played - 4);
+    const topIsWinner = result.winner === top;
+    topWins = topIsWinner ? winnerWins : loserWins;
+    botWins = topIsWinner ? loserWins : winnerWins;
+    winner = result.winner;
+  }
+
+  if (topWins === null || botWins === null) {
     return <>{`${top}-${bot}`}</>;
   }
 
-  const winnerWins = 4;
-  const loserWins = Math.max(0, result.games_played - 4);
-  const topIsWinner = result.winner === top;
-  const topWins = topIsWinner ? winnerWins : loserWins;
-  const botWins = topIsWinner ? loserWins : winnerWins;
-
-  const topCls = topIsWinner ? "" : "line-through text-muted-foreground";
-  const botCls = topIsWinner ? "line-through text-muted-foreground" : "";
+  const topCls = winner && winner !== top ? "line-through text-muted-foreground" : "";
+  const botCls = winner && winner !== bot ? "line-through text-muted-foreground" : "";
 
   return (
     <>
@@ -174,6 +189,7 @@ function renderSeriesLabel(
     </>
   );
 }
+
 
 
 function getSeriesRound(seriesId: string, seriesList: BracketSeries[]): string {
@@ -190,6 +206,18 @@ interface AllPicksMatrixProps {
 const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
   const { data: resolvedBracket } = useBracketData();
   const seriesList = resolvedBracket ?? bracketSeries;
+  const { data: detected } = useDetectedSeriesResults();
+  const liveMap = useMemo(() => {
+    const m = new Map<string, { topWins: number; bottomWins: number; winner: string | null }>();
+    for (const d of detected ?? []) {
+      m.set(d.series_id, {
+        topWins: d.topWins,
+        bottomWins: d.bottomWins,
+        winner: d.detectedWinner,
+      });
+    }
+    return m;
+  }, [detected]);
 
   if (loading) {
     return <p className="text-center text-muted-foreground font-body py-8">Loading picks…</p>;
@@ -286,7 +314,7 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
                     })() : ""}
                   </td>
                   <td className="sticky left-0 z-10 bg-[#1A1E24]/80 backdrop-blur-sm p-3 align-middle font-display tracking-wide whitespace-nowrap text-sm">
-                    {renderSeriesLabel(seriesId, seriesList, resultMap.get(seriesId))}
+                    {renderSeriesLabel(seriesId, seriesList, resultMap.get(seriesId), liveMap.get(seriesId))}
                   </td>
                   {players.map((player) => {
                     const pick = pickMap.get(`${player}::${seriesId}`);

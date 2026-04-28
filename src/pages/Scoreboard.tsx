@@ -141,30 +141,44 @@ function getSeriesLabel(seriesId: string, seriesList: BracketSeries[]): string {
   return `${top}-${bot}`;
 }
 
-// Render a series label with the loser struck through and series wins shown
-// (e.g. "OKC 4-HOU 1" with HOU struck through). Falls back to plain label
-// when the series isn't decided yet.
+// Render a series label with current series wins shown per team. If the
+// series is decided, the loser is struck through. `live` carries
+// auto-detected per-team wins from the NBA feed and is used whenever it's
+// available (covers in-progress series too).
 function renderSeriesLabel(
   seriesId: string,
   seriesList: BracketSeries[],
   result: SeriesResult | undefined,
+  live: { topWins: number; bottomWins: number; winner: string | null } | undefined,
 ) {
   const s = seriesList.find((b) => b.id === seriesId);
   const top = s?.topTeam?.abbreviation || "TBD";
   const bot = s?.bottomTeam?.abbreviation || "TBD";
 
-  if (!result || (result.winner !== top && result.winner !== bot)) {
+  // Prefer live detected wins; fall back to the confirmed result; finally show plain label.
+  let topWins: number | null = null;
+  let botWins: number | null = null;
+  let winner: string | null = null;
+
+  if (live && (live.topWins > 0 || live.bottomWins > 0 || live.winner)) {
+    topWins = live.topWins;
+    botWins = live.bottomWins;
+    winner = live.winner;
+  } else if (result && (result.winner === top || result.winner === bot)) {
+    const winnerWins = 4;
+    const loserWins = Math.max(0, result.games_played - 4);
+    const topIsWinner = result.winner === top;
+    topWins = topIsWinner ? winnerWins : loserWins;
+    botWins = topIsWinner ? loserWins : winnerWins;
+    winner = result.winner;
+  }
+
+  if (topWins === null || botWins === null) {
     return <>{`${top}-${bot}`}</>;
   }
 
-  const winnerWins = 4;
-  const loserWins = Math.max(0, result.games_played - 4);
-  const topIsWinner = result.winner === top;
-  const topWins = topIsWinner ? winnerWins : loserWins;
-  const botWins = topIsWinner ? loserWins : winnerWins;
-
-  const topCls = topIsWinner ? "" : "line-through text-muted-foreground";
-  const botCls = topIsWinner ? "line-through text-muted-foreground" : "";
+  const topCls = winner && winner !== top ? "line-through text-muted-foreground" : "";
+  const botCls = winner && winner !== bot ? "line-through text-muted-foreground" : "";
 
   return (
     <>
@@ -174,6 +188,7 @@ function renderSeriesLabel(
     </>
   );
 }
+
 
 
 function getSeriesRound(seriesId: string, seriesList: BracketSeries[]): string {

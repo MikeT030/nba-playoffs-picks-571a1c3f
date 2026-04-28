@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import HighlightTicker from "@/components/HighlightTicker";
 
 const TARGET = new Date("2026-04-18T17:00:00Z"); // 19:00 CET = 17:00 UTC
 

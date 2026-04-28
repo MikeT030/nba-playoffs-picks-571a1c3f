@@ -179,7 +179,7 @@ const HighlightTicker = ({ variant = "default" }: Props) => {
           {item.kind === "live" && (
             <span className="absolute left-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-red-400 animate-pulse" />
           )}
-          <span className="leading-tight text-center">{item.tag}</span>
+          <span className="leading-tight text-center text-sm">{item.tag}</span>
           {/* slanted divider */}
           <span
             aria-hidden

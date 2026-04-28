@@ -56,9 +56,9 @@ function roundOf(s: BracketSeries): RoundKey | undefined {
 const SectionHead = ({ label, accent }: { label: string; accent?: boolean }) => (
   <div className="flex items-center gap-2 px-1">
     <h3
-      className={`font-display text-xs tracking-widest uppercase ${
+      className={`font-display tracking-widest uppercase ${
         accent ? "text-primary" : "text-muted-foreground"
-      }`}
+      } text-base`}
     >
       {label}
     </h3>

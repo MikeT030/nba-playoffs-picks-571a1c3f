@@ -160,7 +160,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="border-none bg-[#1A1E24]/95 backdrop-blur-md h-[97vh] max-h-[97vh] p-0 gap-0 overflow-hidden">
+      <DrawerContent className="border-none bg-black h-[97vh] max-h-[97vh] p-0 gap-0 overflow-hidden">
         <DrawerTitle className="sr-only">
           {displayAway.abbreviation} vs {displayHome.abbreviation}
         </DrawerTitle>

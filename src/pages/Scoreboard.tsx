@@ -191,6 +191,32 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
     pickMap.set(`${p.profile_name}::${p.series_id}`, p);
   }
 
+  // Result lookup + actual-winner set for per-cell point scoring
+  const resultMap = new Map<string, SeriesResult>();
+  for (const r of results) resultMap.set(r.series_id, r);
+  const actualWinnerSet = new Set(results.map((r) => r.winner));
+
+  const POINTS_COLOR: Record<number, string> = {
+    3: "text-emerald-400",
+    2: "text-sky-400",
+    1: "text-amber-400",
+    0: "text-muted-foreground/50",
+  };
+
+  function scorePick(pick: PickRow): { basePoints: number; championBonus: boolean } | null {
+    const result = resultMap.get(pick.series_id);
+    if (!result) return null; // series not decided yet
+    let basePoints = 0;
+    if (result.winner === pick.winner) {
+      basePoints = result.games_played === pick.games_in_series ? 3 : 2;
+    } else if (actualWinnerSet.has(pick.winner)) {
+      basePoints = 1;
+    }
+    const championBonus =
+      pick.series_id === "nba-finals" && result.winner === pick.winner;
+    return { basePoints, championBonus };
+  }
+
   // Group series by round for row headers
   let lastRound = "";
 

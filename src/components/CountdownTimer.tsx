@@ -12,12 +12,6 @@ const CountdownTimer = () => {
     return () => clearInterval(id);
   }, []);
 
-  // Auto-minimize 2s after mount, collapsing to just the day count.
-  useEffect(() => {
-    const t = setTimeout(() => setMinimized(true), 2000);
-    return () => clearTimeout(t);
-  }, []);
-
   const targetMs = TARGET.getTime();
   const isRunning = now >= targetMs;
   const diff = isRunning ? now - targetMs : targetMs - now;

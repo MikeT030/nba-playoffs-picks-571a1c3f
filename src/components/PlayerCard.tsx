@@ -38,6 +38,7 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
                 src={img}
                 alt={`${player.firstName} ${player.lastName}`}
                 className="absolute inset-0 w-full h-full object-cover object-top"
+                style={player.imageOffsetY ? { transform: `translateY(${player.imageOffsetY}px)` } : undefined}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0a1628] via-transparent to-transparent" />
 

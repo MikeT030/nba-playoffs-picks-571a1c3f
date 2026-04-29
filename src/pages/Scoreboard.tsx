@@ -531,24 +531,26 @@ const Scoreboard = () => {
         {/* All Picks section */}
         <Accordion type="single" collapsible className="space-y-4">
           <AccordionItem value="all-picks" className="border-none group">
-            <AccordionTrigger className="font-display tracking-wider text-foreground text-2xl hover:no-underline py-0 [&>svg]:h-6 [&>svg]:w-6">
-              All Picks
-            </AccordionTrigger>
+            <AccordionTrigger className="font-display tracking-wider text-foreground text-2xl hover:no-underline py-0 [&>svg]:h-6 [&>svg]:w-6 flex-col items-stretch gap-4 [&>svg]:self-end">
+              <span className="flex items-center justify-between w-full">
+                All Picks
+              </span>
 
-            {/* Teaser preview — visible only when accordion is closed */}
-            <div className="group-data-[state=open]:hidden mt-4 relative rounded-lg border border-white/10 bg-[#191d24] backdrop-blur-md overflow-hidden pointer-events-none select-none">
-              <div className="max-h-[110px] overflow-hidden">
-                <AllPicksMatrix picks={allPicks} results={allResults} loading={loading} />
+              {/* Teaser preview — visible only when accordion is closed */}
+              <div className="group-data-[state=open]:hidden relative rounded-lg border border-white/10 bg-[#191d24] backdrop-blur-md overflow-hidden select-none">
+                <div className="max-h-[110px] overflow-hidden pointer-events-none">
+                  <AllPicksMatrix picks={allPicks} results={allResults} loading={loading} />
+                </div>
+                {/* Gradient fade overlay */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background:
+                      "linear-gradient(180deg, hsl(var(--background) / 0) 0%, hsl(var(--background) / 0.15) 35%, hsl(var(--background) / 0.75) 75%, hsl(var(--background)) 100%)",
+                  }}
+                />
               </div>
-              {/* Gradient fade overlay */}
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(180deg, hsl(var(--background) / 0) 0%, hsl(var(--background) / 0.15) 35%, hsl(var(--background) / 0.75) 75%, hsl(var(--background)) 100%)",
-                }}
-              />
-            </div>
+            </AccordionTrigger>
 
             <AccordionContent className="pt-4 pb-0">
               <div className="rounded-lg border border-white/10 bg-[#191d24] backdrop-blur-md overflow-hidden pt-0">

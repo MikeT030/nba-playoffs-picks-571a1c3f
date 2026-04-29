@@ -75,7 +75,8 @@ export const ScoreRibbon = ({ row, rank, totalPlayers }: { row: Row; rank: numbe
       <div
         className="absolute inset-0"
         style={{
-          background: "linear-gradient(135deg, #1f3a8a 0%, #2952c4 50%, #1f3a8a 100%)",
+          background:
+            "linear-gradient(135deg, rgba(31,58,138,0.8) 0%, rgba(41,82,196,0.8) 50%, rgba(31,58,138,0.8) 100%)",
           clipPath: "polygon(0 0, 96% 0, 92% 100%, 0 100%)",
           boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
         }}
@@ -95,11 +96,13 @@ export const ScoreRibbon = ({ row, rank, totalPlayers }: { row: Row; rank: numbe
       <div
         className="absolute -left-1 -top-1 -bottom-1 w-[92px]"
         style={{
-          background: "linear-gradient(180deg, #2a5fdb 0%, #1d3fa3 100%)",
+          background:
+            "linear-gradient(180deg, rgba(42,95,219,0.8) 0%, rgba(29,63,163,0.8) 100%)",
           clipPath: "polygon(0 0, 100% 0, 88% 100%, 0 100%)",
           boxShadow: "2px 0 6px rgba(0,0,0,0.35)",
         }}
       />
+
       {/* Avatar circle */}
       <div className="absolute left-3 top-1/2 -translate-y-1/2 w-[60px] h-[60px] rounded-full bg-white border-[3px] border-white shadow-lg overflow-hidden flex items-center justify-center">
         {avatarSrc ? (

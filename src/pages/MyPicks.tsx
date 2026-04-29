@@ -331,32 +331,6 @@ const MyPicks = () => {
     </div>
   );
 
-  const viewTabs = (
-    <div className="flex border-b border-border/40 mb-11">
-      <button
-        onClick={() => setShowBracket(true)}
-        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-base font-medium transition-all duration-200 border-b-2 -mb-px ${
-          showBracket
-            ? "border-primary text-primary"
-            : "border-transparent text-muted-foreground hover:text-foreground"
-        }`}
-      >
-        <LayoutGrid size={16} />
-        Bracket
-      </button>
-      <button
-        onClick={() => setShowBracket(false)}
-        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-base font-medium transition-all duration-200 border-b-2 -mb-px ${
-          !showBracket
-            ? "border-primary text-primary"
-            : "border-transparent text-muted-foreground hover:text-foreground"
-        }`}
-      >
-        <Network size={16} />
-        Cards
-      </button>
-    </div>
-  );
 
   if (bets.length === 0) {
     return (
@@ -383,165 +357,166 @@ const MyPicks = () => {
 
       <section className="container py-8 pb-24">
 
-        {viewTabs}
+        {/* Bracket section */}
+        <div className="space-y-4 mb-12">
+          <h2 className="font-display tracking-wider text-foreground text-2xl">Bracket</h2>
 
-        {showBracket ? (
-          <>
-            {seriesResults.length > 0 && (() => {
-              const userBetsLite = bets.map((b) => ({
-                series_id: b.seriesId,
-                winner: b.winner,
-                games_in_series: b.gamesInSeries,
-              }));
-              const totalPoints = totalUserPoints(userBetsLite, seriesResults);
-              return (
-                <div className="flex items-center justify-center gap-4 py-2 px-3 mb-6 rounded-lg bg-[#1A1E24] border border-border/50">
-                  <div className="text-center">
-                    <p className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">Your Points</p>
-                    <p className="font-display text-2xl text-primary">{totalPoints}</p>
-                  </div>
+          {seriesResults.length > 0 && (() => {
+            const userBetsLite = bets.map((b) => ({
+              series_id: b.seriesId,
+              winner: b.winner,
+              games_in_series: b.gamesInSeries,
+            }));
+            const totalPoints = totalUserPoints(userBetsLite, seriesResults);
+            return (
+              <div className="flex items-center justify-center gap-4 py-2 px-3 mb-2 rounded-lg bg-[#1A1E24] border border-border/50">
+                <div className="text-center">
+                  <p className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">Your Points</p>
+                  <p className="font-display text-2xl text-primary">{totalPoints}</p>
                 </div>
-              );
-            })()}
+              </div>
+            );
+          })()}
 
-            {(() => {
-              const actualWinners: Record<string, string> = {};
-              const seriesScores: Record<string, string> = {};
-              const pickPoints: Record<string, import("@/lib/pickScoring").PickPointInfo> = {};
-              const userPicksLite = bets.map((b) => ({
-                series_id: b.seriesId,
-                winner: b.winner,
-                games_in_series: b.gamesInSeries,
-              }));
-              for (const r of seriesResults) {
-                actualWinners[r.series_id] = r.winner;
-                const { topTeam, bottomTeam } = resolveSeriesTeams(r.series_id, picks, activeBracket);
-                const winnerWins = Math.min(4, Math.max(0, r.games_played - (r.games_played - 4 < 0 ? 0 : r.games_played - 4)));
-                // games_played = winner wins (4) + loser wins. Winner always has 4 in NBA playoffs.
-                const wWins = 4;
-                const lWins = Math.max(0, r.games_played - 4);
-                if (topTeam?.abbreviation === r.winner) {
-                  seriesScores[r.series_id] = `${wWins}-${lWins}`;
-                } else if (bottomTeam?.abbreviation === r.winner) {
-                  seriesScores[r.series_id] = `${lWins}-${wWins}`;
-                }
+          {(() => {
+            const actualWinners: Record<string, string> = {};
+            const seriesScores: Record<string, string> = {};
+            const pickPoints: Record<string, import("@/lib/pickScoring").PickPointInfo> = {};
+            const userPicksLite = bets.map((b) => ({
+              series_id: b.seriesId,
+              winner: b.winner,
+              games_in_series: b.gamesInSeries,
+            }));
+            for (const r of seriesResults) {
+              actualWinners[r.series_id] = r.winner;
+              const { topTeam, bottomTeam } = resolveSeriesTeams(r.series_id, picks, activeBracket);
+              const wWins = 4;
+              const lWins = Math.max(0, r.games_played - 4);
+              if (topTeam?.abbreviation === r.winner) {
+                seriesScores[r.series_id] = `${wWins}-${lWins}`;
+              } else if (bottomTeam?.abbreviation === r.winner) {
+                seriesScores[r.series_id] = `${lWins}-${wWins}`;
               }
-              for (const p of userPicksLite) {
-                pickPoints[p.series_id] = scorePick(p, userPicksLite, seriesResults);
-              }
-              return (
-                <PlayoffBracket
-                  ref={bracketRef}
-                  picks={picks}
-                  bets={bets}
-                  seriesList={activeBracket}
-                  actualWinners={actualWinners}
-                  pickPoints={pickPoints}
-                  seriesScores={seriesScores}
-                  variant="badge"
-                />
-              );
-            })()}
-            <div className="flex justify-start mt-4 mb-4">
-              <button
-                onClick={handleShareBracket}
-                disabled={downloading}
-                className="inline-flex items-center gap-1.5 font-body text-white hover:text-white/80 underline underline-offset-2 disabled:opacity-50 text-sm font-medium"
-              >
-                <svg width="14" height="14" viewBox="0 0 40 41" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M22 6.83754V26.003C22 27.1059 21.1123 28 20 28C18.8954 28 18 27.105 18 26.003V6.83106L15.7411 9.08998C14.9672 9.86383 13.7122 9.86343 12.9257 9.07694C12.1446 8.29589 12.1493 7.02495 12.9127 6.26155L18.5956 0.578616C18.9804 0.193832 19.4841 0.00047404 19.9901 0L20.0054 0.00597072C20.5133 0.00705428 21.0184 0.199037 21.3979 0.578616L27.0809 6.26155C27.8547 7.0354 27.8543 8.29045 27.0678 9.07694C26.2868 9.85799 25.0158 9.85338 24.2524 9.08998L22 6.83754ZM4 37H36V22.9908C36 21.8913 36.8877 21 38 21C39.1046 21 40 21.8982 40 22.9908V39.0092C40 39.5585 39.7784 40.0558 39.418 40.416C39.0521 40.7774 38.554 41 38.0027 41H1.99729C1.44728 41 0.949187 40.7793 0.587987 40.4201C0.223492 40.0524 0 39.555 0 39.0092V22.9908C0 21.8913 0.88773 21 2 21C3.10457 21 4 21.8982 4 22.9908V37Z" fill="white"/>
-                </svg>
-                {downloading ? "Generating..." : "Share Bracket"}
-              </button>
-            </div>
+            }
+            for (const p of userPicksLite) {
+              pickPoints[p.series_id] = scorePick(p, userPicksLite, seriesResults);
+            }
+            return (
+              <PlayoffBracket
+                ref={bracketRef}
+                picks={picks}
+                bets={bets}
+                seriesList={activeBracket}
+                actualWinners={actualWinners}
+                pickPoints={pickPoints}
+                seriesScores={seriesScores}
+                variant="badge"
+              />
+            );
+          })()}
 
-            <Accordion type="single" collapsible className="mt-8">
-              <AccordionItem value="scoring" className="rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md px-5 py-0 border-none">
-                <AccordionTrigger className="font-display text-sm tracking-wider text-foreground flex items-center gap-2 hover:no-underline py-4">
-                  <span className="flex items-center gap-2 text-base">
-                    SCORING SYSTEM
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-body text-sm text-muted-foreground">
-                    <div className="flex items-center gap-2">
-                      <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">3 pts</span>
-                      <span className="text-foreground">Correct winner + correct game count on the right series</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">2 pts</span>
-                      <span className="text-foreground">Correct winner on the right series (wrong game count)</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">1 pt</span>
-                      <span className="text-foreground">Picked a team that won, but assigned to the wrong series</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">4 pts</span>
-                      <span className="text-foreground">Correctly predicted the Supreme Finals champion</span>
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </>
-        ) : (
-          <>
-            <Select value={selectedRound} onValueChange={setSelectedRound}>
-              <SelectTrigger className="w-[220px] mb-6">
-                <SelectValue placeholder="Select round" />
-              </SelectTrigger>
-              <SelectContent position="popper" sideOffset={4}>
-                {rounds.map((r) => (
-                  <SelectItem key={r.value} value={r.value}>
-                    {r.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="flex justify-start mt-4">
+            <button
+              onClick={handleShareBracket}
+              disabled={downloading}
+              className="inline-flex items-center gap-1.5 font-body text-white hover:text-white/80 underline underline-offset-2 disabled:opacity-50 text-sm font-medium"
+            >
+              <svg width="14" height="14" viewBox="0 0 40 41" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                <path fillRule="evenodd" clipRule="evenodd" d="M22 6.83754V26.003C22 27.1059 21.1123 28 20 28C18.8954 28 18 27.105 18 26.003V6.83106L15.7411 9.08998C14.9672 9.86383 13.7122 9.86343 12.9257 9.07694C12.1446 8.29589 12.1493 7.02495 12.9127 6.26155L18.5956 0.578616C18.9804 0.193832 19.4841 0.00047404 19.9901 0L20.0054 0.00597072C20.5133 0.00705428 21.0184 0.199037 21.3979 0.578616L27.0809 6.26155C27.8547 7.0354 27.8543 8.29045 27.0678 9.07694C26.2868 9.85799 25.0158 9.85338 24.2524 9.08998L22 6.83754ZM4 37H36V22.9908C36 21.8913 36.8877 21 38 21C39.1046 21 40 21.8982 40 22.9908V39.0092C40 39.5585 39.7784 40.0558 39.418 40.416C39.0521 40.7774 38.554 41 38.0027 41H1.99729C1.44728 41 0.949187 40.7793 0.587987 40.4201C0.223492 40.0524 0 39.555 0 39.0092V22.9908C0 21.8913 0.88773 21 2 21C3.10457 21 4 21.8982 4 22.9908V37Z" fill="white"/>
+              </svg>
+              {downloading ? "Generating..." : "Share Bracket"}
+            </button>
+          </div>
+        </div>
 
-            {(selectedRound === "all" ? roundOrder : [selectedRound]).map((round) => {
-              const roundSeries = activeBracket.filter((s) => s.round === round);
-              const conferences = round === "Finals" ? ["Finals"] : ["West", "East"];
+        {/* Cards section */}
+        <div className="space-y-4 mb-12">
+          <h2 className="font-display tracking-wider text-foreground text-2xl">Cards</h2>
 
-              return (
-                <div key={round} className="mb-10">
-                  <h2 className="font-display text-2xl tracking-wider mb-4">{round.toUpperCase()}</h2>
+          <Select value={selectedRound} onValueChange={setSelectedRound}>
+            <SelectTrigger className="w-[220px] mb-2">
+              <SelectValue placeholder="Select round" />
+            </SelectTrigger>
+            <SelectContent position="popper" sideOffset={4}>
+              {rounds.map((r) => (
+                <SelectItem key={r.value} value={r.value}>
+                  {r.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-                  {conferences.map((conf) => {
-                    const confSeries = roundSeries.filter((s) => s.conference === conf);
-                    if (!confSeries.length) return null;
+          {(selectedRound === "all" ? roundOrder : [selectedRound]).map((round) => {
+            const roundSeries = activeBracket.filter((s) => s.round === round);
+            const conferences = round === "Finals" ? ["Finals"] : ["West", "East"];
 
-                    return (
-                      <div key={conf} className="mb-6">
-                        {conf !== "Finals" && (
-                          <h3 className="font-display text-lg tracking-wider text-foreground mb-3">
-                            {conf === "East" ? "Eastern Conference" : "Western Conference"}
-                          </h3>
-                        )}
-                        <div className="grid gap-4 md:grid-cols-2">
-                          {confSeries.map((series) => {
-                            const resolved = resolveSeriesTeams(series.id, picks, activeBracket);
-                            return (
-                              <PickCard
-                                key={series.id}
-                                topTeam={resolved.topTeam ?? series.topTeam}
-                                bottomTeam={resolved.bottomTeam ?? series.bottomTeam}
-                                bet={bets.find((b) => b.seriesId === series.id)}
-                                round={series.round}
-                                conference={series.conference}
-                              />
-                            );
-                          })}
-                        </div>
+            return (
+              <div key={round} className="mb-10">
+                <h3 className="font-display text-2xl tracking-wider mb-4">{round.toUpperCase()}</h3>
+
+                {conferences.map((conf) => {
+                  const confSeries = roundSeries.filter((s) => s.conference === conf);
+                  if (!confSeries.length) return null;
+
+                  return (
+                    <div key={conf} className="mb-6">
+                      {conf !== "Finals" && (
+                        <h4 className="font-display text-lg tracking-wider text-foreground mb-3">
+                          {conf === "East" ? "Eastern Conference" : "Western Conference"}
+                        </h4>
+                      )}
+                      <div className="grid gap-4 md:grid-cols-2">
+                        {confSeries.map((series) => {
+                          const resolved = resolveSeriesTeams(series.id, picks, activeBracket);
+                          return (
+                            <PickCard
+                              key={series.id}
+                              topTeam={resolved.topTeam ?? series.topTeam}
+                              bottomTeam={resolved.bottomTeam ?? series.bottomTeam}
+                              bet={bets.find((b) => b.seriesId === series.id)}
+                              round={series.round}
+                              conference={series.conference}
+                            />
+                          );
+                        })}
                       </div>
-                    );
-                  })}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+
+        <Accordion type="single" collapsible className="mt-8">
+          <AccordionItem value="scoring" className="rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md px-5 py-0 border-none">
+            <AccordionTrigger className="font-display text-sm tracking-wider text-foreground flex items-center gap-2 hover:no-underline py-4">
+              <span className="flex items-center gap-2 text-base">
+                SCORING SYSTEM
+              </span>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-body text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">3 pts</span>
+                  <span className="text-foreground">Correct winner + correct game count on the right series</span>
                 </div>
-              );
-            })}
-          </>
-        )}
+                <div className="flex items-center gap-2">
+                  <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">2 pts</span>
+                  <span className="text-foreground">Correct winner on the right series (wrong game count)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">1 pt</span>
+                  <span className="text-foreground">Picked a team that won, but assigned to the wrong series</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">4 pts</span>
+                  <span className="text-foreground">Correctly predicted the Supreme Finals champion</span>
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </section>
 
       {!locked && <BetsDrawer open={betsOpen} onOpenChange={setBetsOpen} onBetsSaved={() => setRefreshKey((k) => k + 1)} resolvedBracket={resolvedBracket} />}

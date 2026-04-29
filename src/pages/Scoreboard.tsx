@@ -489,72 +489,17 @@ const Scoreboard = () => {
   }, []);
 
 
-  const viewTabs = (
-    <div className="flex border-b border-border/40 mb-11">
-      <button
-        onClick={() => setShowAllPicks(false)}
-        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-base font-medium transition-all duration-200 border-b-2 -mb-px ${
-          !showAllPicks
-            ? "border-primary text-primary"
-            : "border-transparent text-muted-foreground hover:text-foreground"
-        }`}
-      >
-        <LayoutGrid size={16} />
-        Points
-      </button>
-      <button
-        onClick={() => setShowAllPicks(true)}
-        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-body text-base font-medium transition-all duration-200 border-b-2 -mb-px ${
-          showAllPicks
-            ? "border-primary text-primary"
-            : "border-transparent text-muted-foreground hover:text-foreground"
-        }`}
-      >
-        <span
-          aria-label="All Picks"
-          className="w-4 h-4 bg-current"
-          style={{
-            WebkitMaskImage: `url(${allPicksIcon})`,
-            maskImage: `url(${allPicksIcon})`,
-            WebkitMaskRepeat: "no-repeat",
-            maskRepeat: "no-repeat",
-            WebkitMaskPosition: "center",
-            maskPosition: "center",
-            WebkitMaskSize: "contain",
-            maskSize: "contain",
-          }}
-        />
-        All Picks
-      </button>
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-background pb-28">
       <HeroBanner title={"SCORE\nBOARD"} subtitle="2026 Playoffs" />
 
-      <section className="container py-8">
-        {viewTabs}
-
-        {showAllPicks ? (
-          <>
-            <div className="rounded-lg border border-white/10 bg-[#191d24] backdrop-blur-md overflow-hidden pt-0">
-              <AllPicksMatrix picks={allPicks} results={allResults} loading={loading} />
-            </div>
-            {allPicks.length > 0 && (
-              <div className="flex justify-start mt-3">
-                <button
-                  onClick={() => exportAllPicksToExcel(allPicks, allResults, seriesListForExport)}
-                  className="inline-flex items-center gap-1.5 text-xs font-body text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
-                >
-                  <Download size={14} />
-                  Download as Excel
-                </button>
-              </div>
-            )}
-          </>
-        ) : (
-          /* Leaderboard */
+      <section className="container py-8 space-y-10">
+        {/* Points section */}
+        <div className="space-y-4">
+          <h2 className="font-display text-base tracking-wider text-foreground flex items-center gap-2">
+            <LayoutGrid size={16} />
+            Points
+          </h2>
           <div className="space-y-3">
             {scoreboard.map((player, i) => (
               <button
@@ -574,7 +519,42 @@ const Scoreboard = () => {
               </button>
             ))}
           </div>
-        )}
+        </div>
+
+        {/* All Picks section */}
+        <div className="space-y-4">
+          <h2 className="font-display text-base tracking-wider text-foreground flex items-center gap-2">
+            <span
+              aria-label="All Picks"
+              className="w-4 h-4 bg-current"
+              style={{
+                WebkitMaskImage: `url(${allPicksIcon})`,
+                maskImage: `url(${allPicksIcon})`,
+                WebkitMaskRepeat: "no-repeat",
+                maskRepeat: "no-repeat",
+                WebkitMaskPosition: "center",
+                maskPosition: "center",
+                WebkitMaskSize: "contain",
+                maskSize: "contain",
+              }}
+            />
+            All Picks
+          </h2>
+          <div className="rounded-lg border border-white/10 bg-[#191d24] backdrop-blur-md overflow-hidden pt-0">
+            <AllPicksMatrix picks={allPicks} results={allResults} loading={loading} />
+          </div>
+          {allPicks.length > 0 && (
+            <div className="flex justify-start mt-3">
+              <button
+                onClick={() => exportAllPicksToExcel(allPicks, allResults, seriesListForExport)}
+                className="inline-flex items-center gap-1.5 text-xs font-body text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
+              >
+                <Download size={14} />
+                Download as Excel
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* Scoring legend */}
         <Accordion type="single" collapsible className="mt-8">

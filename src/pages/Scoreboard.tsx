@@ -496,8 +496,7 @@ const Scoreboard = () => {
       <section className="container py-8 space-y-10">
         {/* Points section */}
         <div className="space-y-4">
-          <h2 className="font-display text-base tracking-wider text-foreground flex items-center gap-2">
-            <LayoutGrid size={16} />
+          <h2 className="font-display text-base tracking-wider text-foreground">
             Points
           </h2>
           <div className="space-y-3">
@@ -523,21 +522,7 @@ const Scoreboard = () => {
 
         {/* All Picks section */}
         <div className="space-y-4">
-          <h2 className="font-display text-base tracking-wider text-foreground flex items-center gap-2">
-            <span
-              aria-label="All Picks"
-              className="w-4 h-4 bg-current"
-              style={{
-                WebkitMaskImage: `url(${allPicksIcon})`,
-                maskImage: `url(${allPicksIcon})`,
-                WebkitMaskRepeat: "no-repeat",
-                maskRepeat: "no-repeat",
-                WebkitMaskPosition: "center",
-                maskPosition: "center",
-                WebkitMaskSize: "contain",
-                maskSize: "contain",
-              }}
-            />
+          <h2 className="font-display text-base tracking-wider text-foreground">
             All Picks
           </h2>
           <div className="rounded-lg border border-white/10 bg-[#191d24] backdrop-blur-md overflow-hidden pt-0">

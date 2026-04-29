@@ -69,22 +69,44 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
                 <img src={flairBustsLogo} alt="Flair Busts" className="h-14 w-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]" />
               </div>
 
-              {/* Stats overlay */}
-              <div className="relative -mt-16 px-4 z-10">
-                <div className="text-center">
-                  <span className="font-display text-4xl tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                    {player.stat}
-                  </span>
-                  <span className="font-display text-lg tracking-tight text-white/80 ml-1 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                    {player.statLabel}
-                  </span>
+              {/* Bottom stack: stats, name, ribbon */}
+              <div className="absolute bottom-0 left-0 right-0 z-10">
+                {/* Stats overlay */}
+                <div className="px-4">
+                  <div className="text-center">
+                    <span className="font-display text-4xl tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                      {player.stat}
+                    </span>
+                    <span className="font-display text-lg tracking-tight text-white/80 ml-1 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                      {player.statLabel}
+                    </span>
+                  </div>
+                  <p className="text-center font-display text-xs tracking-[0.2em] text-amber-400/90 mt-1 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
+                    {player.statLine}
+                  </p>
+                  <p className="text-center font-display text-[9px] tracking-[0.15em] text-white/60 mt-0.5">
+                    {player.subtitle}
+                  </p>
                 </div>
-                <p className="text-center font-display text-xs tracking-[0.2em] text-amber-400/90 mt-1 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
-                  {player.statLine}
-                </p>
-                <p className="text-center font-display text-[9px] tracking-[0.15em] text-white/60 mt-0.5">
-                  {player.subtitle}
-                </p>
+
+                {/* Player name */}
+                <div className="px-4 pt-3 pb-[12px] flex items-center justify-between gap-3">
+                  <div className="min-w-0 flex-1 flex-col flex items-center justify-center">
+                    <p className={`font-body italic ${player.nameColor} text-2xl leading-none -mb-0.5 drop-shadow-[0_1px_6px_rgba(220,40,40,0.4)] text-right`}>
+                      {player.firstName}
+                    </p>
+                    <h3 className="font-display text-4xl tracking-wider text-white uppercase leading-none drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] text-right">
+                      {player.lastName}
+                    </h3>
+                  </div>
+                </div>
+
+                {/* Game context ribbon */}
+                <div className={`mx-3 mb-3 rounded px-3 py-1.5 bg-gradient-to-r ${player.accentPrimary} pb-[6px]`}>
+                  <p className="font-display text-xs tracking-[0.15em] text-white/90 uppercase text-center leading-tight font-bold">
+                    {player.gameContext}
+                  </p>
+                </div>
               </div>
 
               {/* Player name */}

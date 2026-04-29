@@ -70,7 +70,7 @@ export const ScoreRibbon = ({ row, rank, totalPlayers, displayRank }: { row: Row
   const stars = starsForRank(rank, totalPlayers);
 
   return (
-    <div className="relative w-full h-[72px] select-none">
+    <div className="relative w-full h-[61px] select-none">
       {/* Background ribbon shape using clip-path */}
       <div
         className="absolute inset-0"

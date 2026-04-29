@@ -41,6 +41,16 @@ const rounds = [
   { value: "Finals", label: "Finals" },
 ];
 
+const ONES = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
+const TENS = ["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
+function numberToWords(n: number): string {
+  if (n < 0) return `negative ${numberToWords(-n)}`;
+  if (n < 20) return ONES[n];
+  if (n < 100) return TENS[Math.floor(n / 10)] + (n % 10 ? `-${ONES[n % 10]}` : "");
+  if (n < 1000) return `${ONES[Math.floor(n / 100)]} hundred${n % 100 ? ` ${numberToWords(n % 100)}` : ""}`;
+  return String(n);
+}
+
 interface BetSelection {
   seriesId: string;
   winner: string;

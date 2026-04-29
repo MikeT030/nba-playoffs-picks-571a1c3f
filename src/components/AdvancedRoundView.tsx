@@ -314,7 +314,7 @@ const AdvancedRoundView = ({
   return (
     <div className="space-y-3">
       {/* Round select */}
-      <div className="flex items-center gap-2 overflow-x-auto py-3 -mx-4 px-4 pb-0">
+      <div className="flex items-center gap-2 overflow-x-auto py-3 -mx-4 px-4 pb-[12px]">
         {selectableRounds.map((r) => {
           const roundMatches = byRound[r];
           const hasMatches = roundMatches.length > 0;

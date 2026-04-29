@@ -66,7 +66,7 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
                 <img
                   src={img}
                   alt={`${player.firstName} ${player.lastName}`}
-                  className="w-full h-[298px] object-cover object-top"
+                  className="w-full h-[354px] object-cover object-top"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a1628] via-transparent to-transparent" />
               </div>

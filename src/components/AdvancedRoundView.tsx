@@ -356,7 +356,7 @@ const AdvancedRoundView = ({
                 setUserSelected(true);
                 setActiveRound(r);
               }}
-              className={`shrink-0 inline-flex items-center gap-1.5 px-4 py-2.5 rounded-md border font-display tracking-widest uppercase transition-all duration-300 ease-out ${stateClasses}`}
+              className={`shrink-0 inline-flex items-center gap-1.5 px-4 py-2.5 rounded-md border font-display tracking-widest uppercase transition-all duration-700 ease-out ${stateClasses}`}
             >
               {ROUND_LABEL[r]}
               {isComplete && <Check className="w-3 h-3" strokeWidth={3} />}

@@ -331,10 +331,10 @@ const AdvancedRoundView = ({
               "border-secondary/40 bg-secondary/30 hover:bg-secondary/50 text-secondary-foreground text-lg";
           } else if (hasMatches) {
             stateClasses =
-              "border-border bg-transparent hover:bg-accent/40 text-muted-foreground hover:text-foreground text-2xl";
+              "border-border bg-transparent hover:bg-accent/40 text-[#DBE0E5] hover:text-foreground text-2xl";
           } else {
             stateClasses =
-              "border-transparent bg-transparent text-muted-foreground/60 hover:text-foreground text-2xl";
+              "border-transparent bg-transparent text-[#DBE0E5] hover:text-foreground text-2xl";
           }
 
           return (

@@ -411,7 +411,10 @@ const DemoAllPicksTable = () => {
               </tbody>
             </table>
           </div>
-        </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       )}
     </div>
   );

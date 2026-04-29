@@ -325,7 +325,7 @@ const AdvancedRoundView = ({
           let stateClasses: string;
           if (isActive) {
             stateClasses =
-              "border-0 bg-[#47b4eb]/0 text-primary-foreground text-2xl";
+              "border-0 bg-[#47b4eb]/0 text-primary text-2xl";
           } else if (isComplete) {
             stateClasses =
               "border-secondary/40 bg-secondary/30 hover:bg-secondary/50 text-[#D9D9D9] text-lg";

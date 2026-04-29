@@ -111,13 +111,6 @@ const ScoreRibbon = ({ row, rank, totalPlayers }: { row: Row; rank: number; tota
         )}
       </div>
 
-      {/* Right slashes */}
-      <div className="absolute right-1 top-1/2 -translate-y-1/2 flex gap-[3px] text-white/90 font-display text-2xl leading-none">
-        <span>/</span>
-        <span>/</span>
-        <span>/</span>
-      </div>
-
       {/* Content */}
       <div className="absolute inset-0 pl-[110px] pr-12 flex items-center justify-between gap-3">
         <span className="font-display text-white text-lg tracking-wide truncate drop-shadow">

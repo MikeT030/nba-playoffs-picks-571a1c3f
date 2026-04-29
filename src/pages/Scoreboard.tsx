@@ -430,7 +430,7 @@ function exportAllPicksToExcel(
 }
 
 const Scoreboard = () => {
-  const [showAllPicks, setShowAllPicks] = useState(false);
+  
   const [scoreboard, setScoreboard] = useState<ParticipantScore[]>([]);
   const [loading, setLoading] = useState(true);
   const [cardMap, setCardMap] = useState<Record<string, string>>({});

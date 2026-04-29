@@ -81,17 +81,8 @@ export const ScoreRibbon = ({ row, rank, totalPlayers }: { row: Row; rank: numbe
           boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
         }}
       />
-      {/* Diagonal accent stripes (left, behind avatar tab) */}
-      <div
-        className="absolute top-0 bottom-0"
-        style={{
-          left: "82px",
-          width: "70px",
-          background:
-            "repeating-linear-gradient(110deg, transparent 0 8px, rgba(255,255,255,0.18) 8px 14px, transparent 14px 22px)",
-          clipPath: "polygon(20% 0, 100% 0, 80% 100%, 0 100%)",
-        }}
-      />
+      {/* Diagonal accent stripes removed */}
+
       {/* Avatar tab (raised box on the left) */}
       <div
         className="absolute -left-1 -top-1 -bottom-1 w-[92px]"

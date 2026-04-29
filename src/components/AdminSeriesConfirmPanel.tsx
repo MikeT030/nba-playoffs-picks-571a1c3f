@@ -64,7 +64,7 @@ const AdminSeriesConfirmPanel = () => {
   const headerCount = ready.length + mismatch.length;
 
   return (
-    <Accordion type="single" collapsible defaultValue="confirm" className="bg-[#181C23] rounded-lg px-5">
+    <Accordion type="single" collapsible className="bg-[#181C23] rounded-lg px-5">
       <AccordionItem value="confirm" className="border-b-0">
         <AccordionTrigger className="hover:no-underline">
           <div className="flex items-center gap-2">

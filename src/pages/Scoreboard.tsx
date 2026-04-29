@@ -500,23 +500,31 @@ const Scoreboard = () => {
             Points
           </h2>
           <div className="space-y-3">
-            {scoreboard.map((player, i) => (
-              <button
-                key={player.name}
-                onClick={() => openCardDialog(player.name)}
-                className="block w-full text-left transition-transform active:scale-[0.99] hover:brightness-110"
-              >
-                <ScoreRibbon
-                  row={{
-                    name: player.name,
-                    totalPoints: player.totalPoints,
-                    cardId: cardMap[player.name],
-                  }}
-                  rank={i}
-                  totalPlayers={scoreboard.length}
-                />
-              </button>
-            ))}
+            {(() => {
+              const ranks: number[] = [];
+              scoreboard.forEach((p, i) => {
+                if (i > 0 && p.totalPoints === scoreboard[i - 1].totalPoints) ranks.push(ranks[i - 1]);
+                else ranks.push(i + 1);
+              });
+              return scoreboard.map((player, i) => (
+                <button
+                  key={player.name}
+                  onClick={() => openCardDialog(player.name)}
+                  className="block w-full text-left transition-transform active:scale-[0.99] hover:brightness-110"
+                >
+                  <ScoreRibbon
+                    row={{
+                      name: player.name,
+                      totalPoints: player.totalPoints,
+                      cardId: cardMap[player.name],
+                    }}
+                    rank={i}
+                    totalPlayers={scoreboard.length}
+                    displayRank={ranks[i]}
+                  />
+                </button>
+              ));
+            })()}
           </div>
         </div>
 

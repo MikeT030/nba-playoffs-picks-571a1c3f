@@ -433,7 +433,7 @@ const MyPicks = () => {
         <Accordion type="single" collapsible className="mb-12">
           <AccordionItem value="cards" className="border-none">
             <AccordionTrigger className="hover:no-underline py-2">
-              <h2 className="font-display tracking-wider text-foreground text-2xl">Cards</h2>
+              <h2 className="font-display tracking-wider text-foreground text-2xl">That's what you've picked</h2>
             </AccordionTrigger>
             <AccordionContent className="pt-4">
               <Select value={selectedRound} onValueChange={setSelectedRound}>

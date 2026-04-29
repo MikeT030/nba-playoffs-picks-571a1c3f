@@ -22,6 +22,7 @@ import { playerCards } from "@/data/playerCards";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import PlayerCard from "@/components/PlayerCard";
+import { ScoreRibbon } from "@/components/DemoVisualScoreboard";
 
 
 
@@ -554,43 +555,24 @@ const Scoreboard = () => {
           </>
         ) : (
           /* Leaderboard */
-          <div className="rounded-lg bg-[#191d24] overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-12">#</TableHead>
-                  <TableHead>Player</TableHead>
-                  <TableHead className="text-right">Points</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {scoreboard.map((player, i) => (
-                  <TableRow key={player.name} className="cursor-pointer border-b-[#2B2F37]" onClick={() => openCardDialog(player.name)}>
-                    <TableCell>{getRankIcon(i)}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2.5">
-                        {(() => {
-                          const cardId = cardMap[player.name];
-                          const card = cardId ? playerCards.find(c => c.id === cardId) : null;
-                          const imgSrc = card ? playerImages[card.image] : null;
-                          return (
-                            <Avatar className="h-8 w-8 border border-border/40">
-                              {imgSrc ? (
-                                <AvatarImage src={imgSrc} alt={player.name} className="object-cover object-top" />
-                              ) : (
-                                <AvatarFallback className="text-xs bg-muted">{player.name.charAt(0)}</AvatarFallback>
-                              )}
-                            </Avatar>
-                          );
-                        })()}
-                        <span className="font-body font-medium text-foreground">{player.name}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right font-display text-lg text-foreground">{player.totalPoints}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+          <div className="space-y-3">
+            {scoreboard.map((player, i) => (
+              <button
+                key={player.name}
+                onClick={() => openCardDialog(player.name)}
+                className="block w-full text-left transition-transform active:scale-[0.99] hover:brightness-110"
+              >
+                <ScoreRibbon
+                  row={{
+                    name: player.name,
+                    totalPoints: player.totalPoints,
+                    cardId: cardMap[player.name],
+                  }}
+                  rank={i}
+                  totalPlayers={scoreboard.length}
+                />
+              </button>
+            ))}
           </div>
         )}
 

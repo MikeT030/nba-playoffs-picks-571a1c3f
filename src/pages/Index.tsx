@@ -5,7 +5,6 @@ import HeroBanner from "@/components/HeroBanner";
 
 import BetsDrawer from "@/components/BetsDrawer";
 import CardRouletteOverlay from "@/components/CardRouletteOverlay";
-import CountdownTimer from "@/components/CountdownTimer";
 import HighlightTicker from "@/components/HighlightTicker";
 import { usePlayoffGames } from "@/hooks/usePlayoffGames";
 import { useBracketData } from "@/hooks/useBracketData";

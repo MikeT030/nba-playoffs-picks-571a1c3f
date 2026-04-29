@@ -447,7 +447,7 @@ const MyPicks = () => {
         {/* Cards section */}
         <Accordion type="single" collapsible className="mb-12">
           <AccordionItem value="cards" className="border-none group">
-            <AccordionTrigger className="hover:no-underline py-2 flex-col items-stretch gap-4 relative [&>svg]:absolute [&>svg]:right-0 [&>svg]:top-4 [&>svg]:h-6 [&>svg]:w-6">
+            <AccordionTrigger className="w-full hover:no-underline py-2 flex-col items-stretch gap-4 relative [&>svg]:absolute [&>svg]:right-0 [&>svg]:top-4 [&>svg]:h-6 [&>svg]:w-6 [&>svg]:z-10">
               <span className="flex items-center w-full pr-8">
                 <h2 className="font-display tracking-wider text-foreground text-2xl">That's what you've picked</h2>
               </span>

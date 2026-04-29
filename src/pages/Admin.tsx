@@ -20,6 +20,7 @@ import DemoMatchDetailDialog from "@/components/DemoMatchDetailDialog";
 import DemoMatchCardFonts from "@/components/DemoMatchCardFonts";
 import DemoBracketPlayedOut from "@/components/DemoBracketPlayedOut";
 import DemoAllPicksTable from "@/components/DemoAllPicksTable";
+import DemoVisualScoreboard from "@/components/DemoVisualScoreboard";
 import { DemoFlyerCardV3, DemoFlyerCardPaxson, DemoFlyerCardDavis, DemoFlyerCardMiller } from "@/components/DemoFlyerCardVariants";
 
 interface AdminUser {
@@ -104,6 +105,8 @@ const Admin = () => {
         </p>
 
         <AdminSeriesConfirmPanel />
+
+        <DemoVisualScoreboard />
 
         <DemoAllMatchupsInnovation />
 

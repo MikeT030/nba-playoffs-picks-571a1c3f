@@ -334,7 +334,7 @@ const AdvancedRoundView = ({
               "border-border bg-transparent hover:bg-accent/40 text-muted-foreground hover:text-foreground text-xl";
           } else {
             stateClasses =
-              "border-transparent bg-transparent text-muted-foreground/60 hover:text-foreground text-xl";
+              "border-transparent bg-transparent text-muted-foreground/60 hover:text-foreground text-2xl";
           }
 
           return (

@@ -281,21 +281,23 @@ const DemoAllPicksTable = () => {
 
   return (
     <div className="space-y-3">
-      <div>
-        <h2 className="font-display text-lg tracking-wider">DEMO ALL-POINTS TABLE</h2>
-        <p className="text-xs text-muted-foreground font-body">
-          Same played-out results as the demo bracket. Each cell shows the
-          pick (e.g. "OKC in 6") and the points it earned (3 = perfect,
-          2 = winner, 1 = right team / wrong series, 0 = miss). The Finals
-          cell adds a +4 champion bonus when correct.
-        </p>
-      </div>
-
       {isLoading ? (
         <p className="text-sm text-muted-foreground font-body">Loading demo table…</p>
       ) : (
-        <div className="rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md overflow-hidden">
-          <div className="w-full overflow-auto">
+        <Accordion type="single" collapsible defaultValue="demo-all-picks">
+          <AccordionItem value="demo-all-picks" className="border-none">
+            <AccordionTrigger className="font-display text-lg tracking-wider hover:no-underline py-2">
+              DEMO ALL-POINTS TABLE
+            </AccordionTrigger>
+            <AccordionContent className="pt-2 space-y-3">
+              <p className="text-xs text-muted-foreground font-body">
+                Same played-out results as the demo bracket. Each cell shows the
+                pick (e.g. "OKC in 6") and the points it earned (3 = perfect,
+                2 = winner, 1 = right team / wrong series, 0 = miss). The Finals
+                cell adds a +4 champion bonus when correct.
+              </p>
+              <div className="rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md overflow-hidden">
+                <div className="w-full overflow-auto">
             <table className="min-w-max text-sm border-collapse">
               <thead>
                 <tr>

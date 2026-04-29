@@ -175,9 +175,16 @@ const DemoVisualScoreboard = () => {
         ) : rows.length === 0 ? (
           <p className="font-body text-sm text-muted-foreground">No scores yet.</p>
         ) : (
-          rows.map((row, i) => (
-            <ScoreRibbon key={row.name} row={row} rank={i} totalPlayers={rows.length} />
-          ))
+          (() => {
+            const ranks: number[] = [];
+            rows.forEach((r, i) => {
+              if (i > 0 && r.totalPoints === rows[i - 1].totalPoints) ranks.push(ranks[i - 1]);
+              else ranks.push(i + 1);
+            });
+            return rows.map((row, i) => (
+              <ScoreRibbon key={row.name} row={row} rank={i} totalPlayers={rows.length} displayRank={ranks[i]} />
+            ));
+          })()
         )}
       </div>
     </div>

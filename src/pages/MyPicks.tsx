@@ -430,63 +430,68 @@ const MyPicks = () => {
         </div>
 
         {/* Cards section */}
-        <div className="space-y-4 mb-12">
-          <h2 className="font-display tracking-wider text-foreground text-2xl">Cards</h2>
+        <Accordion type="single" collapsible className="mb-12">
+          <AccordionItem value="cards" className="border-none">
+            <AccordionTrigger className="hover:no-underline py-2">
+              <h2 className="font-display tracking-wider text-foreground text-2xl">Cards</h2>
+            </AccordionTrigger>
+            <AccordionContent className="pt-4">
+              <Select value={selectedRound} onValueChange={setSelectedRound}>
+                <SelectTrigger className="w-[220px] mb-2">
+                  <SelectValue placeholder="Select round" />
+                </SelectTrigger>
+                <SelectContent position="popper" sideOffset={4}>
+                  {rounds.map((r) => (
+                    <SelectItem key={r.value} value={r.value}>
+                      {r.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-          <Select value={selectedRound} onValueChange={setSelectedRound}>
-            <SelectTrigger className="w-[220px] mb-2">
-              <SelectValue placeholder="Select round" />
-            </SelectTrigger>
-            <SelectContent position="popper" sideOffset={4}>
-              {rounds.map((r) => (
-                <SelectItem key={r.value} value={r.value}>
-                  {r.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              {(selectedRound === "all" ? roundOrder : [selectedRound]).map((round) => {
+                const roundSeries = activeBracket.filter((s) => s.round === round);
+                const conferences = round === "Finals" ? ["Finals"] : ["West", "East"];
 
-          {(selectedRound === "all" ? roundOrder : [selectedRound]).map((round) => {
-            const roundSeries = activeBracket.filter((s) => s.round === round);
-            const conferences = round === "Finals" ? ["Finals"] : ["West", "East"];
+                return (
+                  <div key={round} className="mb-10">
+                    <h3 className="font-display text-2xl tracking-wider mb-4">{round.toUpperCase()}</h3>
 
-            return (
-              <div key={round} className="mb-10">
-                <h3 className="font-display text-2xl tracking-wider mb-4">{round.toUpperCase()}</h3>
+                    {conferences.map((conf) => {
+                      const confSeries = roundSeries.filter((s) => s.conference === conf);
+                      if (!confSeries.length) return null;
 
-                {conferences.map((conf) => {
-                  const confSeries = roundSeries.filter((s) => s.conference === conf);
-                  if (!confSeries.length) return null;
-
-                  return (
-                    <div key={conf} className="mb-6">
-                      {conf !== "Finals" && (
-                        <h4 className="font-display text-lg tracking-wider text-foreground mb-3">
-                          {conf === "East" ? "Eastern Conference" : "Western Conference"}
-                        </h4>
-                      )}
-                      <div className="grid gap-4 md:grid-cols-2">
-                        {confSeries.map((series) => {
-                          const resolved = resolveSeriesTeams(series.id, picks, activeBracket);
-                          return (
-                            <PickCard
-                              key={series.id}
-                              topTeam={resolved.topTeam ?? series.topTeam}
-                              bottomTeam={resolved.bottomTeam ?? series.bottomTeam}
-                              bet={bets.find((b) => b.seriesId === series.id)}
-                              round={series.round}
-                              conference={series.conference}
-                            />
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
-        </div>
+                      return (
+                        <div key={conf} className="mb-6">
+                          {conf !== "Finals" && (
+                            <h4 className="font-display text-lg tracking-wider text-foreground mb-3">
+                              {conf === "East" ? "Eastern Conference" : "Western Conference"}
+                            </h4>
+                          )}
+                          <div className="grid gap-4 md:grid-cols-2">
+                            {confSeries.map((series) => {
+                              const resolved = resolveSeriesTeams(series.id, picks, activeBracket);
+                              return (
+                                <PickCard
+                                  key={series.id}
+                                  topTeam={resolved.topTeam ?? series.topTeam}
+                                  bottomTeam={resolved.bottomTeam ?? series.bottomTeam}
+                                  bet={bets.find((b) => b.seriesId === series.id)}
+                                  round={series.round}
+                                  conference={series.conference}
+                                />
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
 
         <Accordion type="single" collapsible className="mt-8">
           <AccordionItem value="scoring" className="rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md px-5 py-0 border-none">

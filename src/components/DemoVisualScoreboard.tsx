@@ -76,7 +76,7 @@ export const ScoreRibbon = ({ row, rank, totalPlayers }: { row: Row; rank: numbe
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(135deg, rgba(31,58,138,0.8) 0%, rgba(41,82,196,0.8) 50%, rgba(31,58,138,0.8) 100%)",
+            "linear-gradient(135deg, rgba(31,58,138,0.6) 0%, rgba(41,82,196,0.6) 50%, rgba(31,58,138,0.6) 100%)",
           clipPath: "polygon(0 0, 96% 0, 92% 100%, 0 100%)",
           boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
         }}
@@ -97,7 +97,7 @@ export const ScoreRibbon = ({ row, rank, totalPlayers }: { row: Row; rank: numbe
         className="absolute -left-1 -top-1 -bottom-1 w-[92px]"
         style={{
           background:
-            "linear-gradient(180deg, rgba(42,95,219,0.8) 0%, rgba(29,63,163,0.8) 100%)",
+            "linear-gradient(180deg, rgba(42,95,219,0.6) 0%, rgba(29,63,163,0.6) 100%)",
           clipPath: "polygon(0 0, 100% 0, 88% 100%, 0 100%)",
           boxShadow: "2px 0 6px rgba(0,0,0,0.35)",
         }}

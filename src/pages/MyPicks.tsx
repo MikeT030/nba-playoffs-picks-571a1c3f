@@ -373,6 +373,9 @@ const MyPicks = () => {
                 <div className="text-center">
                   <p className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">The facts</p>
                   <p className="font-display text-2xl text-primary">{totalPoints}</p>
+                  <p className="text-[10px] text-muted-foreground font-body uppercase tracking-wider mt-1">
+                    that's mf {numberToWords(totalPoints)} points
+                  </p>
                 </div>
               </div>
             );

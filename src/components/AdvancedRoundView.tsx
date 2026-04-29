@@ -58,7 +58,7 @@ const SectionHead = ({ label, accent }: { label: string; accent?: boolean }) => 
     <h3
       className={`font-display tracking-widest uppercase ${
         accent ? "text-primary" : "text-[#ededed]"
-      } text-base`}
+      } text-xl`}
     >
       {label}
     </h3>

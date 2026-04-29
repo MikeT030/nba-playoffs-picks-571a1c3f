@@ -5,15 +5,15 @@ import { playerCards } from "@/data/playerCards";
 
 // Image map — same as PlayerCard.tsx
 import westbrookImg from "@/assets/westbrook.jpeg";
-import ewingImg from "@/assets/ewing.png";
-import millerImg from "@/assets/miller.png";
-import starksImg from "@/assets/starks.png";
-import lebronImg from "@/assets/lebron.png";
-import pippenImg from "@/assets/pippen.png";
-import kmartinImg from "@/assets/kmartin.png";
-import bsimmonsImg from "@/assets/bsimmons.png";
+import ewingImg from "@/assets/ewing.webp";
+import millerImg from "@/assets/miller.webp";
+import starksImg from "@/assets/starks.webp";
+import lebronImg from "@/assets/lebron.webp";
+import pippenImg from "@/assets/pippen.webp";
+import kmartinImg from "@/assets/kmartin.webp";
+import bsimmonsImg from "@/assets/bsimmons.webp";
 import curryImg from "@/assets/curry.webp";
-import kobeImg from "@/assets/kobe.png";
+import kobeImg from "@/assets/kobe.webp";
 import wadeImg from "@/assets/wade.jpg";
 
 const images: Record<string, string> = {

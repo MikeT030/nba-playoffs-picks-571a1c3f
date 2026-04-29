@@ -496,8 +496,7 @@ const Scoreboard = () => {
       <section className="container py-8 space-y-10">
         {/* Points section */}
         <div className="space-y-4">
-          <h2 className="font-display text-base tracking-wider text-foreground flex items-center gap-2">
-            <LayoutGrid size={16} />
+          <h2 className="font-display text-base tracking-wider text-foreground">
             Points
           </h2>
           <div className="space-y-3">

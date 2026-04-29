@@ -531,14 +531,14 @@ const Scoreboard = () => {
         {/* All Picks section */}
         <Accordion type="single" collapsible className="space-y-4">
           <AccordionItem value="all-picks" className="border-none group">
-            <AccordionTrigger className="font-display tracking-wider text-foreground text-2xl hover:no-underline py-0 flex-col items-stretch gap-4 relative [&>svg]:absolute [&>svg]:right-0 [&>svg]:top-1 [&>svg]:h-6 [&>svg]:w-6">
+            <AccordionTrigger className="w-full font-display tracking-wider text-foreground text-2xl hover:no-underline py-0 flex-col items-stretch gap-4 relative [&>svg]:absolute [&>svg]:right-0 [&>svg]:top-1 [&>svg]:h-6 [&>svg]:w-6 [&>svg]:z-10">
               <span className="flex items-center w-full pr-8">
                 All Picks
               </span>
 
               {/* Teaser preview — visible only when accordion is closed */}
-              <div className="group-data-[state=open]:hidden relative rounded-lg border border-white/10 bg-[#191d24] backdrop-blur-md overflow-hidden select-none">
-                <div className="max-h-[110px] overflow-hidden pointer-events-none">
+              <div className="group-data-[state=open]:hidden relative w-full max-w-full rounded-lg border border-white/10 bg-[#191d24] backdrop-blur-md overflow-hidden select-none">
+                <div className="max-h-[110px] w-full max-w-full overflow-hidden pointer-events-none [&>div]:!overflow-hidden">
                   <AllPicksMatrix picks={allPicks} results={allResults} loading={loading} />
                 </div>
                 {/* Gradient fade overlay */}

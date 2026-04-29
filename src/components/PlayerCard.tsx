@@ -62,11 +62,11 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
               </div>
 
               {/* Player image */}
-              <div className="relative -mt-[68px] flex justify-center">
+              <div className="relative -mt-[68px] aspect-video w-full overflow-hidden">
                 <img
                   src={img}
                   alt={`${player.firstName} ${player.lastName}`}
-                  className="w-full h-[298px] object-cover object-top"
+                  className="w-full h-full object-cover object-top"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a1628] via-transparent to-transparent" />
               </div>

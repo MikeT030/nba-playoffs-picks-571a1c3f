@@ -311,6 +311,15 @@ const AdvancedRoundView = ({
   // schedules the next round.
   const selectableRounds: RoundKey[] = ROUND_ORDER;
 
+  const roundButtonRefs = useRef<Partial<Record<RoundKey, HTMLButtonElement | null>>>({});
+
+  useEffect(() => {
+    const btn = roundButtonRefs.current[activeRound];
+    if (btn) {
+      btn.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }
+  }, [activeRound]);
+
   return (
     <div className="space-y-3">
       {/* Round select */}
@@ -340,6 +349,9 @@ const AdvancedRoundView = ({
           return (
             <button
               key={r}
+              ref={(el) => {
+                roundButtonRefs.current[r] = el;
+              }}
               onClick={() => {
                 setUserSelected(true);
                 setActiveRound(r);

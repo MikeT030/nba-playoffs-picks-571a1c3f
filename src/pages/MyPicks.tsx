@@ -446,9 +446,48 @@ const MyPicks = () => {
 
         {/* Cards section */}
         <Accordion type="single" collapsible className="mb-12">
-          <AccordionItem value="cards" className="border-none">
-            <AccordionTrigger className="hover:no-underline py-2">
-              <h2 className="font-display tracking-wider text-foreground text-2xl">That's what you've picked</h2>
+          <AccordionItem value="cards" className="border-none group">
+            <AccordionTrigger className="hover:no-underline py-2 flex-col items-stretch gap-4 [&>svg]:self-end [&>svg]:h-6 [&>svg]:w-6">
+              <span className="flex items-center justify-between w-full">
+                <h2 className="font-display tracking-wider text-foreground text-2xl">That's what you've picked</h2>
+              </span>
+
+              {/* Teaser preview — visible only when accordion is closed */}
+              {(() => {
+                const firstRound = roundOrder.find((r) => activeBracket.some((s) => s.round === r));
+                if (!firstRound) return null;
+                const previewSeries = activeBracket.filter((s) => s.round === firstRound).slice(0, 2);
+                if (!previewSeries.length) return null;
+                return (
+                  <div className="group-data-[state=open]:hidden relative rounded-lg overflow-hidden select-none">
+                    <div className="max-h-[110px] overflow-hidden pointer-events-none">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        {previewSeries.map((series) => {
+                          const resolved = resolveSeriesTeams(series.id, picks, activeBracket);
+                          return (
+                            <PickCard
+                              key={series.id}
+                              topTeam={resolved.topTeam ?? series.topTeam}
+                              bottomTeam={resolved.bottomTeam ?? series.bottomTeam}
+                              bet={bets.find((b) => b.seriesId === series.id)}
+                              round={series.round}
+                              conference={series.conference}
+                            />
+                          );
+                        })}
+                      </div>
+                    </div>
+                    {/* Gradient fade overlay */}
+                    <div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        background:
+                          "linear-gradient(180deg, hsl(var(--background) / 0) 0%, hsl(var(--background) / 0.15) 35%, hsl(var(--background) / 0.75) 75%, hsl(var(--background)) 100%)",
+                      }}
+                    />
+                  </div>
+                );
+              })()}
             </AccordionTrigger>
             <AccordionContent className="pt-4">
               <Select value={selectedRound} onValueChange={setSelectedRound}>

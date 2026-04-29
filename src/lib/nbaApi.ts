@@ -187,7 +187,7 @@ export const teamMeta: Record<string, { color: string; logo: string }> = {
   POR: { color: "#E03A3E", logo: nbaLogoUrl("POR") },
   SAC: { color: "#5A2D81", logo: nbaLogoUrl("SAC") },
   SAS: { color: "#84888B", logo: nbaLogoUrl("SAS") },
-  TOR: { color: "#CE1141", logo: nbaLogoUrl("TOR") },
+  TOR: { color: "#753BBD", logo: nbaLogoUrl("TOR") },
   UTA: { color: "#002B5C", logo: nbaLogoUrl("UTA") },
   WAS: { color: "#002B5C", logo: nbaLogoUrl("WAS") },
 };

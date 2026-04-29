@@ -108,26 +108,6 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
                   </p>
                 </div>
               </div>
-
-              {/* Player name */}
-              <div className="relative px-4 pt-3 pb-[12px] flex items-center justify-between gap-3">
-                <div className="min-w-0 flex-1 flex-col flex items-center justify-center">
-                  <p className={`font-body italic ${player.nameColor} text-2xl leading-none -mb-0.5 drop-shadow-[0_1px_6px_rgba(220,40,40,0.4)] text-right`}>
-                    {player.firstName}
-                  </p>
-                  <h3 className="font-display text-4xl tracking-wider text-white uppercase leading-none drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] text-right">
-                    {player.lastName}
-                  </h3>
-                </div>
-              </div>
-
-
-              {/* Game context ribbon */}
-              <div className={`relative mx-3 mb-3 rounded px-3 py-1.5 bg-gradient-to-r ${player.accentPrimary} pb-[6px]`}>
-                <p className="font-display text-xs tracking-[0.15em] text-white/90 uppercase text-center leading-tight font-bold">
-                  {player.gameContext}
-                </p>
-              </div>
             </div>
           </div>
         </div>

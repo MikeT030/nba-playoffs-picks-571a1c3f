@@ -591,7 +591,7 @@ const Scoreboard = () => {
           <div className="flex-1 flex items-center justify-center overflow-hidden px-4 pb-8 pt-4">
             {playersWithCards.length > 0 && (
               <div
-                className="flex flex-col items-center gap-3 mx-auto w-full max-w-[359px] touch-pan-y select-none"
+                className="flex flex-col items-center gap-3 mx-auto w-full max-w-[352px] touch-pan-y select-none"
                 onTouchStart={(e) => {
                   (e.currentTarget as any)._touchStartX = e.touches[0].clientX;
                   (e.currentTarget as any)._touchStartY = e.touches[0].clientY;

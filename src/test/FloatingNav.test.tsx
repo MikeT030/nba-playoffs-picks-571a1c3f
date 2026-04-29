@@ -14,25 +14,25 @@ describe("FloatingNav", () => {
   it("renders all navigation links", () => {
     renderNav();
     expect(screen.getByText("Games")).toBeInTheDocument();
-    expect(screen.getByText("Scoreboard")).toBeInTheDocument();
+    expect(screen.getByText("Leaderboard")).toBeInTheDocument();
     expect(screen.getByText("My Picks")).toBeInTheDocument();
   });
 
   it("links to correct paths", () => {
     renderNav();
     expect(screen.getByText("Home").closest("a")).toHaveAttribute("href", "/");
-    expect(screen.getByText("Scoreboard").closest("a")).toHaveAttribute("href", "/scoreboard");
+    expect(screen.getByText("Leaderboard").closest("a")).toHaveAttribute("href", "/leaderboard");
     expect(screen.getByText("My Picks").closest("a")).toHaveAttribute("href", "/my-picks");
   });
 
   it("applies active styling to the current route", () => {
-    renderNav("/scoreboard");
-    const scoreboardLink = screen.getByText("Scoreboard").closest("a");
-    expect(scoreboardLink?.className).toContain("bg-primary/15");
+    renderNav("/leaderboard");
+    const link = screen.getByText("Leaderboard").closest("a");
+    expect(link?.className).toContain("bg-primary/15");
   });
 
   it("applies inactive styling to non-current routes", () => {
-    renderNav("/scoreboard");
+    renderNav("/leaderboard");
     const homeLink = screen.getByText("Home").closest("a");
     expect(homeLink?.className).toContain("text-[#F9F9FA]");
     expect(homeLink?.className).not.toContain("bg-primary/15");

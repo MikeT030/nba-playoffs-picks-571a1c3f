@@ -39,6 +39,7 @@ const App = () => (
             <Route path="/admin/demo-match" element={<DemoMatchDetail />} />
             <Route path="/my-picks" element={<MyPicks />} />
             <Route path="/make-your-bets" element={<MakeYourBets />} />
+            <Route path="/leaderboard" element={<Scoreboard />} />
             <Route path="/scoreboard" element={<Scoreboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

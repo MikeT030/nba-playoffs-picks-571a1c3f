@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import { PenLine, CheckCircle, LogIn, LayoutGrid, Network, Lock } from "lucide-react";
+import { PenLine, LogIn, Lock } from "lucide-react";
 import shareIcon from "@/assets/share-icon.svg";
 import { useNavigate } from "react-router-dom";
 import PlayoffBracket from "@/components/PlayoffBracket";

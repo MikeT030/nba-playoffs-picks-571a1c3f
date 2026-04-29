@@ -64,7 +64,7 @@ function starsForRank(rank: number, total: number): number {
   return Math.max(1, Math.round(ratio * 4) + 1);
 }
 
-const ScoreRibbon = ({ row, rank, totalPlayers }: { row: Row; rank: number; totalPlayers: number }) => {
+export const ScoreRibbon = ({ row, rank, totalPlayers }: { row: Row; rank: number; totalPlayers: number }) => {
   const card = row.cardId ? playerCards.find((c) => c.id === row.cardId) : null;
   const avatarSrc = card ? playerImages[card.image] : null;
   const stars = starsForRank(rank, totalPlayers);

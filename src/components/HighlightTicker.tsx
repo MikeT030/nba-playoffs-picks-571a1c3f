@@ -104,8 +104,8 @@ const HighlightTicker = ({ variant = "default" }: Props) => {
     <div
       className={
         variant === "inset"
-          ? "w-full overflow-hidden"
-          : "mb-3 w-full max-w-md mx-auto overflow-hidden"
+          ? "w-full overflow-hidden mb-[30px]"
+          : "mb-[30px] w-full max-w-md mx-auto overflow-hidden"
       }
     >
       <div

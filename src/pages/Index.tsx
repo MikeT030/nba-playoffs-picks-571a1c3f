@@ -192,7 +192,6 @@ const Index = () => {
 
       <section className="container py-10 pt-0">
         <HighlightTicker />
-        <div className="h-[30px]" aria-hidden />
 
         {isLoading || (isFetching && (!matches || matches.length === 0)) ? (
           <div className="grid gap-4 md:grid-cols-2">

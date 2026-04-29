@@ -497,7 +497,7 @@ const Scoreboard = () => {
         {/* Points section */}
         <div className="space-y-4">
           <h2 className="font-display tracking-wider text-foreground text-2xl">
-            Points
+            the facts
           </h2>
           <div className="space-y-3">
             {(() => {

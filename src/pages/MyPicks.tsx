@@ -379,7 +379,7 @@ const MyPicks = () => {
             }));
             const totalPoints = totalUserPoints(userBetsLite, seriesResults);
             return (
-              <div className="flex items-center justify-center gap-4 py-2 px-3 mb-2 rounded-lg bg-[#1A1E24] border border-border/50 scale-90 origin-center">
+              <div className="flex items-center justify-center gap-4 py-2 px-3 mb-2 rounded-lg bg-[#1A1E24] border border-border/50">
                 <div className="text-center">
                   <p className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">The facts</p>
                   <p className="font-display text-2xl text-primary">

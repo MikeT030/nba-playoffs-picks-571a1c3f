@@ -114,10 +114,6 @@ export const ScoreRibbon = ({ row, rank, totalPlayers, displayRank }: { row: Row
         )}
       </div>
 
-      {/* Rank label */}
-      <span className="absolute top-1 left-2 z-10 font-display text-[10px] tracking-wider text-white/80 drop-shadow">
-        #{displayRank ?? rank + 1}
-      </span>
 
       {/* Content */}
       <div className="absolute inset-0 pl-[110px] pr-12 flex items-center justify-between gap-3">

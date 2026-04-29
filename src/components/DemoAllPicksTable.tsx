@@ -1,6 +1,12 @@
 import { useMemo } from "react";
 import { useBracketData } from "@/hooks/useBracketData";
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
   resolveSeriesTeams,
   isPlayInPlaceholder,
   type BracketSeries,

@@ -31,10 +31,18 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
         {/* Outer border */}
         <div className={`p-[4px] bg-gradient-to-br ${player.accentPrimary} rounded-sm`}>
           {/* Card content */}
-            <div className="relative bg-gradient-to-b from-[#0a1628] via-[#0d1f3c] to-[#0a1628] rounded-sm overflow-hidden">
+            <div className="relative bg-gradient-to-b from-[#0a1628] via-[#0d1f3c] to-[#0a1628] rounded-sm overflow-hidden aspect-[3/4]">
+
+              {/* Player image — fills entire card */}
+              <img
+                src={img}
+                alt={`${player.firstName} ${player.lastName}`}
+                className="absolute inset-0 w-full h-full object-cover object-top"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a1628] via-transparent to-transparent" />
 
               {/* Background swirls */}
-              <div className="absolute inset-0 opacity-30">
+              <div className="absolute inset-0 opacity-30 pointer-events-none">
                 <div
                   className="absolute inset-0"
                   style={{ background: `radial-gradient(ellipse at bottom right, ${player.swirlPrimary} 0%, transparent 60%)` }}
@@ -57,18 +65,8 @@ const PlayerCard = ({ player, selected = false, onClick, className = "" }: Playe
               </div>
 
               {/* Top badge */}
-              <div className="relative px-3 pt-3 pb-0 flex items-start justify-between z-20">
-                <img src={flairBustsLogo} alt="Flair Busts" className="h-14 w-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)] mb-[-14px]" />
-              </div>
-
-              {/* Player image */}
-              <div className="relative -mt-[68px] flex justify-center">
-                <img
-                  src={img}
-                  alt={`${player.firstName} ${player.lastName}`}
-                  className="w-full h-[354px] object-cover object-top"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a1628] via-transparent to-transparent" />
+              <div className="absolute top-0 left-0 right-0 px-3 pt-3 pb-0 flex items-start justify-between z-20">
+                <img src={flairBustsLogo} alt="Flair Busts" className="h-14 w-auto drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]" />
               </div>
 
               {/* Stats overlay */}

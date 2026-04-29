@@ -359,7 +359,7 @@ const MyPicks = () => {
 
         {/* Bracket section */}
         <div className="space-y-4 mb-12">
-          <h2 className="font-display tracking-wider text-foreground text-2xl">Bracket</h2>
+          <h2 className="font-display tracking-wider text-foreground text-2xl">The Bracket</h2>
 
           {seriesResults.length > 0 && (() => {
             const userBetsLite = bets.map((b) => ({

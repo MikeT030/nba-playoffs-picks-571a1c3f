@@ -19,6 +19,7 @@ export interface PlayerCardData {
   swirlSecondary: string;  // background swirl color
   nameColor: string;       // first name italic color
   logoOverride?: string;   // optional custom team logo URL (e.g. historical logos)
+  imageOffsetY?: number;   // optional vertical offset in px for the player image
 }
 
 export const playerCards: PlayerCardData[] = [
@@ -78,6 +79,7 @@ export const playerCards: PlayerCardData[] = [
     swirlPrimary: "rgba(255,198,39,0.4)",
     swirlSecondary: "rgba(0,45,98,0.4)",
     nameColor: "text-yellow-400",
+    imageOffsetY: -40,
   },
   {
     id: "starks",

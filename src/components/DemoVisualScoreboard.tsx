@@ -124,18 +124,6 @@ const ScoreRibbon = ({ row, rank, totalPlayers }: { row: Row; rank: number; tota
           {row.name}
         </span>
         <div className="flex items-center gap-3 shrink-0">
-          <div className="flex gap-0.5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <svg
-                key={i}
-                viewBox="0 0 24 24"
-                className={`w-3.5 h-3.5 ${i < stars ? "text-amber-400" : "text-white/20"}`}
-                fill="currentColor"
-              >
-                <path d="M12 2l2.9 6.9L22 10l-5.5 4.8L18.2 22 12 18.3 5.8 22l1.7-7.2L2 10l7.1-1.1z" />
-              </svg>
-            ))}
-          </div>
           <span className="font-display text-white text-xl tracking-wider tabular-nums drop-shadow">
             {row.totalPoints.toString().padStart(4, "0")}
           </span>

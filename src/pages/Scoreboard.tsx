@@ -529,7 +529,7 @@ const Scoreboard = () => {
         </div>
 
         {/* All Picks section */}
-        <Accordion type="single" collapsible defaultValue="all-picks" className="space-y-4">
+        <Accordion type="single" collapsible className="space-y-4">
           <AccordionItem value="all-picks" className="border-none">
             <AccordionTrigger className="font-display tracking-wider text-foreground text-2xl hover:no-underline py-0 [&>svg]:h-6 [&>svg]:w-6">
               All Picks

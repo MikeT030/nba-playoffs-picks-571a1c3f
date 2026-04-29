@@ -496,7 +496,7 @@ const Scoreboard = () => {
       <section className="container py-8 space-y-10">
         {/* Points section */}
         <div className="space-y-4">
-          <h2 className="font-display text-base tracking-wider text-foreground">
+          <h2 className="font-display tracking-wider text-foreground text-2xl">
             Points
           </h2>
           <div className="space-y-3">
@@ -530,7 +530,7 @@ const Scoreboard = () => {
 
         {/* All Picks section */}
         <div className="space-y-4">
-          <h2 className="font-display text-base tracking-wider text-foreground">
+          <h2 className="font-display tracking-wider text-foreground text-2xl">
             All Picks
           </h2>
           <div className="rounded-lg border border-white/10 bg-[#191d24] backdrop-blur-md overflow-hidden pt-0">

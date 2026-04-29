@@ -529,25 +529,29 @@ const Scoreboard = () => {
         </div>
 
         {/* All Picks section */}
-        <div className="space-y-4">
-          <h2 className="font-display tracking-wider text-foreground text-2xl">
-            All Picks
-          </h2>
-          <div className="rounded-lg border border-white/10 bg-[#191d24] backdrop-blur-md overflow-hidden pt-0">
-            <AllPicksMatrix picks={allPicks} results={allResults} loading={loading} />
-          </div>
-          {allPicks.length > 0 && (
-            <div className="flex justify-start mt-3">
-              <button
-                onClick={() => exportAllPicksToExcel(allPicks, allResults, seriesListForExport)}
-                className="inline-flex items-center gap-1.5 text-xs font-body text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
-              >
-                <Download size={14} />
-                Download as Excel
-              </button>
-            </div>
-          )}
-        </div>
+        <Accordion type="single" collapsible defaultValue="all-picks" className="space-y-4">
+          <AccordionItem value="all-picks" className="border-none">
+            <AccordionTrigger className="font-display tracking-wider text-foreground text-2xl hover:no-underline py-0 [&>svg]:h-6 [&>svg]:w-6">
+              All Picks
+            </AccordionTrigger>
+            <AccordionContent className="pt-4 pb-0">
+              <div className="rounded-lg border border-white/10 bg-[#191d24] backdrop-blur-md overflow-hidden pt-0">
+                <AllPicksMatrix picks={allPicks} results={allResults} loading={loading} />
+              </div>
+              {allPicks.length > 0 && (
+                <div className="flex justify-start mt-3">
+                  <button
+                    onClick={() => exportAllPicksToExcel(allPicks, allResults, seriesListForExport)}
+                    className="inline-flex items-center gap-1.5 text-xs font-body text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
+                  >
+                    <Download size={14} />
+                    Download as Excel
+                  </button>
+                </div>
+              )}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
 
         {/* Scoring legend */}
         <Accordion type="single" collapsible className="mt-8">

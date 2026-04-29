@@ -314,7 +314,7 @@ const AdvancedRoundView = ({
   return (
     <div className="space-y-3">
       {/* Round select */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+      <div className="flex items-center gap-2 overflow-x-auto py-3 -mx-4 px-4">
         {selectableRounds.map((r) => {
           const roundMatches = byRound[r];
           const hasMatches = roundMatches.length > 0;
@@ -344,7 +344,7 @@ const AdvancedRoundView = ({
                 setUserSelected(true);
                 setActiveRound(r);
               }}
-              className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border font-display tracking-widest uppercase transition-colors ${stateClasses}`}
+              className={`shrink-0 inline-flex items-center gap-1.5 px-4 py-2.5 rounded-md border font-display tracking-widest uppercase transition-colors ${stateClasses}`}
             >
               {ROUND_LABEL[r]}
               {isComplete && <Check className="w-3 h-3" strokeWidth={3} />}

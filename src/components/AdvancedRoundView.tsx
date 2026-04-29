@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { ChevronRight, ArrowRight, Check } from "lucide-react";
 import MatchCard from "@/components/MatchCard";
 import { teamMeta } from "@/lib/nbaApi";

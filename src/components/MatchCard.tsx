@@ -147,6 +147,30 @@ const MatchCard = ({ match }: MatchCardProps) => {
   const displaySeriesHome = activeGame ? activeGame.seriesRecord[1] : match.homeWins;
   const displayOt = activeGame ? activeGame.ot : undefined;
 
+  // Series-level wins for label suffix
+  const seriesAwayWins = match.awayWins ?? 0;
+  const seriesHomeWins = match.homeWins ?? 0;
+  const seriesTotalGames = seriesAwayWins + seriesHomeWins;
+  const seriesIsDecided = seriesAwayWins >= 4 || seriesHomeWins >= 4;
+  const awayIsWinner = seriesIsDecided && seriesAwayWins > seriesHomeWins;
+  const homeIsWinner = seriesIsDecided && seriesHomeWins > seriesAwayWins;
+
+  const awayLabel = seriesIsDecided
+    ? awayIsWinner
+      ? `${displayAway.abbreviation} in ${seriesTotalGames}`
+      : displayAway.abbreviation
+    : seriesTotalGames > 0
+      ? `${displayAway.abbreviation} ${seriesAwayWins}`
+      : displayAway.abbreviation;
+
+  const homeLabel = seriesIsDecided
+    ? homeIsWinner
+      ? `${displayHome.abbreviation} in ${seriesTotalGames}`
+      : displayHome.abbreviation
+    : seriesTotalGames > 0
+      ? `${displayHome.abbreviation} ${seriesHomeWins}`
+      : displayHome.abbreviation;
+
   const betTeamName = bet
     ? match.homeTeam.abbreviation === bet.winner
       ? match.homeTeam.name

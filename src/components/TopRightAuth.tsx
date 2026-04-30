@@ -42,7 +42,7 @@ const TopRightAuth = () => {
   return (
     <Link
       to="/settings"
-      className="absolute top-4 right-4 z-50 flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-[#22272E]/80 backdrop-blur-md hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 overflow-hidden"
+      className="absolute top-4 right-4 z-50 flex items-center justify-center w-10 h-10 rounded-full border bg-[#22272E]/80 backdrop-blur-md hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 overflow-hidden border-solid border-[#ededed]"
     >
       {playerImage ? (
         <img

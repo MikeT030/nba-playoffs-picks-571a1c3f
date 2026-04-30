@@ -191,10 +191,8 @@ const DemoBracketPlayedOut = () => {
           className="rounded-lg p-3"
           style={{
             backgroundImage: `linear-gradient(hsl(var(--background) / 0.7), hsl(var(--background) / 0.7)), url(${bracketCourtBg})`,
-            backgroundSize: "contain",
+            backgroundSize: "cover",
             backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundColor: "hsl(var(--background))",
           }}
         >
           <PlayoffBracket

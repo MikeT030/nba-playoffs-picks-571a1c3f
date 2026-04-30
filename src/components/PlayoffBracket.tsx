@@ -159,7 +159,7 @@ const TeamSlot = ({
               ? "TBD"
               : isDecided && isActualWinner && typeof totalGames === "number"
               ? `${team.abbreviation} in ${totalGames}`
-              : !isDecided && typeof teamWins === "number"
+              : !isDecided && typeof teamWins === "number" && teamWins > 0
               ? `${team.abbreviation} ${teamWins}`
               : team.abbreviation}
           </span>

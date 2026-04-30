@@ -132,8 +132,8 @@ const AdvancedCard = ({
               <p className="tracking-wide text-xl text-muted-foreground" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
                 TBD
               </p>
-              <p className="text-[10px] font-body uppercase tracking-widest text-muted-foreground mt-0.5 flex items-center justify-end gap-1">
-                Winner of {feederALabel} <ArrowRight size={9} /> {feederBLabel}
+              <p className="text-[10px] font-body uppercase tracking-widest text-muted-foreground mt-0.5">
+                {feederALabel} or {feederBLabel}
               </p>
             </div>
           </div>

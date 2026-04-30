@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 
 import PlayoffBracket from "@/components/PlayoffBracket";
+import bracketCourtBg from "@/assets/bracket-court-bg.jpeg";
 import { useBracketData } from "@/hooks/useBracketData";
 import {
   resolveSeriesTeams,
@@ -186,7 +187,14 @@ const DemoBracketPlayedOut = () => {
       {isLoading ? (
         <p className="text-sm text-muted-foreground font-body">Loading bracket…</p>
       ) : (
-        <div className="rounded-lg bg-[#181C23] p-3">
+        <div
+          className="rounded-lg p-3 overflow-hidden"
+          style={{
+            backgroundImage: `linear-gradient(hsl(var(--background) / 0.7), hsl(var(--background) / 0.7)), url(${bracketCourtBg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
           <PlayoffBracket
             seriesList={bracket}
             actualWinners={winners}

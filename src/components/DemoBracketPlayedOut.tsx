@@ -200,24 +200,33 @@ const DemoBracketPlayedOut = () => {
       {isLoading ? (
         <p className="text-sm text-muted-foreground font-body">Loading bracket…</p>
       ) : (
-        <div
-          className="rounded-lg p-3"
-          style={{
-            backgroundImage: `linear-gradient(hsl(var(--background) / 0.7), hsl(var(--background) / 0.7)), url(${bracketCourtBg})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          <PlayoffBracket
-            seriesList={bracket}
-            actualWinners={winners}
-            seriesScores={seriesScores}
-            picks={picks}
-            bets={bets}
-            championName={champion}
-            championLogoSrc={championLogo}
-          />
-        </div>
+        <>
+          <div className="mb-2">
+            <p className="font-body font-medium text-3xl text-white flex items-baseline gap-3">
+              You have
+              <span className="font-display text-primary text-5xl leading-none">{totalPoints}</span>
+              points
+            </p>
+          </div>
+          <div
+            className="rounded-lg p-3"
+            style={{
+              backgroundImage: `linear-gradient(hsl(var(--background) / 0.7), hsl(var(--background) / 0.7)), url(${bracketCourtBg})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            <PlayoffBracket
+              seriesList={bracket}
+              actualWinners={winners}
+              seriesScores={seriesScores}
+              picks={picks}
+              bets={bets}
+              championName={champion}
+              championLogoSrc={championLogo}
+            />
+          </div>
+        </>
       )}
     </div>
   );

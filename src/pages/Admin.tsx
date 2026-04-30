@@ -114,7 +114,7 @@ const Admin = () => {
               label: "DEMO HEADER — HOMEPAGE",
               content: (
                 <>
-                  <HeroBannerMinimal title="Playoff Games" showDemoAvatar />
+                  <HeroBannerMinimal title="The Games" showDemoAvatar />
                   <div className="container space-y-3" style={{ height: 200 }}>
                     <p className="font-body text-xs uppercase tracking-widest text-muted-foreground">First Round · East</p>
                     <div className="bg-[#181C23] rounded-lg h-20 flex items-center justify-between px-4">

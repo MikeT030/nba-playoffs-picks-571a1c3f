@@ -103,7 +103,7 @@ const PICK_GAMES_OFFSET: Record<string, number> = {
 const DemoBracketPlayedOut = () => {
   const { data: bracket, isLoading } = useBracketData(2025);
 
-  const { winners, champion, championLogo, seriesScores, picks, bets } = useMemo(() => {
+  const { winners, champion, championLogo, seriesScores, picks, bets, totalPoints } = useMemo(() => {
     const { winners, games } = buildPlayedOutResults(bracket);
 
     // Build "topWins-bottomWins" per series for the score readout

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { PenLine, CheckCircle, Lock } from "lucide-react";
-import HeroBanner from "@/components/HeroBanner";
+import HeroBannerMinimal from "@/components/HeroBannerMinimal";
 
 import BetsDrawer from "@/components/BetsDrawer";
 import CardRouletteOverlay from "@/components/CardRouletteOverlay";
@@ -188,7 +188,7 @@ const Index = () => {
         isRefreshing={isRefreshing}
         progress={progress}
       />
-      <HeroBanner title="Playoff Games" subtitle="2026" />
+      <HeroBannerMinimal title="Playoff Games" />
 
       <section className="container py-10 pt-0">
         <HighlightTicker />

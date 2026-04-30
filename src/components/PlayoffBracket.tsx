@@ -111,6 +111,7 @@ const TeamSlot = ({
   actualWinnerAbbr,
   variant,
   teamWins,
+  totalGames,
 }: {
   team?: Team;
   isPicked: boolean;
@@ -118,9 +119,11 @@ const TeamSlot = ({
   actualWinnerAbbr?: string;
   variant?: BracketVariant;
   teamWins?: number;
+  totalGames?: number;
 }) => {
   const isActualWinner = !!team && !!actualWinnerAbbr && team.abbreviation === actualWinnerAbbr;
   const isActualLoser = !!team && !!actualWinnerAbbr && team.abbreviation !== actualWinnerAbbr;
+  const isDecided = !!actualWinnerAbbr;
 
   const winnerRowClass =
     isActualWinner && variant === "stripe"
@@ -154,8 +157,10 @@ const TeamSlot = ({
           >
             {isPlayInPlaceholder(team.abbreviation)
               ? "TBD"
-              : typeof teamWins === "number"
-              ? `${team.abbreviation} in ${teamWins}`
+              : isDecided && isActualWinner && typeof totalGames === "number"
+              ? `${team.abbreviation} in ${totalGames}`
+              : !isDecided && typeof teamWins === "number" && teamWins > 0
+              ? `${team.abbreviation} ${teamWins}`
               : team.abbreviation}
           </span>
           {isActualWinner && variant === "trophy" && (
@@ -254,6 +259,10 @@ const BracketCard = ({
     if (!m) return [undefined, undefined] as const;
     return [Number(m[1]), Number(m[2])] as const;
   })();
+  const totalGames =
+    typeof topWins === "number" && typeof bottomWins === "number"
+      ? topWins + bottomWins
+      : undefined;
 
   return (
     <div
@@ -271,6 +280,7 @@ const BracketCard = ({
         actualWinnerAbbr={actualWinnerAbbr}
         variant={variant}
         teamWins={topWins}
+        totalGames={totalGames}
       />
       <TeamSlot
         team={bottomTeam}
@@ -279,6 +289,7 @@ const BracketCard = ({
         actualWinnerAbbr={actualWinnerAbbr}
         variant={variant}
         teamWins={bottomWins}
+        totalGames={totalGames}
       />
 
       {winnerTeam ? (

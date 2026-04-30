@@ -581,19 +581,19 @@ const Scoreboard = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-body text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">3 pts</span>
-                <span className="text-foreground">Correct winner + correct game count on the right series</span>
+                <span className="text-foreground pl-[10px]">Correct winner + correct game count on the right series</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">2 pts</span>
-                <span className="text-foreground">Correct winner on the right series (wrong game count)</span>
+                <span className="text-foreground pl-[10px]">Correct winner on the right series (wrong game count)</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">1 pt</span>
-                <span className="text-foreground">Picked a team that won, but assigned to the wrong series</span>
+                <span className="text-foreground pl-[10px]">Picked a team that won, but assigned to the wrong series</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">4 pts</span>
-                <span className="text-foreground">Correctly predicted the Supreme Finals champion</span>
+                <span className="text-foreground pl-[10px]">Correctly predicted Finals champion</span>
               </div>
             </div>
           </div>

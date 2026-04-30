@@ -259,6 +259,10 @@ const BracketCard = ({
     if (!m) return [undefined, undefined] as const;
     return [Number(m[1]), Number(m[2])] as const;
   })();
+  const totalGames =
+    typeof topWins === "number" && typeof bottomWins === "number"
+      ? topWins + bottomWins
+      : undefined;
 
   return (
     <div
@@ -276,6 +280,7 @@ const BracketCard = ({
         actualWinnerAbbr={actualWinnerAbbr}
         variant={variant}
         teamWins={topWins}
+        totalGames={totalGames}
       />
       <TeamSlot
         team={bottomTeam}
@@ -284,6 +289,7 @@ const BracketCard = ({
         actualWinnerAbbr={actualWinnerAbbr}
         variant={variant}
         teamWins={bottomWins}
+        totalGames={totalGames}
       />
 
       {winnerTeam ? (

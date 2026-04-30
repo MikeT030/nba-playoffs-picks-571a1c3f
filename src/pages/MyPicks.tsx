@@ -380,16 +380,12 @@ const MyPicks = () => {
             }));
             const totalPoints = totalUserPoints(userBetsLite, seriesResults);
             return (
-              <div className="flex items-center justify-center gap-4 py-2 px-3 mb-2 rounded-lg bg-[#1A1E24] border border-border/50">
-                <div className="text-center">
-                  <p className="text-[10px] text-muted-foreground font-body uppercase tracking-wider">The facts</p>
-                  <p className="font-display text-2xl text-primary">
-                    {totalPoints}{" "}
-                    <span className="text-sm text-muted-foreground normal-case tracking-normal">
-                      that's mf {numberToWords(totalPoints)} points
-                    </span>
-                  </p>
-                </div>
+              <div className="mb-2">
+                <p className="font-body font-medium text-3xl text-white flex items-baseline gap-3">
+                  You have
+                  <span className="font-display text-primary text-5xl leading-none">{totalPoints}</span>
+                  points
+                </p>
               </div>
             );
           })()}

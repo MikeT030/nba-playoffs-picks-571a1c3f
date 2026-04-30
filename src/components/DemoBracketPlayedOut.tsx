@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import PlayoffBracket from "@/components/PlayoffBracket";
 import bracketCourtBg from "@/assets/bracket-court-bg.png";
 import { useBracketData } from "@/hooks/useBracketData";
+import { totalUserPoints } from "@/lib/pickScoring";
 import {
   resolveSeriesTeams,
   isPlayInPlaceholder,
@@ -102,7 +103,7 @@ const PICK_GAMES_OFFSET: Record<string, number> = {
 const DemoBracketPlayedOut = () => {
   const { data: bracket, isLoading } = useBracketData(2025);
 
-  const { winners, champion, championLogo, seriesScores, picks, bets } = useMemo(() => {
+  const { winners, champion, championLogo, seriesScores, picks, bets, totalPoints } = useMemo(() => {
     const { winners, games } = buildPlayedOutResults(bracket);
 
     // Build "topWins-bottomWins" per series for the score readout
@@ -170,7 +171,19 @@ const DemoBracketPlayedOut = () => {
       });
     }
 
-    return { winners, champion, championLogo, seriesScores, picks, bets };
+    const seriesResultsLite = Object.keys(winners).map((sid) => ({
+      series_id: sid,
+      winner: winners[sid],
+      games_played: games[sid] ?? 6,
+    }));
+    const userPicksLite = bets.map((b) => ({
+      series_id: b.seriesId,
+      winner: b.winner,
+      games_in_series: b.gamesInSeries,
+    }));
+    const totalPoints = totalUserPoints(userPicksLite, seriesResultsLite);
+
+    return { winners, champion, championLogo, seriesScores, picks, bets, totalPoints };
   }, [bracket]);
 
   return (
@@ -187,24 +200,33 @@ const DemoBracketPlayedOut = () => {
       {isLoading ? (
         <p className="text-sm text-muted-foreground font-body">Loading bracket…</p>
       ) : (
-        <div
-          className="rounded-lg p-3"
-          style={{
-            backgroundImage: `linear-gradient(hsl(var(--background) / 0.7), hsl(var(--background) / 0.7)), url(${bracketCourtBg})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          <PlayoffBracket
-            seriesList={bracket}
-            actualWinners={winners}
-            seriesScores={seriesScores}
-            picks={picks}
-            bets={bets}
-            championName={champion}
-            championLogoSrc={championLogo}
-          />
-        </div>
+        <>
+          <div className="mb-2">
+            <p className="font-body font-medium text-3xl text-white flex items-baseline gap-3">
+              You have
+              <span className="font-display text-primary text-5xl leading-none">{totalPoints}</span>
+              points
+            </p>
+          </div>
+          <div
+            className="rounded-lg p-3"
+            style={{
+              backgroundImage: `linear-gradient(hsl(var(--background) / 0.7), hsl(var(--background) / 0.7)), url(${bracketCourtBg})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            <PlayoffBracket
+              seriesList={bracket}
+              actualWinners={winners}
+              seriesScores={seriesScores}
+              picks={picks}
+              bets={bets}
+              championName={champion}
+              championLogoSrc={championLogo}
+            />
+          </div>
+        </>
       )}
     </div>
   );

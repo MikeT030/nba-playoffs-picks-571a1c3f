@@ -171,7 +171,19 @@ const DemoBracketPlayedOut = () => {
       });
     }
 
-    return { winners, champion, championLogo, seriesScores, picks, bets };
+    const seriesResultsLite = Object.keys(winners).map((sid) => ({
+      series_id: sid,
+      winner: winners[sid],
+      games_played: games[sid] ?? 6,
+    }));
+    const userPicksLite = bets.map((b) => ({
+      series_id: b.seriesId,
+      winner: b.winner,
+      games_in_series: b.gamesInSeries,
+    }));
+    const totalPoints = totalUserPoints(userPicksLite, seriesResultsLite);
+
+    return { winners, champion, championLogo, seriesScores, picks, bets, totalPoints };
   }, [bracket]);
 
   return (

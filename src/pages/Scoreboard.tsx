@@ -577,7 +577,7 @@ const Scoreboard = () => {
           <h2 className="font-display tracking-wider text-foreground text-2xl">
             Scoring System
           </h2>
-          <div className="rounded-lg border border-white/10 bg-[#22272E]/80 backdrop-blur-md px-5 py-4">
+          <div className="rounded-lg border border-white/10 bg-transparent px-5 py-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-body text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <span className="font-display text-primary text-base w-auto text-right whitespace-nowrap">3 pts</span>

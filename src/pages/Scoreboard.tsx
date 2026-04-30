@@ -4,7 +4,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { LayoutGrid, ChevronLeft, ChevronRight, Download } from "lucide-react";
 import allPicksIcon from "@/assets/all-picks-icon.svg";
 
-import HeroBanner from "@/components/HeroBanner";
+import HeroBannerMinimal from "@/components/HeroBannerMinimal";
 import {
   Table,
   TableBody,
@@ -491,7 +491,7 @@ const Scoreboard = () => {
 
   return (
     <div className="min-h-screen bg-background pb-28">
-      <HeroBanner title={"Leaderboard"} subtitle="2026 Playoffs" />
+      <HeroBannerMinimal title="Leaderboard" />
 
       <section className="container py-8 space-y-10">
         {/* Points section */}

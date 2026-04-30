@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/accordion";
 import { toast } from "sonner";
 import AdminSeriesConfirmPanel from "@/components/AdminSeriesConfirmPanel";
+import HeroBannerMinimal from "@/components/HeroBannerMinimal";
 import DemoAllMatchupsInnovation from "@/components/DemoAllMatchupsInnovation";
 import DemoAdvancedRoundView from "@/components/DemoAdvancedRoundView";
 import DemoMatchCard from "@/components/DemoMatchCard";
@@ -89,8 +90,9 @@ const Admin = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background px-4 pt-16 pb-28">
-      <div className="max-w-sm mx-auto space-y-6">
+    <div className="min-h-screen bg-background pb-28">
+      <HeroBannerMinimal title="Admin Area" />
+      <div className="max-w-sm mx-auto space-y-6 px-4">
         <button
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-body text-sm"
@@ -99,7 +101,6 @@ const Admin = () => {
           Back
         </button>
 
-        <h1 className="font-display text-3xl tracking-wider">ADMIN AREA</h1>
         <p className="font-body text-sm text-muted-foreground">
           Internal area for testing new features.
         </p>

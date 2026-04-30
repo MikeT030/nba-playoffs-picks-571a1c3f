@@ -280,7 +280,7 @@ const Settings = () => {
                 onClick={() => navigate("/admin")}
               >
                 <Shield size={18} />
-                ADMIN SETTINGS
+                ADMIN AREA
               </button>
             )}
 

@@ -188,7 +188,7 @@ const Index = () => {
         isRefreshing={isRefreshing}
         progress={progress}
       />
-      <HeroBanner subtitle="2026" />
+      <HeroBanner title="Playoff Games" subtitle="2026" />
 
       <section className="container py-10 pt-0">
         <HighlightTicker />

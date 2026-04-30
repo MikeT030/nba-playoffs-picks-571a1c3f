@@ -442,11 +442,6 @@ const AdvancedRoundView = ({
         </div>
       )}
 
-      {inRound.length === 0 && advancedEntries.length > 0 && (
-        <p className="font-body text-[10px] text-muted-foreground italic px-1 flex items-center gap-1">
-          <ChevronRight size={10} /> No confirmed matchups yet — opponents still TBD.
-        </p>
-      )}
     </div>
   );
 };

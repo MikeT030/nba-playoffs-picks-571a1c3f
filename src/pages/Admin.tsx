@@ -99,7 +99,7 @@ const Admin = () => {
           Back
         </button>
 
-        <h1 className="font-display text-3xl tracking-wider">ADMIN section</h1>
+        <h1 className="font-display text-3xl tracking-wider">ADMIN AREA</h1>
         <p className="font-body text-sm text-muted-foreground">
           Internal area for testing new features.
         </p>

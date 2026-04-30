@@ -157,8 +157,10 @@ const TeamSlot = ({
           >
             {isPlayInPlaceholder(team.abbreviation)
               ? "TBD"
-              : typeof teamWins === "number"
-              ? `${team.abbreviation} in ${teamWins}`
+              : isDecided && isActualWinner && typeof totalGames === "number"
+              ? `${team.abbreviation} in ${totalGames}`
+              : !isDecided && typeof teamWins === "number" && teamWins > 0
+              ? `${team.abbreviation} ${teamWins}`
               : team.abbreviation}
           </span>
           {isActualWinner && variant === "trophy" && (

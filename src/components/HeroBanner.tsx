@@ -28,7 +28,7 @@ const HeroBanner = ({ title = "PLAYOFFS PICKS", subtitle = "2026 Playoffs" }: He
                 </p>
                 <h1
                   className="text-2xl md:text-5xl tracking-wider leading-[1.05] whitespace-pre-line"
-                  style={{ fontFamily: "'Archivo Black', sans-serif" }}
+                  style={{ fontFamily: "'Claymale', 'Archivo Black', sans-serif" }}
                 >
                   {title}
                 </h1>

@@ -111,6 +111,7 @@ const TeamSlot = ({
   actualWinnerAbbr,
   variant,
   teamWins,
+  totalGames,
 }: {
   team?: Team;
   isPicked: boolean;

@@ -53,7 +53,7 @@ const eastSemiIds = ["east-semi-top", "east-semi-bottom"];
 
 const headerLabels = [
   "1st Round", "Conf. Semis", "Conf. Finals",
-  "Supreme Finals",
+  "Finals",
   "Conf. Finals", "Conf. Semis", "1st Round",
 ];
 

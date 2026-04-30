@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import PlayoffBracket from "@/components/PlayoffBracket";
 import bracketCourtBg from "@/assets/bracket-court-bg.png";
 import { useBracketData } from "@/hooks/useBracketData";
+import { totalUserPoints } from "@/lib/pickScoring";
 import {
   resolveSeriesTeams,
   isPlayInPlaceholder,

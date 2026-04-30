@@ -381,9 +381,9 @@ const MyPicks = () => {
             const totalPoints = totalUserPoints(userBetsLite, seriesResults);
             return (
               <div className="mb-2">
-                <p className="font-body font-medium text-white flex items-baseline gap-3 text-2xl">
+                <p className="font-body font-medium text-white flex items-baseline gap-3 text-lg">
                   You have
-                  <span className="font-display text-primary leading-none text-4xl">{totalPoints}</span>
+                  <span className="font-display text-primary leading-none text-2xl">{totalPoints}</span>
                   points
                 </p>
               </div>

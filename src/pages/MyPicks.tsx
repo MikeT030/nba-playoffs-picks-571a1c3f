@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { PenLine, LogIn, Lock } from "lucide-react";
 import shareIcon from "@/assets/share-icon.svg";
+import bracketCourtBg from "@/assets/bracket-court-bg.jpeg";
 import { useNavigate } from "react-router-dom";
 import PlayoffBracket from "@/components/PlayoffBracket";
 import TeamLogo from "@/components/TeamLogo";
@@ -417,16 +418,25 @@ const MyPicks = () => {
               pickPoints[p.series_id] = scorePick(p, userPicksLite, seriesResults);
             }
             return (
-              <PlayoffBracket
-                ref={bracketRef}
-                picks={picks}
-                bets={bets}
-                seriesList={activeBracket}
-                actualWinners={actualWinners}
-                pickPoints={pickPoints}
-                seriesScores={seriesScores}
-                variant="badge"
-              />
+              <div
+                className="relative rounded-lg overflow-hidden"
+                style={{
+                  backgroundImage: `linear-gradient(hsl(var(--background) / 0.7), hsl(var(--background) / 0.7)), url(${bracketCourtBg})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              >
+                <PlayoffBracket
+                  ref={bracketRef}
+                  picks={picks}
+                  bets={bets}
+                  seriesList={activeBracket}
+                  actualWinners={actualWinners}
+                  pickPoints={pickPoints}
+                  seriesScores={seriesScores}
+                  variant="badge"
+                />
+              </div>
             );
           })()}
 

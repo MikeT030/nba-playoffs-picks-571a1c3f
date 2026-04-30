@@ -419,7 +419,7 @@ const MyPicks = () => {
             }
             return (
               <div
-                className="relative rounded-lg overflow-hidden"
+                className="relative rounded-lg"
                 style={{
                   backgroundImage: `linear-gradient(hsl(var(--background) / 0.7), hsl(var(--background) / 0.7)), url(${bracketCourtBg})`,
                   backgroundSize: "cover",

@@ -109,8 +109,8 @@ const Admin = () => {
 
         <Accordion type="multiple" className="space-y-3">
           {[
-            { value: "header-home", label: "DEMO HEADER — HOMEPAGE", content: <HeroBannerMinimal title="Playoff Games" /> },
-            { value: "header-mypicks", label: "DEMO HEADER — MY PICKS", content: <HeroBannerMinimal title="My Picks" /> },
+            { value: "header-home", label: "DEMO HEADER — HOMEPAGE", content: <HeroBannerMinimal title="Playoff Games" showDemoAvatar /> },
+            { value: "header-mypicks", label: "DEMO HEADER — MY PICKS", content: <HeroBannerMinimal title="My Picks" showDemoAvatar /> },
             { value: "visual-scoreboard", label: "DEMO VISUAL SCOREBOARD", content: <DemoVisualScoreboard /> },
             { value: "all-matchups", label: "DEMO ALL MATCHUPS INNOVATION", content: <DemoAllMatchupsInnovation /> },
             { value: "advanced-round", label: "DEMO ADVANCED ROUND VIEW", content: <DemoAdvancedRoundView /> },

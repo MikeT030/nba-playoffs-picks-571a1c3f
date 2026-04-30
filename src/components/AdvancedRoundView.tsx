@@ -57,7 +57,7 @@ const SectionHead = ({ label, accent }: { label: string; accent?: boolean }) => 
   <div className="flex items-center gap-2 px-1 py-[20px] pb-[10px] pt-[20px]">
     <h3
       className={`font-display tracking-widest uppercase ${
-        accent ? "text-primary" : "text-[#ededed]"
+        accent ? "text-[#ededed]" : "text-[#ededed]"
       } text-xl`}
     >
       {label}

@@ -202,9 +202,9 @@ const DemoBracketPlayedOut = () => {
       ) : (
         <>
           <div className="mb-2">
-            <p className="font-body font-medium text-3xl text-white flex items-baseline gap-3">
+            <p className="font-body font-medium text-white flex items-baseline gap-3 text-2xl">
               You have
-              <span className="font-display text-primary text-5xl leading-none">{totalPoints}</span>
+              <span className="font-display text-primary leading-none text-4xl">{totalPoints}</span>
               points
             </p>
           </div>

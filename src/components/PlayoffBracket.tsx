@@ -118,9 +118,11 @@ const TeamSlot = ({
   actualWinnerAbbr?: string;
   variant?: BracketVariant;
   teamWins?: number;
+  totalGames?: number;
 }) => {
   const isActualWinner = !!team && !!actualWinnerAbbr && team.abbreviation === actualWinnerAbbr;
   const isActualLoser = !!team && !!actualWinnerAbbr && team.abbreviation !== actualWinnerAbbr;
+  const isDecided = !!actualWinnerAbbr;
 
   const winnerRowClass =
     isActualWinner && variant === "stripe"

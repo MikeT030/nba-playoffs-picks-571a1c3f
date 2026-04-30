@@ -510,7 +510,7 @@ const Scoreboard = () => {
                 <button
                   key={player.name}
                   onClick={() => openCardDialog(player.name)}
-                  className="block w-full text-left transition-transform active:scale-[0.99] hover:brightness-110"
+                  className={`block w-full text-left transition-transform active:scale-[0.99] hover:brightness-110 ${i % 2 === 1 ? "opacity-[1.15]" : ""}`}
                 >
                   <ScoreRibbon
                     row={{

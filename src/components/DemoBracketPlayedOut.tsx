@@ -188,7 +188,7 @@ const DemoBracketPlayedOut = () => {
         <p className="text-sm text-muted-foreground font-body">Loading bracket…</p>
       ) : (
         <div
-          className="rounded-lg p-3 overflow-hidden"
+          className="rounded-lg p-3"
           style={{
             backgroundImage: `linear-gradient(hsl(var(--background) / 0.7), hsl(var(--background) / 0.7)), url(${bracketCourtBg})`,
             backgroundSize: "cover",

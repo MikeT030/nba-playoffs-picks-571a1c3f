@@ -18,7 +18,7 @@ const ScoreboardSvg = ({ size = 20 }: { size?: number }) => (
 
 const navItems = [
   { to: "/", label: "Games", icon: BasketballSvg },
-  { to: "/leaderboard", label: "Leaderboard", icon: ScoreboardSvg },
+  { to: "/leaderboard", label: "Leader\nBoard", icon: ScoreboardSvg },
   { to: "/my-picks", label: "My Picks", icon: Network },
 ];
 
@@ -45,7 +45,7 @@ const FloatingNav = () => {
               )}
             >
               <item.icon size={20} className={item.to === "/my-picks" ? "rotate-90" : ""} />
-              <span className="text-sm font-semibold">{item.label}</span>
+              <span className="text-sm font-semibold whitespace-pre-line leading-tight">{item.label}</span>
             </Link>
           );
         })}

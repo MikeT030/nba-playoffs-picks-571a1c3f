@@ -106,76 +106,65 @@ const Admin = () => {
 
         <AdminSeriesConfirmPanel />
 
-        <DemoVisualScoreboard />
-
-        <DemoAllMatchupsInnovation />
-
-        <DemoAdvancedRoundView />
-
-        <DemoFlyerCardV3 />
-
-        <DemoFlyerCardPaxson />
-
-        <DemoFlyerCardDavis />
-
-        <DemoFlyerCardMiller />
-
-        <div className="space-y-2">
-          <h2 className="font-display text-lg tracking-wider text-muted-foreground">DEMO MATCH CARD</h2>
-          <DemoMatchCard />
-        </div>
-
-        <div className="space-y-2">
-          <h2 className="font-display text-lg tracking-wider text-muted-foreground">DEMO MATCH CARD — TEAM COLORS</h2>
-          <DemoMatchCardColored />
-        </div>
-
-        <DemoMatchDetailDialog />
-
-        <DemoMatchDetailDialog
-          heading="DEMO MATCH DETAIL — WAS vs UTA"
-          data={{
-            away: {
-              abbreviation: "WAS",
-              name: "Wizards",
-              seed: 7,
-              color: "#002B5C",
+        <Accordion type="multiple" className="space-y-3">
+          {[
+            { value: "visual-scoreboard", label: "DEMO VISUAL SCOREBOARD", content: <DemoVisualScoreboard /> },
+            { value: "all-matchups", label: "DEMO ALL MATCHUPS INNOVATION", content: <DemoAllMatchupsInnovation /> },
+            { value: "advanced-round", label: "DEMO ADVANCED ROUND VIEW", content: <DemoAdvancedRoundView /> },
+            { value: "flyer-v3", label: "DEMO FLYER CARD — V3", content: <DemoFlyerCardV3 /> },
+            { value: "flyer-paxson", label: "DEMO FLYER CARD — PAXSON", content: <DemoFlyerCardPaxson /> },
+            { value: "flyer-davis", label: "DEMO FLYER CARD — DAVIS", content: <DemoFlyerCardDavis /> },
+            { value: "flyer-miller", label: "DEMO FLYER CARD — MILLER", content: <DemoFlyerCardMiller /> },
+            { value: "match-card", label: "DEMO MATCH CARD", content: <DemoMatchCard /> },
+            { value: "match-card-colored", label: "DEMO MATCH CARD — TEAM COLORS", content: <DemoMatchCardColored /> },
+            { value: "match-detail", label: "DEMO MATCH DETAIL DIALOG", content: <DemoMatchDetailDialog /> },
+            {
+              value: "match-detail-was-uta",
+              label: "DEMO MATCH DETAIL — WAS vs UTA",
+              content: (
+                <DemoMatchDetailDialog
+                  heading="DEMO MATCH DETAIL — WAS vs UTA"
+                  data={{
+                    away: { abbreviation: "WAS", name: "Wizards", seed: 7, color: "#002B5C" },
+                    home: { abbreviation: "UTA", name: "Jazz", seed: 2, color: "#F9A01B" },
+                    awayScore: 96,
+                    homeScore: 104,
+                    seriesAway: 1,
+                    seriesHome: 4,
+                    gameNumber: 5,
+                    date: "May 02",
+                    conference: "WEST",
+                    round: "First Round",
+                    yourPick: { winner: "UTA", games_in_series: 5 },
+                    yourPickResult: "Shiiiiit 3 Points",
+                  }}
+                  seriesResult={{ winner: "UTA", games_played: 5 }}
+                  picks={[
+                    { user_id: "w1", profile_name: "Erik", winner: "UTA", games_in_series: 5 },
+                    { user_id: "w2", profile_name: "Alexander", winner: "UTA", games_in_series: 6 },
+                    { user_id: "w3", profile_name: "David", winner: "WAS", games_in_series: 7 },
+                    { user_id: "w4", profile_name: "Fabian", winner: "UTA", games_in_series: 4 },
+                    { user_id: "w5", profile_name: "Hannes", winner: "UTA", games_in_series: 5 },
+                  ]}
+                />
+              ),
             },
-            home: {
-              abbreviation: "UTA",
-              name: "Jazz",
-              seed: 2,
-              color: "#F9A01B",
-            },
-            awayScore: 96,
-            homeScore: 104,
-            seriesAway: 1,
-            seriesHome: 4,
-            gameNumber: 5,
-            date: "May 02",
-            conference: "WEST",
-            round: "First Round",
-            yourPick: { winner: "UTA", games_in_series: 5 },
-            yourPickResult: "Shiiiiit 3 Points",
-          }}
-          seriesResult={{ winner: "UTA", games_played: 5 }}
-          picks={[
-            { user_id: "w1", profile_name: "Erik", winner: "UTA", games_in_series: 5 },
-            { user_id: "w2", profile_name: "Alexander", winner: "UTA", games_in_series: 6 },
-            { user_id: "w3", profile_name: "David", winner: "WAS", games_in_series: 7 },
-            { user_id: "w4", profile_name: "Fabian", winner: "UTA", games_in_series: 4 },
-            { user_id: "w5", profile_name: "Hannes", winner: "UTA", games_in_series: 5 },
-          ]}
-        />
-
-        <div className="space-y-2">
-          <h2 className="font-display text-lg tracking-wider text-muted-foreground">FONT VARIANTS</h2>
-          <DemoMatchCardFonts />
-        </div>
-
-        <DemoBracketPlayedOut />
-
-        <DemoAllPicksTable />
+            { value: "match-card-fonts", label: "FONT VARIANTS", content: <DemoMatchCardFonts /> },
+            { value: "bracket-played-out", label: "DEMO BRACKET — PLAYED OUT", content: <DemoBracketPlayedOut /> },
+            { value: "all-picks-table", label: "DEMO ALL PICKS TABLE", content: <DemoAllPicksTable /> },
+          ].map((item) => (
+            <AccordionItem
+              key={item.value}
+              value={item.value}
+              className="bg-[#181C23] rounded-lg px-5 border-b-0"
+            >
+              <AccordionTrigger className="hover:no-underline">
+                <h2 className="font-display text-lg tracking-wider text-left">{item.label}</h2>
+              </AccordionTrigger>
+              <AccordionContent>{item.content}</AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
 
         <Accordion type="single" collapsible className="bg-[#181C23] rounded-lg px-5">
           <AccordionItem value="roles" className="border-b-0">

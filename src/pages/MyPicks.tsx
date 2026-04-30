@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { PenLine, LogIn, Lock } from "lucide-react";
 import shareIcon from "@/assets/share-icon.svg";
-import bracketCourtBg from "@/assets/bracket-court-bg.jpeg";
+import bracketCourtBg from "@/assets/bracket-court-bg.png";
 import { useNavigate } from "react-router-dom";
 import PlayoffBracket from "@/components/PlayoffBracket";
 import TeamLogo from "@/components/TeamLogo";

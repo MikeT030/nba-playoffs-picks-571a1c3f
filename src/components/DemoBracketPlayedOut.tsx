@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import PlayoffBracket from "@/components/PlayoffBracket";
-import bracketCourtBg from "@/assets/bracket-court-bg.jpeg";
+import bracketCourtBg from "@/assets/bracket-court-bg.png";
 import { useBracketData } from "@/hooks/useBracketData";
 import {
   resolveSeriesTeams,

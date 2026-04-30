@@ -111,6 +111,7 @@ const Admin = () => {
           {[
             { value: "header-home", label: "DEMO HEADER — HOMEPAGE", content: <HeroBannerMinimal title="Playoff Games" showDemoAvatar /> },
             { value: "header-mypicks", label: "DEMO HEADER — MY PICKS", content: <HeroBannerMinimal title="My Picks" showDemoAvatar /> },
+            { value: "header-leaderboard", label: "DEMO HEADER — LEADERBOARD", content: <HeroBannerMinimal title="Leaderboard" showDemoAvatar /> },
             { value: "visual-scoreboard", label: "DEMO VISUAL SCOREBOARD", content: <DemoVisualScoreboard /> },
             { value: "all-matchups", label: "DEMO ALL MATCHUPS INNOVATION", content: <DemoAllMatchupsInnovation /> },
             { value: "advanced-round", label: "DEMO ADVANCED ROUND VIEW", content: <DemoAdvancedRoundView /> },

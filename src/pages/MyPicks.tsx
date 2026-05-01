@@ -412,6 +412,28 @@ const MyPicks = () => {
                 seriesScores[r.series_id] = `${lWins}-${wWins}`;
               }
             }
+            // Ongoing series scores (not yet decided): match by team-pair from live matches.
+            const liveByPair = new Map<string, { home: string; away: string; homeWins: number; awayWins: number }>();
+            for (const m of liveMatches) {
+              const key = [m.homeTeam.abbreviation, m.awayTeam.abbreviation].sort().join("-");
+              liveByPair.set(key, {
+                home: m.homeTeam.abbreviation,
+                away: m.awayTeam.abbreviation,
+                homeWins: m.homeWins,
+                awayWins: m.awayWins,
+              });
+            }
+            for (const series of activeBracket) {
+              if (seriesScores[series.id]) continue;
+              const { topTeam, bottomTeam } = resolveSeriesTeams(series.id, picks, activeBracket);
+              if (!topTeam || !bottomTeam) continue;
+              const key = [topTeam.abbreviation, bottomTeam.abbreviation].sort().join("-");
+              const live = liveByPair.get(key);
+              if (!live) continue;
+              const topWins = topTeam.abbreviation === live.home ? live.homeWins : live.awayWins;
+              const bottomWins = bottomTeam.abbreviation === live.home ? live.homeWins : live.awayWins;
+              seriesScores[series.id] = `${topWins}-${bottomWins}`;
+            }
             for (const p of userPicksLite) {
               pickPoints[p.series_id] = scorePick(p, userPicksLite, seriesResults);
             }

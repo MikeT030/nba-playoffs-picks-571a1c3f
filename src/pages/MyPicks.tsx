@@ -295,7 +295,7 @@ const MyPicks = () => {
   if (!user) {
     return (
       <div className="min-h-screen bg-background pb-28">
-        <HeroBannerMinimal title="My Picks" />
+        <HeroBannerMinimal title="2026 Playoffs Picks" />
         <section className="container py-10">
           <div className="flex flex-col items-center justify-center py-8 gap-4">
             <p className="font-display text-2xl tracking-wider">SIGN IN TO VIEW PICKS</p>

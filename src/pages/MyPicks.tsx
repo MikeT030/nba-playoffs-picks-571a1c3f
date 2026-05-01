@@ -366,7 +366,7 @@ const MyPicks = () => {
 
   return (
     <div className="min-h-screen bg-background pb-28">
-      <HeroBannerMinimal title="My Picks" />
+      <HeroBannerMinimal title="2026 Playoffs Picks" />
 
       <section className="container py-8 pb-24">
 

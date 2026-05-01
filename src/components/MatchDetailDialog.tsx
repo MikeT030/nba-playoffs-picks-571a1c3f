@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useSeriesGames } from "@/hooks/useSeriesGames";
 import { isNextUp as checkIsNextUp, formatTipOff } from "@/lib/seriesUtils";
-import type { Match, Team } from "@/data/playoffsData";
+import { getBracketSeriesIdForMatch, type Match, type Team } from "@/data/playoffsData";
 import { teamMeta } from "@/lib/nbaApi";
 
 /**
@@ -110,16 +110,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
 
   const bracketSeriesId = useMemo(() => {
     if (!match) return null;
-    if (!bracketData) return match.id;
-    const teamSet = new Set([match.homeTeam.abbreviation, match.awayTeam.abbreviation]);
-    const found = bracketData.find(
-      (s) => s.topTeam && s.bottomTeam && teamSet.has(s.topTeam.abbreviation) && teamSet.has(s.bottomTeam.abbreviation)
-    );
-    if (found) return found.id;
-    const partial = bracketData.find(
-      (s) => s.topTeam && s.bottomTeam && (teamSet.has(s.topTeam.abbreviation) || teamSet.has(s.bottomTeam.abbreviation))
-    );
-    return partial?.id ?? match.id;
+    return getBracketSeriesIdForMatch(match, bracketData);
   }, [match, bracketData]);
 
   const { data: seriesResult } = useQuery({

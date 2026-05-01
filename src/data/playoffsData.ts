@@ -109,6 +109,21 @@ export function getConference(team1: string, team2: string): "East" | "West" | "
   return "Finals";
 }
 
+export function getBracketSeriesIdForMatch(
+  match: Match,
+  seriesList: BracketSeries[] | undefined,
+): string {
+  if (!seriesList) return match.id;
+  const home = match.homeTeam.abbreviation;
+  const away = match.awayTeam.abbreviation;
+  const found = seriesList.find(
+    (s) =>
+      (s.topTeam?.abbreviation === home && s.bottomTeam?.abbreviation === away) ||
+      (s.topTeam?.abbreviation === away && s.bottomTeam?.abbreviation === home),
+  );
+  return found?.id ?? match.id;
+}
+
 // Dummy play-in placeholder teams with unique abbreviations so picks can be made
 const playInPlaceholders: Record<string, Team> = {
   "PIW7": { name: "West Play-In 7th", abbreviation: "PIW7", color: "#888", logo: "🏀", seed: 7 },

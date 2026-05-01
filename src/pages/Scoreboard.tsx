@@ -491,7 +491,7 @@ const Scoreboard = () => {
 
   return (
     <div className="min-h-screen bg-background pb-28">
-      <HeroBannerMinimal title="Leaderboard" />
+      <HeroBannerMinimal title="2026 Playoffs Picks" />
 
       <section className="container py-8 space-y-10">
         {/* Points section */}

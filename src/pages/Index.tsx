@@ -188,7 +188,7 @@ const Index = () => {
         isRefreshing={isRefreshing}
         progress={progress}
       />
-      <HeroBannerMinimal title="My Picks" />
+      <HeroBannerMinimal title="The Games" />
 
       <section className="container py-10 pt-0">
         <HighlightTicker />

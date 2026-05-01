@@ -257,25 +257,46 @@ const AdvancedRoundView = ({
       const topWinner = s.topParentSeriesId ? winnerByBracketId[s.topParentSeriesId] : undefined;
       const bottomWinner = s.bottomParentSeriesId ? winnerByBracketId[s.bottomParentSeriesId] : undefined;
 
-      // Both decided → the matchup is set; should normally show as a real
-      // Match. Skip here — if no Match exists yet, the API just hasn't
-      // scheduled it.
-      if (topWinner && bottomWinner) continue;
-
       // Neither decided → nothing to show.
       if (!topWinner && !bottomWinner) continue;
+
+      // Helper: look up a team's seed from its parent bracket series.
+      const seedFor = (parent: BracketSeries | undefined, abbr: string) => {
+        if (!parent) return undefined;
+        if (parent.topTeam?.abbreviation === abbr) return parent.topTeam.seed;
+        if (parent.bottomTeam?.abbreviation === abbr) return parent.bottomTeam.seed;
+        return undefined;
+      };
+
+      if (topWinner && bottomWinner) {
+        // Both teams have advanced but no Match exists yet (API hasn't
+        // scheduled the next-round series). Show one card per advanced team,
+        // with the now-known opponent as the "feeder" label.
+        entries.push({
+          key: `${s.id}-top`,
+          team: topWinner,
+          teamSeed: seedFor(topParent, topWinner),
+          aLabel: bottomWinner,
+          bLabel: bottomWinner,
+          conferenceLabel: CONF_LABEL_FOR[s.conference],
+        });
+        entries.push({
+          key: `${s.id}-bottom`,
+          team: bottomWinner,
+          teamSeed: seedFor(bottomParent, bottomWinner),
+          aLabel: topWinner,
+          bLabel: topWinner,
+          conferenceLabel: CONF_LABEL_FOR[s.conference],
+        });
+        continue;
+      }
 
       const winnerAbbr = (topWinner ?? bottomWinner)!;
       const pendingParent = topWinner ? bottomParent : topParent;
       if (!pendingParent || !pendingParent.topTeam || !pendingParent.bottomTeam) continue;
 
-      // Find seed of winner from bracket.
       const decidedParent = topWinner ? topParent : bottomParent;
-      let teamSeed: number | undefined;
-      if (decidedParent) {
-        if (decidedParent.topTeam?.abbreviation === winnerAbbr) teamSeed = decidedParent.topTeam.seed;
-        else if (decidedParent.bottomTeam?.abbreviation === winnerAbbr) teamSeed = decidedParent.bottomTeam.seed;
-      }
+      const teamSeed = seedFor(decidedParent, winnerAbbr);
 
       entries.push({
         key: s.id,

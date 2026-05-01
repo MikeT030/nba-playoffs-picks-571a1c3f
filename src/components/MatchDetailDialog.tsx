@@ -6,7 +6,23 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useSeriesGames } from "@/hooks/useSeriesGames";
 import { isNextUp as checkIsNextUp, formatTipOff } from "@/lib/seriesUtils";
-import type { Match } from "@/data/playoffsData";
+import type { Match, Team } from "@/data/playoffsData";
+import { teamMeta } from "@/lib/nbaApi";
+
+/**
+ * Resolve a Team-like object for *any* abbreviation, so picks made for a
+ * matchup that never materialised (e.g. someone picked "DEN" for the
+ * "winner of DEN/MIN vs winner of SAS/PIW7" semi slot, and the actual
+ * matchup ended up MIN vs SAS) still render with the right team
+ * abbreviation/color instead of being silently mapped to one of the
+ * teams in the *current* matchup.
+ */
+function teamForPick(abbr: string, match: Match): Team {
+  if (abbr === match.homeTeam.abbreviation) return match.homeTeam;
+  if (abbr === match.awayTeam.abbreviation) return match.awayTeam;
+  const meta = teamMeta[abbr] || { color: "#666", logo: "🏀" };
+  return { name: abbr, abbreviation: abbr, color: meta.color, logo: meta.logo };
+}
 
 interface MatchDetailDialogProps {
   match: Match | null;

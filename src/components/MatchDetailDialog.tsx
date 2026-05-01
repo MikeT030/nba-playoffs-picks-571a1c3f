@@ -4,6 +4,7 @@ import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBracketData } from "@/hooks/useBracketData";
+import { useAllSeriesResults } from "@/hooks/useAllSeriesResults";
 import { useSeriesGames } from "@/hooks/useSeriesGames";
 import { isNextUp as checkIsNextUp, formatTipOff } from "@/lib/seriesUtils";
 import { getBracketSeriesIdForMatch, type Match, type Team } from "@/data/playoffsData";
@@ -34,6 +35,7 @@ interface MatchDetailDialogProps {
 const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchDetailDialogProps) => {
   const { user } = useAuth();
   const { data: bracketData } = useBracketData();
+  const { data: allResults } = useAllSeriesResults();
   const { data: seriesGames } = useSeriesGames(
     match?.id,
     match?.homeTeam.abbreviation,
@@ -110,8 +112,8 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
 
   const bracketSeriesId = useMemo(() => {
     if (!match) return null;
-    return getBracketSeriesIdForMatch(match, bracketData);
-  }, [match, bracketData]);
+    return getBracketSeriesIdForMatch(match, bracketData, allResults);
+  }, [match, bracketData, allResults]);
 
   const { data: seriesResult } = useQuery({
     queryKey: ["series-result", bracketSeriesId],

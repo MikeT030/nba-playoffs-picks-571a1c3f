@@ -103,7 +103,7 @@ const Auth = () => {
 
       {/* Form */}
       <div className="flex-1 flex items-start justify-center px-4 -mt-[108px] relative z-10">
-        <div className="w-full max-w-sm space-y-8">
+        <div className="w-full max-w-sm space-y-8 pt-[30px]">
           <div className="text-center">
             <h1
               className="md:text-4xl tracking-wider leading-tight text-center text-4xl"

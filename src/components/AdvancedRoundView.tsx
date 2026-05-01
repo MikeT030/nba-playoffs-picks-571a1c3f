@@ -78,14 +78,20 @@ const AdvancedCard = ({
   conferenceLabel: string;
   roundLabel: string;
 }) => {
-  const headerBits = [conferenceLabel, roundLabel, "Awaiting opponent"].filter(Boolean);
+  const opponentKnown = feederALabel === feederBLabel;
+  const headerSuffix = opponentKnown ? "Awaiting tip-off" : "Awaiting opponent";
+  const headerBits = [conferenceLabel, roundLabel, headerSuffix].filter(Boolean);
 
   return (
     <div className="relative block rounded-lg overflow-hidden bg-[#1A1E24]/80 backdrop-blur-md border border-dashed border-border/60">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `linear-gradient(135deg, ${colorFor(team)}66 0%, ${colorFor(team)}66 50%, hsl(var(--muted) / 0.18) 50%, hsl(var(--muted) / 0.18) 100%)`,
+          background: `linear-gradient(135deg, ${colorFor(team)}66 0%, ${colorFor(team)}66 50%, ${
+            opponentKnown ? `${colorFor(feederALabel)}66` : "hsl(var(--muted) / 0.18)"
+          } 50%, ${
+            opponentKnown ? `${colorFor(feederALabel)}66` : "hsl(var(--muted) / 0.18)"
+          } 100%)`,
         }}
       />
       <div className="relative">
@@ -116,20 +122,28 @@ const AdvancedCard = ({
             <div className="flex items-center gap-2">
               <span className="text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
               <span className="text-muted-foreground font-body text-sm">vs</span>
-              <span className="text-2xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>?</span>
+              <span
+                className={`text-2xl ${opponentKnown ? "" : "text-muted-foreground"}`}
+                style={{ fontFamily: "'Orbitron', sans-serif" }}
+              >
+                {opponentKnown ? "—" : "?"}
+              </span>
             </div>
             <p className="text-xs font-body mt-1 font-medium text-muted-foreground">
-              TBD
+              {opponentKnown ? "Set" : "TBD"}
             </p>
           </div>
 
           <div className="flex-1 flex items-center gap-1.5 justify-end text-right -translate-y-2">
             <div>
-              <p className="tracking-wide text-xl text-muted-foreground" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
-                TBD
+              <p
+                className={`tracking-wide text-xl ${opponentKnown ? "" : "text-muted-foreground"}`}
+                style={{ fontFamily: "'Saira Stencil One', sans-serif" }}
+              >
+                {opponentKnown ? feederALabel : "TBD"}
               </p>
-              <p className="text-[10px] font-body uppercase tracking-widest text-muted-foreground mt-0.5">
-                {feederALabel} or {feederBLabel}
+              <p className="text-[10px] font-body uppercase tracking-widest text-primary mt-0.5">
+                {opponentKnown ? "✓ Advanced" : `${feederALabel} or ${feederBLabel}`}
               </p>
             </div>
           </div>

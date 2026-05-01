@@ -109,19 +109,59 @@ export function getConference(team1: string, team2: string): "East" | "West" | "
   return "Finals";
 }
 
+/**
+ * Resolve which bracket-slot ID corresponds to a live Match (e.g. map a
+ * "MIN vs SAS" Conf-Semi card back to `west-semi-bottom` so picks stored under
+ * that slot are found).
+ *
+ * Resolution order, ALL strict (no partial-team matching):
+ *  1. Direct match: a series whose own `topTeam`/`bottomTeam` already equals
+ *     the match's two teams.
+ *  2. Parent-walking via confirmed `seriesResults`: for any series with parent
+ *     IDs, derive its effective top/bottom from each parent's confirmed
+ *     winner, then check if those winners equal the match's two teams.
+ *
+ * Falling back to `match.id` (instead of a partial-match bracket slot) keeps
+ * the previous bug fixed: picks for unrelated teams never bleed into the
+ * current matchup.
+ */
 export function getBracketSeriesIdForMatch(
   match: Match,
   seriesList: BracketSeries[] | undefined,
+  seriesResults?: { series_id: string; winner: string }[],
 ): string {
   if (!seriesList) return match.id;
   const home = match.homeTeam.abbreviation;
   const away = match.awayTeam.abbreviation;
-  const found = seriesList.find(
+
+  // Pass 1: direct match on already-resolved top/bottom teams.
+  const direct = seriesList.find(
     (s) =>
       (s.topTeam?.abbreviation === home && s.bottomTeam?.abbreviation === away) ||
       (s.topTeam?.abbreviation === away && s.bottomTeam?.abbreviation === home),
   );
-  return found?.id ?? match.id;
+  if (direct) return direct.id;
+
+  // Pass 2: walk parents via confirmed series results, so later-round slots
+  // resolve even when `useBracketData` hasn't propagated forward yet.
+  if (seriesResults && seriesResults.length > 0) {
+    const winnerOf = (seriesId: string | undefined): string | undefined => {
+      if (!seriesId) return undefined;
+      return seriesResults.find((r) => r.series_id === seriesId)?.winner;
+    };
+
+    const matchPair = [home, away].sort().join("|");
+    const parentMatch = seriesList.find((s) => {
+      if (!s.topParentSeriesId || !s.bottomParentSeriesId) return false;
+      const top = winnerOf(s.topParentSeriesId);
+      const bot = winnerOf(s.bottomParentSeriesId);
+      if (!top || !bot) return false;
+      return [top, bot].sort().join("|") === matchPair;
+    });
+    if (parentMatch) return parentMatch.id;
+  }
+
+  return match.id;
 }
 
 // Dummy play-in placeholder teams with unique abbreviations so picks can be made

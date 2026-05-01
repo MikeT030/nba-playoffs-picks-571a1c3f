@@ -13,8 +13,8 @@ const useUserBet = (match: Match) => {
   const { data: allResults } = useAllSeriesResults();
 
   const bracketSeriesId = useMemo(() => {
-    return getBracketSeriesIdForMatch(match, bracketData);
-  }, [match, bracketData]);
+    return getBracketSeriesIdForMatch(match, bracketData, allResults);
+  }, [match, bracketData, allResults]);
 
   const dbPick = useMemo(() => {
     if (!allPicks || !bracketSeriesId) return null;

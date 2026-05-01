@@ -59,13 +59,63 @@ function groupIntoSeries(games: NbaGame[], bracket: BracketSeries[]): Match[] {
     seriesMap.get(key)!.push(game);
   }
 
+  // Compute series winners (by team-pair key) from finished game tallies, so
+  // we can walk the bracket forward and resolve teams for later rounds.
+  const winnerByPair = new Map<string, string>();
+  for (const [key, seriesGames] of seriesMap) {
+    const [teamA, teamB] = key.split("-");
+    let aWins = 0;
+    let bWins = 0;
+    for (const g of seriesGames) {
+      if (g.status !== "Final") continue;
+      const homeWon = g.home_team_score > g.visitor_team_score;
+      const winner = homeWon ? g.home_team.abbreviation : g.visitor_team.abbreviation;
+      if (winner === teamA) aWins++;
+      else bWins++;
+    }
+    if (aWins >= 4) winnerByPair.set(key, teamA);
+    else if (bWins >= 4) winnerByPair.set(key, teamB);
+  }
+
+  // Walk the bracket and resolve later-round teams from known winners.
+  // Iterate in round order; each pass fills any series whose parents now
+  // have known winners.
+  const resolvedTeams = new Map<string, { top?: string; bottom?: string }>();
+  for (const s of bracket) {
+    resolvedTeams.set(s.id, {
+      top: s.topTeam?.abbreviation,
+      bottom: s.bottomTeam?.abbreviation,
+    });
+  }
+  const winnerOfSeries = (seriesId: string): string | undefined => {
+    const r = resolvedTeams.get(seriesId);
+    if (!r?.top || !r?.bottom) return undefined;
+    const k = [r.top, r.bottom].sort().join("-");
+    return winnerByPair.get(k);
+  };
+  // Multiple passes so deeper rounds resolve once their parents do.
+  for (let pass = 0; pass < 4; pass++) {
+    for (const s of bracket) {
+      const cur = resolvedTeams.get(s.id)!;
+      if (!cur.top && s.topParentSeriesId) {
+        const w = winnerOfSeries(s.topParentSeriesId);
+        if (w) cur.top = w;
+      }
+      if (!cur.bottom && s.bottomParentSeriesId) {
+        const w = winnerOfSeries(s.bottomParentSeriesId);
+        if (w) cur.bottom = w;
+      }
+    }
+  }
+
   // Build a quick lookup: team-pair → bracket round, so each derived Match
   // gets its real round ("Conference Semifinals", "Conference Finals", …)
   // instead of being hard-tagged as "First Round".
   const roundByTeamPair = new Map<string, Match["round"]>();
   for (const s of bracket) {
-    if (!s.topTeam || !s.bottomTeam) continue;
-    const k = [s.topTeam.abbreviation, s.bottomTeam.abbreviation].sort().join("-");
+    const r = resolvedTeams.get(s.id)!;
+    if (!r.top || !r.bottom) continue;
+    const k = [r.top, r.bottom].sort().join("-");
     roundByTeamPair.set(k, s.round as Match["round"]);
   }
 

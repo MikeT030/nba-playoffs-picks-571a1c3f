@@ -106,10 +106,10 @@ const Auth = () => {
         <div className="w-full max-w-sm space-y-8">
           <div className="text-center">
             <h1
-              className="md:text-4xl tracking-wider leading-tight text-center text-4xl"
+              className="md:text-4xl tracking-wider leading-tight text-center text-4xl whitespace-pre-line"
               style={{ fontFamily: "'Archivo Black', sans-serif" }}
             >
-              THE 2026 PLAYOFFS PICKS
+              {"2026\nPLAYOFFS PICKS"}
             </h1>
             <p className="font-body mt-3 text-lg font-normal text-secondary-foreground whitespace-pre-line">{subtitle}</p>
           </div>

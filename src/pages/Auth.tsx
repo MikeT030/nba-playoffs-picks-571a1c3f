@@ -109,7 +109,7 @@ const Auth = () => {
               className="md:text-4xl tracking-wider leading-tight text-center text-4xl"
               style={{ fontFamily: "'Archivo Black', sans-serif" }}
             >
-              2026
+              <span className="font-thin" style={{ fontFamily: "'Barlow', sans-serif" }}>2026</span>
               <br />
               <span className="text-4xl font-bold" style={{ fontFamily: "'Claymale', 'Archivo Black', sans-serif" }}>Playoffs Picks</span>
             </h1>

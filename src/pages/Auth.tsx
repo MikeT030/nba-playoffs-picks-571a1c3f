@@ -111,7 +111,7 @@ const Auth = () => {
             >
               2026
               <br />
-              <span className="text-4xl" style={{ fontFamily: "'Claymale', 'Archivo Black', sans-serif" }}>Playoffs</span> PICKS
+              <span className="text-4xl font-bold" style={{ fontFamily: "'Claymale', 'Archivo Black', sans-serif" }}>Playoffs</span> PICKS
             </h1>
             <p className="font-body mt-3 text-lg font-normal text-secondary-foreground whitespace-pre-line">{subtitle}</p>
           </div>

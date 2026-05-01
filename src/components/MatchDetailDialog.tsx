@@ -112,8 +112,8 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
 
   const bracketSeriesId = useMemo(() => {
     if (!match) return null;
-    return getBracketSeriesIdForMatch(match, bracketData);
-  }, [match, bracketData]);
+    return getBracketSeriesIdForMatch(match, bracketData, allResults);
+  }, [match, bracketData, allResults]);
 
   const { data: seriesResult } = useQuery({
     queryKey: ["series-result", bracketSeriesId],

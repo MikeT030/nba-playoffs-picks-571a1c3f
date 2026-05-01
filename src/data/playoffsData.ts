@@ -111,19 +111,20 @@ export function getConference(team1: string, team2: string): "East" | "West" | "
 
 /**
  * Resolve which bracket-slot ID corresponds to a live Match (e.g. map a
- * "MIN vs SAS" Conf-Semi card back to `west-semi-bottom` so picks stored under
- * that slot are found).
+ * "MIN vs SAS" Conf-Semi card back to `west-semi-bottom`), in a strictly
+ * round- and conference-scoped way so picks from one round can never bleed
+ * into a card from another round even when the same two teams reappear.
  *
- * Resolution order, ALL strict (no partial-team matching):
- *  1. Direct match: a series whose own `topTeam`/`bottomTeam` already equals
- *     the match's two teams.
- *  2. Parent-walking via confirmed `seriesResults`: for any series with parent
- *     IDs, derive its effective top/bottom from each parent's confirmed
- *     winner, then check if those winners equal the match's two teams.
+ * Resolution order:
+ *  0. If `match.id` already equals a known bracket series id, use it.
+ *  1. Direct match on already-resolved `topTeam`/`bottomTeam`, restricted to
+ *     bracket slots whose round AND conference equal the visible match.
+ *  2. Parent-walking via confirmed `seriesResults`: for any same-round /
+ *     same-conference series with parent ids, derive its expected pair from
+ *     each parent's confirmed winner and check if it equals the match's pair.
  *
- * Falling back to `match.id` (instead of a partial-match bracket slot) keeps
- * the previous bug fixed: picks for unrelated teams never bleed into the
- * current matchup.
+ * Falling back to `match.id` (instead of any partial-team match) keeps picks
+ * from unrelated series from leaking into the current matchup.
  */
 export function getBracketSeriesIdForMatch(
   match: Match,
@@ -131,27 +132,40 @@ export function getBracketSeriesIdForMatch(
   seriesResults?: { series_id: string; winner: string }[],
 ): string {
   if (!seriesList) return match.id;
+
+  // Pass 0: card id is already a bracket id.
+  if (seriesList.some((s) => s.id === match.id)) return match.id;
+
   const home = match.homeTeam.abbreviation;
   const away = match.awayTeam.abbreviation;
+  const matchPair = [home, away].sort().join("|");
 
-  // Pass 1: direct match on already-resolved top/bottom teams.
-  const direct = seriesList.find(
+  // Only consider bracket slots that match the visible card's round AND
+  // conference. This is the key guard against e.g. a First Round DEN-vs-MIN
+  // card resolving to `west-semi-bottom` once those teams also appear in the
+  // semis bracket through parent winners.
+  const sameContext = seriesList.filter(
+    (s) => s.round === match.round && s.conference === match.conference,
+  );
+
+  // Pass 1: direct team-pair match within the same round/conference.
+  const direct = sameContext.find(
     (s) =>
       (s.topTeam?.abbreviation === home && s.bottomTeam?.abbreviation === away) ||
       (s.topTeam?.abbreviation === away && s.bottomTeam?.abbreviation === home),
   );
   if (direct) return direct.id;
 
-  // Pass 2: walk parents via confirmed series results, so later-round slots
-  // resolve even when `useBracketData` hasn't propagated forward yet.
+  // Pass 2: parent-walking via confirmed series results, scoped to the same
+  // round/conference. This lets a Conf-Semi card resolve to its bracket slot
+  // even before `useBracketData` has propagated winners forward.
   if (seriesResults && seriesResults.length > 0) {
     const winnerOf = (seriesId: string | undefined): string | undefined => {
       if (!seriesId) return undefined;
       return seriesResults.find((r) => r.series_id === seriesId)?.winner;
     };
 
-    const matchPair = [home, away].sort().join("|");
-    const parentMatch = seriesList.find((s) => {
+    const parentMatch = sameContext.find((s) => {
       if (!s.topParentSeriesId || !s.bottomParentSeriesId) return false;
       const top = winnerOf(s.topParentSeriesId);
       const bot = winnerOf(s.bottomParentSeriesId);

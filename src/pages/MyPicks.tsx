@@ -156,6 +156,7 @@ const MyPicks = () => {
   const navigate = useNavigate();
   const { data: resolvedBracket } = useBracketData();
   const { data: seriesResults = [] } = useAllSeriesResults();
+  const { data: liveMatches = [] } = usePlayoffGames();
   const activeBracket = resolvedBracket ?? bracketSeries;
   const [betsOpen, setBetsOpen] = useState(false);
   const [profileName, setProfileName] = useState<string | null>(null);

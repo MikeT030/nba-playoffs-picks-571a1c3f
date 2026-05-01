@@ -248,17 +248,20 @@ const AdvancedRoundView = ({
     for (const s of targets) {
       // Skip if this matchup is already a real Match (both teams known and a
       // game exists / will exist in this round).
-      const realMatch = matches.find(
-        (m) =>
-          m.round === activeRound &&
-          s.topTeam &&
-          s.bottomTeam &&
-          ((m.homeTeam.abbreviation === s.topTeam.abbreviation &&
-            m.awayTeam.abbreviation === s.bottomTeam.abbreviation) ||
-            (m.homeTeam.abbreviation === s.bottomTeam.abbreviation &&
-              m.awayTeam.abbreviation === s.topTeam.abbreviation)),
-      );
-      if (realMatch) continue;
+      // Look up a real Match for this bracket series. We intentionally do
+      // NOT filter by `m.round === activeRound` because usePlayoffGames
+      // currently tags every Match as "First Round" regardless of its actual
+      // playoff round. Match purely by the team pair, which is unique across
+      // the playoffs.
+      const findRealMatch = (aAbbr?: string, bAbbr?: string) => {
+        if (!aAbbr || !bAbbr) return undefined;
+        return matches.find(
+          (m) =>
+            (m.homeTeam.abbreviation === aAbbr && m.awayTeam.abbreviation === bAbbr) ||
+            (m.homeTeam.abbreviation === bAbbr && m.awayTeam.abbreviation === aAbbr),
+        );
+      };
+      if (findRealMatch(s.topTeam?.abbreviation, s.bottomTeam?.abbreviation)) continue;
 
       // Check parents.
       const topParent = s.topParentSeriesId

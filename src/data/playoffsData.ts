@@ -212,9 +212,15 @@ export function resolveSeriesTeams(
  * Given real playoff games from the API, detect which teams fill the TBD (7/8 seed)
  * slots by looking at who the known 1-seed and 2-seed teams are playing against.
  */
-export function resolveBracketWithApiGames(
-  games: { home_team: { abbreviation: string; full_name: string }; visitor_team: { abbreviation: string; full_name: string } }[]
-): BracketSeries[] {
+type ApiGameLike = {
+  home_team: { abbreviation: string; full_name: string };
+  visitor_team: { abbreviation: string; full_name: string };
+  home_team_score?: number;
+  visitor_team_score?: number;
+  status?: string;
+};
+
+export function resolveBracketWithApiGames(games: ApiGameLike[]): BracketSeries[] {
   if (!games.length) return bracketSeries;
 
   // Known seeds whose opponents reveal the play-in winners
@@ -248,13 +254,65 @@ export function resolveBracketWithApiGames(
     }
   }
 
-  if (Object.keys(resolved).length === 0) return bracketSeries;
+  // Tally finals wins per team-pair to derive series winners, so we can
+  // propagate winners forward into later-round bracket slots (semis, conf
+  // finals, finals) — without this, a Conf-Semi card like MIN vs SAS would
+  // still show the original DEN/SAS slots and pick lookups by team would
+  // misroute to a Round 1 series.
+  const winsByPair = new Map<string, Map<string, number>>();
+  const namesByAbbr = new Map<string, string>();
+  for (const g of games) {
+    namesByAbbr.set(g.home_team.abbreviation, g.home_team.full_name);
+    namesByAbbr.set(g.visitor_team.abbreviation, g.visitor_team.full_name);
+    if (g.status !== "Final") continue;
+    const a = g.home_team.abbreviation;
+    const b = g.visitor_team.abbreviation;
+    const key = [a, b].sort().join("-");
+    const winnerAbbr =
+      (g.home_team_score ?? 0) > (g.visitor_team_score ?? 0) ? a : b;
+    const m = winsByPair.get(key) ?? new Map<string, number>();
+    m.set(winnerAbbr, (m.get(winnerAbbr) ?? 0) + 1);
+    winsByPair.set(key, m);
+  }
+  const winnerOfPair = (abbrA: string, abbrB: string): string | undefined => {
+    const m = winsByPair.get([abbrA, abbrB].sort().join("-"));
+    if (!m) return undefined;
+    if ((m.get(abbrA) ?? 0) >= 4) return abbrA;
+    if ((m.get(abbrB) ?? 0) >= 4) return abbrB;
+    return undefined;
+  };
+
+  // Build a working map of resolved (top, bottom) per series, seeded with the
+  // static bracket and the play-in resolution above.
+  const slots = new Map<string, { top?: Team; bottom?: Team }>();
+  for (const s of bracketSeries) {
+    slots.set(s.id, {
+      top: s.topTeam,
+      bottom: resolved[s.id] ?? s.bottomTeam,
+    });
+  }
+
+  // Multiple passes so deeper rounds resolve once their parents do.
+  for (let pass = 0; pass < 4; pass++) {
+    for (const s of bracketSeries) {
+      const cur = slots.get(s.id)!;
+      const fillFromParent = (parentId: string | undefined): Team | undefined => {
+        if (!parentId) return undefined;
+        const p = slots.get(parentId);
+        if (!p?.top?.abbreviation || !p?.bottom?.abbreviation) return undefined;
+        const w = winnerOfPair(p.top.abbreviation, p.bottom.abbreviation);
+        if (!w) return undefined;
+        const fullName = namesByAbbr.get(w) ?? w;
+        return makeTeam(w, fullName);
+      };
+      if (!cur.top) cur.top = fillFromParent(s.topParentSeriesId);
+      if (!cur.bottom) cur.bottom = fillFromParent(s.bottomParentSeriesId);
+    }
+  }
 
   return bracketSeries.map((s) => {
-    if (resolved[s.id]) {
-      return { ...s, bottomTeam: resolved[s.id] };
-    }
-    return s;
+    const cur = slots.get(s.id)!;
+    return { ...s, topTeam: cur.top, bottomTeam: cur.bottom };
   });
 }
 

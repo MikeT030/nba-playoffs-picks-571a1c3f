@@ -4,6 +4,7 @@ import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBracketData } from "@/hooks/useBracketData";
+import { useAllSeriesResults } from "@/hooks/useAllSeriesResults";
 import { useSeriesGames } from "@/hooks/useSeriesGames";
 import { isNextUp as checkIsNextUp, formatTipOff } from "@/lib/seriesUtils";
 import { getBracketSeriesIdForMatch, type Match, type Team } from "@/data/playoffsData";

@@ -214,7 +214,7 @@ function groupIntoSeries(games: NbaGame[], bracket: BracketSeries[]): Match[] {
 
     matches.push({
       id: key.toLowerCase(),
-      round: "First Round",
+      round: roundByTeamPair.get(key) ?? "First Round",
       conference: getConference(homeAbbr, awayAbbr),
       gameNumber,
       date: dateStr,

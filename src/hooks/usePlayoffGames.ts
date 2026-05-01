@@ -59,6 +59,16 @@ function groupIntoSeries(games: NbaGame[], bracket: BracketSeries[]): Match[] {
     seriesMap.get(key)!.push(game);
   }
 
+  // Build a quick lookup: team-pair → bracket round, so each derived Match
+  // gets its real round ("Conference Semifinals", "Conference Finals", …)
+  // instead of being hard-tagged as "First Round".
+  const roundByTeamPair = new Map<string, Match["round"]>();
+  for (const s of bracket) {
+    if (!s.topTeam || !s.bottomTeam) continue;
+    const k = [s.topTeam.abbreviation, s.bottomTeam.abbreviation].sort().join("-");
+    roundByTeamPair.set(k, s.round as Match["round"]);
+  }
+
   const matches: Match[] = [];
 
   for (const [key, seriesGames] of seriesMap) {

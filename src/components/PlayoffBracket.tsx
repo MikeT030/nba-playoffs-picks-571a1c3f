@@ -351,14 +351,10 @@ const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
 }, ref) => {
   const bracket = seriesList ?? defaultBracketSeries;
 
-  // Actual confirmed winners take precedence over the user's picks when advancing
-  // teams to later rounds, so the bracket reflects reality once series are decided.
-  const advancementMap = { ...picks, ...actualWinners };
-
   const resolve = (id: string) => {
     const series = bracket.find((s) => s.id === id);
     if (!series) return { topTeam: undefined, bottomTeam: undefined };
-    const resolved = resolveSeriesTeams(id, advancementMap, bracket);
+    const resolved = resolveSeriesTeams(id, picks, bracket);
     return {
       topTeam: resolved.topTeam ?? series.topTeam,
       bottomTeam: resolved.bottomTeam ?? series.bottomTeam,

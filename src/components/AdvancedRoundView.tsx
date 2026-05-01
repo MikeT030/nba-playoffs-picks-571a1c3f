@@ -78,14 +78,20 @@ const AdvancedCard = ({
   conferenceLabel: string;
   roundLabel: string;
 }) => {
-  const headerBits = [conferenceLabel, roundLabel, "Awaiting opponent"].filter(Boolean);
+  const opponentKnown = feederALabel === feederBLabel;
+  const headerSuffix = opponentKnown ? "Awaiting tip-off" : "Awaiting opponent";
+  const headerBits = [conferenceLabel, roundLabel, headerSuffix].filter(Boolean);
 
   return (
     <div className="relative block rounded-lg overflow-hidden bg-[#1A1E24]/80 backdrop-blur-md border border-dashed border-border/60">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `linear-gradient(135deg, ${colorFor(team)}66 0%, ${colorFor(team)}66 50%, hsl(var(--muted) / 0.18) 50%, hsl(var(--muted) / 0.18) 100%)`,
+          background: `linear-gradient(135deg, ${colorFor(team)}66 0%, ${colorFor(team)}66 50%, ${
+            opponentKnown ? `${colorFor(feederALabel)}66` : "hsl(var(--muted) / 0.18)"
+          } 50%, ${
+            opponentKnown ? `${colorFor(feederALabel)}66` : "hsl(var(--muted) / 0.18)"
+          } 100%)`,
         }}
       />
       <div className="relative">
@@ -116,20 +122,28 @@ const AdvancedCard = ({
             <div className="flex items-center gap-2">
               <span className="text-2xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>—</span>
               <span className="text-muted-foreground font-body text-sm">vs</span>
-              <span className="text-2xl text-muted-foreground" style={{ fontFamily: "'Orbitron', sans-serif" }}>?</span>
+              <span
+                className={`text-2xl ${opponentKnown ? "" : "text-muted-foreground"}`}
+                style={{ fontFamily: "'Orbitron', sans-serif" }}
+              >
+                {opponentKnown ? "—" : "?"}
+              </span>
             </div>
             <p className="text-xs font-body mt-1 font-medium text-muted-foreground">
-              TBD
+              {opponentKnown ? "Set" : "TBD"}
             </p>
           </div>
 
           <div className="flex-1 flex items-center gap-1.5 justify-end text-right -translate-y-2">
             <div>
-              <p className="tracking-wide text-xl text-muted-foreground" style={{ fontFamily: "'Saira Stencil One', sans-serif" }}>
-                TBD
+              <p
+                className={`tracking-wide text-xl ${opponentKnown ? "" : "text-muted-foreground"}`}
+                style={{ fontFamily: "'Saira Stencil One', sans-serif" }}
+              >
+                {opponentKnown ? feederALabel : "TBD"}
               </p>
-              <p className="text-[10px] font-body uppercase tracking-widest text-muted-foreground mt-0.5">
-                {feederALabel} or {feederBLabel}
+              <p className="text-[10px] font-body uppercase tracking-widest text-primary mt-0.5">
+                {opponentKnown ? "✓ Advanced" : `${feederALabel} or ${feederBLabel}`}
               </p>
             </div>
           </div>
@@ -257,25 +271,46 @@ const AdvancedRoundView = ({
       const topWinner = s.topParentSeriesId ? winnerByBracketId[s.topParentSeriesId] : undefined;
       const bottomWinner = s.bottomParentSeriesId ? winnerByBracketId[s.bottomParentSeriesId] : undefined;
 
-      // Both decided → the matchup is set; should normally show as a real
-      // Match. Skip here — if no Match exists yet, the API just hasn't
-      // scheduled it.
-      if (topWinner && bottomWinner) continue;
-
       // Neither decided → nothing to show.
       if (!topWinner && !bottomWinner) continue;
+
+      // Helper: look up a team's seed from its parent bracket series.
+      const seedFor = (parent: BracketSeries | undefined, abbr: string) => {
+        if (!parent) return undefined;
+        if (parent.topTeam?.abbreviation === abbr) return parent.topTeam.seed;
+        if (parent.bottomTeam?.abbreviation === abbr) return parent.bottomTeam.seed;
+        return undefined;
+      };
+
+      if (topWinner && bottomWinner) {
+        // Both teams have advanced but no Match exists yet (API hasn't
+        // scheduled the next-round series). Show one card per advanced team,
+        // with the now-known opponent as the "feeder" label.
+        entries.push({
+          key: `${s.id}-top`,
+          team: topWinner,
+          teamSeed: seedFor(topParent, topWinner),
+          aLabel: bottomWinner,
+          bLabel: bottomWinner,
+          conferenceLabel: CONF_LABEL_FOR[s.conference],
+        });
+        entries.push({
+          key: `${s.id}-bottom`,
+          team: bottomWinner,
+          teamSeed: seedFor(bottomParent, bottomWinner),
+          aLabel: topWinner,
+          bLabel: topWinner,
+          conferenceLabel: CONF_LABEL_FOR[s.conference],
+        });
+        continue;
+      }
 
       const winnerAbbr = (topWinner ?? bottomWinner)!;
       const pendingParent = topWinner ? bottomParent : topParent;
       if (!pendingParent || !pendingParent.topTeam || !pendingParent.bottomTeam) continue;
 
-      // Find seed of winner from bracket.
       const decidedParent = topWinner ? topParent : bottomParent;
-      let teamSeed: number | undefined;
-      if (decidedParent) {
-        if (decidedParent.topTeam?.abbreviation === winnerAbbr) teamSeed = decidedParent.topTeam.seed;
-        else if (decidedParent.bottomTeam?.abbreviation === winnerAbbr) teamSeed = decidedParent.bottomTeam.seed;
-      }
+      const teamSeed = seedFor(decidedParent, winnerAbbr);
 
       entries.push({
         key: s.id,

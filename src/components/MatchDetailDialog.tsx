@@ -35,6 +35,7 @@ interface MatchDetailDialogProps {
 const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchDetailDialogProps) => {
   const { user } = useAuth();
   const { data: bracketData } = useBracketData();
+  const { data: allResults } = useAllSeriesResults();
   const { data: seriesGames } = useSeriesGames(
     match?.id,
     match?.homeTeam.abbreviation,

@@ -336,8 +336,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
           {allPicks && allPicks.length > 0 ? (
             <div className="rounded-lg border border-white/10 bg-[#22272E]/80 overflow-hidden">
               {allPicks.map((pick, idx) => {
-                const pickedTeam =
-                  pick.winner === match.homeTeam.abbreviation ? match.homeTeam : match.awayTeam;
+                const pickedTeam = teamForPick(pick.winner, match);
                 const isCurrentUser = user && pick.user_id === user.id;
                 const pts = computePts(pick);
                 return (

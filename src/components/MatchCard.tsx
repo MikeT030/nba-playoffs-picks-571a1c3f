@@ -1,4 +1,4 @@
-import type { Match } from "@/data/playoffsData";
+import { getBracketSeriesIdForMatch, type Match } from "@/data/playoffsData";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useAllUserPicks } from "@/hooks/useAllUserPicks";
 import { useAllSeriesResults } from "@/hooks/useAllSeriesResults";
@@ -13,16 +13,7 @@ const useUserBet = (match: Match) => {
   const { data: allResults } = useAllSeriesResults();
 
   const bracketSeriesId = useMemo(() => {
-    if (!bracketData) return match.id;
-    const teamSet = new Set([match.homeTeam.abbreviation, match.awayTeam.abbreviation]);
-    const found = bracketData.find(
-      (s) => s.topTeam && s.bottomTeam && teamSet.has(s.topTeam.abbreviation) && teamSet.has(s.bottomTeam.abbreviation)
-    );
-    if (found) return found.id;
-    const partial = bracketData.find(
-      (s) => s.topTeam && s.bottomTeam && (teamSet.has(s.topTeam.abbreviation) || teamSet.has(s.bottomTeam.abbreviation))
-    );
-    return partial?.id ?? match.id;
+    return getBracketSeriesIdForMatch(match, bracketData);
   }, [match, bracketData]);
 
   const dbPick = useMemo(() => {

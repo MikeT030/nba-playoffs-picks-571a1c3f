@@ -1,42 +1,46 @@
-## Goal
+## Problem
 
-Append `(vs. ABBR)` to the "Your Pick" line on every match card, where `ABBR` is the **opponent the user predicted to face their picked winner** (Option A). On mismatches with reality, no warning is shown — we just display the user's assumed opponent.
+In the bracket, Round 2+ matchup cards show the user's *predicted* opponent rather than the *actual* one once a parent series has concluded. Example: bracket displays OKC vs HOU (user's R1 pick) even though the real R2 matchup is OKC vs LAL.
 
-Example: `Your Pick: SAS in 7 (vs. DEN)` even if the real series is SAS vs. MIN.
+## Root cause
 
-## Where
+`resolveSeriesTeams` in `src/data/playoffsData.ts` always traverses the user's parent picks to fill a child series' slots, overriding the slots that `resolveBracketWithApiGames` already filled with the *real* advancing team.
 
-`src/components/MatchCard.tsx` — the `Your Pick` block (lines 273–290).
+Per-series flow today:
+1. `useBracketData` runs `resolveBracketWithApiGames`, which writes the real `topTeam`/`bottomTeam` into a series once its parent series is decided (4 wins recorded).
+2. `PlayoffBracket.resolve()` then calls `resolveSeriesTeams`, which unconditionally replaces those slots with `picks[parentSeriesId]` (the user's predicted winner).
 
-## How to derive the assumed opponent
+So the API-resolved truth is silently overwritten by the user's pick.
 
-For the bracket series the card resolves to (already computed via `getBracketSeriesIdForMatch` in `useUserBet`):
+## Fix
 
-1. **First Round slot** (`bracketSeries[i].topTeam` / `bottomTeam` are fixed teams):
-   - Opponent = whichever of `topTeam` / `bottomTeam` is **not** `bet.winner`.
+In `resolveSeriesTeams`, only fall back to the parent-pick traversal when the slot is *not* already filled by the bracket data. Treat play-in placeholders (`PIE7`/`PIW7`/`PIE8`/`PIW8` via `isPlayInPlaceholder`) as "not filled" so Round 1 TBD behavior is preserved.
 
-2. **Later round slot** (`topParentSeriesId` / `bottomParentSeriesId`):
-   - Look up the user's pick winner for each parent series in `allPicks`.
-   - The two parent-winners are the user's assumed semis/finals matchup.
-   - Opponent = whichever parent-winner is **not** `bet.winner`.
-   - If a parent pick is missing, no opponent suffix is rendered.
+Pseudocode:
 
-3. If `bet.winner` does not appear in the assumed pair (data inconsistency), render no suffix.
+```text
+topTeam = series.topTeam
+if topTeam is missing OR isPlayInPlaceholder(topTeam.abbreviation):
+    use existing parent-pick traversal to fill it
+# same for bottomTeam
+```
 
-## Implementation steps
+This keeps the current behavior for:
+- Round 1 (slots are always pre-filled in the static bracket; no parent traversal happens anyway).
+- Pre-decision rounds where the parent series isn't over yet (slot stays undefined → traversal still uses the user's pick to preview).
 
-1. In `useUserBet` (or directly in `MatchCard`), expose `bracketSeriesId`, `bracketData`, and `allPicks` so we can compute the opponent.
-2. Add a small helper `getAssumedOpponent(bracketSeriesId, winnerAbbr, bracketData, allPicks): string | null` in `src/data/playoffsData.ts` next to `getBracketSeriesIdForMatch`. It implements the two cases above and returns the abbreviation or `null`.
-3. Update the JSX:
-   ```tsx
-   Your Pick: <b>{bet.winner}</b> in <b>{bet.gamesInSeries}</b>
-   {opponent ? <> (vs. {opponent})</> : null}
-   ```
-   The `· N Points` segment continues to render after this.
-4. Apply the same change to `MatchDetailDialog.tsx` if/where it shows the same "Your Pick" line, so card and detail stay consistent. (Will verify during implementation.)
+And fixes the case where the parent is decided: the real advancing team wins.
 
-## Notes
+## Files to change
 
-- Spacing: `(vs. DEN)` with a space after the period (standard typography). Confirmed earlier.
-- No visual indicator when assumed opponent ≠ real opponent — purely Option A.
-- `DemoMatchCardColored` uses a hardcoded demo string and is unaffected unless you want it updated too (let me know).
+- `src/data/playoffsData.ts` — adjust `resolveSeriesTeams` as above (both top and bottom branches).
+
+## Side effects to verify
+
+- `MyPicks.tsx` builds `seriesScores` keyed off `resolveSeriesTeams(...)`. After the fix, the resolved teams will be the *actual* matchup, so `seriesScores` will correctly reflect the actual series score (e.g. OKC-LAL), not the predicted matchup.
+- `MatchCard`'s "Your Pick: X in N (vs. OPP)" already compares against `getAssumedOpponentAbbr` and only shows the suffix when the actual matchup differs — unaffected.
+- Bracket coloring (winner/loser highlight, "+points" tag) keys off `actualWinners[id]` and the bet's `winner` abbreviation, not the slot teams — unaffected.
+
+## Out of scope
+
+No UI changes, no data-model changes, no changes to Round 1 logic.

@@ -386,15 +386,17 @@ const DemoAllPicksTable = () => {
                               className="p-3 align-middle text-center font-body text-xs whitespace-nowrap"
                             >
                               <div className="inline-flex items-baseline gap-1.5">
-                                <span>
-                                  <span className="font-bold text-foreground">
-                                    {cell.pick.winner}
-                                  </span>
-                                  <span className="ml-1 text-white">
-                                    in {cell.pick.games_in_series}
+                                <span className="inline-flex flex-col items-start">
+                                  <span>
+                                    <span className="font-bold text-foreground">
+                                      {cell.pick.winner}
+                                    </span>
+                                    <span className="ml-1 text-white">
+                                      in {cell.pick.games_in_series}
+                                    </span>
                                   </span>
                                   {cell.showAssumed && (
-                                    <span className="ml-1 text-muted-foreground">
+                                    <span className="text-muted-foreground text-[10px] leading-tight">
                                       (vs. {cell.assumedOpp})
                                     </span>
                                   )}

@@ -305,7 +305,10 @@ const BracketCard = ({
               actualWinnerAbbr && isWrong ? "text-rose-300/80" : "text-primary"
             }`}
           >
-            Your Pick: {winnerTeam.abbreviation} in {bet!.gamesInSeries}
+            Your Pick: {winnerTeam.abbreviation} in {bet!.gamesInSeries}{(() => {
+              const opp = winnerTeam.abbreviation === topTeam?.abbreviation ? bottomTeam : topTeam;
+              return opp ? ` (vs. ${opp.abbreviation})` : "";
+            })()}
           </span>
           <PointsTag point={pickPoint} variant={variant} />
         </div>

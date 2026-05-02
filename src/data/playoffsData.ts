@@ -291,7 +291,12 @@ export function resolveSeriesTeams(
   let topTeam = series.topTeam;
   let bottomTeam = series.bottomTeam;
 
-  if (series.topParentSeriesId) {
+  // Only fall back to the user's predicted opponent when the slot has not
+  // already been filled with the real advancing team by
+  // `resolveBracketWithApiGames`. Play-in placeholders count as "not filled".
+  const needsFill = (t?: Team) => !t || isPlayInPlaceholder(t.abbreviation);
+
+  if (needsFill(topTeam) && series.topParentSeriesId) {
     const parentWinner = picks[series.topParentSeriesId];
     if (parentWinner) {
       const parentSeries = seriesList.find((s) => s.id === series.topParentSeriesId);
@@ -302,7 +307,7 @@ export function resolveSeriesTeams(
     }
   }
 
-  if (series.bottomParentSeriesId) {
+  if (needsFill(bottomTeam) && series.bottomParentSeriesId) {
     const parentWinner = picks[series.bottomParentSeriesId];
     if (parentWinner) {
       const parentSeries = seriesList.find((s) => s.id === series.bottomParentSeriesId);

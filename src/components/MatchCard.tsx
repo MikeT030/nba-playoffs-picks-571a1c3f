@@ -51,7 +51,7 @@ interface MatchCardProps {
 }
 
 const MatchCard = ({ match }: MatchCardProps) => {
-  const { pick: bet, points } = useUserBet(match);
+  const { pick: bet, points, opponentAbbr } = useUserBet(match);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { data: seriesGames } = useSeriesGames(

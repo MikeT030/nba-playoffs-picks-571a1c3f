@@ -1,4 +1,4 @@
-import { getBracketSeriesIdForMatch, type Match } from "@/data/playoffsData";
+import { getBracketSeriesIdForMatch, getAssumedOpponentAbbr, type Match } from "@/data/playoffsData";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useAllUserPicks } from "@/hooks/useAllUserPicks";
 import { useAllSeriesResults } from "@/hooks/useAllSeriesResults";
@@ -38,7 +38,12 @@ const useUserBet = (match: Match) => {
     return 0;
   }, [dbPick, seriesResult]);
 
-  return { pick: dbPick ?? null, points };
+  const opponentAbbr = useMemo(() => {
+    if (!dbPick) return null;
+    return getAssumedOpponentAbbr(bracketSeriesId, dbPick.winner, bracketData, allPicks);
+  }, [dbPick, bracketSeriesId, bracketData, allPicks]);
+
+  return { pick: dbPick ?? null, points, opponentAbbr };
 };
 
 interface MatchCardProps {
@@ -46,7 +51,7 @@ interface MatchCardProps {
 }
 
 const MatchCard = ({ match }: MatchCardProps) => {
-  const { pick: bet, points } = useUserBet(match);
+  const { pick: bet, points, opponentAbbr } = useUserBet(match);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { data: seriesGames } = useSeriesGames(
@@ -273,7 +278,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
       {bet && betTeamName && (
         <div className="px-4 pb-3 -mt-1">
           <p className="font-body text-white text-center pt-0 text-sm">
-            Your Pick: <span className="font-bold">{bet.winner}</span> in <span className="font-bold">{bet.gamesInSeries}</span>
+            Your Pick: <span className="font-bold">{bet.winner}</span> in <span className="font-bold">{bet.gamesInSeries}</span>{opponentAbbr ? ` (vs. ${opponentAbbr})` : ""}
             {points !== null && (
               <span className="ml-2 text-primary font-medium">
                 ·{" "}

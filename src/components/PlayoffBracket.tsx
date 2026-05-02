@@ -299,33 +299,38 @@ const BracketCard = ({
         totalGames={totalGames}
       />
 
-      {winnerTeam ? (
-        <div className="flex items-center justify-center gap-1.5 px-1" style={{ height: 24 }}>
-          {actualWinnerAbbr &&
-            (isCorrect ? (
-              <Check size={11} className="text-emerald-400 shrink-0" />
-            ) : (
-              <X size={11} className="text-rose-400 shrink-0" />
-            ))}
-          <span
-            className={`text-[10px] font-body font-medium whitespace-nowrap ${
-              actualWinnerAbbr && isWrong ? "text-rose-300/80" : "text-primary"
-            }`}
-          >
-            Your Pick: {winnerTeam.abbreviation} in {bet!.gamesInSeries}{(() => {
-              const assumedOpp = getAssumedOpponentAbbr(seriesId, winnerTeam.abbreviation, seriesList, allPicks);
-              if (!assumedOpp) return "";
-              const actualOpp = topTeam?.abbreviation === winnerTeam.abbreviation
-                ? bottomTeam?.abbreviation
-                : bottomTeam?.abbreviation === winnerTeam.abbreviation
-                  ? topTeam?.abbreviation
-                  : null;
-              return actualOpp && actualOpp !== assumedOpp ? ` (vs. ${assumedOpp})` : "";
-            })()}
-          </span>
-          <PointsTag point={pickPoint} variant={variant} />
-        </div>
-      ) : (
+      {winnerTeam ? (() => {
+        const assumedOpp = getAssumedOpponentAbbr(seriesId, winnerTeam.abbreviation, seriesList, allPicks);
+        const actualOpp = topTeam?.abbreviation === winnerTeam.abbreviation
+          ? bottomTeam?.abbreviation
+          : bottomTeam?.abbreviation === winnerTeam.abbreviation
+            ? topTeam?.abbreviation
+            : null;
+        const showAssumed = !!assumedOpp && !!actualOpp && actualOpp !== assumedOpp;
+        return (
+          <div className="flex items-center justify-center gap-1.5 px-1" style={{ minHeight: 24 }}>
+            {actualWinnerAbbr &&
+              (isCorrect ? (
+                <Check size={11} className="text-emerald-400 shrink-0" />
+              ) : (
+                <X size={11} className="text-rose-400 shrink-0" />
+              ))}
+            <span
+              className={`text-[10px] font-body font-medium whitespace-nowrap inline-flex flex-col items-center leading-tight ${
+                actualWinnerAbbr && isWrong ? "text-rose-300/80" : "text-primary"
+              }`}
+            >
+              <span>Your Pick: {winnerTeam.abbreviation} in {bet!.gamesInSeries}</span>
+              {showAssumed && (
+                <span className="text-muted-foreground text-[9px]">
+                  (vs. {assumedOpp})
+                </span>
+              )}
+            </span>
+            <PointsTag point={pickPoint} variant={variant} />
+          </div>
+        );
+      })() : (
         <div className="flex items-center justify-center" style={{ height: 24 }}>
           <span className="text-[10px] font-body text-muted-foreground/40 italic">No pick</span>
         </div>

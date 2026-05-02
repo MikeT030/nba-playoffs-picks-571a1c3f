@@ -1,42 +1,42 @@
-I found the root cause: the current lookup checks “direct team pair” before it checks what round the card is in. That means the First Round DEN vs MIN card can match the static bracket slot `west-r1-3v6`, but the broader logic can still become unsafe when the same two teams appear as resolved/current participants in another bracket context. The fix should make the lookup round-aware and parent-slot-aware, not just team-pair-aware.
+## Goal
 
-Plan:
+Append `(vs. ABBR)` to the "Your Pick" line on every match card, where `ABBR` is the **opponent the user predicted to face their picked winner** (Option A). On mismatches with reality, no warning is shown — we just display the user's assumed opponent.
 
-1. Update `getBracketSeriesIdForMatch` in `src/data/playoffsData.ts`
-   - First try to map by the card’s own `match.id` if it is already a known bracket series id.
-     - Example: First Round DEN vs MIN should resolve immediately to `west-r1-3v6`.
-   - Then restrict all team-pair matching by both:
-     - `match.round`
-     - `match.conference`
-   - Direct matching will only consider bracket slots in the same round/conference as the visible card.
-     - Example: A First Round DEN vs MIN card cannot resolve to `west-semi-bottom`.
-     - Example: A Conference Semis MIN vs SAS card cannot resolve to `west-r1-3v6`.
+Example: `Your Pick: SAS in 7 (vs. DEN)` even if the real series is SAS vs. MIN.
 
-2. Make parent-walking recursive and slot-specific
-   - Use confirmed `series_results` to derive the expected teams for later-round bracket slots.
-   - Only match a later-round slot when both parent winners are known and exactly equal the visible matchup pair.
-   - This keeps MIN vs SAS mapped to `west-semi-bottom` after these results exist:
-     - `west-r1-3v6 = MIN`
-     - `west-r1-2v7 = SAS`
+## Where
 
-3. Prevent wrong fallback behavior
-   - If no strict same-round/same-conference bracket slot is found, return `match.id`.
-   - That means no unrelated picks are displayed rather than showing picks from the wrong series.
+`src/components/MatchCard.tsx` — the `Your Pick` block (lines 273–290).
 
-4. Add focused tests for the bug cases
-   - DEN vs MIN, First Round -> `west-r1-3v6`
-   - MIN vs SAS, Conference Semifinals with confirmed parent results -> `west-semi-bottom`
-   - MIN vs SAS without confirmed parent results -> fallback to `match.id`, so no incorrect picks bleed in
-   - DEN vs MIN must never resolve to the semis slot
+## How to derive the assumed opponent
 
-5. Verify the UI paths using the same corrected helper
-   - `MatchCard.tsx` already calls the shared helper.
-   - `MatchDetailDialog.tsx` already calls the shared helper.
-   - After the helper is fixed, both the card “Your Pick” line and detail drawer “All Picks” list will use the same safe mapping.
+For the bracket series the card resolves to (already computed via `getBracketSeriesIdForMatch` in `useUserBet`):
 
-Expected result:
+1. **First Round slot** (`bracketSeries[i].topTeam` / `bottomTeam` are fixed teams):
+   - Opponent = whichever of `topTeam` / `bottomTeam` is **not** `bet.winner`.
 
-- On the DEN vs MIN First Round matchup, the app will show picks from `west-r1-3v6` only: the 11 DEN picks.
-- It will not show the later-round `west-semi-bottom` picks on the DEN vs MIN card.
-- On the MIN vs SAS Conference Semis matchup, once the parent results are confirmed, the app will show picks from `west-semi-bottom`: 7 DEN and 4 SAS.
-- It will not invent/show MIN picks for the semis unless someone actually picked MIN for `west-semi-bottom`.
+2. **Later round slot** (`topParentSeriesId` / `bottomParentSeriesId`):
+   - Look up the user's pick winner for each parent series in `allPicks`.
+   - The two parent-winners are the user's assumed semis/finals matchup.
+   - Opponent = whichever parent-winner is **not** `bet.winner`.
+   - If a parent pick is missing, no opponent suffix is rendered.
+
+3. If `bet.winner` does not appear in the assumed pair (data inconsistency), render no suffix.
+
+## Implementation steps
+
+1. In `useUserBet` (or directly in `MatchCard`), expose `bracketSeriesId`, `bracketData`, and `allPicks` so we can compute the opponent.
+2. Add a small helper `getAssumedOpponent(bracketSeriesId, winnerAbbr, bracketData, allPicks): string | null` in `src/data/playoffsData.ts` next to `getBracketSeriesIdForMatch`. It implements the two cases above and returns the abbreviation or `null`.
+3. Update the JSX:
+   ```tsx
+   Your Pick: <b>{bet.winner}</b> in <b>{bet.gamesInSeries}</b>
+   {opponent ? <> (vs. {opponent})</> : null}
+   ```
+   The `· N Points` segment continues to render after this.
+4. Apply the same change to `MatchDetailDialog.tsx` if/where it shows the same "Your Pick" line, so card and detail stay consistent. (Will verify during implementation.)
+
+## Notes
+
+- Spacing: `(vs. DEN)` with a space after the period (standard typography). Confirmed earlier.
+- No visual indicator when assumed opponent ≠ real opponent — purely Option A.
+- `DemoMatchCardColored` uses a hardcoded demo string and is unaffected unless you want it updated too (let me know).

@@ -255,6 +255,18 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
     pickMap.set(`${p.profile_name}::${p.series_id}`, p);
   }
 
+  // Per-player picks list for assumed-opponent resolution
+  const picksByPlayer = new Map<string, { series_id: string; winner: string }[]>();
+  for (const p of picks) {
+    const arr = picksByPlayer.get(p.profile_name) ?? [];
+    arr.push({ series_id: p.series_id, winner: p.winner });
+    picksByPlayer.set(p.profile_name, arr);
+  }
+
+  // Series lookup for actual-opponent resolution
+  const seriesMap = new Map<string, BracketSeries>();
+  for (const s of seriesList) seriesMap.set(s.id, s);
+
   // Result lookup + actual-winner set for per-cell point scoring
   const resultMap = new Map<string, SeriesResult>();
   for (const r of results) resultMap.set(r.series_id, r);

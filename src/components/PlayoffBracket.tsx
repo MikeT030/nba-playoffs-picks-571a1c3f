@@ -5,6 +5,7 @@ import {
   bracketSeries as defaultBracketSeries,
   resolveSeriesTeams,
   isPlayInPlaceholder,
+  getAssumedOpponentAbbr,
   type BracketSeries,
   type Team,
 } from "@/data/playoffsData";
@@ -224,6 +225,9 @@ const BracketCard = ({
   pickPoint,
   variant = "badge",
   seriesScore,
+  seriesId,
+  seriesList,
+  allPicks,
 }: {
   topTeam?: Team;
   bottomTeam?: Team;
@@ -236,6 +240,9 @@ const BracketCard = ({
   pickPoint?: PickPointInfo;
   variant?: BracketVariant;
   seriesScore?: string;
+  seriesId: string;
+  seriesList: BracketSeries[];
+  allPicks: { series_id: string; winner: string }[];
 }) => {
   const winnerTeam =
     bet?.winner === topTeam?.abbreviation ? topTeam
@@ -305,7 +312,16 @@ const BracketCard = ({
               actualWinnerAbbr && isWrong ? "text-rose-300/80" : "text-primary"
             }`}
           >
-            Your Pick: {winnerTeam.abbreviation} in {bet!.gamesInSeries}
+            Your Pick: {winnerTeam.abbreviation} in {bet!.gamesInSeries}{(() => {
+              const assumedOpp = getAssumedOpponentAbbr(seriesId, winnerTeam.abbreviation, seriesList, allPicks);
+              if (!assumedOpp) return "";
+              const actualOpp = topTeam?.abbreviation === winnerTeam.abbreviation
+                ? bottomTeam?.abbreviation
+                : bottomTeam?.abbreviation === winnerTeam.abbreviation
+                  ? topTeam?.abbreviation
+                  : null;
+              return actualOpp && actualOpp !== assumedOpp ? ` (vs. ${assumedOpp})` : "";
+            })()}
           </span>
           <PointsTag point={pickPoint} variant={variant} />
         </div>
@@ -377,6 +393,9 @@ const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
         pickPoint={pickPoints[id]}
         variant={variant}
         seriesScore={seriesScores[id]}
+        seriesId={id}
+        seriesList={bracket}
+        allPicks={bets.map((b) => ({ series_id: b.seriesId, winner: b.winner }))}
       />
     );
   };

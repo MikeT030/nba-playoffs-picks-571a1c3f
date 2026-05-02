@@ -225,6 +225,9 @@ const BracketCard = ({
   pickPoint,
   variant = "badge",
   seriesScore,
+  seriesId,
+  seriesList,
+  allPicks,
 }: {
   topTeam?: Team;
   bottomTeam?: Team;
@@ -237,6 +240,9 @@ const BracketCard = ({
   pickPoint?: PickPointInfo;
   variant?: BracketVariant;
   seriesScore?: string;
+  seriesId: string;
+  seriesList: BracketSeries[];
+  allPicks: { series_id: string; winner: string }[];
 }) => {
   const winnerTeam =
     bet?.winner === topTeam?.abbreviation ? topTeam

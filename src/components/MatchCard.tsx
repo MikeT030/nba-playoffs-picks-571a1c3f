@@ -1,4 +1,4 @@
-import { getBracketSeriesIdForMatch, type Match } from "@/data/playoffsData";
+import { getBracketSeriesIdForMatch, getAssumedOpponentAbbr, type Match } from "@/data/playoffsData";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useAllUserPicks } from "@/hooks/useAllUserPicks";
 import { useAllSeriesResults } from "@/hooks/useAllSeriesResults";
@@ -38,7 +38,12 @@ const useUserBet = (match: Match) => {
     return 0;
   }, [dbPick, seriesResult]);
 
-  return { pick: dbPick ?? null, points };
+  const opponentAbbr = useMemo(() => {
+    if (!dbPick) return null;
+    return getAssumedOpponentAbbr(bracketSeriesId, dbPick.winner, bracketData, allPicks);
+  }, [dbPick, bracketSeriesId, bracketData, allPicks]);
+
+  return { pick: dbPick ?? null, points, opponentAbbr };
 };
 
 interface MatchCardProps {

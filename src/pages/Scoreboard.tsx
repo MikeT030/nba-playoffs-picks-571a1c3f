@@ -343,12 +343,33 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
                       ? score.basePoints + (score.championBonus ? 4 : 0)
                       : null;
                     const colorCls = score ? POINTS_COLOR[score.basePoints] ?? "" : "";
+                    const playerPicks = picksByPlayer.get(player);
+                    const assumedOpp = getAssumedOpponentAbbr(
+                      seriesId,
+                      pick.winner,
+                      seriesList,
+                      playerPicks,
+                    );
+                    const sDef = seriesMap.get(seriesId);
+                    const top = sDef?.topTeam?.abbreviation;
+                    const bot = sDef?.bottomTeam?.abbreviation;
+                    const actualOpp =
+                      top === pick.winner ? bot : bot === pick.winner ? top : null;
+                    const showAssumed =
+                      !!assumedOpp && !!actualOpp && actualOpp !== assumedOpp;
                     return (
                       <td key={player} className="p-3 align-middle text-center font-body text-xs whitespace-nowrap">
                         <div className="inline-flex items-baseline gap-1.5">
-                          <span>
-                            <span className="font-bold text-foreground">{pick.winner}</span>
-                            <span className="ml-1 text-white">in {pick.games_in_series}</span>
+                          <span className="inline-flex flex-col items-start">
+                            <span>
+                              <span className="font-bold text-foreground">{pick.winner}</span>
+                              <span className="ml-1 text-white">in {pick.games_in_series}</span>
+                            </span>
+                            {showAssumed && (
+                              <span className="text-muted-foreground text-[10px] leading-tight">
+                                (vs. {assumedOpp})
+                              </span>
+                            )}
                           </span>
                           {score && (
                             <span className={`font-display text-sm ${colorCls}`}>

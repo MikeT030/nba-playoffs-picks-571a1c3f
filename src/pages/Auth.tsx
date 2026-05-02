@@ -82,7 +82,7 @@ const Auth = () => {
 
   const subtitle =
     step === "email"
-      ? "Sign in or Sign up"
+      ? "Get in the game"
       : step === "forgot"
         ? "Enter your email to receive a reset link"
         : isExistingUser

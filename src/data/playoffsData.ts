@@ -178,6 +178,45 @@ export function getBracketSeriesIdForMatch(
   return match.id;
 }
 
+/**
+ * Given a bracket series id and the user's picked winner abbreviation,
+ * return the abbreviation of the opponent the user *assumed* would face that
+ * winner — even if reality played out differently.
+ *
+ * For First Round slots: the opponent is the other fixed team in the slot.
+ * For later rounds: the opponent is derived from the user's pick for the
+ * other parent series. Returns null if the opponent cannot be determined
+ * (missing parent pick or inconsistent data).
+ */
+export function getAssumedOpponentAbbr(
+  bracketSeriesId: string | null | undefined,
+  winnerAbbr: string,
+  seriesList: BracketSeries[] | undefined,
+  allPicks: { series_id: string; winner: string }[] | undefined,
+): string | null {
+  if (!bracketSeriesId || !seriesList) return null;
+  const series = seriesList.find((s) => s.id === bracketSeriesId);
+  if (!series) return null;
+
+  // First round (or any slot with concrete teams already)
+  const top = series.topTeam?.abbreviation;
+  const bot = series.bottomTeam?.abbreviation;
+  if (top && bot && (top === winnerAbbr || bot === winnerAbbr)) {
+    return top === winnerAbbr ? bot : top;
+  }
+
+  // Later rounds: walk parents via user's own picks
+  if (series.topParentSeriesId && series.bottomParentSeriesId && allPicks) {
+    const topPick = allPicks.find((p) => p.series_id === series.topParentSeriesId)?.winner;
+    const botPick = allPicks.find((p) => p.series_id === series.bottomParentSeriesId)?.winner;
+    if (!topPick || !botPick) return null;
+    if (topPick === winnerAbbr) return botPick;
+    if (botPick === winnerAbbr) return topPick;
+  }
+
+  return null;
+}
+
 // Dummy play-in placeholder teams with unique abbreviations so picks can be made
 const playInPlaceholders: Record<string, Team> = {
   "PIW7": { name: "West Play-In 7th", abbreviation: "PIW7", color: "#888", logo: "🏀", seed: 7 },

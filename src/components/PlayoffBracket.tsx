@@ -393,6 +393,9 @@ const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
         pickPoint={pickPoints[id]}
         variant={variant}
         seriesScore={seriesScores[id]}
+        seriesId={id}
+        seriesList={bracket}
+        allPicks={bets.map((b) => ({ series_id: b.seriesId, winner: b.winner }))}
       />
     );
   };

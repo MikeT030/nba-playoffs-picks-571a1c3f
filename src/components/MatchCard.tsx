@@ -278,7 +278,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
       {bet && betTeamName && (
         <div className="px-4 pb-3 -mt-1">
           <p className="font-body text-white text-center pt-0 text-sm">
-            Your Pick: <span className="font-bold">{bet.winner}</span> in <span className="font-bold">{bet.gamesInSeries}</span>
+            Your Pick: <span className="font-bold">{bet.winner}</span> in <span className="font-bold">{bet.gamesInSeries}</span>{opponentAbbr ? ` (vs. ${opponentAbbr})` : ""}
             {points !== null && (
               <span className="ml-2 text-primary font-medium">
                 ·{" "}

@@ -14,7 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
-import { bracketSeries, type BracketSeries } from "@/data/playoffsData";
+import { bracketSeries, getAssumedOpponentAbbr, type BracketSeries } from "@/data/playoffsData";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useDetectedSeriesResults } from "@/hooks/useDetectedSeriesResults";
 import { playerImages } from "@/lib/playerImages";

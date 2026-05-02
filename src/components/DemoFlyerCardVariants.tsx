@@ -25,7 +25,7 @@ const DAVIS_QUOTE =
   "With Kevin Garnett out, Glen \"Big Baby\" Davis stepped out to the perimeter and hit a walk-off jumper as time expired to beat the Magic, then proceeded to nearly tackle a small child in the front row during his celebration.";
 
 const QUOTE =
-  "Trailing by three points with only seconds left in the fourth quarter, Chapman caught a deflected pass while flying out of bounds and launched a one-legged, fading three-pointer that somehow tied the game and took it into overtime. Phoenix still lost the game and the series.";
+  "Trailing by three points with only seconds left in the fourth quarter, Chapman caught a deflected pass while flying out of bounds and launched a one-legged, fading three-pointer that somehow tied the game and took it into overtime.";
 
 const PAXSON_QUOTE =
   "With the Bulls trailing late in Game 6, Paxson spotted up beyond the arc, caught the kick-out from Horace Grant, and calmly drained a three-pointer with 3.9 seconds left to clinch Chicago's third straight championship.";

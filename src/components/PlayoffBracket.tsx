@@ -312,7 +312,16 @@ const BracketCard = ({
               actualWinnerAbbr && isWrong ? "text-rose-300/80" : "text-primary"
             }`}
           >
-            Your Pick: {winnerTeam.abbreviation} in {bet!.gamesInSeries}
+            Your Pick: {winnerTeam.abbreviation} in {bet!.gamesInSeries}{(() => {
+              const assumedOpp = getAssumedOpponentAbbr(seriesId, winnerTeam.abbreviation, seriesList, allPicks);
+              if (!assumedOpp) return "";
+              const actualOpp = topTeam?.abbreviation === winnerTeam.abbreviation
+                ? bottomTeam?.abbreviation
+                : bottomTeam?.abbreviation === winnerTeam.abbreviation
+                  ? topTeam?.abbreviation
+                  : null;
+              return actualOpp && actualOpp !== assumedOpp ? ` (vs. ${assumedOpp})` : "";
+            })()}
           </span>
           <PointsTag point={pickPoint} variant={variant} />
         </div>

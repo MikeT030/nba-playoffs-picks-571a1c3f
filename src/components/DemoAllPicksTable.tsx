@@ -260,11 +260,29 @@ const DemoAllPicksTable = () => {
     const rows = seriesIds.map((seriesId) => {
       const round = getSeriesRound(seriesId, bracket);
       const label = getSeriesLabel(seriesId, bracket);
+      const { topTeam, bottomTeam } = resolveSeriesTeams(seriesId, winners, bracket);
+      const seriesDef = bracket.find((s) => s.id === seriesId);
+      const top = topTeam ?? seriesDef?.topTeam;
+      const bot = bottomTeam ?? seriesDef?.bottomTeam;
       const cells = players.map(({ picks }) => {
         const pick = picks.find((p) => p.series_id === seriesId);
         if (!pick) return null;
         const score = scorePick(pick, winners, games, actualWinnerSet);
-        return { pick, ...score };
+        const assumedOpp = getAssumedOpponentAbbr(
+          seriesId,
+          pick.winner,
+          bracket,
+          picks.map((p) => ({ series_id: p.series_id, winner: p.winner })),
+        );
+        const actualOpp =
+          top?.abbreviation === pick.winner
+            ? bot?.abbreviation
+            : bot?.abbreviation === pick.winner
+              ? top?.abbreviation
+              : null;
+        const showAssumed =
+          !!assumedOpp && !!actualOpp && actualOpp !== assumedOpp;
+        return { pick, ...score, assumedOpp, showAssumed };
       });
       return { seriesId, round, label, cells };
     });

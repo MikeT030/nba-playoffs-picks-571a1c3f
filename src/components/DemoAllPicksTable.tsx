@@ -393,6 +393,11 @@ const DemoAllPicksTable = () => {
                                   <span className="ml-1 text-white">
                                     in {cell.pick.games_in_series}
                                   </span>
+                                  {cell.showAssumed && (
+                                    <span className="ml-1 text-muted-foreground">
+                                      (vs. {cell.assumedOpp})
+                                    </span>
+                                  )}
                                 </span>
                                 <span
                                   className={`font-display text-sm ${colorCls}`}

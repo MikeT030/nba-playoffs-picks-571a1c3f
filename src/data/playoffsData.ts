@@ -198,11 +198,15 @@ export function getAssumedOpponentAbbr(
   const series = seriesList.find((s) => s.id === bracketSeriesId);
   if (!series) return null;
 
-  // First round (or any slot with concrete teams already)
-  const top = series.topTeam?.abbreviation;
-  const bot = series.bottomTeam?.abbreviation;
-  if (top && bot && (top === winnerAbbr || bot === winnerAbbr)) {
-    return top === winnerAbbr ? bot : top;
+  // First Round: opponent is the other fixed team in the slot.
+  // (For later rounds, slot teams may be the *actual* advancing teams once
+  // the bracket is resolved with API data — which is not what we want here.)
+  if (series.round === "First Round") {
+    const top = series.topTeam?.abbreviation;
+    const bot = series.bottomTeam?.abbreviation;
+    if (top && bot && (top === winnerAbbr || bot === winnerAbbr)) {
+      return top === winnerAbbr ? bot : top;
+    }
   }
 
   // Later rounds: walk parents via user's own picks

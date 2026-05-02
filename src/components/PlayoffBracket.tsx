@@ -5,6 +5,7 @@ import {
   bracketSeries as defaultBracketSeries,
   resolveSeriesTeams,
   isPlayInPlaceholder,
+  getAssumedOpponentAbbr,
   type BracketSeries,
   type Team,
 } from "@/data/playoffsData";

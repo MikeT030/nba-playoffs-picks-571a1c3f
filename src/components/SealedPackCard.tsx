@@ -57,7 +57,7 @@ const SealedPackCard = ({
       {/* Sealed pack overlay (burns away on click) */}
       <button
         type="button"
-        onClick={() => !opened && setOpened(true)}
+        onClick={handleOpen}
         aria-label={opened ? "Pack opened" : "Tap to burn the pack open"}
         disabled={opened}
         className={`absolute inset-0 ${opened ? "pointer-events-none" : "cursor-pointer"}`}

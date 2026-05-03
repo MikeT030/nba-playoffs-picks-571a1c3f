@@ -203,6 +203,24 @@ const Settings = () => {
           </div>
         )}
 
+        {/* FLYER – The Shot demo award (only if this user got one) */}
+        {!loading && user && demoFlyer && (
+          <div className="mt-3 mb-3">
+            <h2 className="font-display text-lg tracking-wider mb-3">FLYER – THE SHOT</h2>
+            <FlyerCardForId
+              cardId={demoFlyer.cardId}
+              sealed={!demoFlyerBurned}
+              defaultOpened={demoFlyerBurned}
+              hideHeading
+            />
+            {!demoFlyerBurned && (
+              <p className="font-body text-xs text-muted-foreground mt-2 text-center">
+                Open your pack from the awards drawer to reveal this card.
+              </p>
+            )}
+          </div>
+        )}
+
         {!loading && user && (() => {
           const championPick = picks.find((p) => p.seriesId === "nba-finals");
           const championAbbr = championPick?.winner;

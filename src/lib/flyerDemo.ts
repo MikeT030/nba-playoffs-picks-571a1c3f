@@ -81,6 +81,21 @@ export const claimDemoCard = (cardId: FlyerCardId, userId: string): boolean => {
   return true;
 };
 
+export const unclaimDemoCard = (userId: string) => {
+  const claims = getDemoClaims();
+  let changed = false;
+  for (const id of FLYER_CARD_IDS) {
+    if (claims[id] === userId) {
+      delete claims[id];
+      changed = true;
+    }
+  }
+  if (changed) {
+    window.localStorage.setItem(CLAIMS_KEY, JSON.stringify(claims));
+    emit();
+  }
+};
+
 export const getCardForUser = (userId: string): FlyerCardId | null => {
   const claims = getDemoClaims();
   for (const id of FLYER_CARD_IDS) {

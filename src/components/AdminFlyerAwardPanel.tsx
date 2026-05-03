@@ -3,7 +3,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { totalUserPoints, type PickLite, type SeriesResultLite } from "@/lib/pickScoring";
 import { toast } from "sonner";
-import { Trophy, Save, RotateCcw } from "lucide-react";
+import { Trophy, Save, RotateCcw, Shuffle, Eye, Radio, Trash2 } from "lucide-react";
+import AdminFlyerAwardDemoDrawer from "@/components/AdminFlyerAwardDemoDrawer";
+import {
+  FLYER_CARD_IDS,
+  type FlyerCardId,
+  setDemoWinners,
+  clearDemo,
+  useDemoFlyerState,
+} from "@/lib/flyerDemo";
 
 const FLYER_CARDS = [
   { id: "chapman", label: "Chapman" },

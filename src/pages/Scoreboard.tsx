@@ -131,7 +131,7 @@ function computeScoreboard(
 }
 
 const getRankIcon = (index: number) => {
-  return <span className="text-muted-foreground font-body text-sm w-[18px] text-center inline-block">{index + 1}</span>;
+  return <span className="text-muted-foreground font-body text-base w-[18px] text-center inline-block">{index + 1}</span>;
 };
 
 // Build a label for each series like "OKC-HOU"

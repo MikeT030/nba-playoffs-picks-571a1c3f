@@ -275,32 +275,44 @@ const MatchCard = ({ match }: MatchCardProps) => {
         </div>
       )}
 
-      {bet && betTeamName && (
-        <div className="px-4 pb-3 -mt-1">
-          <p className="font-body text-white text-center pt-0 text-sm">
-            Your Pick: <span className="font-bold">{bet.winner}</span> in <span className="font-bold">{bet.gamesInSeries}</span>{(() => {
-              if (!opponentAbbr) return "";
-              const actualOpp = match.homeTeam.abbreviation === bet.winner
-                ? match.awayTeam.abbreviation
-                : match.awayTeam.abbreviation === bet.winner
-                  ? match.homeTeam.abbreviation
-                  : null;
-              return actualOpp && actualOpp !== opponentAbbr ? ` (vs. ${opponentAbbr})` : "";
-            })()}
-            {points !== null && (
-              <span className="ml-2 text-primary font-medium">
-                ·{" "}
-                {points === 3
-                  ? "Shiiiiit 3 Points"
-                  : points === 2
-                    ? "That's 2 Points"
-                    : "0 Points, Bro"}
-                {match.id === "nba-finals" && points > 0 && " And 4 for the Champ"}
+      {bet && betTeamName && (() => {
+        const pickInMatch =
+          match.homeTeam.abbreviation === bet.winner ||
+          match.awayTeam.abbreviation === bet.winner;
+        const actualOpp = match.homeTeam.abbreviation === bet.winner
+          ? match.awayTeam.abbreviation
+          : match.awayTeam.abbreviation === bet.winner
+            ? match.homeTeam.abbreviation
+            : null;
+        const showAssumed = !pickInMatch
+          ? !!opponentAbbr
+          : !!opponentAbbr && !!actualOpp && actualOpp !== opponentAbbr;
+        const suffixOpp = opponentAbbr ?? actualOpp;
+        const broken = !pickInMatch;
+        const effectivePoints = broken ? 0 : points;
+        return (
+          <div className="px-4 pb-3 -mt-1">
+            <p className="font-body text-white text-center pt-0 text-sm">
+              Your Pick:{" "}
+              <span className={broken ? "line-through opacity-70" : ""}>
+                <span className="font-bold">{bet.winner}</span> in <span className="font-bold">{bet.gamesInSeries}</span>
+                {showAssumed && suffixOpp ? ` (vs. ${suffixOpp})` : ""}
               </span>
-            )}
-          </p>
-        </div>
-      )}
+              {effectivePoints !== null && (
+                <span className="ml-2 text-primary font-medium">
+                  ·{" "}
+                  {effectivePoints === 3
+                    ? "Shiiiiit 3 Points"
+                    : effectivePoints === 2
+                      ? "That's 2 Points"
+                      : "0 Points, Bro"}
+                  {match.id === "nba-finals" && effectivePoints > 0 && " And 4 for the Champ"}
+                </span>
+              )}
+            </p>
+          </div>
+        );
+      })()}
       </div>
     </div>
     <MatchDetailDialog match={match} open={dialogOpen} onOpenChange={setDialogOpen} initialGameIdx={activeGameIdx} />

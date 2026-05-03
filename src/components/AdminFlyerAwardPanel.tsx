@@ -20,7 +20,7 @@ const FLYER_CARDS = [
   { id: "davis", label: "Davis" },
 ] as const;
 
-type CardId = (typeof FLYER_CARDS)[number]["id"];
+type CardId = FlyerCardId;
 
 interface ProfileRow {
   user_id: string;

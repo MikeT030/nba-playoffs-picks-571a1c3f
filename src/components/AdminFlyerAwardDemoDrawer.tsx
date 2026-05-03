@@ -125,7 +125,7 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
         <p className="font-display text-xs sm:text-sm tracking-[0.25em] uppercase text-muted-foreground">
           FLYER – The Shot · {mode === "receiver" ? "You're Worthy" : "It's Official"}
         </p>
-        <h2 className="mt-2 font-body text-base sm:text-lg text-foreground leading-snug max-w-2xl mx-auto font-medium">
+        <h2 className="mt-2 font-body sm:text-lg text-foreground leading-snug max-w-2xl mx-auto font-medium text-lg">
           {headline}
         </h2>
 

@@ -416,13 +416,21 @@ const BasketballIcon = ({ name, color }: { name: string; color: string }) => {
           <path d="M 19 13 H 22 M 20.5 13 V 16" {...common} />
         </svg>
       );
-    case "whistle":
+    case "whistle": // basketball sneaker silhouette
       return (
-        <svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden>
-          <path d="M 4 14 Q 4 10 8 10 H 17 L 20 8 V 13 L 17 11 H 11" {...common} />
-          <circle cx="9" cy="14" r="3.6" {...common} />
-          <circle cx="9" cy="14" r="0.7" fill={color} stroke="none" />
-          <path d="M 12 7 Q 14 3 19 4" {...common} />
+        <svg viewBox="0 0 64 64" width="100%" height="100%" aria-hidden>
+          <path
+            fill={color}
+            stroke="none"
+            d="M2 44 C2 40 6 38 10 38 L18 38 L22 30 C24 26 28 24 32 24 L36 24 C39 24 41 26 42 28 L44 33 L52 36 C58 38 62 41 62 46 L62 50 C62 52 60 54 58 54 L6 54 C3 54 2 52 2 50 Z M22 44 L26 44 M30 44 L34 44 M38 44 L42 44 M46 46 L50 46 M14 48 L18 48"
+          />
+          <path
+            d="M22 44 L26 44 M30 44 L34 44 M38 44 L42 44"
+            stroke="white"
+            strokeWidth="1.2"
+            fill="none"
+            strokeLinecap="round"
+          />
         </svg>
       );
     case "hoop": // backboard, rim, net, post

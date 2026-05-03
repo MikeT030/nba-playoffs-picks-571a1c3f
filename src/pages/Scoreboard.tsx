@@ -353,28 +353,34 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
                     const sDef = seriesMap.get(seriesId);
                     const top = sDef?.topTeam?.abbreviation;
                     const bot = sDef?.bottomTeam?.abbreviation;
+                    const pickInMatch = top === pick.winner || bot === pick.winner;
                     const actualOpp =
                       top === pick.winner ? bot : bot === pick.winner ? top : null;
-                    const showAssumed =
-                      !!assumedOpp && !!actualOpp && actualOpp !== assumedOpp;
+                    const broken = !!sDef && !!top && !!bot && !pickInMatch;
+                    const showAssumed = broken
+                      ? !!assumedOpp
+                      : !!assumedOpp && !!actualOpp && actualOpp !== assumedOpp;
+                    const suffixOpp = assumedOpp ?? actualOpp;
+                    const effectiveTotal = broken ? 0 : total;
+                    const effectiveColorCls = broken ? POINTS_COLOR[0] : colorCls;
                     return (
                       <td key={player} className="p-3 align-middle text-center font-body text-xs whitespace-nowrap">
                         <div className="inline-flex items-baseline gap-1.5">
                           <span className="inline-flex flex-col items-start">
-                            <span>
+                            <span className={broken ? "line-through opacity-70" : ""}>
                               <span className="font-bold text-foreground">{pick.winner}</span>
                               <span className="ml-1 text-white">in {pick.games_in_series}</span>
                             </span>
-                            {showAssumed && (
-                              <span className="text-muted-foreground text-[10px] leading-tight">
-                                (vs. {assumedOpp})
+                            {showAssumed && suffixOpp && (
+                              <span className={`text-muted-foreground text-[10px] leading-tight ${broken ? "line-through opacity-70" : ""}`}>
+                                (vs. {suffixOpp})
                               </span>
                             )}
                           </span>
-                          {score && (
-                            <span className={`font-display text-sm ${colorCls}`}>
-                              {total}
-                              {score.championBonus && (
+                          {(score || broken) && (
+                            <span className={`font-display text-sm ${effectiveColorCls}`}>
+                              {effectiveTotal ?? 0}
+                              {!broken && score?.championBonus && (
                                 <span className="ml-0.5 text-[9px] font-body text-amber-300/80 align-top">
                                   +4
                                 </span>

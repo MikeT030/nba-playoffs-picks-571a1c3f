@@ -38,8 +38,16 @@ const SealedPackCard = ({
   midLine = "PLATINUM SUPER COLOR",
   tierLine = ["1", "PREMIUM", "PLATINUM", "CARD"],
   seriesLabel = "Sizzling hot 2026 series",
+  defaultOpened = false,
+  onOpen,
 }: SealedPackCardProps) => {
-  const [opened, setOpened] = useState(false);
+  const [opened, setOpened] = useState(defaultOpened);
+
+  const handleOpen = () => {
+    if (opened) return;
+    setOpened(true);
+    onOpen?.();
+  };
 
   return (
     <div className={`relative w-full ${aspectClass} select-none`}>

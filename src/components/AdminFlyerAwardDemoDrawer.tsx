@@ -86,9 +86,15 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
   if (!open) return null;
 
   const headline =
-    mode === "receiver"
-      ? `${viewer?.name ?? "You"}, you're worthy of receiving 1 of 4 FLYER – The Shot player cards.`
-      : `It's official, ${formatNames(winners.map((w) => w.name))} are worthy of receiving 1 of 4 FLYER – The Shot player cards.`;
+    mode === "receiver" ? (
+      <>
+        {viewer?.name ?? "You"},
+        <br />
+        you're worthy of receiving 1 of 4 FLYER – The Shot player cards.
+      </>
+    ) : (
+      `It's official, ${formatNames(winners.map((w) => w.name))} are worthy of receiving 1 of 4 FLYER – The Shot player cards.`
+    );
 
   const subline =
     mode === "receiver"

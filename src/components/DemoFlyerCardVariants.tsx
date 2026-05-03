@@ -271,135 +271,178 @@ const FlyerCardV3 = ({
   );
 };
 
-export const DemoFlyerCardV3 = () => (
-  <FlyerCardV3
-    heading="PLATINUM — CHAPMAN"
-    borderColor="#FF5C00"
-    borderWidth="2px"
-    image={rexChapmanImg}
-    imageAlt="Rex Chapman fading three-pointer, 1997 Playoffs"
-    awayLogo={PHX_LOGO}
-    awayAlt="PHX"
-    homeLogo={SEA_LOGO}
-    homeAlt="SEA"
-    era="1997"
-    matchup="West First Round"
-    game="Game 4"
-    firstName="REX"
-    lastName="CHAPMAN"
-    quote={QUOTE}
-    stats={[
-      { label: "PTS", value: 22 },
-      { label: "AST", value: 4 },
-      { label: "TRB", value: 5 },
-      { label: "3P", value: 4 },
-      { label: "3PA", value: 12 },
-      { label: "MP", value: "44:20" },
-    ]}
-    sealed
-    sealedConfig={{
-      topBanner: "PLATINUM · CLUB",
-      title: "Supreme Platinum",
-      yearLabel: "1996-97",
-      midLine: "PLATINUM SUPER COLOR",
-      tierLine: ["1", "PREMIUM", "PLATINUM", "CARD"],
-      seriesLabel: "Sizzling hot 2026 series",
-    }}
-  />
-);
+type FlyerSlug = "chapman" | "paxson" | "miller" | "davis";
 
-export const DemoFlyerCardPaxson = () => (
-  <FlyerCardV3
-    heading="PLATINUM — PAXSON"
-    borderColor="#CE1141"
-    borderWidth="2px"
-    image={johnPaxsonImg}
-    imageAlt="John Paxson hitting the championship-winning three-pointer, 1993 Supreme Finals Game 6"
-    awayLogo={CHI_LOGO}
-    awayAlt="CHI"
-    homeLogo={PHX_LOGO}
-    homeAlt="PHX"
-    era="1993"
-    matchup="Supreme Finals"
-    game="Game 6"
-    firstName="JOHN"
-    lastName="PAXSON"
-    quote={PAXSON_QUOTE}
-    quoteBgColor="rgba(206, 17, 65, 0.25)"
-    stats={[
-      { label: "PTS", value: 8 },
-      { label: "AST", value: 1 },
-      { label: "TRB", value: 1 },
-      { label: "3P", value: 2 },
-      { label: "3PA", value: 3 },
-      { label: "MP", value: "22:00" },
-    ]}
-    sealedToppsStyle
-    sealedToppsConfig={{
-      sportLabel: "Playoffs",
-      yearLabel: "2026",
-      seriesLabel: "SERIES 1",
-      picturesLabel: "15 PICTURE CARDS",
-      qualityLabel: "PREMIUM QUALITY",
-    }}
-  />
-);
+type FlyerPreset = Omit<FlyerCardV3Props, "sealed" | "sealedToppsStyle" | "defaultOpened" | "onBurn" | "hideHeading">;
 
-export const DemoFlyerCardMiller = () => (
-  <FlyerCardV3
-    heading="PLATINUM — MILLER"
-    borderColor="#98002E"
-    borderWidth="2px"
-    image={mikeMillerImg}
-    imageAlt="Mike Miller shooting a three-pointer in the 2012 Supreme Finals Game 5"
-    awayLogo={OKC_LOGO}
-    awayAlt="OKC"
-    homeLogo={MIA_LOGO}
-    homeAlt="MIA"
-    era="2012"
-    matchup="Supreme Finals"
-    game="Game 5"
-    firstName="MIKE"
-    lastName="MILLER"
-    quote={MILLER_QUOTE}
-    quoteBgColor="rgba(152, 1, 46, 0.3)"
-    stats={[
-      { label: "PTS", value: 23 },
-      { label: "TRB", value: 5 },
-      { label: "3P", value: 7 },
-      { label: "3PA", value: 8 },
-      { label: "MP", value: "23:14" },
-    ]}
-  />
-);
+const CHAPMAN_PRESET: FlyerPreset = {
+  heading: "PLATINUM — CHAPMAN",
+  borderColor: "#FF5C00",
+  borderWidth: "2px",
+  image: rexChapmanImg,
+  imageAlt: "Rex Chapman fading three-pointer, 1997 Playoffs",
+  awayLogo: PHX_LOGO,
+  awayAlt: "PHX",
+  homeLogo: SEA_LOGO,
+  homeAlt: "SEA",
+  era: "1997",
+  matchup: "West First Round",
+  game: "Game 4",
+  firstName: "REX",
+  lastName: "CHAPMAN",
+  quote: QUOTE,
+  stats: [
+    { label: "PTS", value: 22 },
+    { label: "AST", value: 4 },
+    { label: "TRB", value: 5 },
+    { label: "3P", value: 4 },
+    { label: "3PA", value: 12 },
+    { label: "MP", value: "44:20" },
+  ],
+  sealedConfig: {
+    topBanner: "PLATINUM · CLUB",
+    title: "Supreme Platinum",
+    yearLabel: "1996-97",
+    midLine: "PLATINUM SUPER COLOR",
+    tierLine: ["1", "PREMIUM", "PLATINUM", "CARD"],
+    seriesLabel: "Sizzling hot 2026 series",
+  },
+};
 
-export const DemoFlyerCardDavis = () => (
-  <FlyerCardV3
-    heading="PLATINUM — DAVIS"
-    borderColor="#007A33"
-    borderWidth="2px"
-    image={glenDavisImg}
-    imageAlt="Glen 'Big Baby' Davis driving in the 2009 Eastern Conference Semifinals"
-    awayLogo={ORL_LOGO}
-    awayAlt="ORL"
-    homeLogo={BOS_LOGO}
-    homeAlt="BOS"
-    era="2009"
-    matchup="East Conf. Semifinals"
-    game="Game 4"
-    firstName="GLEN"
-    lastName="DAVIS"
-    quote={DAVIS_QUOTE}
-    quoteBgColor="rgba(0, 122, 51, 0.3)"
-    stats={[
-      { label: "PTS", value: 21 },
-      { label: "TRB", value: 6 },
-      { label: "FG", value: 9 },
-      { label: "FGA", value: 14 },
-      { label: "MP", value: "33:11" },
-    ]}
-  />
-);
+const PAXSON_PRESET: FlyerPreset = {
+  heading: "PLATINUM — PAXSON",
+  borderColor: "#CE1141",
+  borderWidth: "2px",
+  image: johnPaxsonImg,
+  imageAlt: "John Paxson hitting the championship-winning three-pointer, 1993 Supreme Finals Game 6",
+  awayLogo: CHI_LOGO,
+  awayAlt: "CHI",
+  homeLogo: PHX_LOGO,
+  homeAlt: "PHX",
+  era: "1993",
+  matchup: "Supreme Finals",
+  game: "Game 6",
+  firstName: "JOHN",
+  lastName: "PAXSON",
+  quote: PAXSON_QUOTE,
+  quoteBgColor: "rgba(206, 17, 65, 0.25)",
+  stats: [
+    { label: "PTS", value: 8 },
+    { label: "AST", value: 1 },
+    { label: "TRB", value: 1 },
+    { label: "3P", value: 2 },
+    { label: "3PA", value: 3 },
+    { label: "MP", value: "22:00" },
+  ],
+  sealedToppsConfig: {
+    sportLabel: "Playoffs",
+    yearLabel: "2026",
+    seriesLabel: "SERIES 1",
+    picturesLabel: "15 PICTURE CARDS",
+    qualityLabel: "PREMIUM QUALITY",
+  },
+};
+
+const MILLER_PRESET: FlyerPreset = {
+  heading: "PLATINUM — MILLER",
+  borderColor: "#98002E",
+  borderWidth: "2px",
+  image: mikeMillerImg,
+  imageAlt: "Mike Miller shooting a three-pointer in the 2012 Supreme Finals Game 5",
+  awayLogo: OKC_LOGO,
+  awayAlt: "OKC",
+  homeLogo: MIA_LOGO,
+  homeAlt: "MIA",
+  era: "2012",
+  matchup: "Supreme Finals",
+  game: "Game 5",
+  firstName: "MIKE",
+  lastName: "MILLER",
+  quote: MILLER_QUOTE,
+  quoteBgColor: "rgba(152, 1, 46, 0.3)",
+  stats: [
+    { label: "PTS", value: 23 },
+    { label: "TRB", value: 5 },
+    { label: "3P", value: 7 },
+    { label: "3PA", value: 8 },
+    { label: "MP", value: "23:14" },
+  ],
+  sealedConfig: {
+    topBanner: "PLATINUM · CLUB",
+    title: "Supreme Platinum",
+    yearLabel: "2011-12",
+    midLine: "PLATINUM SUPER COLOR",
+    tierLine: ["1", "PREMIUM", "PLATINUM", "CARD"],
+    seriesLabel: "Sizzling hot 2026 series",
+  },
+};
+
+const DAVIS_PRESET: FlyerPreset = {
+  heading: "PLATINUM — DAVIS",
+  borderColor: "#007A33",
+  borderWidth: "2px",
+  image: glenDavisImg,
+  imageAlt: "Glen 'Big Baby' Davis driving in the 2009 Eastern Conference Semifinals",
+  awayLogo: ORL_LOGO,
+  awayAlt: "ORL",
+  homeLogo: BOS_LOGO,
+  homeAlt: "BOS",
+  era: "2009",
+  matchup: "East Conf. Semifinals",
+  game: "Game 4",
+  firstName: "GLEN",
+  lastName: "DAVIS",
+  quote: DAVIS_QUOTE,
+  quoteBgColor: "rgba(0, 122, 51, 0.3)",
+  stats: [
+    { label: "PTS", value: 21 },
+    { label: "TRB", value: 6 },
+    { label: "FG", value: 9 },
+    { label: "FGA", value: 14 },
+    { label: "MP", value: "33:11" },
+  ],
+  sealedToppsConfig: {
+    sportLabel: "Playoffs",
+    yearLabel: "2026",
+    seriesLabel: "SERIES 1",
+    picturesLabel: "15 PICTURE CARDS",
+    qualityLabel: "PREMIUM QUALITY",
+  },
+};
+
+const PRESETS: Record<FlyerSlug, { preset: FlyerPreset; toppsStyle: boolean }> = {
+  chapman: { preset: CHAPMAN_PRESET, toppsStyle: false },
+  paxson: { preset: PAXSON_PRESET, toppsStyle: true },
+  miller: { preset: MILLER_PRESET, toppsStyle: false },
+  davis: { preset: DAVIS_PRESET, toppsStyle: true },
+};
+
+export interface FlyerCardForIdProps {
+  cardId: FlyerSlug;
+  sealed?: boolean;
+  defaultOpened?: boolean;
+  hideHeading?: boolean;
+  onBurn?: () => void;
+}
+
+export const FlyerCardForId = ({ cardId, sealed = false, defaultOpened, hideHeading, onBurn }: FlyerCardForIdProps) => {
+  const { preset, toppsStyle } = PRESETS[cardId];
+  return (
+    <FlyerCardV3
+      {...preset}
+      sealed={sealed && !toppsStyle}
+      sealedToppsStyle={sealed && toppsStyle}
+      defaultOpened={defaultOpened}
+      hideHeading={hideHeading}
+      onBurn={onBurn}
+    />
+  );
+};
+
+export const DemoFlyerCardV3 = () => <FlyerCardForId cardId="chapman" sealed />;
+export const DemoFlyerCardPaxson = () => <FlyerCardForId cardId="paxson" sealed />;
+export const DemoFlyerCardMiller = () => <FlyerCardForId cardId="miller" />;
+export const DemoFlyerCardDavis = () => <FlyerCardForId cardId="davis" />;
 
 /* ──────────────────────────────────────────────────────────────
    V4 — Newspaper / box-score vibe

@@ -17,6 +17,10 @@ interface SealedPackCardProps {
   tierLine?: string[];
   /** Bottom banner (e.g. "Sizzling hot 2026 series"). */
   seriesLabel?: string;
+  /** Start opened (skip animation, used for already-burned demo state). */
+  defaultOpened?: boolean;
+  /** Fired the first time the user taps the pack to open it. */
+  onOpen?: () => void;
 }
 
 /**

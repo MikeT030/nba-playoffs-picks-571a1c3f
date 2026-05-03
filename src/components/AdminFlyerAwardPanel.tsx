@@ -60,6 +60,11 @@ const AdminFlyerAwardPanel = () => {
     davis: "",
   });
 
+  // Demo drawer state (no DB)
+  const { winners: demoWinners } = useDemoFlyerState();
+  const [demoMode, setDemoMode] = useState<"receiver" | "broadcast" | null>(null);
+  const [demoViewerId, setDemoViewerId] = useState<string>("");
+
   const load = async () => {
     setLoading(true);
     const [picksRes, resultsRes, profilesRes, assignsRes] = await Promise.all([

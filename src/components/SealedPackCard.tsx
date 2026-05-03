@@ -349,7 +349,7 @@ const FullPackFace = ({
             boxShadow: `4px 4px 0 ${YELLOW}`,
           }}
         >
-          <span className="inline-block" style={{ transform: "skew(8deg)" }}>
+          <span className="inline-block text-base" style={{ transform: "skew(8deg)" }}>
             {seriesLabel}
           </span>
         </div>

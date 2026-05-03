@@ -298,7 +298,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
                 <span className="font-bold">{bet.winner}</span> in <span className="font-bold">{bet.gamesInSeries}</span>
                 {showAssumed && suffixOpp ? ` (vs. ${suffixOpp})` : ""}
               </span>
-              {effectivePoints !== null && (
+              {(broken || effectivePoints !== null) && (
                 <span className="ml-2 text-primary font-medium">
                   ·{" "}
                   {effectivePoints === 3
@@ -306,7 +306,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
                     : effectivePoints === 2
                       ? "That's 2 Points"
                       : "0 Points, Bro"}
-                  {match.id === "nba-finals" && effectivePoints > 0 && " And 4 for the Champ"}
+                  {match.id === "nba-finals" && effectivePoints! > 0 && " And 4 for the Champ"}
                 </span>
               )}
             </p>

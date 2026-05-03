@@ -117,6 +117,12 @@ interface FlyerCardV3Props {
   stats?: StatItem[];
   /** Wrap the card in a sealed pack that the user clicks to rip open. */
   sealed?: boolean;
+  /** Pack starts already opened (skip the burn animation). */
+  defaultOpened?: boolean;
+  /** Hide the section heading above the card. */
+  hideHeading?: boolean;
+  /** Fired the first time the user taps to burn the pack. */
+  onBurn?: () => void;
   sealedConfig?: {
     topBanner?: string;
     title?: string;

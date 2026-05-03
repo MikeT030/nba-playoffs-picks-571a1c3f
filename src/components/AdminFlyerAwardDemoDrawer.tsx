@@ -5,6 +5,7 @@ import {
   FLYER_CARD_IDS,
   type FlyerCardId,
   claimDemoCard,
+  unclaimDemoCard,
   getCardForUser,
   isDemoCardBurned,
   markDemoCardBurned,

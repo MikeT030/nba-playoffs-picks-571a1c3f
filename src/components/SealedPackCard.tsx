@@ -17,6 +17,10 @@ interface SealedPackCardProps {
   tierLine?: string[];
   /** Bottom banner (e.g. "Sizzling hot 2026 series"). */
   seriesLabel?: string;
+  /** Start opened (skip animation, used for already-burned demo state). */
+  defaultOpened?: boolean;
+  /** Fired the first time the user taps the pack to open it. */
+  onOpen?: () => void;
 }
 
 /**
@@ -34,8 +38,16 @@ const SealedPackCard = ({
   midLine = "PLATINUM SUPER COLOR",
   tierLine = ["1", "PREMIUM", "PLATINUM", "CARD"],
   seriesLabel = "Sizzling hot 2026 series",
+  defaultOpened = false,
+  onOpen,
 }: SealedPackCardProps) => {
-  const [opened, setOpened] = useState(false);
+  const [opened, setOpened] = useState(defaultOpened);
+
+  const handleOpen = () => {
+    if (opened) return;
+    setOpened(true);
+    onOpen?.();
+  };
 
   return (
     <div className={`relative w-full ${aspectClass} select-none`}>
@@ -45,7 +57,7 @@ const SealedPackCard = ({
       {/* Sealed pack overlay (burns away on click) */}
       <button
         type="button"
-        onClick={() => !opened && setOpened(true)}
+        onClick={handleOpen}
         aria-label={opened ? "Pack opened" : "Tap to burn the pack open"}
         disabled={opened}
         className={`absolute inset-0 ${opened ? "pointer-events-none" : "cursor-pointer"}`}

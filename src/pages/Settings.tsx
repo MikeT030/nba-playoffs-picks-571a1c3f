@@ -20,6 +20,8 @@ import TeamLogo from "@/components/TeamLogo";
 import { bracketSeries, resolveSeriesTeams, isPlayInPlaceholder } from "@/data/playoffsData";
 import { teamMeta } from "@/lib/nbaApi";
 import { useBracketData } from "@/hooks/useBracketData";
+import { FlyerCardForId } from "@/components/DemoFlyerCardVariants";
+import { useDemoFlyerState } from "@/lib/flyerDemo";
 
 const Settings = () => {
   const { user, loading, signOut } = useAuth();
@@ -28,6 +30,9 @@ const Settings = () => {
   const { data: resolvedBracket } = useBracketData();
   const activeBracket = resolvedBracket ?? bracketSeries;
   const { assignedCardId, loading: cardLoading, assignRandomCard } = usePlayerCard();
+  const { winners: demoWinners, burned: demoBurned } = useDemoFlyerState();
+  const demoFlyer = user ? demoWinners.find((w) => w.user_id === user.id) : undefined;
+  const demoFlyerBurned = demoFlyer ? !!demoBurned[demoFlyer.cardId] : false;
   const [betsOpen, setBetsOpen] = useState(false);
   const [hasPicks, setHasPicks] = useState(false);
   const [picks, setPicks] = useState<{ seriesId: string; winner: string; gamesInSeries: number }[]>([]);
@@ -195,6 +200,24 @@ const Settings = () => {
               selected
               className="!opacity-100"
             />
+          </div>
+        )}
+
+        {/* FLYER – The Shot demo award (only if this user got one) */}
+        {!loading && user && demoFlyer && (
+          <div className="mt-3 mb-3">
+            <h2 className="font-display text-lg tracking-wider mb-3">FLYER – THE SHOT</h2>
+            <FlyerCardForId
+              cardId={demoFlyer.cardId}
+              sealed={!demoFlyerBurned}
+              defaultOpened={demoFlyerBurned}
+              hideHeading
+            />
+            {!demoFlyerBurned && (
+              <p className="font-body text-xs text-muted-foreground mt-2 text-center">
+                Open your pack from the awards drawer to reveal this card.
+              </p>
+            )}
           </div>
         )}
 

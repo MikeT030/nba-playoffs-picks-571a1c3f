@@ -1,56 +1,63 @@
-# Admin Panel: Award "Flyer – The Shot" Cards
+## Goal
 
-Add an admin-only panel on `/admin` that computes current standings and lets you assign each of the 4 Flyer cards (Chapman, Paxson, Miller, Davis) to a user — defaulting to the current top 4.
+Build a demo for the "FLYER – The Shot · AWARD CARDS" admin section that simulates what users see when the first round ends and 4 cards are awarded — without touching the real `flyer_card_assignments` table.
 
-## What the user sees
+## Behavior
 
-A new accordion section on the Admin page titled **"Flyer – The Shot · Award Cards"**, containing:
+Two drawer variants, both showing 4 cards wrapped in the existing `DemoFlyerCardV3` sealed pack (same pack used for the V3 demo entry).
 
-1. **Live standings table** — top 10 users with current points (computed with the same scoring logic used on the Leaderboard).
-2. **4 assignment rows**, one per card:
-   - Card name + small preview thumbnail (Chapman / Paxson / Miller / Davis)
-   - A user dropdown, pre-selected with the current top-4 user for that slot
-   - Current assignee badge (if already assigned)
-3. A **"Save assignments"** button that persists all four at once, plus a **"Reset to current top 4"** button.
-4. A confirmation toast on save. Re-assigning a card to a different user replaces the previous holder.
+**Version 1 — Receiver view** ("you got one")
+- Heading text: `<User name>, you're worthy of receiving 1 of 4 FLYER – The Shot player cards.`
+- The viewer is one of the 4 winners. Their own card is interactive — tap to burn the pack and reveal the player card underneath. Other 3 cards stay sealed (since this drawer represents *that* user's POV).
+- Once burned, the revealed card is also surfaced on the Profile page (below the existing "THAT'S YOU" card) under a new "FLYER – THE SHOT" section.
 
-Tie handling: when users are tied (e.g. Simon and Hannes L both at 10), the dropdown shows all tied users so you choose; the default order falls back to earliest pick `created_at`.
+**Version 2 — Broadcast view** ("everyone else sees it")
+- Heading text: `It's official, <user 1>, <user 2>, <user 3>, and <user 4> are worthy of receiving 1 of 4 FLYER – The Shot player cards.`
+- All 4 cards shown sealed. A card only reveals once *that* winning user has burned it in their own receiver drawer. Until then, only the pack is visible.
 
-## Data model
+## Admin entry points (in the existing FLYER award accordion)
 
-New table `flyer_card_assignments`:
+Add a new "Demo" subsection below the live assignment UI:
 
-```text
-card_id    text   primary key   -- 'chapman' | 'paxson' | 'miller' | 'davis'
-user_id    uuid   not null
-assigned_at timestamptz default now()
-assigned_by uuid                 -- admin who assigned
-```
+1. **Pick 4 random winners** button — randomly selects 4 distinct active users from the standings list and assigns each one of the 4 player cards (chapman / paxson / miller / davis), stored only in `localStorage` (key: `demo.flyerWinners`).
+2. **Open Receiver drawer** button — opens V1. A small selector lets you pick which of the 4 winners you're viewing as ("View as: Simon ▾").
+3. **Open Broadcast drawer** button — opens V2.
+4. **Reset demo** button — clears localStorage (winners + burned flags) and closes drawers.
 
-- RLS: SELECT public (so the holder can see their card later); INSERT/UPDATE/DELETE restricted to `has_role(auth.uid(), 'admin')`.
-- `card_id` as PK guarantees only one holder per card. Reassigning = upsert on `card_id`.
-- Kept separate from `player_card_assignments` so the existing roulette flow (one random "Career Lowlight" per user, queried with `.maybeSingle()`) is untouched.
+Both drawer buttons are disabled until winners have been picked.
 
-## Implementation
+## Storage (demo-only, no DB)
 
-1. **Migration** — create `flyer_card_assignments` with the schema + RLS policies above.
-2. **Hook** `useFlyerAssignments` — fetch all 4 rows, expose `{ assignments, upsert(cardId, userId), loading }`.
-3. **Hook** `useStandings` — batched query of all `picks` + `series_results` + `profiles`, runs `totalUserPoints` from `src/lib/pickScoring.ts` per user, returns sorted `[{ user_id, display_name, points }]`. Reused by the panel (and available for future use on the Scoreboard if we want to dedupe later).
-4. **Component** `AdminFlyerAwardPanel.tsx`:
-   - Renders standings table + 4 assignment rows
-   - Card metadata (id, label, thumb) hardcoded from the existing 4 `DemoFlyerCard*` exports
-   - "Save" calls `upsert` for each changed row
-5. **Admin.tsx** — add a new accordion item above the demo previews section that mounts `AdminFlyerAwardPanel`.
+`localStorage`:
+- `demo.flyerWinners` → `[{ user_id, name, cardId }]` (length 4)
+- `demo.flyerBurned.<cardId>` → `"1"` once that pack has been ripped open in the receiver drawer
 
-## Out of scope (can follow up)
+The real `flyer_card_assignments` table is never touched by any of this.
 
-- Showing the awarded card to the recipient on their profile / homepage.
-- Notifying the recipient.
-- Auto-recomputing assignments as more series finish (this panel stays manual; you click "Reset to current top 4" whenever you want to re-snap).
+## Profile page integration
 
-## Current top 4 (for reference, will be the initial defaults)
+In `src/pages/Settings.tsx`, after the existing "THAT'S YOU" PlayerCard block, read `demo.flyerWinners` + burned flags. If the current signed-in user appears in the demo winners list AND their card has been burned, render a new section:
 
-1. Simon — 10
-2. Hannes L — 10
-3. Larsn — 8
-4. Axlzander — 8
+- Heading: `FLYER – THE SHOT`
+- The matching `FlyerCardV3` (no longer sealed — burned state means card is exposed).
+
+If they're a winner but haven't burned yet, show the sealed pack with a hint to open it from the awards drawer.
+
+## Technical details
+
+**New files**
+- `src/components/AdminFlyerAwardDemoDrawer.tsx` — drawer component, supports `mode: "receiver" | "broadcast"`, takes `winners`, `viewerUserId` (receiver only), and exposes a burn handler that writes to localStorage.
+- `src/lib/flyerDemo.ts` — small helpers: `getDemoWinners()`, `setDemoWinners()`, `clearDemo()`, `isDemoCardBurned(cardId)`, `markDemoCardBurned(cardId)`, plus a `useDemoFlyerState()` hook that subscribes to the `storage` event so the Profile page updates live.
+
+**Modified files**
+- `src/components/AdminFlyerAwardPanel.tsx` — add the Demo subsection (random-pick button, open-drawer buttons, viewer selector, reset). Reuses the standings list it already loads.
+- `src/components/DemoFlyerCardVariants.tsx` — refactor so the four `DemoFlyerCardV3 / Paxson / Miller / Davis` exports each forward a `sealed` / `sealedToppsStyle` flag and an optional `onBurn` callback to the underlying `FlyerCardV3`. (Currently only Chapman is sealed; we need all four wrappable.) Add a `getFlyerCardComponent(cardId)` helper.
+- `src/components/SealedPackCard.tsx` — add an optional `onOpen` prop fired when `setOpened(true)` runs, plus an optional `defaultOpened` so the broadcast view can show already-burned cards as opened.
+- `src/pages/Settings.tsx` — render the burned demo card under the existing "THAT'S YOU" section.
+
+**No DB migration required.** No edits to RLS, edge functions, or the existing `flyer_card_assignments` table.
+
+## Out of scope
+
+- Real "auto-pop on first round complete" trigger. This is described as a demo, so it lives behind admin buttons. (We can wire it to a real round-complete check later if you want.)
+- Persisting demo state across browsers — localStorage only.

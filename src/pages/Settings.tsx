@@ -30,6 +30,9 @@ const Settings = () => {
   const { data: resolvedBracket } = useBracketData();
   const activeBracket = resolvedBracket ?? bracketSeries;
   const { assignedCardId, loading: cardLoading, assignRandomCard } = usePlayerCard();
+  const { winners: demoWinners, burned: demoBurned } = useDemoFlyerState();
+  const demoFlyer = user ? demoWinners.find((w) => w.user_id === user.id) : undefined;
+  const demoFlyerBurned = demoFlyer ? !!demoBurned[demoFlyer.cardId] : false;
   const [betsOpen, setBetsOpen] = useState(false);
   const [hasPicks, setHasPicks] = useState(false);
   const [picks, setPicks] = useState<{ seriesId: string; winner: string; gamesInSeries: number }[]>([]);

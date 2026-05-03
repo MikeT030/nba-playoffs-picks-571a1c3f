@@ -6,17 +6,17 @@ export type FlyerCardId = (typeof FLYER_CARD_IDS)[number];
 export interface DemoWinner {
   user_id: string;
   name: string;
+  /** Pre-assigned card (kept for back-compat). Receiver mode now uses free-choice claims instead. */
   cardId: FlyerCardId;
 }
 
 const WINNERS_KEY = "demo.flyerWinners";
+const CLAIMS_KEY = "demo.flyerClaims"; // { [cardId]: user_id }
 const burnKey = (cardId: string) => `demo.flyerBurned.${cardId}`;
 const EVENT = "demo-flyer-change";
 
 const emit = () => {
-  if (typeof window !== "undefined") {
-    window.dispatchEvent(new Event(EVENT));
-  }
+  if (typeof window !== "undefined") window.dispatchEvent(new Event(EVENT));
 };
 
 export const getDemoWinners = (): DemoWinner[] => {
@@ -33,18 +33,15 @@ export const getDemoWinners = (): DemoWinner[] => {
 
 export const setDemoWinners = (winners: DemoWinner[]) => {
   window.localStorage.setItem(WINNERS_KEY, JSON.stringify(winners));
-  // Reset burn states when winners change
-  for (const id of FLYER_CARD_IDS) {
-    window.localStorage.removeItem(burnKey(id));
-  }
+  window.localStorage.removeItem(CLAIMS_KEY);
+  for (const id of FLYER_CARD_IDS) window.localStorage.removeItem(burnKey(id));
   emit();
 };
 
 export const clearDemo = () => {
   window.localStorage.removeItem(WINNERS_KEY);
-  for (const id of FLYER_CARD_IDS) {
-    window.localStorage.removeItem(burnKey(id));
-  }
+  window.localStorage.removeItem(CLAIMS_KEY);
+  for (const id of FLYER_CARD_IDS) window.localStorage.removeItem(burnKey(id));
   emit();
 };
 
@@ -58,6 +55,40 @@ export const markDemoCardBurned = (cardId: string) => {
   emit();
 };
 
+export const getDemoClaims = (): Partial<Record<FlyerCardId, string>> => {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = window.localStorage.getItem(CLAIMS_KEY);
+    if (!raw) return {};
+    return JSON.parse(raw) ?? {};
+  } catch {
+    return {};
+  }
+};
+
+/**
+ * Try to claim a card for a user (first-come, first-served).
+ * Returns true if the claim succeeded, false otherwise (card already claimed,
+ * or this user has already claimed another card).
+ */
+export const claimDemoCard = (cardId: FlyerCardId, userId: string): boolean => {
+  const claims = getDemoClaims();
+  if (claims[cardId]) return false;
+  if (Object.values(claims).includes(userId)) return false;
+  claims[cardId] = userId;
+  window.localStorage.setItem(CLAIMS_KEY, JSON.stringify(claims));
+  emit();
+  return true;
+};
+
+export const getCardForUser = (userId: string): FlyerCardId | null => {
+  const claims = getDemoClaims();
+  for (const id of FLYER_CARD_IDS) {
+    if (claims[id] === userId) return id;
+  }
+  return null;
+};
+
 export const useDemoFlyerState = () => {
   const [winners, setWinnersState] = useState<DemoWinner[]>(() => getDemoWinners());
   const [burned, setBurnedState] = useState<Record<string, boolean>>(() => {
@@ -65,12 +96,14 @@ export const useDemoFlyerState = () => {
     for (const id of FLYER_CARD_IDS) out[id] = isDemoCardBurned(id);
     return out;
   });
+  const [claims, setClaimsState] = useState<Partial<Record<FlyerCardId, string>>>(() => getDemoClaims());
 
   const refresh = useCallback(() => {
     setWinnersState(getDemoWinners());
     const out: Record<string, boolean> = {};
     for (const id of FLYER_CARD_IDS) out[id] = isDemoCardBurned(id);
     setBurnedState(out);
+    setClaimsState(getDemoClaims());
   }, []);
 
   useEffect(() => {
@@ -83,5 +116,5 @@ export const useDemoFlyerState = () => {
     };
   }, [refresh]);
 
-  return { winners, burned, refresh };
+  return { winners, burned, claims, refresh };
 };

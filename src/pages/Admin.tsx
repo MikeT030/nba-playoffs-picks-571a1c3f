@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/accordion";
 import { toast } from "sonner";
 import AdminSeriesConfirmPanel from "@/components/AdminSeriesConfirmPanel";
+import AdminFlyerAwardPanel from "@/components/AdminFlyerAwardPanel";
 import HeroBannerMinimal from "@/components/HeroBannerMinimal";
 import DemoAllMatchupsInnovation from "@/components/DemoAllMatchupsInnovation";
 import DemoAdvancedRoundView from "@/components/DemoAdvancedRoundView";

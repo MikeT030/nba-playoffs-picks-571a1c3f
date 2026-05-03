@@ -524,7 +524,32 @@ const MemphisPattern = () => {
     { name: "court", color: CYAN, top: "76%", left: "78%", size: "14%", rotate: 8 },
   ];
 
-  return null;
+  // Tonal repeating watermark pattern (Panini-pack style): large
+  // skewed "FLYER" wordmark tiled across the background.
+  const tile = encodeURIComponent(`
+    <svg xmlns='http://www.w3.org/2000/svg' width='220' height='120' viewBox='0 0 220 120'>
+      <g font-family='Impact, Bebas Neue, Oswald, sans-serif' font-weight='900'
+         font-size='72' font-style='italic' fill='rgba(255,255,255,0.07)'
+         transform='skewX(-12)'>
+        <text x='-10' y='70'>FLYER</text>
+        <text x='110' y='30'>FLYER</text>
+        <text x='110' y='110'>FLYER</text>
+      </g>
+    </svg>
+  `);
+
+  return (
+    <div
+      className="absolute inset-0 w-full h-full pointer-events-none"
+      aria-hidden
+      style={{
+        backgroundImage: `url("data:image/svg+xml;utf8,${tile}")`,
+        backgroundRepeat: "repeat",
+        backgroundSize: "55% auto",
+        mixBlendMode: "overlay",
+      }}
+    />
+  );
 
   return (
     <div className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden>

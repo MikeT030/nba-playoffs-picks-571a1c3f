@@ -90,7 +90,9 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
       <>
         {viewer?.name ?? "You"},
         <br />
-        you're worthy of receiving 1 of 4 FLYER – The Shot player cards.
+        you're worthy of receiving 1 of 4
+        <br />
+        FLYER – The Shot player cards.
       </>
     ) : (
       `It's official, ${formatNames(winners.map((w) => w.name))} are worthy of receiving 1 of 4 FLYER – The Shot player cards.`

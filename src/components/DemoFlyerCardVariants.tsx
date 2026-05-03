@@ -242,14 +242,28 @@ const FlyerCardV3 = ({
 
   return (
     <div className="space-y-2">
-      <h2 className="font-display text-lg tracking-wider text-muted-foreground">
-        PLATINUM — CHAPMAN
-      </h2>
+      {!hideHeading && (
+        <h2 className="font-display text-lg tracking-wider text-muted-foreground">
+          {heading}
+        </h2>
+      )}
 
       {sealedToppsStyle ? (
-        <SealedPackCardToppsStyle {...sealedToppsConfig}>{cardArticle}</SealedPackCardToppsStyle>
+        <SealedPackCardToppsStyle
+          {...sealedToppsConfig}
+          defaultOpened={defaultOpened}
+          onOpen={onBurn}
+        >
+          {cardArticle}
+        </SealedPackCardToppsStyle>
       ) : sealed ? (
-        <SealedPackCard {...sealedConfig}>{cardArticle}</SealedPackCard>
+        <SealedPackCard
+          {...sealedConfig}
+          defaultOpened={defaultOpened}
+          onOpen={onBurn}
+        >
+          {cardArticle}
+        </SealedPackCard>
       ) : (
         cardArticle
       )}

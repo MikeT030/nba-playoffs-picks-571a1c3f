@@ -20,6 +20,8 @@ import TeamLogo from "@/components/TeamLogo";
 import { bracketSeries, resolveSeriesTeams, isPlayInPlaceholder } from "@/data/playoffsData";
 import { teamMeta } from "@/lib/nbaApi";
 import { useBracketData } from "@/hooks/useBracketData";
+import { FlyerCardForId } from "@/components/DemoFlyerCardVariants";
+import { useDemoFlyerState } from "@/lib/flyerDemo";
 
 const Settings = () => {
   const { user, loading, signOut } = useAuth();

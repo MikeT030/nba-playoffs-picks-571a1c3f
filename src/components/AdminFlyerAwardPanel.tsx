@@ -261,6 +261,114 @@ const AdminFlyerAwardPanel = () => {
         <Save size={14} />
         {saving ? "Saving…" : "Save assignments"}
       </button>
+
+      {/* ─── Demo drawers (no DB) ─────────────────────── */}
+      <div className="border-t border-border pt-4 space-y-3">
+        <p className="font-body text-xs uppercase tracking-widest text-muted-foreground">
+          Demo · "Round 1 complete" reveal
+        </p>
+        <p className="font-body text-[11px] text-muted-foreground -mt-1">
+          Picks 4 random users and lets you preview both award drawers. Demo state lives only in your browser — the live assignments above are not affected.
+        </p>
+
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            onClick={() => {
+              const pool = [...standings];
+              if (pool.length < 4) {
+                toast.error("Need at least 4 users with picks to draw winners");
+                return;
+              }
+              // Fisher-Yates shuffle, take 4
+              for (let i = pool.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [pool[i], pool[j]] = [pool[j], pool[i]];
+              }
+              const picks = pool.slice(0, 4);
+              const next = FLYER_CARD_IDS.map((cardId, i) => ({
+                user_id: picks[i].user_id,
+                name: picks[i].display_name,
+                cardId: cardId as FlyerCardId,
+              }));
+              setDemoWinners(next);
+              setDemoViewerId(next[0].user_id);
+              toast.success("4 random demo winners picked");
+            }}
+            className="flex items-center justify-center gap-2 bg-secondary text-secondary-foreground font-body text-sm py-2 rounded-md"
+          >
+            <Shuffle size={14} />
+            Pick 4 random
+          </button>
+          <button
+            onClick={() => {
+              clearDemo();
+              setDemoViewerId("");
+              setDemoMode(null);
+              toast.success("Demo reset");
+            }}
+            disabled={demoWinners.length === 0}
+            className="flex items-center justify-center gap-2 bg-background border border-border text-foreground font-body text-sm py-2 rounded-md disabled:opacity-40"
+          >
+            <Trash2 size={14} />
+            Reset demo
+          </button>
+        </div>
+
+        {demoWinners.length > 0 && (
+          <div className="space-y-2 rounded-md bg-background/40 p-3">
+            <p className="font-body text-[11px] uppercase tracking-widest text-muted-foreground">
+              Current demo winners
+            </p>
+            <ul className="space-y-1">
+              {demoWinners.map((w) => (
+                <li key={w.cardId} className="flex items-center justify-between text-xs font-body">
+                  <span className="capitalize text-muted-foreground">{w.cardId}</span>
+                  <span className="truncate">{w.name}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="flex items-center gap-2 pt-1">
+              <span className="font-body text-[11px] text-muted-foreground">View as</span>
+              <select
+                value={demoViewerId || demoWinners[0].user_id}
+                onChange={(e) => setDemoViewerId(e.target.value)}
+                className="flex-1 bg-background border border-border rounded-md text-xs font-body px-2 py-1"
+              >
+                {demoWinners.map((w) => (
+                  <option key={w.user_id} value={w.user_id}>
+                    {w.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <button
+                onClick={() => setDemoMode("receiver")}
+                className="flex items-center justify-center gap-2 bg-primary/15 text-primary border border-primary/40 font-body text-xs py-2 rounded-md"
+              >
+                <Eye size={14} />
+                Receiver drawer
+              </button>
+              <button
+                onClick={() => setDemoMode("broadcast")}
+                className="flex items-center justify-center gap-2 bg-primary/15 text-primary border border-primary/40 font-body text-xs py-2 rounded-md"
+              >
+                <Radio size={14} />
+                Broadcast drawer
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <AdminFlyerAwardDemoDrawer
+        open={demoMode !== null}
+        onOpenChange={(o) => !o && setDemoMode(null)}
+        mode={demoMode ?? "broadcast"}
+        viewerUserId={demoViewerId || demoWinners[0]?.user_id}
+      />
     </div>
   );
 };

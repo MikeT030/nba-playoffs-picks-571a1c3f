@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useAllSeriesResults } from "@/hooks/useAllSeriesResults";
+import { useAllUserPicks } from "@/hooks/useAllUserPicks";
 import { useSeriesGames } from "@/hooks/useSeriesGames";
 import { isNextUp as checkIsNextUp, formatTipOff } from "@/lib/seriesUtils";
 import { getBracketSeriesIdForMatch, getAssumedOpponentAbbr, type Match, type Team } from "@/data/playoffsData";
@@ -310,7 +311,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
                   ? match.homeTeam.abbreviation
                   : null;
               const assumedOpp = bracketSeriesId
-                ? getAssumedOpponentAbbr(bracketSeriesId, userPick.winner, bracketData, [])
+                ? getAssumedOpponentAbbr(bracketSeriesId, userPick.winner, bracketData, currentUserAllPicks ?? [])
                 : null;
               const broken = !pickInMatch;
               const showAssumed = broken

@@ -322,7 +322,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
               const effectivePts = broken ? 0 : pts;
               return (
                 <div className="px-4 pb-3">
-                  <p className="font-body text-white text-center text-sm">
+                  <p className="font-body text-white text-center text-base">
                     Your Pick:{" "}
                     <span className={broken ? "line-through opacity-70" : ""}>
                       <span className="font-bold">{userPick.winner}</span> in <span className="font-bold">{userPick.games_in_series}</span>

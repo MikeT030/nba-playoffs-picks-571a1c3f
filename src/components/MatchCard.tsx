@@ -292,7 +292,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
         const effectivePoints = broken ? 0 : points;
         return (
           <div className="px-4 pb-3 -mt-1">
-            <p className="font-body text-white text-center pt-0 text-sm">
+            <p className="font-body text-white text-center pt-0 text-base">
               Your Pick:{" "}
               <span className={broken ? "line-through opacity-70" : ""}>
                 <span className="font-bold">{bet.winner}</span> in <span className="font-bold">{bet.gamesInSeries}</span>

@@ -525,7 +525,7 @@ const MemphisPattern = () => {
   const tile = encodeURIComponent(`
     <svg xmlns='http://www.w3.org/2000/svg' width='220' height='120' viewBox='0 0 220 120'>
       <g font-family='Impact, Bebas Neue, Oswald, sans-serif' font-weight='900'
-         font-size='72' font-style='italic' fill='rgba(255,255,255,0.07)'
+         font-size='72' font-style='italic' fill='hsl(200, 80%, 60%)' fill-opacity='0.35'
          transform='skewX(-12)'>
         <text x='-10' y='70'>FLYER</text>
         <text x='110' y='30'>FLYER</text>

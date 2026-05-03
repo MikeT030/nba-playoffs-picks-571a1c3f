@@ -310,7 +310,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
                   ? match.homeTeam.abbreviation
                   : null;
               const assumedOpp = bracketSeriesId
-                ? getAssumedOpponentAbbr(bracketSeriesId, userPick.winner, bracketData, allPicks ?? [])
+                ? getAssumedOpponentAbbr(bracketSeriesId, userPick.winner, bracketData, [])
                 : null;
               const broken = !pickInMatch;
               const showAssumed = broken

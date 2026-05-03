@@ -21,7 +21,7 @@ import { bracketSeries, resolveSeriesTeams, isPlayInPlaceholder } from "@/data/p
 import { teamMeta } from "@/lib/nbaApi";
 import { useBracketData } from "@/hooks/useBracketData";
 import { FlyerCardForId } from "@/components/DemoFlyerCardVariants";
-import { useDemoFlyerState } from "@/lib/flyerDemo";
+import { useDemoFlyerState, getCardForUser } from "@/lib/flyerDemo";
 
 const Settings = () => {
   const { user, loading, signOut } = useAuth();
@@ -30,9 +30,14 @@ const Settings = () => {
   const { data: resolvedBracket } = useBracketData();
   const activeBracket = resolvedBracket ?? bracketSeries;
   const { assignedCardId, loading: cardLoading, assignRandomCard } = usePlayerCard();
-  const { winners: demoWinners, burned: demoBurned } = useDemoFlyerState();
-  const demoFlyer = user ? demoWinners.find((w) => w.user_id === user.id) : undefined;
+  const { winners: demoWinners, burned: demoBurned, claims: demoClaims } = useDemoFlyerState();
+  const demoFlyerWinner = user ? demoWinners.find((w) => w.user_id === user.id) : undefined;
+  const demoClaimedCardId = user ? getCardForUser(user.id) : null;
+  const demoFlyer = demoFlyerWinner && demoClaimedCardId
+    ? { cardId: demoClaimedCardId }
+    : undefined;
   const demoFlyerBurned = demoFlyer ? !!demoBurned[demoFlyer.cardId] : false;
+  void demoClaims; // subscribe to re-render on claim changes
   const [betsOpen, setBetsOpen] = useState(false);
   const [hasPicks, setHasPicks] = useState(false);
   const [picks, setPicks] = useState<{ seriesId: string; winner: string; gamesInSeries: number }[]>([]);

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from "@/components/ui/drawer";
 import { FlyerCardForId } from "@/components/DemoFlyerCardVariants";
 import {
@@ -34,8 +34,21 @@ const FAN_TRANSFORMS = [
   { rotate: 12, x: 90 },
 ];
 
+const REVEAL_MS = 4600;
+
 const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: Props) => {
   const { winners, burned, claims } = useDemoFlyerState();
+  const [revealingCardId, setRevealingCardId] = useState<FlyerCardId | null>(null);
+
+  useEffect(() => {
+    if (!revealingCardId) return;
+    const t = window.setTimeout(() => setRevealingCardId(null), REVEAL_MS);
+    return () => window.clearTimeout(t);
+  }, [revealingCardId]);
+
+  useEffect(() => {
+    if (!open) setRevealingCardId(null);
+  }, [open]);
 
   const viewer = winners.find((w) => w.user_id === viewerUserId) ?? winners[0];
   const viewerClaimedCard: FlyerCardId | null = useMemo(
@@ -84,7 +97,12 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
                 const isViewerCard = claimedBy === viewer?.user_id;
                 sealed = !isViewerCard || !cardBurned;
                 defaultOpened = isViewerCard && cardBurned;
-                onBurn = isViewerCard ? () => markDemoCardBurned(cardId) : undefined;
+                onBurn = isViewerCard
+                  ? () => {
+                      setRevealingCardId(cardId);
+                      markDemoCardBurned(cardId);
+                    }
+                  : undefined;
 
                 // Allow viewer to claim an unclaimed pack (first-come, first-served)
                 if (!claimedBy && !viewerClaimedCard && viewer) {
@@ -105,13 +123,23 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
                 : null;
               const isViewerCard = mode === "receiver" && claimedBy === viewer?.user_id;
 
+              const isRevealing = revealingCardId === cardId;
+              const someoneRevealing = revealingCardId !== null;
+              const isHidden = someoneRevealing && !isRevealing;
+
+              const transform = isRevealing
+                ? `translateX(0px) rotate(0deg) scale(1.6)`
+                : `translateX(${t.x}px) rotate(${t.rotate}deg)`;
+
               return (
                 <div
                   key={cardId}
-                  className="absolute bottom-0 w-[55%] max-w-[200px] origin-bottom transition-transform duration-300 hover:-translate-y-2"
+                  className="absolute bottom-0 w-[55%] max-w-[200px] origin-bottom transition-all duration-500 ease-out hover:-translate-y-2"
                   style={{
-                    transform: `translateX(${t.x}px) rotate(${t.rotate}deg)`,
-                    zIndex: i + 1,
+                    transform,
+                    zIndex: isRevealing ? 100 : i + 1,
+                    opacity: isHidden ? 0 : 1,
+                    pointerEvents: isHidden ? "none" : undefined,
                   }}
                   onClick={onClickWhenSealed}
                   role={onClickWhenSealed ? "button" : undefined}
@@ -123,7 +151,7 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
                     hideHeading
                     onBurn={onBurn}
                   />
-                  {ownerName && (
+                  {ownerName && !isRevealing && (
                     <p className="mt-1 text-center font-body text-[10px] text-muted-foreground truncate">
                       {ownerName}
                       {isViewerCard ? " (you)" : ""}

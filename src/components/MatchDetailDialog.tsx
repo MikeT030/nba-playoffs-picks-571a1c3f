@@ -5,9 +5,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useAllSeriesResults } from "@/hooks/useAllSeriesResults";
+import { useAllUserPicks } from "@/hooks/useAllUserPicks";
 import { useSeriesGames } from "@/hooks/useSeriesGames";
 import { isNextUp as checkIsNextUp, formatTipOff } from "@/lib/seriesUtils";
-import { getBracketSeriesIdForMatch, type Match, type Team } from "@/data/playoffsData";
+import { getBracketSeriesIdForMatch, getAssumedOpponentAbbr, type Match, type Team } from "@/data/playoffsData";
 import { teamMeta } from "@/lib/nbaApi";
 
 /**
@@ -36,6 +37,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
   const { user } = useAuth();
   const { data: bracketData } = useBracketData();
   const { data: allResults } = useAllSeriesResults();
+  const { data: currentUserAllPicks } = useAllUserPicks();
   const { data: seriesGames } = useSeriesGames(
     match?.id,
     match?.homeTeam.abbreviation,
@@ -301,19 +303,40 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
               const userPick = user && allPicks ? allPicks.find((p) => p.user_id === user.id) : null;
               if (!userPick) return null;
               const pts = computePts(userPick);
+              const pickInMatch =
+                match.homeTeam.abbreviation === userPick.winner ||
+                match.awayTeam.abbreviation === userPick.winner;
+              const actualOpp = match.homeTeam.abbreviation === userPick.winner
+                ? match.awayTeam.abbreviation
+                : match.awayTeam.abbreviation === userPick.winner
+                  ? match.homeTeam.abbreviation
+                  : null;
+              const assumedOpp = bracketSeriesId
+                ? getAssumedOpponentAbbr(bracketSeriesId, userPick.winner, bracketData, currentUserAllPicks ?? [])
+                : null;
+              const broken = !pickInMatch;
+              const showAssumed = broken
+                ? !!assumedOpp
+                : !!assumedOpp && !!actualOpp && actualOpp !== assumedOpp;
+              const suffixOpp = assumedOpp ?? actualOpp;
+              const effectivePts = broken ? 0 : pts;
               return (
                 <div className="px-4 pb-3">
                   <p className="font-body text-white text-center text-sm">
-                    Your Pick: <span className="font-bold">{userPick.winner}</span> in <span className="font-bold">{userPick.games_in_series}</span>
-                    {pts !== null && (
+                    Your Pick:{" "}
+                    <span className={broken ? "line-through opacity-70" : ""}>
+                      <span className="font-bold">{userPick.winner}</span> in <span className="font-bold">{userPick.games_in_series}</span>
+                      {showAssumed && suffixOpp ? ` (vs. ${suffixOpp})` : ""}
+                    </span>
+                    {(broken || effectivePts !== null) && (
                       <span className="ml-2 text-primary font-medium">
                         ·{" "}
-                        {pts === 3
+                        {effectivePts === 3
                           ? "Shiiiiit 3 Points"
-                          : pts === 2
+                          : effectivePts === 2
                             ? "That's 2 Points"
                             : "0 Points, Bro"}
-                        {match.id === "nba-finals" && pts > 0 && " And 4 for the Champ"}
+                        {match.id === "nba-finals" && effectivePts! > 0 && " And 4 for the Champ"}
                       </span>
                     )}
                   </p>

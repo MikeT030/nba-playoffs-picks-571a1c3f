@@ -104,6 +104,13 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
       className="fixed inset-0 z-50 bg-background flex flex-col animate-fade-in"
       role="dialog"
       aria-modal="true"
+      onClick={() => {
+        if (mode !== "receiver" || !viewer) return;
+        if (viewerHasBurned) return;
+        if (!selectedCardId) return;
+        unclaimDemoCard(viewer.user_id);
+        setSelectedCardId(null);
+      }}
     >
       {/* Top bar */}
       <div className="relative shrink-0 px-4 pt-6 pb-4 text-center">

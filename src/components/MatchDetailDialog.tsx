@@ -7,7 +7,7 @@ import { useBracketData } from "@/hooks/useBracketData";
 import { useAllSeriesResults } from "@/hooks/useAllSeriesResults";
 import { useSeriesGames } from "@/hooks/useSeriesGames";
 import { isNextUp as checkIsNextUp, formatTipOff } from "@/lib/seriesUtils";
-import { getBracketSeriesIdForMatch, type Match, type Team } from "@/data/playoffsData";
+import { getBracketSeriesIdForMatch, getAssumedOpponentAbbr, type Match, type Team } from "@/data/playoffsData";
 import { teamMeta } from "@/lib/nbaApi";
 
 /**

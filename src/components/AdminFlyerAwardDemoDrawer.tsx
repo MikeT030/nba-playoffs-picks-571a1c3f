@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from "@/components/ui/drawer";
+import { X } from "lucide-react";
 import { FlyerCardForId } from "@/components/DemoFlyerCardVariants";
 import {
   FLYER_CARD_IDS,
@@ -26,27 +26,63 @@ const formatNames = (names: string[]) => {
   return `${names.slice(0, -1).join(", ")}, and ${names[names.length - 1]}`;
 };
 
-/** Fan-style positioning for 4 cards: rotated + horizontally fanned, centered. */
-const FAN_TRANSFORMS = [
-  { rotate: -12, x: -90 },
-  { rotate: -4, x: -30 },
-  { rotate: 4, x: 30 },
-  { rotate: 12, x: 90 },
-];
+/** Stack offsets — each card peeks out down/right from the one before it. */
+const STACK_OFFSET_X = 36; // px right per index
+const STACK_OFFSET_Y = 28; // px down per index
 
 const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: Props) => {
   const { winners, burned, claims } = useDemoFlyerState();
   const [justBurnedId, setJustBurnedId] = useState<FlyerCardId | null>(null);
-
-  useEffect(() => {
-    if (!open) setJustBurnedId(null);
-  }, [open]);
+  const [selectedCardId, setSelectedCardId] = useState<FlyerCardId | null>(null);
 
   const viewer = winners.find((w) => w.user_id === viewerUserId) ?? winners[0];
   const viewerClaimedCard: FlyerCardId | null = useMemo(
     () => (viewer ? getCardForUser(viewer.user_id) : null),
     [viewer, claims],
   );
+
+  const viewerHasBurned =
+    mode === "receiver" &&
+    !!viewerClaimedCard &&
+    (burned[viewerClaimedCard] ?? isDemoCardBurned(viewerClaimedCard));
+
+  // Auto-select the viewer's claimed card if they already have one
+  useEffect(() => {
+    if (!open) {
+      setJustBurnedId(null);
+      setSelectedCardId(null);
+      return;
+    }
+    if (mode === "receiver" && viewerClaimedCard) {
+      setSelectedCardId(viewerClaimedCard);
+    }
+  }, [open, mode, viewerClaimedCard]);
+
+  // Lock body scroll while open
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
+  // Block Escape unless allowed to close
+  const canClose = mode === "broadcast" || viewerHasBurned;
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (canClose) onOpenChange(false);
+        else e.preventDefault();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, canClose, onOpenChange]);
+
+  if (!open) return null;
 
   const headline =
     mode === "receiver"
@@ -55,121 +91,231 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
 
   const subline =
     mode === "receiver"
-      ? viewerClaimedCard
-        ? "Tap your pack to burn it open. Your card lands on your Profile."
-        : "Pick any pack — first come, first served. You can only claim one."
+      ? viewerHasBurned
+        ? "Your card has been added to your Profile."
+        : selectedCardId
+          ? "Tap your card again to burn the pack open."
+          : "Tap any pack to bring it to the front. First come, first served."
       : "Cards stay sealed until each owner burns their pack.";
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="max-h-[92vh]">
-        <DrawerHeader className="text-center">
-          <DrawerTitle className="font-display text-base tracking-wider uppercase text-muted-foreground">
-            FLYER – The Shot · {mode === "receiver" ? "You're Worthy" : "It's Official"}
-          </DrawerTitle>
-          <DrawerDescription className="font-body text-base text-foreground leading-snug max-w-2xl mx-auto">
-            {headline}
-          </DrawerDescription>
-        </DrawerHeader>
+    <div
+      className="fixed inset-0 z-50 bg-background flex flex-col animate-fade-in"
+      role="dialog"
+      aria-modal="true"
+    >
+      {/* Top bar */}
+      <div className="relative shrink-0 px-4 pt-6 pb-4 text-center">
+        <p className="font-display text-xs sm:text-sm tracking-[0.25em] uppercase text-muted-foreground">
+          FLYER – The Shot · {mode === "receiver" ? "You're Worthy" : "It's Official"}
+        </p>
+        <h2 className="mt-2 font-body text-base sm:text-lg text-foreground leading-snug max-w-2xl mx-auto">
+          {headline}
+        </h2>
 
-        <div className="px-4 pb-10 overflow-y-auto">
-          {/* Fan stack */}
-          <div className="relative mx-auto h-[440px] w-full max-w-md flex items-end justify-center">
-            {FLYER_CARD_IDS.map((cardId, i) => {
-              const claimedBy = claims[cardId];
-              const cardBurned = burned[cardId] ?? isDemoCardBurned(cardId);
+        {canClose && (
+          <button
+            type="button"
+            onClick={() => onOpenChange(false)}
+            aria-label="Close"
+            className="absolute top-4 right-4 p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
+      </div>
 
-              // Determine sealed/opened state based on mode
-              let sealed: boolean;
-              let defaultOpened: boolean;
-              let onBurn: (() => void) | undefined;
-              let onClickWhenSealed: (() => void) | undefined;
-
-              if (mode === "receiver") {
-                const isViewerCard = claimedBy === viewer?.user_id;
-                sealed = !isViewerCard || !cardBurned;
-                defaultOpened = isViewerCard && cardBurned;
-                onBurn = isViewerCard
-                  ? () => {
-                      setJustBurnedId(cardId);
-                      markDemoCardBurned(cardId);
-                    }
-                  : undefined;
-
-                // Allow viewer to claim an unclaimed pack (first-come, first-served)
-                if (!claimedBy && !viewerClaimedCard && viewer) {
-                  onClickWhenSealed = () => {
-                    const ok = claimDemoCard(cardId, viewer.user_id);
-                    if (!ok) toast.error("That pack just got claimed.");
-                  };
+      {/* Stack stage */}
+      <div className="flex-1 min-h-0 overflow-y-auto px-4">
+        <div className="relative mx-auto w-full max-w-md flex items-center justify-center py-6">
+          <StackedCards
+            mode={mode}
+            viewerUserId={viewer?.user_id}
+            claims={claims}
+            burned={burned}
+            selectedCardId={selectedCardId}
+            justBurnedId={justBurnedId}
+            viewerClaimedCard={viewerClaimedCard}
+            onSelect={(cardId) => {
+              if (mode !== "receiver" || !viewer) return;
+              if (viewerHasBurned) return;
+              // If viewer already claimed a card, only that card is selectable
+              if (viewerClaimedCard && cardId !== viewerClaimedCard) return;
+              // First selection: claim it
+              if (!viewerClaimedCard) {
+                const ok = claimDemoCard(cardId, viewer.user_id);
+                if (!ok) {
+                  toast.error("That pack just got claimed.");
+                  return;
                 }
-              } else {
-                // broadcast: cards reveal only after their owner burned them
-                sealed = !claimedBy || !cardBurned;
-                defaultOpened = !!claimedBy && cardBurned;
               }
-
-              const t = FAN_TRANSFORMS[i];
-              const ownerName = claimedBy
-                ? winners.find((w) => w.user_id === claimedBy)?.name
-                : null;
-              const isViewerCard = mode === "receiver" && claimedBy === viewer?.user_id;
-
-              // In receiver mode, the viewer's burned card stays enlarged & centered;
-              // the other 3 cards stay hidden so the reveal owns the stage.
-              const isRevealed =
-                mode === "receiver" && isViewerCard && (cardBurned || justBurnedId === cardId);
-              const someoneRevealed = mode === "receiver" && (
-                justBurnedId !== null ||
-                FLYER_CARD_IDS.some(
-                  (id) => claims[id] === viewer?.user_id && (burned[id] ?? isDemoCardBurned(id)),
-                )
-              );
-              const isHidden = someoneRevealed && !isRevealed;
-
-              const transform = isRevealed
-                ? `translateX(0px) rotate(0deg)`
-                : `translateX(${t.x}px) rotate(${t.rotate}deg)`;
-
-              return (
-                <div
-                  key={cardId}
-                  className={`absolute bottom-0 origin-bottom transition-all duration-500 ease-out ${
-                    isRevealed ? "w-full max-w-sm" : "w-[55%] max-w-[200px] hover:-translate-y-2"
-                  }`}
-                  style={{
-                    transform,
-                    zIndex: isRevealed ? 100 : i + 1,
-                    opacity: isHidden ? 0 : 1,
-                    pointerEvents: isHidden ? "none" : undefined,
-                  }}
-                  onClick={onClickWhenSealed}
-                  role={onClickWhenSealed ? "button" : undefined}
-                >
-                  <FlyerCardForId
-                    cardId={cardId}
-                    sealed={sealed}
-                    defaultOpened={defaultOpened}
-                    hideHeading
-                    onBurn={onBurn}
-                  />
-                  {ownerName && !isRevealed && (
-                    <p className="mt-1 text-center font-body text-[10px] text-muted-foreground truncate">
-                      {ownerName}
-                      {isViewerCard ? " (you)" : ""}
-                    </p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          <p className="text-center font-body text-xs text-muted-foreground mt-4 max-w-md mx-auto">
-            {subline}
-          </p>
+              setSelectedCardId(cardId);
+            }}
+            onBurn={(cardId) => {
+              setJustBurnedId(cardId);
+              markDemoCardBurned(cardId);
+            }}
+          />
         </div>
-      </DrawerContent>
-    </Drawer>
+      </div>
+
+      {/* Footer */}
+      <div className="shrink-0 px-4 pb-8 pt-2 flex flex-col items-center gap-4">
+        <p className="text-center font-body text-xs sm:text-sm text-muted-foreground max-w-md">
+          {subline}
+        </p>
+
+        {viewerHasBurned && (
+          <button
+            type="button"
+            onClick={() => onOpenChange(false)}
+            className="font-display text-[11px] sm:text-xs tracking-[0.3em] text-white bg-black/70 backdrop-blur-sm px-5 py-2.5 rounded-full border border-white/25 hover:bg-black transition-colors animate-fade-in"
+          >
+            NICE, GOT IT
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+interface StackedCardsProps {
+  mode: "receiver" | "broadcast";
+  viewerUserId?: string;
+  claims: Partial<Record<FlyerCardId, string>>;
+  burned: Record<string, boolean>;
+  selectedCardId: FlyerCardId | null;
+  justBurnedId: FlyerCardId | null;
+  viewerClaimedCard: FlyerCardId | null;
+  onSelect: (cardId: FlyerCardId) => void;
+  onBurn: (cardId: FlyerCardId) => void;
+}
+
+const StackedCards = ({
+  mode,
+  viewerUserId,
+  claims,
+  burned,
+  selectedCardId,
+  justBurnedId,
+  viewerClaimedCard,
+  onSelect,
+  onBurn,
+}: StackedCardsProps) => {
+  // Card width — sized so 4 stacked cards (with offsets) fit comfortably on mobile
+  const cardWidthClass = "w-[70vw] max-w-[260px]";
+
+  return (
+    <div
+      className="relative"
+      style={{
+        width: `calc(min(70vw, 260px) + ${STACK_OFFSET_X * (FLYER_CARD_IDS.length - 1)}px)`,
+        height: `calc(min(70vw, 260px) * (4 / 3) + ${STACK_OFFSET_Y * (FLYER_CARD_IDS.length - 1)}px)`,
+      }}
+    >
+      {FLYER_CARD_IDS.map((cardId, i) => {
+        const claimedBy = claims[cardId];
+        const cardBurned = burned[cardId] ?? isDemoCardBurned(cardId);
+        const isViewerCard = mode === "receiver" && claimedBy === viewerUserId;
+        const isSelected = selectedCardId === cardId;
+
+        // Sealed/opened state
+        let sealed: boolean;
+        let defaultOpened: boolean;
+        let burnHandler: (() => void) | undefined;
+
+        if (mode === "receiver") {
+          sealed = !isViewerCard || !cardBurned;
+          defaultOpened = isViewerCard && cardBurned;
+          // Only the selected viewer-card can be burned
+          burnHandler = isViewerCard && isSelected ? () => onBurn(cardId) : undefined;
+        } else {
+          sealed = !claimedBy || !cardBurned;
+          defaultOpened = !!claimedBy && cardBurned;
+        }
+
+        // Position
+        const baseX = i * STACK_OFFSET_X;
+        const baseY = i * STACK_OFFSET_Y;
+        let translateX = baseX;
+        let translateY = baseY;
+        let zIndex = i + 1;
+        let opacity = 1;
+        let scale = 1;
+
+        if (selectedCardId) {
+          if (isSelected) {
+            // Center it within the stack container
+            const totalW = STACK_OFFSET_X * (FLYER_CARD_IDS.length - 1);
+            const totalH = STACK_OFFSET_Y * (FLYER_CARD_IDS.length - 1);
+            translateX = totalW / 2;
+            translateY = totalH / 2;
+            zIndex = 100;
+            scale = 1.04;
+          } else {
+            // Push back & dim
+            opacity = 0.45;
+          }
+        }
+
+        // After burn the selected card stays front; others stay dim
+        const ownerName = claimedBy
+          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            undefined
+          : null;
+        void ownerName;
+
+        // Click logic
+        const handleClick = () => {
+          if (mode !== "receiver") return;
+          // If this is selected & it's the viewer's card & not yet burned → let the
+          // sealed-pack inner button handle the burn (do nothing here).
+          if (isSelected && isViewerCard && !cardBurned) return;
+          // If selected card belongs to someone else, no-op.
+          if (isSelected && !isViewerCard) return;
+          // Otherwise: try to select
+          if (viewerClaimedCard && cardId !== viewerClaimedCard) return;
+          onSelect(cardId);
+        };
+
+        // Disable pointer events on the underlying pack wrapper unless this card
+        // is selected & burnable (so taps on stacked-but-not-front cards reach
+        // our wrapper div and call handleClick instead of triggering burn).
+        const innerInteractive = isSelected && isViewerCard && !cardBurned;
+
+        return (
+          <div
+            key={cardId}
+            onClick={handleClick}
+            role={mode === "receiver" ? "button" : undefined}
+            className={`absolute top-0 left-0 ${cardWidthClass} cursor-pointer transition-all duration-500 ease-out`}
+            style={{
+              transform: `translate(${translateX}px, ${translateY}px) scale(${scale})`,
+              zIndex,
+              opacity,
+              pointerEvents: mode === "broadcast" || (selectedCardId && !isSelected) ? "none" : "auto",
+            }}
+          >
+            <div
+              style={{
+                pointerEvents: innerInteractive ? "auto" : "none",
+              }}
+              // Wrapper to gate inner sealed-pack click. We put pointer-events:none on
+              // the inner wrapper so taps go to the outer div (handleClick) UNLESS
+              // the card is selected and ready to burn.
+            >
+              <FlyerCardForId
+                cardId={cardId}
+                sealed={sealed}
+                defaultOpened={defaultOpened}
+                hideHeading
+                onBurn={burnHandler}
+              />
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 };
 

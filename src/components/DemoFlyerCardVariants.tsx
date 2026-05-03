@@ -412,9 +412,9 @@ const DAVIS_PRESET: FlyerPreset = {
 
 const PRESETS: Record<FlyerSlug, { preset: FlyerPreset; toppsStyle: boolean }> = {
   chapman: { preset: CHAPMAN_PRESET, toppsStyle: false },
-  paxson: { preset: PAXSON_PRESET, toppsStyle: true },
+  paxson: { preset: { ...PAXSON_PRESET, sealedConfig: CHAPMAN_PRESET.sealedConfig }, toppsStyle: false },
   miller: { preset: MILLER_PRESET, toppsStyle: false },
-  davis: { preset: DAVIS_PRESET, toppsStyle: true },
+  davis: { preset: { ...DAVIS_PRESET, sealedConfig: CHAPMAN_PRESET.sealedConfig }, toppsStyle: false },
 };
 
 export interface FlyerCardForIdProps {

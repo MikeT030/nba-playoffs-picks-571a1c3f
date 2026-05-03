@@ -131,7 +131,7 @@ function computeScoreboard(
 }
 
 const getRankIcon = (index: number) => {
-  return <span className="text-muted-foreground font-body text-sm w-[18px] text-center inline-block">{index + 1}</span>;
+  return <span className="text-muted-foreground font-body text-base w-[18px] text-center inline-block">{index + 1}</span>;
 };
 
 // Build a label for each series like "OKC-HOU"
@@ -378,7 +378,7 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
                             )}
                           </span>
                           {(score || broken) && (
-                            <span className={`font-display text-sm ${effectiveColorCls}`}>
+                            <span className={`font-display text-base ${effectiveColorCls}`}>
                               {effectiveTotal ?? 0}
                               {!broken && score?.championBonus && (
                                 <span className="ml-0.5 text-[9px] font-body text-amber-300/80 align-top">

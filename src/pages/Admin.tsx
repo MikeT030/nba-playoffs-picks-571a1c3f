@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/accordion";
 import { toast } from "sonner";
 import AdminSeriesConfirmPanel from "@/components/AdminSeriesConfirmPanel";
+import AdminFlyerAwardPanel from "@/components/AdminFlyerAwardPanel";
 import HeroBannerMinimal from "@/components/HeroBannerMinimal";
 import DemoAllMatchupsInnovation from "@/components/DemoAllMatchupsInnovation";
 import DemoAdvancedRoundView from "@/components/DemoAdvancedRoundView";
@@ -106,6 +107,17 @@ const Admin = () => {
         </p>
 
         <AdminSeriesConfirmPanel />
+
+        <Accordion type="single" collapsible className="bg-[#181C23] rounded-lg px-5">
+          <AccordionItem value="flyer-award" className="border-b-0">
+            <AccordionTrigger className="hover:no-underline">
+              <h2 className="font-display text-lg tracking-wider">FLYER — THE SHOT · AWARD CARDS</h2>
+            </AccordionTrigger>
+            <AccordionContent>
+              <AdminFlyerAwardPanel />
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
 
         <Accordion type="multiple" className="space-y-3">
           {[

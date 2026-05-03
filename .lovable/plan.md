@@ -1,46 +1,56 @@
-## Problem
+# Admin Panel: Award "Flyer – The Shot" Cards
 
-In the bracket, Round 2+ matchup cards show the user's *predicted* opponent rather than the *actual* one once a parent series has concluded. Example: bracket displays OKC vs HOU (user's R1 pick) even though the real R2 matchup is OKC vs LAL.
+Add an admin-only panel on `/admin` that computes current standings and lets you assign each of the 4 Flyer cards (Chapman, Paxson, Miller, Davis) to a user — defaulting to the current top 4.
 
-## Root cause
+## What the user sees
 
-`resolveSeriesTeams` in `src/data/playoffsData.ts` always traverses the user's parent picks to fill a child series' slots, overriding the slots that `resolveBracketWithApiGames` already filled with the *real* advancing team.
+A new accordion section on the Admin page titled **"Flyer – The Shot · Award Cards"**, containing:
 
-Per-series flow today:
-1. `useBracketData` runs `resolveBracketWithApiGames`, which writes the real `topTeam`/`bottomTeam` into a series once its parent series is decided (4 wins recorded).
-2. `PlayoffBracket.resolve()` then calls `resolveSeriesTeams`, which unconditionally replaces those slots with `picks[parentSeriesId]` (the user's predicted winner).
+1. **Live standings table** — top 10 users with current points (computed with the same scoring logic used on the Leaderboard).
+2. **4 assignment rows**, one per card:
+   - Card name + small preview thumbnail (Chapman / Paxson / Miller / Davis)
+   - A user dropdown, pre-selected with the current top-4 user for that slot
+   - Current assignee badge (if already assigned)
+3. A **"Save assignments"** button that persists all four at once, plus a **"Reset to current top 4"** button.
+4. A confirmation toast on save. Re-assigning a card to a different user replaces the previous holder.
 
-So the API-resolved truth is silently overwritten by the user's pick.
+Tie handling: when users are tied (e.g. Simon and Hannes L both at 10), the dropdown shows all tied users so you choose; the default order falls back to earliest pick `created_at`.
 
-## Fix
+## Data model
 
-In `resolveSeriesTeams`, only fall back to the parent-pick traversal when the slot is *not* already filled by the bracket data. Treat play-in placeholders (`PIE7`/`PIW7`/`PIE8`/`PIW8` via `isPlayInPlaceholder`) as "not filled" so Round 1 TBD behavior is preserved.
-
-Pseudocode:
+New table `flyer_card_assignments`:
 
 ```text
-topTeam = series.topTeam
-if topTeam is missing OR isPlayInPlaceholder(topTeam.abbreviation):
-    use existing parent-pick traversal to fill it
-# same for bottomTeam
+card_id    text   primary key   -- 'chapman' | 'paxson' | 'miller' | 'davis'
+user_id    uuid   not null
+assigned_at timestamptz default now()
+assigned_by uuid                 -- admin who assigned
 ```
 
-This keeps the current behavior for:
-- Round 1 (slots are always pre-filled in the static bracket; no parent traversal happens anyway).
-- Pre-decision rounds where the parent series isn't over yet (slot stays undefined → traversal still uses the user's pick to preview).
+- RLS: SELECT public (so the holder can see their card later); INSERT/UPDATE/DELETE restricted to `has_role(auth.uid(), 'admin')`.
+- `card_id` as PK guarantees only one holder per card. Reassigning = upsert on `card_id`.
+- Kept separate from `player_card_assignments` so the existing roulette flow (one random "Career Lowlight" per user, queried with `.maybeSingle()`) is untouched.
 
-And fixes the case where the parent is decided: the real advancing team wins.
+## Implementation
 
-## Files to change
+1. **Migration** — create `flyer_card_assignments` with the schema + RLS policies above.
+2. **Hook** `useFlyerAssignments` — fetch all 4 rows, expose `{ assignments, upsert(cardId, userId), loading }`.
+3. **Hook** `useStandings` — batched query of all `picks` + `series_results` + `profiles`, runs `totalUserPoints` from `src/lib/pickScoring.ts` per user, returns sorted `[{ user_id, display_name, points }]`. Reused by the panel (and available for future use on the Scoreboard if we want to dedupe later).
+4. **Component** `AdminFlyerAwardPanel.tsx`:
+   - Renders standings table + 4 assignment rows
+   - Card metadata (id, label, thumb) hardcoded from the existing 4 `DemoFlyerCard*` exports
+   - "Save" calls `upsert` for each changed row
+5. **Admin.tsx** — add a new accordion item above the demo previews section that mounts `AdminFlyerAwardPanel`.
 
-- `src/data/playoffsData.ts` — adjust `resolveSeriesTeams` as above (both top and bottom branches).
+## Out of scope (can follow up)
 
-## Side effects to verify
+- Showing the awarded card to the recipient on their profile / homepage.
+- Notifying the recipient.
+- Auto-recomputing assignments as more series finish (this panel stays manual; you click "Reset to current top 4" whenever you want to re-snap).
 
-- `MyPicks.tsx` builds `seriesScores` keyed off `resolveSeriesTeams(...)`. After the fix, the resolved teams will be the *actual* matchup, so `seriesScores` will correctly reflect the actual series score (e.g. OKC-LAL), not the predicted matchup.
-- `MatchCard`'s "Your Pick: X in N (vs. OPP)" already compares against `getAssumedOpponentAbbr` and only shows the suffix when the actual matchup differs — unaffected.
-- Bracket coloring (winner/loser highlight, "+points" tag) keys off `actualWinners[id]` and the bet's `winner` abbreviation, not the slot teams — unaffected.
+## Current top 4 (for reference, will be the initial defaults)
 
-## Out of scope
-
-No UI changes, no data-model changes, no changes to Round 1 logic.
+1. Simon — 10
+2. Hannes L — 10
+3. Larsn — 8
+4. Axlzander — 8

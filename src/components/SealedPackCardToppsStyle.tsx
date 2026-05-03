@@ -14,6 +14,8 @@ interface SealedPackCardToppsStyleProps {
   picturesLabel?: string;
   /** Top-left badge, e.g. "PREMIUM QUALITY". */
   qualityLabel?: string;
+  defaultOpened?: boolean;
+  onOpen?: () => void;
 }
 
 /**
@@ -29,8 +31,15 @@ const SealedPackCardToppsStyle = ({
   seriesLabel = "SERIES 1",
   picturesLabel = "15 PICTURE CARDS",
   qualityLabel = "PREMIUM QUALITY",
+  defaultOpened = false,
+  onOpen,
 }: SealedPackCardToppsStyleProps) => {
-  const [opened, setOpened] = useState(false);
+  const [opened, setOpened] = useState(defaultOpened);
+  const handleOpen = () => {
+    if (opened) return;
+    setOpened(true);
+    onOpen?.();
+  };
 
   return (
     <div className={`relative w-full ${aspectClass} select-none`}>
@@ -38,7 +47,7 @@ const SealedPackCardToppsStyle = ({
 
       <button
         type="button"
-        onClick={() => !opened && setOpened(true)}
+        onClick={handleOpen}
         aria-label={opened ? "Pack opened" : "Tap to burn the pack open"}
         disabled={opened}
         className={`absolute inset-0 ${opened ? "pointer-events-none" : "cursor-pointer"}`}

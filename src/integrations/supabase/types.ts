@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      flyer_card_assignments: {
+        Row: {
+          assigned_at: string
+          assigned_by: string | null
+          card_id: string
+          user_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_by?: string | null
+          card_id: string
+          user_id: string
+        }
+        Update: {
+          assigned_at?: string
+          assigned_by?: string | null
+          card_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       picks: {
         Row: {
           created_at: string

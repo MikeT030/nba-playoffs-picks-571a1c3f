@@ -88,7 +88,7 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
   const headline =
     mode === "receiver" ? (
       <>
-        <span className="text-primary">{viewer?.name ?? "You"}</span>,
+        <span className="text-primary font-bold">{viewer?.name ?? "You"}</span>,
         <br />
         you're worthy of receiving 1 of 4
         <br />

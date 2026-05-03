@@ -37,6 +37,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
   const { user } = useAuth();
   const { data: bracketData } = useBracketData();
   const { data: allResults } = useAllSeriesResults();
+  const { data: currentUserAllPicks } = useAllUserPicks();
   const { data: seriesGames } = useSeriesGames(
     match?.id,
     match?.homeTeam.abbreviation,

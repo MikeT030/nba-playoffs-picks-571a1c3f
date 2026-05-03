@@ -319,11 +319,7 @@ const FullPackFace = ({
 
       {/* Basketball — kept but framed by Memphis shapes */}
       <div className="absolute top-[34%] left-1/2 -translate-x-1/2 w-[58%] aspect-square z-0">
-        {/* squiggle accent behind ball */}
-        <svg viewBox="0 0 100 100" className="absolute -inset-4 w-[calc(100%+2rem)] h-[calc(100%+2rem)] pointer-events-none" aria-hidden>
-          <path d="M 5 20 Q 15 5 25 20 T 45 20" fill="none" stroke={PINK} strokeWidth="2.5" strokeLinecap="round" />
-          <path d="M 60 90 Q 70 75 80 90 T 100 90" fill="none" stroke={YELLOW} strokeWidth="2.5" strokeLinecap="round" />
-        </svg>
+        {/* squiggle accents removed */}
         <div
           className="absolute inset-0 rounded-full"
           style={{

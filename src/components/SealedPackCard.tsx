@@ -267,14 +267,15 @@ const FullPackFace = ({
   const YELLOW = "#ffd23f";
   const CORAL = "#ff7a5c";
   const LILAC = "#b39ddb";
-  const BLUE = "#1e2761"; // lighter navy background (Memphis hallmark)
+  const BLUE = "#c0c4cc"; // silver base (kept var name for downstream refs)
   const INK = "#0f0f1a";
 
   return (
     <div
       className="relative w-full h-full overflow-hidden"
       style={{
-        background: BLUE,
+        background:
+          "linear-gradient(135deg, #e8eaed 0%, #b8bcc4 25%, #d8dce2 50%, #9aa0aa 75%, #cfd3d9 100%)",
       }}
     >
       {/* Memphis confetti pattern: squiggles, triangles, dots, zigzags */}

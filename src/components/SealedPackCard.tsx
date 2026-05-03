@@ -524,6 +524,8 @@ const MemphisPattern = () => {
     { name: "court", color: CYAN, top: "76%", left: "78%", size: "14%", rotate: 8 },
   ];
 
+  return null;
+
   return (
     <div className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden>
       {icons.map((ic, i) => (

@@ -320,7 +320,7 @@ const PAXSON_PRESET: FlyerPreset = {
   homeLogo: PHX_LOGO,
   homeAlt: "PHX",
   era: "1993",
-  matchup: "Supreme Finals",
+  matchup: "Finals",
   game: "Game 6",
   firstName: "JOHN",
   lastName: "PAXSON",
@@ -354,7 +354,7 @@ const MILLER_PRESET: FlyerPreset = {
   homeLogo: MIA_LOGO,
   homeAlt: "MIA",
   era: "2012",
-  matchup: "Supreme Finals",
+  matchup: "Finals",
   game: "Game 5",
   firstName: "MIKE",
   lastName: "MILLER",
@@ -512,7 +512,7 @@ export const DemoFlyerCardV4 = () => {
             </div>
 
             <p className="font-body text-[10px] uppercase tracking-wider text-muted-foreground">
-              1997 Supreme · Western First Round
+              1997 · Western First Round
             </p>
 
             <p className="font-body text-xs leading-snug text-[#ededed]/90">

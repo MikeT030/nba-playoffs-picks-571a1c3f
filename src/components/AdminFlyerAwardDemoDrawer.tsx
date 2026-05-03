@@ -274,15 +274,17 @@ const StackedCards = ({
         void ownerName;
 
         // Click logic
-        const handleClick = () => {
+        const handleClick = (e: React.MouseEvent) => {
           if (mode !== "receiver") return;
-          // If this is selected & it's the viewer's card & not yet burned → let the
-          // sealed-pack inner button handle the burn (do nothing here).
-          if (isSelected && isViewerCard && !cardBurned) return;
-          // If selected card belongs to someone else, no-op.
-          if (isSelected && !isViewerCard) return;
+          // Tapping the selected card shouldn't bubble to the layer (which would
+          // deselect it). The inner sealed-pack handles the burn itself.
+          if (isSelected) {
+            e.stopPropagation();
+            return;
+          }
           // Otherwise: try to select
           if (viewerClaimedCard && cardId !== viewerClaimedCard) return;
+          e.stopPropagation();
           onSelect(cardId);
         };
 

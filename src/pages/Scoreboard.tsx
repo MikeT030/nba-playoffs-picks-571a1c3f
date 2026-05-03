@@ -378,7 +378,7 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
                             )}
                           </span>
                           {(score || broken) && (
-                            <span className={`font-display text-sm ${effectiveColorCls}`}>
+                            <span className={`font-display text-base ${effectiveColorCls}`}>
                               {effectiveTotal ?? 0}
                               {!broken && score?.championBonus && (
                                 <span className="ml-0.5 text-[9px] font-body text-amber-300/80 align-top">

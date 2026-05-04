@@ -344,8 +344,21 @@ const FullPackFace = ({
         </div>
       </div>
 
-      {/* Bottom-right: card count above logo */}
-      <div className="absolute bottom-[7%] right-[5%] z-10 flex flex-col items-center gap-2">
+      {/* Bottom-right: logo */}
+      <div className="absolute bottom-[7%] right-[5%] z-10 flex flex-col items-center">
+        <img
+          src={flyerCouchClubLogo}
+          alt={topBanner}
+          className="h-auto"
+          style={{
+            width: "clamp(48px, 18cqw, 110px)",
+            filter: `drop-shadow(2px 2px 0 ${PINK}) drop-shadow(0 2px 4px rgba(0,0,0,0.4))`,
+          }}
+        />
+      </div>
+
+      {/* Card count — sits above the logo, shifted up 40px */}
+      <div className="absolute right-[5%] z-10" style={{ bottom: "calc(7% + 40px)" }}>
         <div
           className="font-display italic text-center leading-none px-2 py-1"
           style={{
@@ -359,16 +372,8 @@ const FullPackFace = ({
         >
           1 CARD
         </div>
-        <img
-          src={flyerCouchClubLogo}
-          alt={topBanner}
-          className="h-auto"
-          style={{
-            width: "clamp(48px, 18cqw, 110px)",
-            filter: `drop-shadow(2px 2px 0 ${PINK}) drop-shadow(0 2px 4px rgba(0,0,0,0.4))`,
-          }}
-        />
       </div>
+
 
 
       {/* Bottom serrated edge */}

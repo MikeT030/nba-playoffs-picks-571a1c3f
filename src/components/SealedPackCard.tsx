@@ -373,17 +373,20 @@ const FullPackFace = ({
       {/* Card count — sits above the logo, shifted up 40px */}
       <div className="absolute right-[5%] z-10" style={{ bottom: "calc(7% + 100px)" }}>
         <div
-          className="font-display italic text-center leading-none px-2 py-1"
+          className="text-center font-display italic tracking-[0.14em] px-3 py-1.5"
           style={{
-            color: YELLOW,
-            WebkitTextStroke: `1px ${INK}`,
-            textShadow: `2px 2px 0 ${PINK}, 3px 3px 0 ${INK}`,
-            fontSize: "clamp(14px, 4.5cqw, 26px)",
-            fontWeight: 900,
-            transform: "skew(-6deg)",
+            background: LILAC,
+            color: INK,
+            fontSize: "clamp(12px, 3.6cqw, 22px)",
+            transform: "skew(-8deg)",
+            fontWeight: 800,
+            border: `2.5px solid ${INK}`,
+            boxShadow: `4px 4px 0 ${YELLOW}`,
           }}
         >
-          1 CARD
+          <span className="inline-block" style={{ transform: "skew(8deg)" }}>
+            1 CARD
+          </span>
         </div>
       </div>
 

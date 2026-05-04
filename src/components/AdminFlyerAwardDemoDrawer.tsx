@@ -35,6 +35,7 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
   const { winners, burned, claims } = useDemoFlyerState();
   const [justBurnedId, setJustBurnedId] = useState<FlyerCardId | null>(null);
   const [selectedCardId, setSelectedCardId] = useState<FlyerCardId | null>(null);
+  const [packVariant, setPackVariant] = useState<"v3" | "v4">("v3");
 
   const viewer = winners.find((w) => w.user_id === viewerUserId) ?? winners[0];
   const viewerClaimedCard: FlyerCardId | null = useMemo(

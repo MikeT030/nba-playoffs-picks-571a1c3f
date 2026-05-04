@@ -130,6 +130,7 @@ interface FlyerCardV3Props {
     midLine?: string;
     tierLine?: string[];
     seriesLabel?: string;
+    variant?: "v3" | "v4";
   };
   /** Use the alternate Topps-style wax pack wrapper. */
   sealedToppsStyle?: boolean;

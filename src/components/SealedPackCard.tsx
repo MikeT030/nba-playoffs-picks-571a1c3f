@@ -295,31 +295,8 @@ const FullPackFace = ({
         />
       </div>
 
-      {/* Big title — Memphis stacked shadow, words stacked into a block */}
-      <div className="absolute left-0 right-0 text-center px-2 z-10" style={{ top: "55.75%", transform: "translateY(-50%)" }}>
-        <h1
-          className="font-display italic leading-[0.95] tracking-tight flex flex-col items-center"
-          style={{
-            fontSize: "clamp(24px, 10.5cqw, 62px)",
-            color: YELLOW,
-            WebkitTextStroke: `1px ${INK}`,
-            textShadow: `2px 2px 0 ${PINK}, 4px 4px 0 ${CYAN}, 6px 6px 0 ${INK}`,
-            transform: "skew(-6deg)",
-          }}
-        >
-          {title.split(" ").map((word, i) => (
-            <span key={i} className="block">{word}</span>
-          ))}
-          <span className="block">Premium</span>
-          <span className="block">Cards</span>
-        </h1>
-      </div>
-
-      {/* Year ribbon hidden */}
-
       {/* Basketball — kept but framed by Memphis shapes */}
-      <div className="absolute top-[34%] left-1/2 -translate-x-1/2 w-[58%] aspect-square z-0">
-        {/* squiggle accents removed */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] w-[58%] aspect-square z-0">
         <div
           className="absolute inset-0 rounded-full"
           style={{
@@ -337,8 +314,26 @@ const FullPackFace = ({
             <path d="M 88 18 Q 50 50 88 82" />
           </g>
         </svg>
+      </div>
 
-        {/* Mid label and tier panel hidden */}
+      {/* Big title — Memphis stacked shadow, words stacked into a block */}
+      <div className="absolute left-0 right-0 text-center px-2 z-10" style={{ top: "72%", transform: "translateY(-50%)" }}>
+        <h1
+          className="font-display italic leading-[0.95] tracking-tight flex flex-col items-center"
+          style={{
+            fontSize: "clamp(24px, 10.5cqw, 62px)",
+            color: YELLOW,
+            WebkitTextStroke: `1px ${INK}`,
+            textShadow: `2px 2px 0 ${PINK}, 4px 4px 0 ${CYAN}, 6px 6px 0 ${INK}`,
+            transform: "skew(-6deg)",
+          }}
+        >
+          {title.split(" ").map((word, i) => (
+            <span key={i} className="block">{word}</span>
+          ))}
+          <span className="block">Premium</span>
+          <span className="block">Cards</span>
+        </h1>
       </div>
 
       {/* (Memphis triangle/dot accents removed — replaced by basketball line-art icons) */}

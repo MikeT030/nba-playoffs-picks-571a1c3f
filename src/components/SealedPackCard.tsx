@@ -296,7 +296,7 @@ const FullPackFace = ({
       </div>
 
       {/* Big title — Memphis stacked shadow, words stacked into a block */}
-      <div className="absolute left-0 right-0 text-center px-2 z-10" style={{ top: "55.75%", transform: "translateY(-50%)" }}>
+      <div className="absolute left-0 right-0 text-center px-2 z-10" style={{ top: "50%", transform: "translateY(-50%)" }}>
         <h1
           className="font-display italic leading-[0.95] tracking-tight flex flex-col items-center"
           style={{
@@ -318,7 +318,8 @@ const FullPackFace = ({
       {/* Year ribbon hidden */}
 
       {/* Basketball — kept but framed by Memphis shapes */}
-      <div className="absolute top-[34%] left-1/2 -translate-x-1/2 w-[58%] aspect-square z-0">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[58%] aspect-square z-0">
+
         {/* squiggle accents removed */}
         <div
           className="absolute inset-0 rounded-full"

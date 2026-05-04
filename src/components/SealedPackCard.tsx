@@ -284,7 +284,7 @@ const FullPackFace = ({
       <SerratedEdge position="top" />
 
       {/* Big title — Memphis stacked shadow, words stacked into a block */}
-      <div className="absolute left-0 right-0 text-center px-2 z-10" style={{ top: "calc(50% - 40px)", transform: "translateY(-50%)" }}>
+      <div className="absolute left-0 right-0 text-center px-2 z-10" style={{ top: "5%" }}>
         <h1
           className="font-display italic leading-[0.95] tracking-tight flex flex-col items-center"
           style={{
@@ -304,7 +304,7 @@ const FullPackFace = ({
       </div>
 
       {/* Basketball — kept but framed by Memphis shapes */}
-      <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-[46.4%] aspect-square z-0" style={{ top: "calc(50% - 40px)" }}>
+      <div className="absolute left-1/2 -translate-x-1/2 w-[46.4%] aspect-square z-0" style={{ top: "5%" }}>
         <div
           className="absolute inset-0 rounded-full"
           style={{

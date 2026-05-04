@@ -1,55 +1,62 @@
-## Add a v4 pack layout (hero dunker), switchable via dot nav
+## Goal
 
-### What you'll see
-A new sealed-pack design joins the existing one. It uses the layout from your reference: a large basketball player silhouette dunking on a hoop on the **left**, a centered headline block on the **upper-right**, a "1 CARD" callout on the **mid-right**, the **FLYER Couch Crew** logo bottom-right, and the existing pink "Sizzling hot 2026 series" banner on the bottom-left.
+Replace the bottom drawer used to award FLYER – The Shot player cards with a full-screen overlay that mimics the reference image: 4 cards at full size, stacked and overlapping (left-to-right, each one nudged down/right), with the rightmost card on top.
 
-The background keeps everything you already have: navy fill, the tiled skewed primary-color "FLYER" watermark, top/bottom serrated edges, the holo shine, the burn-open animation, and the same Memphis-style title shadows + skewed banner styling.
+## Behavior
 
-A row of 2 big dots sits just above the pack on the admin demo drawer, letting you flip between **v3 (current)** and **v4 (new)** instantly. The choice persists per session.
+**Receiver mode**
+1. Layer opens full-screen. No close (X) button is visible yet.
+2. Cards are shown at their natural size, stacked/overlapping like the reference image.
+3. First tap on any card: the card lifts up, animates to the center/front, becomes the topmost card overlapping the rest. It is now "selected" (claimed in `flyerDemo` for first-come, first-served).
+4. Second tap on the now-front (selected) card: triggers the existing `onBurn` burn animation. Sealed packs underneath cannot be tapped while another is selected (only the front card is interactive for burning).
+5. After the burn animation completes, a button styled like the existing "TAP TO BURN" pill appears beneath/over the card with the label **"Nice, got it"**. Tapping it closes the layer.
+6. A close `X` (top-right) becomes visible only after the user has burned their card. So the user has two ways to close after burning: the pill button or the X.
+7. Before the user has burned a card, the layer cannot be closed (Escape, overlay click, swipe-down all blocked).
 
-### Layout sketch
+**Broadcast mode**
+- Same full-screen layer + stacked layout, but cards are read-only (revealing only the ones whose owners burned them).
+- Close X is always visible in broadcast mode (admin needs to dismiss it).
+
+## Layout (reference image)
 
 ```text
-┌──────────────────────────────────┐
-│  ░░ tiled FLYER watermark ░░     │
-│                                   │
-│         ┌──────────┐              │
-│         │ HEADLINE │              │
-│   🏀    │  block   │              │
-│  ╱│╲    └──────────┘              │
-│ hoop+                             │
-│ dunker          ┌──────┐          │
-│ silhouette      │1 CARD│          │
-│                 └──────┘          │
-│                                   │
-│  ┌──────────────┐  ┌───────┐      │
-│  │Sizzling hot..│  │ LOGO  │      │
-│  └──────────────┘  └───────┘      │
-└──────────────────────────────────┘
+   ┌──┐
+   │  │┌──┐
+   │  ││  │┌──┐
+   │  ││  ││  │┌──┐
+   │  ││  ││  ││  │  ← front (rightmost, fully visible)
+   └──┘└──┘└──┘└──┘
 ```
 
-### Technical changes
+- Each card uses its full intrinsic size (the same `FlyerCardForId` rendering used elsewhere).
+- Cards are absolutely positioned, offset by `~28px` right and `~22px` down per index, so each one peeks out from behind the next.
+- z-index increases left → right, so the rightmost card is on top by default.
+- When a card is "lifted", it animates to `translate(0,0)` centered, scales slightly up if needed to fit, and gets the highest z-index. The other cards slide back into the stacked layout (or fade slightly).
 
-1. **New asset**: copy `user-uploads://FLYER_Couch_Crew_logo_cut_out.png` → `src/assets/flyer-couch-crew-logo.png`.
+## Technical changes
 
-2. **`src/components/SealedPackCard.tsx`**:
-   - Add a `variant?: "v3" | "v4"` prop on `SealedPackCard` (default `"v3"`), forwarded to `FullPackFace`.
-   - Extract a new `FullPackFaceV4` component that reuses `MemphisPattern`, `SerratedEdge`, the existing color tokens (PINK/CYAN/YELLOW/INK/BLUE), and the same skewed-banner styling, but lays out:
-     - **Left**: an inline SVG silhouette of a player dunking on a hoop+backboard (single-color INK fill so it reads like the reference). Spans ~55% width, vertically centered.
-     - **Upper-right**: the existing stacked, skewed, multi-shadow `Supreme Premium Cards` headline, scoped to the right ~45% column.
-     - **Mid-right**: a chunky "1 CARD" badge in YELLOW on INK with the same stacked-shadow treatment.
-     - **Bottom-left**: the existing pink "Sizzling hot 2026 series" skewed banner, narrowed to ~52% width.
-     - **Bottom-right**: the new `flyer-couch-crew-logo.png` with the same pink drop-shadow filter currently used for the top logo.
-   - Keep the original `FullPackFace` (v3) untouched so v3 looks identical.
+**`src/components/AdminFlyerAwardDemoDrawer.tsx`** — rename usage left as-is for callers; internally swap `Drawer` for a full-screen overlay (fixed `inset-0 z-50 bg-background`, no Vaul). Replace the fan layout with the new stacked layout.
 
-3. **`src/components/DemoFlyerCardVariants.tsx`**:
-   - Extend `sealedConfig` typing with `variant?: "v3" | "v4"` and pass it through to `SealedPackCard`.
+State to add:
+- `selectedCardId: FlyerCardId | null` — which card is currently lifted to the front.
+- Keep `justBurnedId` for the burn animation; derive `hasBurned` from `claims + burned` for the viewer.
 
-4. **`src/components/AdminFlyerAwardDemoDrawer.tsx`**:
-   - Add local `useState<"v3" | "v4">("v3")` for the active pack variant.
-   - Render a centered dot-nav above the pack grid: two large (~14px) dots, active one filled with `primary`, inactive outline. Clicking a dot updates the variant.
-   - Pass `sealedConfig={{ ...preset.sealedConfig, variant }}` down through `FlyerCardForId` → `FlyerCardV3` → `SealedPackCard`. (Adds a small `sealedConfig` override on `FlyerCardForId` or inlines the variant via a new optional prop `packVariant`.)
+Click logic in receiver mode:
+- If no card selected → tapping any card calls `claimDemoCard` (if not already claimed by viewer) and sets `selectedCardId`. If already claimed by viewer, just sets `selectedCardId` to that claimed card.
+- If a card is selected and the tap is on the *same* card → trigger burn (pass `onBurn` to `FlyerCardForId` which already wires through to the sealed pack). Other cards are non-interactive while one is selected.
+- The viewer can only ever claim one card; subsequent taps on other cards are ignored once a claim exists.
 
-### Notes
-- All v3 visuals — watermark, fonts, serrated edges, shine, burn animation, banner shadow stack — are preserved verbatim in v4; only the foreground composition changes.
-- The dunker silhouette is drawn as an inline SVG (no external image) so it stays crisp at any size and inherits the INK color token.
+Close gating:
+- Replace the Drawer's built-in dismissal. Use a controlled `Dialog`-style div with `onPointerDownOutside`/`onEscapeKeyDown` blocked until `hasBurned`.
+- Render an `X` button (top-right) only when `hasBurned || mode === "broadcast"`.
+- Render the "Nice, got it" pill (reusing the same visual style as the "TAP TO BURN" pill from `SealedPackCardToppsStyle` — black/55 bg, white text, rounded-full, font-display tracking) below the burned card. Clicking it calls `onOpenChange(false)`.
+
+**Header / copy** — keep existing headline/subline text but render in a top bar inside the full-screen layer (not in the Drawer header).
+
+**No changes needed** to `flyerDemo.ts`, `DemoFlyerCardVariants.tsx`, or the sealed pack components — the burn flow stays identical.
+
+## Files touched
+
+- `src/components/AdminFlyerAwardDemoDrawer.tsx` — full rewrite of the layout & interaction model (Drawer → full-screen overlay, fan → stack, add lift/select state, gated close, "Nice, got it" button).
+
+No other files need changes; callers in `Settings.tsx` / `AdminFlyerAwardPanel.tsx` continue to use the same props (`open`, `onOpenChange`, `mode`, `viewerUserId`).

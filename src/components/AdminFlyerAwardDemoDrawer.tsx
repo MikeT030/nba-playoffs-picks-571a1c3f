@@ -35,7 +35,6 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
   const { winners, burned, claims } = useDemoFlyerState();
   const [justBurnedId, setJustBurnedId] = useState<FlyerCardId | null>(null);
   const [selectedCardId, setSelectedCardId] = useState<FlyerCardId | null>(null);
-  const [packVariant, setPackVariant] = useState<"v3" | "v4">("v3");
 
   const viewer = winners.find((w) => w.user_id === viewerUserId) ?? winners[0];
   const viewerClaimedCard: FlyerCardId | null = useMemo(
@@ -142,44 +141,6 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
         )}
       </div>
 
-      {/* Pack version dot-nav — prominent, sits above the stack */}
-      <div
-        className="shrink-0 flex items-center justify-center gap-6 py-3 border-y border-border/40 bg-background/60"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {(["v3", "v4"] as const).map((v) => {
-          const active = packVariant === v;
-          return (
-            <button
-              key={v}
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setPackVariant(v);
-              }}
-              aria-label={`Pack design ${v.toUpperCase()}`}
-              aria-pressed={active}
-              className="flex flex-col items-center gap-1.5 group"
-            >
-              <span
-                className={`block w-6 h-6 rounded-full border-2 transition-all ${
-                  active
-                    ? "bg-primary border-primary scale-110 shadow-[0_0_0_4px_hsl(var(--primary)/0.2)]"
-                    : "bg-transparent border-muted-foreground/60 group-hover:border-foreground"
-                }`}
-              />
-              <span
-                className={`font-display text-[11px] tracking-[0.3em] ${
-                  active ? "text-primary" : "text-muted-foreground"
-                }`}
-              >
-                {v.toUpperCase()}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
       {/* Stack stage */}
       <div className="flex-1 min-h-0 overflow-y-auto px-4">
         <div className="relative mx-auto w-full max-w-md flex items-center justify-center py-6">
@@ -191,7 +152,6 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
             selectedCardId={selectedCardId}
             justBurnedId={justBurnedId}
             viewerClaimedCard={viewerClaimedCard}
-            packVariant={packVariant}
             onSelect={(cardId) => {
               if (mode !== "receiver" || !viewer) return;
               if (viewerHasBurned) return;
@@ -243,7 +203,6 @@ interface StackedCardsProps {
   selectedCardId: FlyerCardId | null;
   justBurnedId: FlyerCardId | null;
   viewerClaimedCard: FlyerCardId | null;
-  packVariant?: "v3" | "v4";
   onSelect: (cardId: FlyerCardId) => void;
   onBurn: (cardId: FlyerCardId) => void;
 }
@@ -256,7 +215,6 @@ const StackedCards = ({
   selectedCardId,
   justBurnedId,
   viewerClaimedCard,
-  packVariant,
   onSelect,
   onBurn,
 }: StackedCardsProps) => {
@@ -370,7 +328,6 @@ const StackedCards = ({
                 defaultOpened={defaultOpened}
                 hideHeading
                 onBurn={burnHandler}
-                packVariant={packVariant}
               />
             </div>
           </div>

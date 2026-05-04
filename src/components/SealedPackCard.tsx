@@ -1,8 +1,5 @@
 import { useState, type ReactNode } from "react";
 import flyerCouchClubLogo from "@/assets/flyer-couch-club-logo.png";
-import flyerCouchCrewLogo from "@/assets/flyer-couch-crew-logo.png";
-
-export type SealedPackVariant = "v3" | "v4";
 
 interface SealedPackCardProps {
   children: ReactNode;
@@ -24,8 +21,6 @@ interface SealedPackCardProps {
   defaultOpened?: boolean;
   /** Fired the first time the user taps the pack to open it. */
   onOpen?: () => void;
-  /** Pack face layout variant. Default "v3". */
-  variant?: SealedPackVariant;
 }
 
 /**
@@ -45,7 +40,6 @@ const SealedPackCard = ({
   seriesLabel = "Sizzling hot 2026 series",
   defaultOpened = false,
   onOpen,
-  variant = "v3",
 }: SealedPackCardProps) => {
   const [opened, setOpened] = useState(defaultOpened);
 
@@ -74,25 +68,14 @@ const SealedPackCard = ({
           <div
             className={`absolute inset-0 sealed-pack-burn ${opened ? "is-open" : ""}`}
           >
-            {variant === "v4" ? (
-              <FullPackFaceV4
-                topBanner={topBanner}
-                title={title}
-                yearLabel={yearLabel}
-                midLine={midLine}
-                tierLine={tierLine}
-                seriesLabel={seriesLabel}
-              />
-            ) : (
-              <FullPackFace
-                topBanner={topBanner}
-                title={title}
-                yearLabel={yearLabel}
-                midLine={midLine}
-                tierLine={tierLine}
-                seriesLabel={seriesLabel}
-              />
-            )}
+            <FullPackFace
+              topBanner={topBanner}
+              title={title}
+              yearLabel={yearLabel}
+              midLine={midLine}
+              tierLine={tierLine}
+              seriesLabel={seriesLabel}
+            />
           </div>
 
           {/* Miami Vice burn edge — only visible while burning */}
@@ -334,7 +317,29 @@ const FullPackFace = ({
 
       {/* Year ribbon hidden */}
 
-      {/* Basketball icon hidden */}
+      {/* Basketball — kept but framed by Memphis shapes */}
+      <div className="absolute top-[34%] left-1/2 -translate-x-1/2 w-[58%] aspect-square z-0">
+        {/* squiggle accents removed */}
+        <div
+          className="absolute inset-0 rounded-full"
+          style={{
+            background: `radial-gradient(circle at 38% 35%, #fdba74 0%, ${CORAL} 50%, #9a3412 95%)`,
+            boxShadow: `inset -8px -10px 22px rgba(0,0,0,0.5), 6px 6px 0 ${INK}`,
+            border: `3px solid ${INK}`,
+          }}
+        />
+        {/* Seams */}
+        <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full" aria-hidden>
+          <g fill="none" stroke={INK} strokeWidth="2" strokeLinecap="round">
+            <line x1="50" y1="2" x2="50" y2="98" />
+            <line x1="2" y1="50" x2="98" y2="50" />
+            <path d="M 12 18 Q 50 50 12 82" />
+            <path d="M 88 18 Q 50 50 88 82" />
+          </g>
+        </svg>
+
+        {/* Mid label and tier panel hidden */}
+      </div>
 
       {/* (Memphis triangle/dot accents removed — replaced by basketball line-art icons) */}
 
@@ -589,163 +594,5 @@ const SerratedEdge = ({ position }: { position: "top" | "bottom" }) => {
     </div>
   );
 };
-
-/* ──────────────────────────────────────────────────────────────
-   V4 — Hero dunker layout.
-   Reuses MemphisPattern + SerratedEdge + color tokens.
-   ────────────────────────────────────────────────────────────── */
-const FullPackFaceV4 = ({
-  title,
-  seriesLabel,
-}: {
-  topBanner: string;
-  title: string;
-  yearLabel: string;
-  midLine: string;
-  tierLine: string[];
-  seriesLabel: string;
-}) => {
-  const PINK = "#ff4fa3";
-  const CYAN = "#3ddad7";
-  const YELLOW = "#ffd23f";
-  const BLUE = "#1e2761";
-  const INK = "#0f0f1a";
-
-  return (
-    <div
-      className="relative w-full h-full overflow-hidden"
-      style={{ background: BLUE }}
-    >
-      <MemphisPattern />
-      <SerratedEdge position="top" />
-
-      {/* Left — hero dunker silhouette */}
-      <div className="absolute left-[-4%] top-[10%] bottom-[16%] w-[58%] pointer-events-none">
-        <DunkerSilhouette color={INK} />
-      </div>
-
-      {/* Right column — headline */}
-      <div
-        className="absolute right-[3%] z-10"
-        style={{ top: "12%", width: "44%" }}
-      >
-        <h1
-          className="font-display italic leading-[0.92] tracking-tight flex flex-col items-center text-center"
-          style={{
-            fontSize: "clamp(18px, 8.5cqw, 48px)",
-            color: YELLOW,
-            WebkitTextStroke: `1px ${INK}`,
-            textShadow: `2px 2px 0 ${PINK}, 4px 4px 0 ${CYAN}, 6px 6px 0 ${INK}`,
-            transform: "skew(-6deg)",
-          }}
-        >
-          {title.split(" ").slice(0, 3).map((word, i) => (
-            <span key={i} className="block">{word}</span>
-          ))}
-        </h1>
-      </div>
-
-      {/* Right — "1 CARD" chunky badge */}
-      <div
-        className="absolute right-[6%] z-10 text-center"
-        style={{ top: "58%" }}
-      >
-        <div
-          className="font-display italic leading-[0.95] px-3 py-2"
-          style={{
-            background: INK,
-            color: YELLOW,
-            border: `2.5px solid ${INK}`,
-            boxShadow: `4px 4px 0 ${PINK}, 7px 7px 0 ${CYAN}`,
-            transform: "skew(-6deg)",
-            fontSize: "clamp(14px, 5.5cqw, 30px)",
-            fontWeight: 900,
-            letterSpacing: "0.04em",
-          }}
-        >
-          <span className="block" style={{ transform: "skew(6deg)" }}>1</span>
-          <span className="block" style={{ transform: "skew(6deg)" }}>CARD</span>
-        </div>
-      </div>
-
-      {/* Bottom-left — series banner */}
-      <div className="absolute bottom-[6%] left-[3%] w-[52%] z-10">
-        <div
-          className="text-center font-display italic tracking-[0.12em] py-1.5 px-2"
-          style={{
-            background: PINK,
-            color: INK,
-            fontSize: "clamp(10px, 3.2cqw, 18px)",
-            transform: "skew(-8deg)",
-            fontWeight: 800,
-            border: `2.5px solid ${INK}`,
-            boxShadow: `4px 4px 0 ${YELLOW}`,
-          }}
-        >
-          <span className="inline-block" style={{ transform: "skew(8deg)" }}>
-            {seriesLabel}
-          </span>
-        </div>
-      </div>
-
-      {/* Bottom-right — FLYER Couch Crew logo */}
-      <div className="absolute bottom-[5%] right-[4%] w-[34%] z-10 flex justify-end">
-        <img
-          src={flyerCouchCrewLogo}
-          alt="FLYER Couch Crew"
-          className="w-full h-auto"
-          style={{
-            filter: `drop-shadow(3px 3px 0 ${PINK}) drop-shadow(0 2px 4px rgba(0,0,0,0.4))`,
-          }}
-        />
-      </div>
-
-      <SerratedEdge position="bottom" />
-    </div>
-  );
-};
-
-/* Inline silhouette of a player dunking on a hoop with backboard. */
-const DunkerSilhouette = ({ color }: { color: string }) => (
-  <svg
-    viewBox="0 0 200 260"
-    width="100%"
-    height="100%"
-    preserveAspectRatio="xMidYMid meet"
-    aria-hidden
-  >
-    <g fill={color}>
-      {/* Backboard */}
-      <rect x="10" y="40" width="70" height="55" rx="2" />
-      {/* Pole */}
-      <rect x="6" y="40" width="6" height="200" />
-      {/* Rim */}
-      <rect x="78" y="92" width="34" height="4" />
-      {/* Net strands */}
-      <path d="M80 96 L86 124 L92 96 Z" />
-      <path d="M92 96 L98 124 L104 96 Z" />
-      <path d="M104 96 L110 122 L112 96 Z" />
-      {/* Head */}
-      <circle cx="118" cy="78" r="10" />
-      {/* Torso */}
-      <path d="M112 88 Q108 110 116 130 L132 132 Q140 116 134 92 Z" />
-      {/* Right arm dunking */}
-      <path d="M126 92 Q120 78 110 70 L102 72 Q98 80 108 88 Z" />
-      {/* Left arm */}
-      <path d="M118 100 Q132 108 150 102 L152 110 Q138 120 120 114 Z" />
-      {/* Hips */}
-      <path d="M114 128 Q116 144 128 146 L138 142 Q140 130 132 126 Z" />
-      {/* Right leg tucked */}
-      <path d="M120 142 Q108 158 110 178 L122 182 Q132 166 130 148 Z" />
-      {/* Left leg trailing */}
-      <path d="M132 142 Q150 168 158 200 L148 210 Q132 188 124 152 Z" />
-      {/* Shoes */}
-      <ellipse cx="116" cy="186" rx="14" ry="6" />
-      <ellipse cx="154" cy="208" rx="14" ry="6" />
-      {/* Basketball */}
-      <circle cx="100" cy="68" r="11" />
-    </g>
-  </svg>
-);
 
 export default SealedPackCard;

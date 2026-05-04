@@ -74,14 +74,25 @@ const SealedPackCard = ({
           <div
             className={`absolute inset-0 sealed-pack-burn ${opened ? "is-open" : ""}`}
           >
-            <FullPackFace
-              topBanner={topBanner}
-              title={title}
-              yearLabel={yearLabel}
-              midLine={midLine}
-              tierLine={tierLine}
-              seriesLabel={seriesLabel}
-            />
+            {variant === "v4" ? (
+              <FullPackFaceV4
+                topBanner={topBanner}
+                title={title}
+                yearLabel={yearLabel}
+                midLine={midLine}
+                tierLine={tierLine}
+                seriesLabel={seriesLabel}
+              />
+            ) : (
+              <FullPackFace
+                topBanner={topBanner}
+                title={title}
+                yearLabel={yearLabel}
+                midLine={midLine}
+                tierLine={tierLine}
+                seriesLabel={seriesLabel}
+              />
+            )}
           </div>
 
           {/* Miami Vice burn edge — only visible while burning */}

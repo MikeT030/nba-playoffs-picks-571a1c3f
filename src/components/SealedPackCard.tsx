@@ -267,15 +267,14 @@ const FullPackFace = ({
   const YELLOW = "#ffd23f";
   const CORAL = "#ff7a5c";
   const LILAC = "#b39ddb";
-  const BLUE = "#c0c4cc"; // silver base (kept var name for downstream refs)
+  const BLUE = "#1e2761"; // lighter navy background (Memphis hallmark)
   const INK = "#0f0f1a";
 
   return (
     <div
       className="relative w-full h-full overflow-hidden"
       style={{
-        background:
-          "linear-gradient(135deg, #e8eaed 0%, #b8bcc4 25%, #d8dce2 50%, #9aa0aa 75%, #cfd3d9 100%)",
+        background: BLUE,
       }}
     >
       {/* Memphis confetti pattern: squiggles, triangles, dots, zigzags */}
@@ -526,7 +525,7 @@ const MemphisPattern = () => {
   const tile = encodeURIComponent(`
     <svg xmlns='http://www.w3.org/2000/svg' width='220' height='120' viewBox='0 0 220 120'>
       <g font-family='Impact, Bebas Neue, Oswald, sans-serif' font-weight='900'
-         font-size='72' font-style='italic' fill='hsl(200, 80%, 60%)' fill-opacity='0.75'
+         font-size='72' font-style='italic' fill='hsl(200, 80%, 60%)' fill-opacity='0.35'
          transform='skewX(-12)'>
         <text x='-10' y='70'>FLYER</text>
         <text x='110' y='30'>FLYER</text>

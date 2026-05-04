@@ -130,6 +130,7 @@ interface FlyerCardV3Props {
     midLine?: string;
     tierLine?: string[];
     seriesLabel?: string;
+    variant?: "v3" | "v4";
   };
   /** Use the alternate Topps-style wax pack wrapper. */
   sealedToppsStyle?: boolean;
@@ -423,13 +424,18 @@ export interface FlyerCardForIdProps {
   defaultOpened?: boolean;
   hideHeading?: boolean;
   onBurn?: () => void;
+  packVariant?: "v3" | "v4";
 }
 
-export const FlyerCardForId = ({ cardId, sealed = false, defaultOpened, hideHeading, onBurn }: FlyerCardForIdProps) => {
+export const FlyerCardForId = ({ cardId, sealed = false, defaultOpened, hideHeading, onBurn, packVariant }: FlyerCardForIdProps) => {
   const { preset, toppsStyle } = PRESETS[cardId];
+  const sealedConfig = packVariant
+    ? { ...(preset.sealedConfig ?? {}), variant: packVariant }
+    : preset.sealedConfig;
   return (
     <FlyerCardV3
       {...preset}
+      sealedConfig={sealedConfig}
       sealed={sealed && !toppsStyle}
       sealedToppsStyle={sealed && toppsStyle}
       defaultOpened={defaultOpened}

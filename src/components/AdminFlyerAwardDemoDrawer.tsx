@@ -35,6 +35,7 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
   const { winners, burned, claims } = useDemoFlyerState();
   const [justBurnedId, setJustBurnedId] = useState<FlyerCardId | null>(null);
   const [selectedCardId, setSelectedCardId] = useState<FlyerCardId | null>(null);
+  const [packVariant, setPackVariant] = useState<"v3" | "v4">("v3");
 
   const viewer = winners.find((w) => w.user_id === viewerUserId) ?? winners[0];
   const viewerClaimedCard: FlyerCardId | null = useMemo(
@@ -143,6 +144,41 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
 
       {/* Stack stage */}
       <div className="flex-1 min-h-0 overflow-y-auto px-4">
+        {/* Pack version dot-nav */}
+        <div
+          className="flex items-center justify-center gap-4 pt-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {(["v3", "v4"] as const).map((v) => {
+            const active = packVariant === v;
+            return (
+              <button
+                key={v}
+                type="button"
+                onClick={() => setPackVariant(v)}
+                aria-label={`Pack design ${v.toUpperCase()}`}
+                aria-pressed={active}
+                className="flex flex-col items-center gap-1 group"
+              >
+                <span
+                  className={`block w-4 h-4 rounded-full border-2 transition-all ${
+                    active
+                      ? "bg-primary border-primary scale-110"
+                      : "bg-transparent border-muted-foreground/60 group-hover:border-foreground"
+                  }`}
+                />
+                <span
+                  className={`font-display text-[10px] tracking-[0.25em] ${
+                    active ? "text-primary" : "text-muted-foreground"
+                  }`}
+                >
+                  {v.toUpperCase()}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
         <div className="relative mx-auto w-full max-w-md flex items-center justify-center py-6">
           <StackedCards
             mode={mode}
@@ -152,6 +188,7 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
             selectedCardId={selectedCardId}
             justBurnedId={justBurnedId}
             viewerClaimedCard={viewerClaimedCard}
+            packVariant={packVariant}
             onSelect={(cardId) => {
               if (mode !== "receiver" || !viewer) return;
               if (viewerHasBurned) return;
@@ -203,6 +240,7 @@ interface StackedCardsProps {
   selectedCardId: FlyerCardId | null;
   justBurnedId: FlyerCardId | null;
   viewerClaimedCard: FlyerCardId | null;
+  packVariant?: "v3" | "v4";
   onSelect: (cardId: FlyerCardId) => void;
   onBurn: (cardId: FlyerCardId) => void;
 }
@@ -215,6 +253,7 @@ const StackedCards = ({
   selectedCardId,
   justBurnedId,
   viewerClaimedCard,
+  packVariant,
   onSelect,
   onBurn,
 }: StackedCardsProps) => {
@@ -328,6 +367,7 @@ const StackedCards = ({
                 defaultOpened={defaultOpened}
                 hideHeading
                 onBurn={burnHandler}
+                packVariant={packVariant}
               />
             </div>
           </div>

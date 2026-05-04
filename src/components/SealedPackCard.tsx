@@ -45,6 +45,7 @@ const SealedPackCard = ({
   seriesLabel = "Sizzling hot 2026 series",
   defaultOpened = false,
   onOpen,
+  variant = "v3",
 }: SealedPackCardProps) => {
   const [opened, setOpened] = useState(defaultOpened);
 

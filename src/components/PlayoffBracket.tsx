@@ -321,7 +321,7 @@ const BracketCard = ({
               ))}
             {broken && <X size={11} className="text-rose-400 shrink-0" />}
             <span
-              className={`text-base font-body font-medium whitespace-nowrap ${
+              className={`text-sm font-body font-medium whitespace-nowrap ${
                 (actualWinnerAbbr && isWrong) || broken ? "text-rose-300/80" : "text-primary"
               }`}
             >

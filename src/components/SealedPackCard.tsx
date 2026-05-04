@@ -338,8 +338,21 @@ const FullPackFace = ({
             boxShadow: `4px 4px 0 ${YELLOW}`,
           }}
         >
-          <span className="inline-block" style={{ transform: "skew(8deg)" }}>
-            {seriesLabel}
+          <span className="inline-block leading-tight" style={{ transform: "skew(8deg)" }}>
+            {(() => {
+              const lower = seriesLabel.toLowerCase();
+              const idx = lower.indexOf("hot");
+              if (idx === -1) return seriesLabel;
+              const before = seriesLabel.slice(0, idx + 3);
+              const after = seriesLabel.slice(idx + 3).trimStart();
+              return (
+                <>
+                  {before}
+                  <br />
+                  {after}
+                </>
+              );
+            })()}
           </span>
         </div>
       </div>

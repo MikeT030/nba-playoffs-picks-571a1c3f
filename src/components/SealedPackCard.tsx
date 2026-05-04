@@ -1,5 +1,8 @@
 import { useState, type ReactNode } from "react";
 import flyerCouchClubLogo from "@/assets/flyer-couch-club-logo.png";
+import flyerCouchCrewLogo from "@/assets/flyer-couch-crew-logo.png";
+
+export type SealedPackVariant = "v3" | "v4";
 
 interface SealedPackCardProps {
   children: ReactNode;
@@ -21,6 +24,8 @@ interface SealedPackCardProps {
   defaultOpened?: boolean;
   /** Fired the first time the user taps the pack to open it. */
   onOpen?: () => void;
+  /** Pack face layout variant. Default "v3". */
+  variant?: SealedPackVariant;
 }
 
 /**

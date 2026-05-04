@@ -283,24 +283,12 @@ const FullPackFace = ({
       {/* Top serrated edge */}
       <SerratedEdge position="top" />
 
-      {/* Top banner — PLATINUM Couch Club logo */}
-      <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-[45%] flex justify-center">
-        <img
-          src={flyerCouchClubLogo}
-          alt={topBanner}
-          className="w-full h-auto"
-          style={{
-            filter: `drop-shadow(3px 3px 0 ${PINK}) drop-shadow(0 2px 4px rgba(0,0,0,0.4))`,
-          }}
-        />
-      </div>
-
       {/* Big title — Memphis stacked shadow, words stacked into a block */}
       <div className="absolute left-0 right-0 text-center px-2 z-10" style={{ top: "50%", transform: "translateY(-50%)" }}>
         <h1
           className="font-display italic leading-[0.95] tracking-tight flex flex-col items-center"
           style={{
-            fontSize: "clamp(24px, 10.5cqw, 62px)",
+            fontSize: "clamp(19px, 8.4cqw, 50px)",
             color: YELLOW,
             WebkitTextStroke: `1px ${INK}`,
             textShadow: `2px 2px 0 ${PINK}, 4px 4px 0 ${CYAN}, 6px 6px 0 ${INK}`,
@@ -315,12 +303,8 @@ const FullPackFace = ({
         </h1>
       </div>
 
-      {/* Year ribbon hidden */}
-
       {/* Basketball — kept but framed by Memphis shapes */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[58%] aspect-square z-0">
-
-        {/* squiggle accents removed */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[46.4%] aspect-square z-0">
         <div
           className="absolute inset-0 rounded-full"
           style={{
@@ -338,31 +322,54 @@ const FullPackFace = ({
             <path d="M 88 18 Q 50 50 88 82" />
           </g>
         </svg>
-
-        {/* Mid label and tier panel hidden */}
       </div>
 
-      {/* (Memphis triangle/dot accents removed — replaced by basketball line-art icons) */}
-
-      {/* Bottom series banner — chunky Memphis tab */}
-      <div className="absolute bottom-[7%] left-0 right-0">
+      {/* Bottom-left: series banner */}
+      <div className="absolute bottom-[7%] left-[5%] z-10">
         <div
-          className="mx-auto w-[88%] text-center font-display italic tracking-[0.14em] py-1.5"
+          className="text-center font-display italic tracking-[0.14em] px-3 py-1.5"
           style={{
             background: PINK,
             color: INK,
-            fontSize: "clamp(14px, 4.5cqw, 28px)",
+            fontSize: "clamp(12px, 3.6cqw, 22px)",
             transform: "skew(-8deg)",
             fontWeight: 800,
             border: `2.5px solid ${INK}`,
             boxShadow: `4px 4px 0 ${YELLOW}`,
           }}
         >
-          <span className="inline-block text-base" style={{ transform: "skew(8deg)" }}>
+          <span className="inline-block" style={{ transform: "skew(8deg)" }}>
             {seriesLabel}
           </span>
         </div>
       </div>
+
+      {/* Bottom-right: card count above logo */}
+      <div className="absolute bottom-[7%] right-[5%] z-10 flex flex-col items-center gap-2">
+        <div
+          className="font-display italic text-center leading-none px-2 py-1"
+          style={{
+            color: YELLOW,
+            WebkitTextStroke: `1px ${INK}`,
+            textShadow: `2px 2px 0 ${PINK}, 3px 3px 0 ${INK}`,
+            fontSize: "clamp(14px, 4.5cqw, 26px)",
+            fontWeight: 900,
+            transform: "skew(-6deg)",
+          }}
+        >
+          1 CARD
+        </div>
+        <img
+          src={flyerCouchClubLogo}
+          alt={topBanner}
+          className="h-auto"
+          style={{
+            width: "clamp(48px, 18cqw, 110px)",
+            filter: `drop-shadow(2px 2px 0 ${PINK}) drop-shadow(0 2px 4px rgba(0,0,0,0.4))`,
+          }}
+        />
+      </div>
+
 
       {/* Bottom serrated edge */}
       <SerratedEdge position="bottom" />

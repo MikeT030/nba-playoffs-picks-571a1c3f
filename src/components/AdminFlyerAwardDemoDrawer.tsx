@@ -240,6 +240,7 @@ interface StackedCardsProps {
   selectedCardId: FlyerCardId | null;
   justBurnedId: FlyerCardId | null;
   viewerClaimedCard: FlyerCardId | null;
+  packVariant?: "v3" | "v4";
   onSelect: (cardId: FlyerCardId) => void;
   onBurn: (cardId: FlyerCardId) => void;
 }
@@ -252,6 +253,7 @@ const StackedCards = ({
   selectedCardId,
   justBurnedId,
   viewerClaimedCard,
+  packVariant,
   onSelect,
   onBurn,
 }: StackedCardsProps) => {

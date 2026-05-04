@@ -367,6 +367,7 @@ const StackedCards = ({
                 defaultOpened={defaultOpened}
                 hideHeading
                 onBurn={burnHandler}
+                packVariant={packVariant}
               />
             </div>
           </div>

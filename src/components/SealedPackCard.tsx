@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import flyerCouchClubLogo from "@/assets/flyer-couch-club-logo.png";
+import flyerCouchClubLogo from "@/assets/flyer-logo.png";
 
 interface SealedPackCardProps {
   children: ReactNode;

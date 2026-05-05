@@ -37,7 +37,7 @@ const SealedPackCard = ({
   yearLabel = "1996-97",
   midLine = "PLATINUM SUPER COLOR",
   tierLine = ["1", "PREMIUM", "PLATINUM", "CARD"],
-  seriesLabel = "Sizzling hot 2026 playoffs series",
+  seriesLabel = "Sizzling hot 2026 series",
   defaultOpened = false,
   onOpen,
 }: SealedPackCardProps) => {

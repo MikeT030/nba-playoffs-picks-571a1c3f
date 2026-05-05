@@ -101,7 +101,7 @@ const FlyerAwardDrawer = ({ open, onOpenChange, mode, viewerUserId, assignments 
             aria-label="Close"
             className="absolute top-4 right-4 p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="lucide lucide-x w-5 h-5 text-[#ededed]" />
           </button>
         )}
       </div>

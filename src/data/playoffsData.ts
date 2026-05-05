@@ -436,6 +436,48 @@ export function resolveBracketWithApiGames(games: ApiGameLike[]): BracketSeries[
   });
 }
 
+/**
+ * Like `resolveBracketWithApiGames`, but only resolves Round 1 play-in (7/8 seed)
+ * slots from the API. Later-round slots are left empty so the user's picks can
+ * drive what advances on the "/my-picks" bracket — without the real-world
+ * winners overwriting their predictions.
+ */
+export function resolveBracketWithApiGamesRound1Only(games: ApiGameLike[]): BracketSeries[] {
+  if (!games.length) return bracketSeries;
+
+  const knownSeeds: Record<string, { seriesId: string; slot: "bottom" }> = {
+    OKC: { seriesId: "west-r1-1v8", slot: "bottom" },
+    SAS: { seriesId: "west-r1-2v7", slot: "bottom" },
+    DET: { seriesId: "east-r1-1v8", slot: "bottom" },
+    BOS: { seriesId: "east-r1-2v7", slot: "bottom" },
+  };
+
+  const resolved: Record<string, Team> = {};
+  for (const game of games) {
+    for (const knownAbbr of Object.keys(knownSeeds)) {
+      const info = knownSeeds[knownAbbr];
+      let opponentAbbr: string | null = null;
+      let opponentName: string | null = null;
+      if (game.home_team.abbreviation === knownAbbr) {
+        opponentAbbr = game.visitor_team.abbreviation;
+        opponentName = game.visitor_team.full_name;
+      } else if (game.visitor_team.abbreviation === knownAbbr) {
+        opponentAbbr = game.home_team.abbreviation;
+        opponentName = game.home_team.full_name;
+      }
+      if (opponentAbbr && opponentName && !resolved[info.seriesId]) {
+        const seed = info.seriesId.includes("1v8") ? 8 : 7;
+        resolved[info.seriesId] = makeTeam(opponentAbbr, opponentName, seed);
+      }
+    }
+  }
+
+  return bracketSeries.map((s) => ({
+    ...s,
+    bottomTeam: resolved[s.id] ?? s.bottomTeam,
+  }));
+}
+
 // Convert bracket series to Match format for the home page (first round only).
 // Builds from any bracket — pass the resolved bracket (with play-in winners
 // filled in) to avoid showing PIW7/PIW8 placeholders once the API knows who

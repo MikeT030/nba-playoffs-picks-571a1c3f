@@ -20,9 +20,8 @@ const FLYER_CARDS = [
   { id: "davis", label: "Davis" },
 ] as const;
 
-// Only the top 3 finishers from the previous round get a card.
-// 3 of the 4 flyer cards can be assigned (one card per user).
-const ASSIGNABLE_CARDS = FLYER_CARDS.slice(0, 3);
+// All 4 flyer cards can be assigned (one card per user).
+const ASSIGNABLE_CARDS = FLYER_CARDS;
 
 type CardId = FlyerCardId;
 
@@ -115,9 +114,9 @@ const AdminFlyerAwardPanel = () => {
     for (const a of assigns) {
       if (a.card_id in map) map[a.card_id as CardId] = a.user_id;
     }
-    // Default any unassigned card to current top-3 (only 3 of 4 cards are assignable)
-    const top = computed.slice(0, 3);
-    FLYER_CARDS.slice(0, 3).forEach((c, i) => {
+    // Default any unassigned card to current top-N
+    const top = computed.slice(0, ASSIGNABLE_CARDS.length);
+    ASSIGNABLE_CARDS.forEach((c, i) => {
       if (!map[c.id] && top[i]) map[c.id] = top[i].user_id;
     });
     setAssignments(map);
@@ -149,8 +148,8 @@ const AdminFlyerAwardPanel = () => {
     [assignments, initialAssignments]
   );
 
-  const resetToTop3 = () => {
-    const top = standings.slice(0, 3);
+  const resetToTop = () => {
+    const top = standings.slice(0, ASSIGNABLE_CARDS.length);
     const next: Record<CardId, string> = { chapman: "", paxson: "", miller: "", davis: "" };
     ASSIGNABLE_CARDS.forEach((c, i) => {
       if (top[i]) next[c.id] = top[i].user_id;
@@ -210,11 +209,11 @@ const AdminFlyerAwardPanel = () => {
             Card Assignments
           </p>
           <button
-            onClick={resetToTop3}
+            onClick={resetToTop}
             className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
             <RotateCcw size={12} />
-            Reset to top 3
+            Reset to top 4
           </button>
         </div>
         <ul className="space-y-2">

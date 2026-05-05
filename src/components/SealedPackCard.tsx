@@ -372,11 +372,8 @@ const FullPackFace = ({
         </svg>
       </div>
 
-      {/* Bottom-right: logo (sits above the card-count badge) */}
-      <div
-        className="absolute right-[5%] z-10 flex flex-col items-center"
-        style={{ bottom: "calc(7% + 50px)" }}
-      >
+      {/* Bottom-right: logo */}
+      <div className="absolute bottom-[7%] right-[5%] z-10 flex flex-col items-center">
         <img
           src={flyerCouchClubLogo}
           alt={topBanner}
@@ -388,8 +385,8 @@ const FullPackFace = ({
         />
       </div>
 
-      {/* Card count — aligned with the series banner */}
-      <div className="absolute right-[5%] bottom-[7%] z-10">
+      {/* Card count — sits above the logo, shifted up 40px */}
+      <div className="absolute right-[5%] z-10" style={{ bottom: "calc(7% + 100px)" }}>
         <div
           className="text-center font-display italic tracking-[0.14em] px-3 py-1.5"
           style={{

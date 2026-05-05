@@ -283,6 +283,30 @@ const FullPackFace = ({
       {/* Top serrated edge */}
       <SerratedEdge position="top" />
 
+      {/* Three mini basketballs above the headline */}
+      <div className="absolute left-0 right-0 z-10 flex justify-center items-center gap-3 px-4" style={{ top: "calc(12% - 6px)" }}>
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="relative w-[10%] aspect-square">
+            <div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: `radial-gradient(circle at 38% 35%, #fdba74 0%, ${CORAL} 50%, #9a3412 95%)`,
+                boxShadow: `inset -3px -4px 8px rgba(0,0,0,0.5), 2px 2px 0 ${INK}`,
+                border: `2px solid ${INK}`,
+              }}
+            />
+            <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full" aria-hidden>
+              <g fill="none" stroke={INK} strokeWidth="3" strokeLinecap="round">
+                <line x1="50" y1="2" x2="50" y2="98" />
+                <line x1="2" y1="50" x2="98" y2="50" />
+                <path d="M 12 18 Q 50 50 12 82" />
+                <path d="M 88 18 Q 50 50 88 82" />
+              </g>
+            </svg>
+          </div>
+        ))}
+      </div>
+
       {/* Big title — Memphis stacked shadow, words stacked into a block */}
       <div className="absolute left-0 right-0 text-left px-2 z-10" style={{ top: "calc(12% + 26px)" }}>
         <h1

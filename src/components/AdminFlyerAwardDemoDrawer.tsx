@@ -220,6 +220,7 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
           </button>
         )}
       </div>
+      </div>
     </div>
   );
 };

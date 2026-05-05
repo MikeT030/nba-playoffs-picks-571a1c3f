@@ -310,7 +310,7 @@ const FullPackFace = ({
       {/* Big title — Memphis stacked shadow, words stacked into a block */}
       <div className="absolute left-0 right-0 text-left px-2 z-10" style={{ top: "calc(12% + 26px)" }}>
         <h1
-          className="font-display italic leading-[0.95] tracking-tight flex flex-col items-start text-6xl"
+          className="font-display italic leading-[0.95] tracking-tight flex flex-col items-start pt-[6px] text-5xl"
           style={{
             fontSize: "clamp(19px, 8.4cqw, 50px)",
             color: YELLOW,

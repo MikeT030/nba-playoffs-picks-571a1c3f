@@ -367,7 +367,7 @@ const FullPackFace = ({
         style={{ width: "clamp(110px, 36cqw, 220px)", height: "clamp(110px, 36cqw, 220px)" }}
       >
         <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full block">
-          <polygon points="100,0 100,100 0,100" fill={PINK} />
+          <polygon points="100,0 100,100 0,100" fill="hsl(var(--primary))" />
           <line x1="100" y1="0" x2="0" y2="100" stroke={INK} strokeWidth="2.5" vectorEffect="non-scaling-stroke" />
         </svg>
       </div>

@@ -695,7 +695,20 @@ const Scoreboard = () => {
 
                 {/* Card */}
                 <div className="relative w-full">
-                  <PlayerCard player={playersWithCards[selectedCardIndex]?.card} />
+                  {(() => {
+                    const slide = playersWithCards[selectedCardIndex];
+                    if (!slide) return null;
+                    if (slide.kind === "flyer") {
+                      return (
+                        <FlyerCardForId
+                          cardId={slide.flyerCardId}
+                          defaultOpened
+                          hideHeading
+                        />
+                      );
+                    }
+                    return <PlayerCard player={slide.card} />;
+                  })()}
                 </div>
 
                 {/* Dots indicator */}

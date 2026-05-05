@@ -234,133 +234,31 @@ const StackedCards = ({
   onSelect,
   onBurn,
 }: StackedCardsProps) => {
-  // Card width — sized so 4 stacked cards (with offsets) fit comfortably on mobile
-  const cardWidthClass = "w-[70vw] max-w-[260px]";
+  // Find this viewer's allocated card: claimed first, otherwise pre-assigned.
+  const claimedId: FlyerCardId | null = (() => {
+    if (mode !== "receiver") return null;
+    if (viewerClaimedCard) return viewerClaimedCard;
+    if (!viewerUserId) return null;
+    const found = Object.entries(claims).find(([, uid]) => uid === viewerUserId)?.[0];
+    return (found as FlyerCardId | undefined) ?? null;
+  })();
+
+  if (!claimedId) return null;
+
+  const cardBurned = burned[claimedId] ?? isDemoCardBurned(claimedId);
+  const sealed = !cardBurned;
+  const defaultOpened = cardBurned;
+  const burnHandler = !cardBurned ? () => onBurn(claimedId) : undefined;
 
   return (
-    <div
-      className="relative"
-      style={{
-        width: `calc(min(70vw, 260px) + ${STACK_OFFSET_X * (FLYER_CARD_IDS.length - 1)}px)`,
-        height: `calc(min(70vw, 260px) * (4 / 3) + ${STACK_OFFSET_Y * (FLYER_CARD_IDS.length - 1)}px)`,
-      }}
-    >
-      {((): FlyerCardId[] => {
-        if (mode !== "receiver") return [...FLYER_CARD_IDS];
-        // Find this viewer's allocated card: claimed first, otherwise pre-assigned.
-        const viewerName = viewerUserId;
-        const claimed =
-          viewerClaimedCard ??
-          (viewerName
-            ? (Object.entries(claims).find(([, uid]) => uid === viewerName)?.[0] as
-                | FlyerCardId
-                | undefined)
-            : undefined);
-        return claimed ? [claimed] : [];
-      })().map((cardId, i) => {
-        const claimedBy = claims[cardId];
-        const cardBurned = burned[cardId] ?? isDemoCardBurned(cardId);
-        const isViewerCard = mode === "receiver" && claimedBy === viewerUserId;
-        const isSelected = selectedCardId === cardId;
-
-        // Sealed/opened state
-        let sealed: boolean;
-        let defaultOpened: boolean;
-        let burnHandler: (() => void) | undefined;
-
-        if (mode === "receiver") {
-          sealed = !isViewerCard || !cardBurned;
-          defaultOpened = isViewerCard && cardBurned;
-          // Only the selected viewer-card can be burned
-          burnHandler = isViewerCard && isSelected ? () => onBurn(cardId) : undefined;
-        } else {
-          sealed = !claimedBy || !cardBurned;
-          defaultOpened = !!claimedBy && cardBurned;
-        }
-
-        // Position
-        const baseX = i * STACK_OFFSET_X;
-        const baseY = i * STACK_OFFSET_Y;
-        let translateX = baseX;
-        let translateY = baseY;
-        let zIndex = i + 1;
-        let opacity = 1;
-        let scale = 1;
-
-        if (selectedCardId) {
-          if (isSelected) {
-            // Center it within the stack container
-            const totalW = STACK_OFFSET_X * (FLYER_CARD_IDS.length - 1);
-            const totalH = STACK_OFFSET_Y * (FLYER_CARD_IDS.length - 1);
-            translateX = totalW / 2;
-            translateY = totalH / 2;
-            zIndex = 100;
-            scale = 1.04;
-          } else {
-            // Push back & dim
-            opacity = 0.45;
-          }
-        }
-
-        // After burn the selected card stays front; others stay dim
-        const ownerName = claimedBy
-          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            undefined
-          : null;
-        void ownerName;
-
-        // Click logic
-        const handleClick = (e: React.MouseEvent) => {
-          if (mode !== "receiver") return;
-          // Tapping the selected card shouldn't bubble to the layer (which would
-          // deselect it). The inner sealed-pack handles the burn itself.
-          if (isSelected) {
-            e.stopPropagation();
-            return;
-          }
-          // Otherwise: try to select
-          if (viewerClaimedCard && cardId !== viewerClaimedCard) return;
-          e.stopPropagation();
-          onSelect(cardId);
-        };
-
-        // Disable pointer events on the underlying pack wrapper unless this card
-        // is selected & burnable (so taps on stacked-but-not-front cards reach
-        // our wrapper div and call handleClick instead of triggering burn).
-        const innerInteractive = isSelected && isViewerCard && !cardBurned;
-
-        return (
-          <div
-            key={cardId}
-            onClick={handleClick}
-            role={mode === "receiver" ? "button" : undefined}
-            className={`absolute top-0 left-0 ${cardWidthClass} cursor-pointer transition-all duration-500 ease-out`}
-            style={{
-              transform: `translate(${translateX}px, ${translateY}px) scale(${scale})`,
-              zIndex,
-              opacity,
-              pointerEvents: mode === "broadcast" || (selectedCardId && !isSelected) ? "none" : "auto",
-            }}
-          >
-            <div
-              style={{
-                pointerEvents: innerInteractive ? "auto" : "none",
-              }}
-              // Wrapper to gate inner sealed-pack click. We put pointer-events:none on
-              // the inner wrapper so taps go to the outer div (handleClick) UNLESS
-              // the card is selected and ready to burn.
-            >
-              <FlyerCardForId
-                cardId={cardId}
-                sealed={sealed}
-                defaultOpened={defaultOpened}
-                hideHeading
-                onBurn={burnHandler}
-              />
-            </div>
-          </div>
-        );
-      })}
+    <div className="relative w-full">
+      <FlyerCardForId
+        cardId={claimedId}
+        sealed={sealed}
+        defaultOpened={defaultOpened}
+        hideHeading
+        onBurn={burnHandler}
+      />
     </div>
   );
 };
@@ -388,7 +286,7 @@ const BroadcastCarousel = ({ winners, burned }: BroadcastCarouselProps) => {
 
   return (
     <div className="w-full flex flex-col items-center gap-4">
-      <Carousel setApi={setApi} opts={{ loop: true }} className="w-[70vw] max-w-[260px]">
+      <Carousel setApi={setApi} opts={{ loop: true }} className="w-full">
         <CarouselContent>
           {winners.map((w) => {
             const cardBurned = burned[w.cardId] ?? isDemoCardBurned(w.cardId);

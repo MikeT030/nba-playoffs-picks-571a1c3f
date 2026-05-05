@@ -361,6 +361,20 @@ const FullPackFace = ({
         </div>
       </div>
 
+      {/* Bottom-right: colored corner wedge behind the logo */}
+      <div
+        className="absolute bottom-0 right-0 z-[5] pointer-events-none"
+        style={{
+          width: "clamp(90px, 30cqw, 180px)",
+          height: "clamp(90px, 30cqw, 180px)",
+          background: PINK,
+          clipPath: "polygon(100% 0, 100% 100%, 0 100%)",
+          borderTop: `2.5px solid ${INK}`,
+          borderLeft: `2.5px solid ${INK}`,
+          borderTopLeftRadius: "8px",
+        }}
+      />
+
       {/* Bottom-right: logo */}
       <div className="absolute bottom-[7%] right-[5%] z-10 flex flex-col items-center">
         <img

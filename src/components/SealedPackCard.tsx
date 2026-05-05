@@ -285,7 +285,7 @@ const FullPackFace = ({
       <SerratedEdge position="top" />
 
       {/* Three mini basketballs above the headline */}
-      <div className="absolute left-0 right-0 z-10 flex justify-start items-center px-4" style={{ top: "calc(12% - 6px)" }}>
+      <div className="absolute left-0 right-0 z-10 flex justify-start items-center px-4" style={{ top: "calc(12% - 12px)" }}>
         <img src={basketballsAligned} alt="" aria-hidden className="w-[34%] h-auto object-contain" />
       </div>
 

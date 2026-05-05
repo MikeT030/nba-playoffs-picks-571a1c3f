@@ -132,7 +132,7 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-stretch sm:items-center justify-center animate-fade-in"
+      className="fixed inset-0 z-50 bg-background/80 backdrop-blur-md flex flex-col animate-fade-in"
       role="dialog"
       aria-modal="true"
       onClick={() => {
@@ -143,10 +143,6 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
         setSelectedCardId(null);
       }}
     >
-      <div
-        className="relative w-full sm:max-w-lg sm:rounded-2xl sm:my-8 sm:max-h-[92vh] bg-background shadow-2xl border border-border flex flex-col overflow-hidden animate-scale-in"
-        onClick={(e) => e.stopPropagation()}
-      >
       {/* Top bar */}
       <div className="relative shrink-0 px-4 pt-6 pb-4 text-center">
         <p className="hidden font-display text-xs sm:text-sm tracking-[0.25em] uppercase text-muted-foreground">
@@ -163,7 +159,7 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
             aria-label="Close"
             className="absolute top-4 right-4 p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
-            <X className="w-5 h-5 text-[#ededed]" />
+            <X className="w-5 h-5" />
           </button>
         )}
       </div>
@@ -219,7 +215,6 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
             NICE, GOT IT
           </button>
         )}
-      </div>
       </div>
     </div>
   );

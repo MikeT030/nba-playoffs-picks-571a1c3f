@@ -85,67 +85,59 @@ const FlyerAwardDrawer = ({ open, onOpenChange, mode, viewerUserId, assignments 
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-stretch sm:items-center justify-center animate-fade-in"
+      className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col animate-fade-in"
       role="dialog"
       aria-modal="true"
-      onClick={() => {
-        if (canClose) onOpenChange(false);
-      }}
     >
-      <div
-        className="relative w-full sm:max-w-lg sm:rounded-2xl sm:my-8 sm:max-h-[92vh] bg-background shadow-2xl border border-border flex flex-col overflow-hidden animate-scale-in"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="relative shrink-0 px-4 pt-6 pb-4 text-center">
-          <h2 className="font-body sm:text-lg text-foreground leading-snug max-w-2xl mx-auto font-medium text-lg">
-            {headline}
-          </h2>
+      <div className="relative shrink-0 px-4 pt-6 pb-4 text-center">
+        <h2 className="font-body sm:text-lg text-foreground leading-snug max-w-2xl mx-auto font-medium text-lg">
+          {headline}
+        </h2>
 
-          {canClose && (
-            <button
-              type="button"
-              onClick={() => onOpenChange(false)}
-              aria-label="Close"
-              className="absolute top-4 right-4 p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            >
-              <X className="w-5 h-5 text-[#ededed]" />
-            </button>
-          )}
+        {canClose && (
+          <button
+            type="button"
+            onClick={() => onOpenChange(false)}
+            aria-label="Close"
+            className="absolute top-4 right-4 p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
+      </div>
+
+      <div className="flex-1 min-h-0 overflow-y-auto px-4">
+        <div className="relative mx-auto w-full max-w-md flex items-center justify-center py-6">
+          {mode === "broadcast" ? (
+            <BroadcastCarousel assignments={assignments} />
+          ) : viewerCard ? (
+            <div className="relative w-full">
+              <FlyerCardForId
+                cardId={viewerCard}
+                sealed={!viewerHasBurned}
+                defaultOpened={viewerHasBurned}
+                hideHeading
+                onBurn={!viewerHasBurned ? handleBurn : undefined}
+              />
+            </div>
+          ) : null}
         </div>
+      </div>
 
-        <div className="flex-1 min-h-0 overflow-y-auto px-4">
-          <div className="relative mx-auto w-full max-w-md flex items-center justify-center py-6">
-            {mode === "broadcast" ? (
-              <BroadcastCarousel assignments={assignments} />
-            ) : viewerCard ? (
-              <div className="relative w-full">
-                <FlyerCardForId
-                  cardId={viewerCard}
-                  sealed={!viewerHasBurned}
-                  defaultOpened={viewerHasBurned}
-                  hideHeading
-                  onBurn={!viewerHasBurned ? handleBurn : undefined}
-                />
-              </div>
-            ) : null}
-          </div>
-        </div>
+      <div className="shrink-0 px-4 pb-8 pt-2 flex flex-col items-center gap-4">
+        <p className="text-center font-body text-xs sm:text-sm text-muted-foreground max-w-md">
+          {subline}
+        </p>
 
-        <div className="shrink-0 px-4 pb-8 pt-2 flex flex-col items-center gap-4">
-          <p className="text-center font-body text-xs sm:text-sm max-w-md text-[#ededed]">
-            {subline}
-          </p>
-
-          {viewerHasBurned && (
-            <button
-              type="button"
-              onClick={() => onOpenChange(false)}
-              className="font-display sm:text-xs tracking-[0.3em] text-primary bg-transparent px-5 py-2.5 rounded-full border border-primary hover:bg-primary/10 transition-colors animate-fade-in text-sm"
-            >
-              NICE, GOT IT
-            </button>
-          )}
-        </div>
+        {viewerHasBurned && (
+          <button
+            type="button"
+            onClick={() => onOpenChange(false)}
+            className="font-display sm:text-xs tracking-[0.3em] text-primary bg-transparent px-5 py-2.5 rounded-full border border-primary hover:bg-primary/10 transition-colors animate-fade-in text-sm"
+          >
+            NICE, GOT IT
+          </button>
+        )}
       </div>
     </div>
   );

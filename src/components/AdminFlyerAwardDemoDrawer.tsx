@@ -227,10 +227,19 @@ const StackedCards = ({
         height: `calc(min(70vw, 260px) * (4 / 3) + ${STACK_OFFSET_Y * (FLYER_CARD_IDS.length - 1)}px)`,
       }}
     >
-      {(mode === "receiver"
-        ? [(viewerClaimedCard ?? (viewerUserId ? (Object.entries(claims).find(([, uid]) => uid === viewerUserId)?.[0] as FlyerCardId | undefined) : undefined)) as FlyerCardId | undefined].filter(Boolean) as FlyerCardId[]
-        : FLYER_CARD_IDS
-      ).map((cardId, i) => {
+      {((): FlyerCardId[] => {
+        if (mode !== "receiver") return [...FLYER_CARD_IDS];
+        // Find this viewer's allocated card: claimed first, otherwise pre-assigned.
+        const viewerName = viewerUserId;
+        const claimed =
+          viewerClaimedCard ??
+          (viewerName
+            ? (Object.entries(claims).find(([, uid]) => uid === viewerName)?.[0] as
+                | FlyerCardId
+                | undefined)
+            : undefined);
+        return claimed ? [claimed] : [];
+      })().map((cardId, i) => {
         const claimedBy = claims[cardId];
         const cardBurned = burned[cardId] ?? isDemoCardBurned(cardId);
         const isViewerCard = mode === "receiver" && claimedBy === viewerUserId;

@@ -278,36 +278,37 @@ const AdminFlyerAwardPanel = () => {
           Demo · "Round 1 complete" reveal
         </p>
         <p className="font-body text-[11px] text-muted-foreground -mt-1">
-          Picks 4 random users and lets you preview both award drawers. Demo state lives only in your browser — the live assignments above are not affected.
+          Picks 3 random users and lets you preview both award drawers. Demo state lives only in your browser — the live assignments above are not affected.
         </p>
 
         <div className="grid grid-cols-2 gap-2">
           <button
             onClick={() => {
               const pool = [...standings];
-              if (pool.length < 4) {
-                toast.error("Need at least 4 users with picks to draw winners");
+              if (pool.length < 3) {
+                toast.error("Need at least 3 users with picks to draw winners");
                 return;
               }
-              // Fisher-Yates shuffle, take 4
+              // Fisher-Yates shuffle, take 3
               for (let i = pool.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [pool[i], pool[j]] = [pool[j], pool[i]];
               }
-              const picks = pool.slice(0, 4);
-              const next = FLYER_CARD_IDS.map((cardId, i) => ({
+              const assignableIds = ASSIGNABLE_CARDS.map((c) => c.id as FlyerCardId);
+              const picks = pool.slice(0, assignableIds.length);
+              const next = assignableIds.map((cardId, i) => ({
                 user_id: picks[i].user_id,
                 name: picks[i].display_name,
-                cardId: cardId as FlyerCardId,
+                cardId,
               }));
               setDemoWinners(next);
               setDemoViewerId(next[0].user_id);
-              toast.success("4 random demo winners picked");
+              toast.success("3 random demo winners picked");
             }}
             className="flex items-center justify-center gap-2 bg-secondary text-secondary-foreground font-body text-sm py-2 rounded-md"
           >
             <Shuffle size={14} />
-            Pick 4 random
+            Pick 3 random
           </button>
           <button
             onClick={() => {

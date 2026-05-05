@@ -227,8 +227,8 @@ const StackedCards = ({
         height: `calc(min(70vw, 260px) * (4 / 3) + ${STACK_OFFSET_Y * (FLYER_CARD_IDS.length - 1)}px)`,
       }}
     >
-      {(mode === "receiver" && viewerClaimedCard
-        ? [viewerClaimedCard]
+      {(mode === "receiver"
+        ? [(viewerClaimedCard ?? (viewerUserId ? (Object.entries(claims).find(([, uid]) => uid === viewerUserId)?.[0] as FlyerCardId | undefined) : undefined)) as FlyerCardId | undefined].filter(Boolean) as FlyerCardId[]
         : FLYER_CARD_IDS
       ).map((cardId, i) => {
         const claimedBy = claims[cardId];

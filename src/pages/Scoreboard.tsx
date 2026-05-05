@@ -508,11 +508,12 @@ const Scoreboard = () => {
 
   useEffect(() => {
     const fetchScores = async () => {
-      const [picksRes, resultsRes, profilesRes, cardsRes] = await Promise.all([
+      const [picksRes, resultsRes, profilesRes, cardsRes, flyersRes] = await Promise.all([
         supabase.from("picks").select("profile_name, series_id, winner, games_in_series, user_id"),
         supabase.from("series_results").select("series_id, winner, games_played"),
         supabase.from("profiles").select("user_id, display_name"),
         supabase.from("player_card_assignments").select("user_id, card_id"),
+        supabase.from("flyer_card_assignments").select("user_id, card_id"),
       ]);
       const activeUserIds = new Set((profilesRes.data || []).map((p: any) => p.user_id));
       const picks = ((picksRes.data || []) as (PickRow & { user_id: string })[]).filter(p => activeUserIds.has(p.user_id));
@@ -530,6 +531,15 @@ const Scoreboard = () => {
         if (name) nameToCard[name] = c.card_id;
       }
       setCardMap(nameToCard);
+
+      const nameToFlyer: Record<string, FlyerCardId> = {};
+      for (const f of (flyersRes.data || [])) {
+        const name = userToName.get(f.user_id);
+        if (name && (FLYER_CARD_IDS as readonly string[]).includes(f.card_id)) {
+          nameToFlyer[name] = f.card_id as FlyerCardId;
+        }
+      }
+      setFlyerMap(nameToFlyer);
 
       setLoading(false);
     };

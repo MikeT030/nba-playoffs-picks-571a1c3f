@@ -325,7 +325,7 @@ const PAXSON_PRESET: FlyerPreset = {
   firstName: "JOHN",
   lastName: "PAXSON",
   quote: PAXSON_QUOTE,
-  quoteBgColor: "rgba(206, 17, 65, 0.25)",
+  quoteBgColor: "rgba(206, 17, 65, 0.6)",
   stats: [
     { label: "PTS", value: 8 },
     { label: "AST", value: 1 },

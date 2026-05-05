@@ -227,7 +227,10 @@ const StackedCards = ({
         height: `calc(min(70vw, 260px) * (4 / 3) + ${STACK_OFFSET_Y * (FLYER_CARD_IDS.length - 1)}px)`,
       }}
     >
-      {FLYER_CARD_IDS.map((cardId, i) => {
+      {(mode === "receiver" && viewerClaimedCard
+        ? [viewerClaimedCard]
+        : FLYER_CARD_IDS
+      ).map((cardId, i) => {
         const claimedBy = claims[cardId];
         const cardBurned = burned[cardId] ?? isDemoCardBurned(cardId);
         const isViewerCard = mode === "receiver" && claimedBy === viewerUserId;

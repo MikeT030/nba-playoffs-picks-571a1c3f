@@ -1,6 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
-import { X } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { FlyerCardForId } from "@/components/DemoFlyerCardVariants";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 import {
   FLYER_CARD_IDS,
   type FlyerCardId,
@@ -150,34 +158,36 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
       {/* Stack stage */}
       <div className="flex-1 min-h-0 overflow-y-auto px-4">
         <div className="relative mx-auto w-full max-w-md flex items-center justify-center py-6">
-          <StackedCards
-            mode={mode}
-            viewerUserId={viewer?.user_id}
-            claims={claims}
-            burned={burned}
-            selectedCardId={selectedCardId}
-            justBurnedId={justBurnedId}
-            viewerClaimedCard={viewerClaimedCard}
-            onSelect={(cardId) => {
-              if (mode !== "receiver" || !viewer) return;
-              if (viewerHasBurned) return;
-              // If viewer already claimed a card, only that card is selectable
-              if (viewerClaimedCard && cardId !== viewerClaimedCard) return;
-              // First selection: claim it
-              if (!viewerClaimedCard) {
-                const ok = claimDemoCard(cardId, viewer.user_id);
-                if (!ok) {
-                  toast.error("That pack just got claimed.");
-                  return;
+          {mode === "broadcast" ? (
+            <BroadcastCarousel winners={winners} burned={burned} />
+          ) : (
+            <StackedCards
+              mode={mode}
+              viewerUserId={viewer?.user_id}
+              claims={claims}
+              burned={burned}
+              selectedCardId={selectedCardId}
+              justBurnedId={justBurnedId}
+              viewerClaimedCard={viewerClaimedCard}
+              onSelect={(cardId) => {
+                if (mode !== "receiver" || !viewer) return;
+                if (viewerHasBurned) return;
+                if (viewerClaimedCard && cardId !== viewerClaimedCard) return;
+                if (!viewerClaimedCard) {
+                  const ok = claimDemoCard(cardId, viewer.user_id);
+                  if (!ok) {
+                    toast.error("That pack just got claimed.");
+                    return;
+                  }
                 }
-              }
-              setSelectedCardId(cardId);
-            }}
-            onBurn={(cardId) => {
-              setJustBurnedId(cardId);
-              markDemoCardBurned(cardId);
-            }}
-          />
+                setSelectedCardId(cardId);
+              }}
+              onBurn={(cardId) => {
+                setJustBurnedId(cardId);
+                markDemoCardBurned(cardId);
+              }}
+            />
+          )}
         </div>
       </div>
 
@@ -351,6 +361,71 @@ const StackedCards = ({
           </div>
         );
       })}
+    </div>
+  );
+};
+
+interface BroadcastCarouselProps {
+  winners: { user_id: string; name: string; cardId: FlyerCardId }[];
+  burned: Record<string, boolean>;
+}
+
+const BroadcastCarousel = ({ winners, burned }: BroadcastCarouselProps) => {
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+    setCurrent(api.selectedScrollSnap());
+    const onSel = () => setCurrent(api.selectedScrollSnap());
+    api.on("select", onSel);
+    return () => {
+      api.off("select", onSel);
+    };
+  }, [api]);
+
+  if (winners.length === 0) return null;
+
+  return (
+    <div className="w-full flex flex-col items-center gap-4">
+      <Carousel setApi={setApi} opts={{ loop: true }} className="w-[70vw] max-w-[260px]">
+        <CarouselContent>
+          {winners.map((w) => {
+            const cardBurned = burned[w.cardId] ?? isDemoCardBurned(w.cardId);
+            return (
+              <CarouselItem key={w.user_id} className="flex flex-col items-center gap-3">
+                <p className="font-display text-xs tracking-[0.25em] uppercase text-primary font-bold">
+                  {w.name}
+                </p>
+                <div className="w-full">
+                  <FlyerCardForId
+                    cardId={w.cardId}
+                    sealed={!cardBurned}
+                    defaultOpened={cardBurned}
+                    hideHeading
+                  />
+                </div>
+              </CarouselItem>
+            );
+          })}
+        </CarouselContent>
+        <CarouselPrevious className="-left-10 sm:-left-12">
+          <ChevronLeft className="w-4 h-4" />
+        </CarouselPrevious>
+        <CarouselNext className="-right-10 sm:-right-12">
+          <ChevronRight className="w-4 h-4" />
+        </CarouselNext>
+      </Carousel>
+      <div className="flex gap-1.5">
+        {winners.map((_, i) => (
+          <span
+            key={i}
+            className={`h-1.5 rounded-full transition-all ${
+              i === current ? "w-6 bg-primary" : "w-1.5 bg-muted-foreground/40"
+            }`}
+          />
+        ))}
+      </div>
     </div>
   );
 };

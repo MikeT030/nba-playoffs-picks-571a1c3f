@@ -93,7 +93,7 @@ const FlyerAwardDrawer = ({ open, onOpenChange, mode, viewerUserId, assignments 
       }}
       dismissible={canClose}
     >
-      <DrawerContent className="h-[calc(92vh+30px)] border-none">
+      <DrawerContent className="h-[calc(92vh+40px)] border-none">
         <div className="relative shrink-0 px-4 pt-6 pb-4 text-center">
           <h2 className="font-body sm:text-lg text-foreground leading-snug max-w-2xl mx-auto font-medium text-lg">
             {headline}

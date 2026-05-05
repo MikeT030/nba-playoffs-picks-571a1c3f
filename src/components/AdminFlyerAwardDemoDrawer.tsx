@@ -201,7 +201,7 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
           <button
             type="button"
             onClick={() => onOpenChange(false)}
-            className="font-display text-[11px] sm:text-xs tracking-[0.3em] text-white bg-black/70 backdrop-blur-sm px-5 py-2.5 rounded-full border border-white/25 hover:bg-black transition-colors animate-fade-in"
+            className="font-display text-[11px] sm:text-xs tracking-[0.3em] text-primary bg-transparent px-5 py-2.5 rounded-full border border-primary hover:bg-primary/10 transition-colors animate-fade-in"
           >
             NICE, GOT IT
           </button>

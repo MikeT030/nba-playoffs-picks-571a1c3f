@@ -389,11 +389,11 @@ const FullPackFace = ({
       {/* Card count — sits above the series banner on the left */}
       <div className="absolute left-[5%] z-10" style={{ bottom: "calc(7% + 60px)" }}>
         <div
-          className="text-center font-display italic tracking-[0.14em] px-3 py-1.5"
+          className="text-center font-display italic tracking-[0.14em] px-6 py-3"
           style={{
             background: LILAC,
             color: INK,
-            fontSize: "clamp(12px, 3.6cqw, 22px)",
+            fontSize: "clamp(24px, 7.2cqw, 44px)",
             transform: "skew(-8deg)",
             fontWeight: 800,
             border: `2.5px solid ${INK}`,

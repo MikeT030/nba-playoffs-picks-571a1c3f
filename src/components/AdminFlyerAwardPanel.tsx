@@ -210,16 +210,21 @@ const AdminFlyerAwardPanel = () => {
             Card Assignments
           </p>
           <button
-            onClick={resetToTop4}
+            onClick={resetToTop3}
             className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
             <RotateCcw size={12} />
-            Reset to top 4
+            Reset to top 3
           </button>
         </div>
         <ul className="space-y-2">
-          {FLYER_CARDS.map((card) => {
+          {ASSIGNABLE_CARDS.map((card) => {
             const persistedUid = initialAssignments[card.id];
+            const selectedElsewhere = new Set(
+              ASSIGNABLE_CARDS.filter((c) => c.id !== card.id)
+                .map((c) => assignments[c.id])
+                .filter(Boolean)
+            );
             return (
               <li
                 key={card.id}
@@ -245,11 +250,13 @@ const AdminFlyerAwardPanel = () => {
                   className="bg-background border border-border rounded-md text-xs font-body px-2 py-1 max-w-[140px]"
                 >
                   <option value="">— none —</option>
-                  {userOptions.map((u) => (
-                    <option key={u.user_id} value={u.user_id}>
-                      {u.display_name} ({u.points} pts)
-                    </option>
-                  ))}
+                  {userOptions
+                    .filter((u) => !selectedElsewhere.has(u.user_id))
+                    .map((u) => (
+                      <option key={u.user_id} value={u.user_id}>
+                        {u.display_name} ({u.points} pts)
+                      </option>
+                    ))}
                 </select>
               </li>
             );

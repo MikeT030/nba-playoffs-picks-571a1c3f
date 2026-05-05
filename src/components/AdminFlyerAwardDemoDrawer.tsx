@@ -47,17 +47,23 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
     !!viewerClaimedCard &&
     (burned[viewerClaimedCard] ?? isDemoCardBurned(viewerClaimedCard));
 
-  // Auto-select the viewer's claimed card if they already have one
+  // Auto-claim & select the viewer's pre-assigned card so only their card shows.
   useEffect(() => {
     if (!open) {
       setJustBurnedId(null);
       setSelectedCardId(null);
       return;
     }
-    if (mode === "receiver" && viewerClaimedCard) {
-      setSelectedCardId(viewerClaimedCard);
+    if (mode === "receiver" && viewer) {
+      let card = viewerClaimedCard;
+      if (!card && viewer.cardId) {
+        if (claimDemoCard(viewer.cardId, viewer.user_id)) {
+          card = viewer.cardId;
+        }
+      }
+      if (card) setSelectedCardId(card);
     }
-  }, [open, mode, viewerClaimedCard]);
+  }, [open, mode, viewer, viewerClaimedCard]);
 
   // Lock body scroll while open
   useEffect(() => {
@@ -227,7 +233,19 @@ const StackedCards = ({
         height: `calc(min(70vw, 260px) * (4 / 3) + ${STACK_OFFSET_Y * (FLYER_CARD_IDS.length - 1)}px)`,
       }}
     >
-      {FLYER_CARD_IDS.map((cardId, i) => {
+      {((): FlyerCardId[] => {
+        if (mode !== "receiver") return [...FLYER_CARD_IDS];
+        // Find this viewer's allocated card: claimed first, otherwise pre-assigned.
+        const viewerName = viewerUserId;
+        const claimed =
+          viewerClaimedCard ??
+          (viewerName
+            ? (Object.entries(claims).find(([, uid]) => uid === viewerName)?.[0] as
+                | FlyerCardId
+                | undefined)
+            : undefined);
+        return claimed ? [claimed] : [];
+      })().map((cardId, i) => {
         const claimedBy = claims[cardId];
         const cardBurned = burned[cardId] ?? isDemoCardBurned(cardId);
         const isViewerCard = mode === "receiver" && claimedBy === viewerUserId;

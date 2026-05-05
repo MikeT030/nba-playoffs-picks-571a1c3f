@@ -306,7 +306,9 @@ export function resolveSeriesTeams(
       const parentSeries = seriesList.find((s) => s.id === series.topParentSeriesId);
       if (parentSeries) {
         const { topTeam: pTop, bottomTeam: pBottom } = resolveSeriesTeams(series.topParentSeriesId, picks, seriesList);
-        topTeam = parentWinner === pTop?.abbreviation ? pTop : pBottom;
+        if (parentWinner === pTop?.abbreviation) topTeam = pTop;
+        else if (parentWinner === pBottom?.abbreviation) topTeam = pBottom;
+        // else: pick doesn't match either parent team — leave undefined
       }
     }
   }
@@ -317,7 +319,8 @@ export function resolveSeriesTeams(
       const parentSeries = seriesList.find((s) => s.id === series.bottomParentSeriesId);
       if (parentSeries) {
         const { topTeam: pTop, bottomTeam: pBottom } = resolveSeriesTeams(series.bottomParentSeriesId, picks, seriesList);
-        bottomTeam = parentWinner === pTop?.abbreviation ? pTop : pBottom;
+        if (parentWinner === pTop?.abbreviation) bottomTeam = pTop;
+        else if (parentWinner === pBottom?.abbreviation) bottomTeam = pBottom;
       }
     }
   }

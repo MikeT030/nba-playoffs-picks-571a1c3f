@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import FloatingNav from "@/components/FloatingNav";
 import TopRightAuth from "@/components/TopRightAuth";
+import AwardDrawerHost from "@/components/AwardDrawerHost";
 
 // Eager: landing route users see first
 import Index from "./pages/Index.tsx";

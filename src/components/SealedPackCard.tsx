@@ -387,7 +387,7 @@ const FullPackFace = ({
       </div>
 
       {/* Card count — sits above the series banner on the left */}
-      <div className="absolute left-[5%] z-10" style={{ bottom: "calc(7% + 110px)" }}>
+      <div className="absolute left-[5%] z-10" style={{ bottom: "calc(7% + 95px)" }}>
         <div
           className="text-center font-display italic tracking-[0.14em] px-6 py-3"
           style={{

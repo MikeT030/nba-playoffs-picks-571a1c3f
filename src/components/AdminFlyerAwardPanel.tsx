@@ -114,9 +114,9 @@ const AdminFlyerAwardPanel = () => {
     for (const a of assigns) {
       if (a.card_id in map) map[a.card_id as CardId] = a.user_id;
     }
-    // Default any unassigned card to current top-3 (only 3 of 4 cards are assignable)
-    const top = computed.slice(0, 3);
-    FLYER_CARDS.slice(0, 3).forEach((c, i) => {
+    // Default any unassigned card to current top-N
+    const top = computed.slice(0, ASSIGNABLE_CARDS.length);
+    ASSIGNABLE_CARDS.forEach((c, i) => {
       if (!map[c.id] && top[i]) map[c.id] = top[i].user_id;
     });
     setAssignments(map);

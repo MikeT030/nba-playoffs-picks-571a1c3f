@@ -141,7 +141,7 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
       dismissible={canClose}
     >
       <DrawerContent
-        className="h-[92vh] border-none"
+        className="h-[calc(92vh+30px)] border-none"
         onClick={() => {
           if (mode !== "receiver" || !viewer) return;
           if (viewerHasBurned) return;

@@ -165,7 +165,7 @@ const BroadcastCarousel = ({ assignments }: { assignments: FlyerAssignment[] }) 
         <CarouselContent>
           {sorted.map((a) => (
             <CarouselItem key={a.user_id} className="flex flex-col items-center gap-3">
-              <p className="font-display text-xs tracking-[0.25em] uppercase text-primary font-bold">
+              <p className="font-display tracking-[0.25em] uppercase text-primary font-bold text-lg">
                 {a.display_name}
               </p>
               <div className="w-full" style={{ pointerEvents: "none" }}>

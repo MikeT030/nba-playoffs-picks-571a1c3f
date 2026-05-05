@@ -1,62 +1,61 @@
-## Goal
+# Ship Award Cards for Real (DB-backed)
 
-Replace the bottom drawer used to award FLYER – The Shot player cards with a full-screen overlay that mimics the reference image: 4 cards at full size, stacked and overlapping (left-to-right, each one nudged down/right), with the rightmost card on top.
+Move the flyer-award flow off `localStorage` and onto the existing `flyer_card_assignments` table, with realtime sync, then wire the auto-opening receiver/broadcast drawers from the previous plan on top.
 
-## Behavior
+## 1. Database migration
 
-**Receiver mode**
-1. Layer opens full-screen. No close (X) button is visible yet.
-2. Cards are shown at their natural size, stacked/overlapping like the reference image.
-3. First tap on any card: the card lifts up, animates to the center/front, becomes the topmost card overlapping the rest. It is now "selected" (claimed in `flyerDemo` for first-come, first-served).
-4. Second tap on the now-front (selected) card: triggers the existing `onBurn` burn animation. Sealed packs underneath cannot be tapped while another is selected (only the front card is interactive for burning).
-5. After the burn animation completes, a button styled like the existing "TAP TO BURN" pill appears beneath/over the card with the label **"Nice, got it"**. Tapping it closes the layer.
-6. A close `X` (top-right) becomes visible only after the user has burned their card. So the user has two ways to close after burning: the pill button or the X.
-7. Before the user has burned a card, the layer cannot be closed (Escape, overlay click, swipe-down all blocked).
+- Add columns to `public.flyer_card_assignments`:
+  - `burned_at timestamptz null`
+  - `round text not null default 'first_round'`
+- Unique constraint: `(round, user_id)` and `(round, card_id)` — one card per user per round, no duplicates.
+- New RLS policy: authenticated users can `UPDATE` their own row to set `burned_at`:
+  - `using (auth.uid() = user_id) with check (auth.uid() = user_id and burned_at is not null)`
+- Enable realtime:
+  - `ALTER TABLE public.flyer_card_assignments REPLICA IDENTITY FULL;`
+  - `ALTER PUBLICATION supabase_realtime ADD TABLE public.flyer_card_assignments;`
 
-**Broadcast mode**
-- Same full-screen layer + stacked layout, but cards are read-only (revealing only the ones whose owners burned them).
-- Close X is always visible in broadcast mode (admin needs to dismiss it).
+## 2. New runtime module: `src/lib/flyerState.ts`
 
-## Layout (reference image)
+Replaces `flyerDemo.ts` (keep the old file until call sites are migrated, then delete). Exports:
 
-```text
-   ┌──┐
-   │  │┌──┐
-   │  ││  │┌──┐
-   │  ││  ││  │┌──┐
-   │  ││  ││  ││  │  ← front (rightmost, fully visible)
-   └──┘└──┘└──┘└──┘
-```
+- `useFlyerState()` — selects all assignments for the current round, subscribes via `supabase.channel('flyer').on('postgres_changes', { table: 'flyer_card_assignments' }, ...)`. Returns `{ winners, burned, myCardId, loading }`.
+- `burnMyCard()` — `update flyer_card_assignments set burned_at = now() where user_id = auth.uid()`.
+- `getCardForUser(userId)` — derived from the fetched rows.
 
-- Each card uses its full intrinsic size (the same `FlyerCardForId` rendering used elsewhere).
-- Cards are absolutely positioned, offset by `~28px` right and `~22px` down per index, so each one peeks out from behind the next.
-- z-index increases left → right, so the rightmost card is on top by default.
-- When a card is "lifted", it animates to `translate(0,0)` centered, scales slightly up if needed to fit, and gets the highest z-index. The other cards slide back into the stacked layout (or fade slightly).
+## 3. Admin panel: `src/components/AdminFlyerAwardPanel.tsx`
 
-## Technical changes
+- Replace `setDemoWinners(...)` with a Supabase write:
+  - Delete existing rows for the current round, then insert one row per winner (`user_id`, `card_id`, `assigned_by = auth.uid()`, `round = 'first_round'`).
+- "Pick random" / "Clear" buttons now hit the DB.
+- Keep the demo preview drawers for admins to inspect both modes against live data.
 
-**`src/components/AdminFlyerAwardDemoDrawer.tsx`** — rename usage left as-is for callers; internally swap `Drawer` for a full-screen overlay (fixed `inset-0 z-50 bg-background`, no Vaul). Replace the fan layout with the new stacked layout.
+## 4. Receiver drawer: `src/components/AdminFlyerAwardDemoDrawer.tsx`
 
-State to add:
-- `selectedCardId: FlyerCardId | null` — which card is currently lifted to the front.
-- Keep `justBurnedId` for the burn animation; derive `hasBurned` from `claims + burned` for the viewer.
+- Remove the claim/unclaim mechanic. Cards are pre-assigned, so the receiver just sees their own card.
+- "Burn" calls `burnMyCard()` instead of `markDemoCardBurned()`.
+- Rename file/component to `FlyerAwardDrawer` for clarity.
 
-Click logic in receiver mode:
-- If no card selected → tapping any card calls `claimDemoCard` (if not already claimed by viewer) and sets `selectedCardId`. If already claimed by viewer, just sets `selectedCardId` to that claimed card.
-- If a card is selected and the tap is on the *same* card → trigger burn (pass `onBurn` to `FlyerCardForId` which already wires through to the sealed pack). Other cards are non-interactive while one is selected.
-- The viewer can only ever claim one card; subsequent taps on other cards are ignored once a claim exists.
+## 5. Global auto-open host: `src/components/AwardDrawerHost.tsx`
 
-Close gating:
-- Replace the Drawer's built-in dismissal. Use a controlled `Dialog`-style div with `onPointerDownOutside`/`onEscapeKeyDown` blocked until `hasBurned`.
-- Render an `X` button (top-right) only when `hasBurned || mode === "broadcast"`.
-- Render the "Nice, got it" pill (reusing the same visual style as the "TAP TO BURN" pill from `SealedPackCardToppsStyle` — black/55 bg, white text, rounded-full, font-display tracking) below the burned card. Clicking it calls `onOpenChange(false)`.
+Mounted once in `src/App.tsx` inside `AuthProvider`:
 
-**Header / copy** — keep existing headline/subline text but render in a top bar inside the full-screen layer (not in the Drawer header).
+- Reads `useFlyerState()` + `useAuth()`.
+- If current user has an assignment with `burned_at = null` → render `FlyerAwardDrawer mode="receiver"`, open. Closes only after they burn.
+- Else, if user is a winner and the set of `burned_at` values has changed since the last value they saw (tracked per-device in `localStorage` key `flyer.lastSeenBurnedAt.<userId>`), open the drawer in `mode="broadcast"`. On close, persist the latest `max(burned_at)` they've seen.
+- Receiver mode wins over broadcast.
 
-**No changes needed** to `flyerDemo.ts`, `DemoFlyerCardVariants.tsx`, or the sealed pack components — the burn flow stays identical.
+## 6. Surface flyer cards beyond the drawer
 
-## Files touched
+- `src/pages/Settings.tsx`: existing "FLYER – THE SHOT" block already renders below "THAT'S YOU" — switch its data source from `useDemoFlyerState` to `useFlyerState`.
+- `src/pages/Scoreboard.tsx`: in the player-card drawer, after fetching `flyer_card_assignments`, append one extra slide per player who also has a flyer card. Render with `<FlyerCardForId cardId=... defaultOpened hideHeading />`.
 
-- `src/components/AdminFlyerAwardDemoDrawer.tsx` — full rewrite of the layout & interaction model (Drawer → full-screen overlay, fan → stack, add lift/select state, gated close, "Nice, got it" button).
+## 7. Cleanup
 
-No other files need changes; callers in `Settings.tsx` / `AdminFlyerAwardPanel.tsx` continue to use the same props (`open`, `onOpenChange`, `mode`, `viewerUserId`).
+- Delete `src/lib/flyerDemo.ts` and rename `useDemoFlyerState` references.
+- Remove the "demo" wording from admin labels now that it's real.
+
+## Notes / risks
+
+- Broadcast "seen" tracking is per-device. If you want cross-device consistency later, add a small `flyer_broadcast_seen (user_id, last_seen_burned_at)` table — not required for v1.
+- The new `UPDATE` RLS policy intentionally only allows users to set `burned_at` on their own row; admins still manage everything else via the existing admin policies.
+- After the migration, an admin must re-assign winners once via the admin panel — the localStorage demo state does not migrate over.

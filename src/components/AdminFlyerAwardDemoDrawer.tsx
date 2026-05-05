@@ -109,7 +109,16 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
         This is your new player card.
       </>
     ) : (
-      `It's official, ${formatNames(winners.map((w) => w.name))} finished top 3 in the first round. Each won a new player card as a reward.`
+      <>
+        It's official,{" "}
+        {winners.map((w, i) => (
+          <span key={w.user_id}>
+            <span className="text-primary font-bold">{w.name}</span>
+            {i < winners.length - 2 ? ", " : i === winners.length - 2 ? ", and " : ""}
+          </span>
+        ))}{" "}
+        finished top 3 in the first round. Each won a new player card as a reward.
+      </>
     );
 
   const subline =

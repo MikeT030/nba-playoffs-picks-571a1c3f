@@ -305,7 +305,7 @@ const CHAPMAN_PRESET: FlyerPreset = {
     yearLabel: "1996-97",
     midLine: "PLATINUM SUPER COLOR",
     tierLine: ["1", "PREMIUM", "PLATINUM", "CARD"],
-    seriesLabel: "Sizzling hot 2026 playoffs series",
+    seriesLabel: "SIZZLING HOT 2026 SERIES",
   },
 };
 
@@ -373,7 +373,7 @@ const MILLER_PRESET: FlyerPreset = {
     yearLabel: "2011-12",
     midLine: "PLATINUM SUPER COLOR",
     tierLine: ["1", "PREMIUM", "PLATINUM", "CARD"],
-    seriesLabel: "Sizzling hot 2026 playoffs series",
+    seriesLabel: "SIZZLING HOT 2026 SERIES",
   },
 };
 

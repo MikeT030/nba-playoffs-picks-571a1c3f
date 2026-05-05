@@ -475,6 +475,7 @@ const Scoreboard = () => {
   const [scoreboard, setScoreboard] = useState<ParticipantScore[]>([]);
   const [loading, setLoading] = useState(true);
   const [cardMap, setCardMap] = useState<Record<string, string>>({});
+  const [flyerMap, setFlyerMap] = useState<Record<string, FlyerCardId>>({});
   const [cardDialogOpen, setCardDialogOpen] = useState(false);
   const [selectedCardIndex, setSelectedCardIndex] = useState(0);
   const [allPicks, setAllPicks] = useState<PickRow[]>([]);
@@ -482,14 +483,20 @@ const Scoreboard = () => {
   const { data: resolvedBracket } = useBracketData();
   const seriesListForExport = resolvedBracket ?? bracketSeries;
 
-  // Build list of players with cards for navigation
-  const playersWithCards = scoreboard
-    .map((p) => {
-      const cardId = cardMap[p.name];
-      const card = cardId ? playerCards.find((c) => c.id === cardId) : null;
-      return card ? { name: p.name, card } : null;
-    })
-    .filter(Boolean) as { name: string; card: (typeof playerCards)[0] }[];
+  // Build list of players with cards for navigation. Each player can have a regular
+  // player card AND a flyer award card; both appear as separate slides.
+  type Slide =
+    | { kind: "player"; name: string; card: (typeof playerCards)[0] }
+    | { kind: "flyer"; name: string; flyerCardId: FlyerCardId };
+  const playersWithCards: Slide[] = scoreboard.flatMap((p) => {
+    const out: Slide[] = [];
+    const cardId = cardMap[p.name];
+    const card = cardId ? playerCards.find((c) => c.id === cardId) : null;
+    if (card) out.push({ kind: "player", name: p.name, card });
+    const flyerId = flyerMap[p.name];
+    if (flyerId) out.push({ kind: "flyer", name: p.name, flyerCardId: flyerId });
+    return out;
+  });
 
   const openCardDialog = (playerName: string) => {
     const idx = playersWithCards.findIndex((p) => p.name === playerName);

@@ -234,17 +234,11 @@ const StackedCards = ({
   onSelect,
   onBurn,
 }: StackedCardsProps) => {
-  // Card width — full container so the card displays at its natural size
+  // Receiver mode only shows the single allocated card at its natural size.
   const cardWidthClass = "w-full";
 
   return (
-    <div
-      className="relative w-full"
-      style={{
-        width: `calc(100% + ${STACK_OFFSET_X * (FLYER_CARD_IDS.length - 1)}px)`,
-        height: `calc(100% * (4 / 3) + ${STACK_OFFSET_Y * (FLYER_CARD_IDS.length - 1)}px)`,
-      }}
-    >
+    <div className="relative w-full">
       {((): FlyerCardId[] => {
         if (mode !== "receiver") return [...FLYER_CARD_IDS];
         // Find this viewer's allocated card: claimed first, otherwise pre-assigned.

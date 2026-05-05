@@ -15,7 +15,7 @@ interface SealedPackCardProps {
   midLine?: string;
   /** Bottom-left tier line (e.g. "1 PREMIUM FLYER CARD"). */
   tierLine?: string[];
-  /** Bottom banner (e.g. "Sizzling hot 2026 series"). */
+  /** Bottom banner (e.g. "Sizzling hot 2026 playoffs series"). */
   seriesLabel?: string;
   /** Start opened (skip animation, used for already-burned demo state). */
   defaultOpened?: boolean;
@@ -37,7 +37,7 @@ const SealedPackCard = ({
   yearLabel = "1996-97",
   midLine = "PLATINUM SUPER COLOR",
   tierLine = ["1", "PREMIUM", "PLATINUM", "CARD"],
-  seriesLabel = "Sizzling hot 2026 series",
+  seriesLabel = "Sizzling hot 2026 playoffs series",
   defaultOpened = false,
   onOpen,
 }: SealedPackCardProps) => {

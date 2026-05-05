@@ -88,11 +88,9 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
   const headline =
     mode === "receiver" ? (
       <>
-        <span className="text-primary font-bold">{viewer?.name ?? "You"}</span>,
+        <span className="text-primary font-bold">{viewer?.name ?? "You"}</span>, you finished the 1st round among the top 3!
         <br />
-        you're worthy of receiving 1 of 4
-        <br />
-        FLYER – The Shot player cards.
+        This is your new player card.
       </>
     ) : (
       `It's official, ${formatNames(winners.map((w) => w.name))} are worthy of receiving 1 of 4 FLYER – The Shot player cards.`

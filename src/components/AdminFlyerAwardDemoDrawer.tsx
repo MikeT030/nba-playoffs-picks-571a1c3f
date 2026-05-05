@@ -150,34 +150,36 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
       {/* Stack stage */}
       <div className="flex-1 min-h-0 overflow-y-auto px-4">
         <div className="relative mx-auto w-full max-w-md flex items-center justify-center py-6">
-          <StackedCards
-            mode={mode}
-            viewerUserId={viewer?.user_id}
-            claims={claims}
-            burned={burned}
-            selectedCardId={selectedCardId}
-            justBurnedId={justBurnedId}
-            viewerClaimedCard={viewerClaimedCard}
-            onSelect={(cardId) => {
-              if (mode !== "receiver" || !viewer) return;
-              if (viewerHasBurned) return;
-              // If viewer already claimed a card, only that card is selectable
-              if (viewerClaimedCard && cardId !== viewerClaimedCard) return;
-              // First selection: claim it
-              if (!viewerClaimedCard) {
-                const ok = claimDemoCard(cardId, viewer.user_id);
-                if (!ok) {
-                  toast.error("That pack just got claimed.");
-                  return;
+          {mode === "broadcast" ? (
+            <BroadcastCarousel winners={winners} burned={burned} />
+          ) : (
+            <StackedCards
+              mode={mode}
+              viewerUserId={viewer?.user_id}
+              claims={claims}
+              burned={burned}
+              selectedCardId={selectedCardId}
+              justBurnedId={justBurnedId}
+              viewerClaimedCard={viewerClaimedCard}
+              onSelect={(cardId) => {
+                if (mode !== "receiver" || !viewer) return;
+                if (viewerHasBurned) return;
+                if (viewerClaimedCard && cardId !== viewerClaimedCard) return;
+                if (!viewerClaimedCard) {
+                  const ok = claimDemoCard(cardId, viewer.user_id);
+                  if (!ok) {
+                    toast.error("That pack just got claimed.");
+                    return;
+                  }
                 }
-              }
-              setSelectedCardId(cardId);
-            }}
-            onBurn={(cardId) => {
-              setJustBurnedId(cardId);
-              markDemoCardBurned(cardId);
-            }}
-          />
+                setSelectedCardId(cardId);
+              }}
+              onBurn={(cardId) => {
+                setJustBurnedId(cardId);
+                markDemoCardBurned(cardId);
+              }}
+            />
+          )}
         </div>
       </div>
 

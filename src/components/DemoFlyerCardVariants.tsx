@@ -359,7 +359,7 @@ const MILLER_PRESET: FlyerPreset = {
   firstName: "MIKE",
   lastName: "MILLER",
   quote: MILLER_QUOTE,
-  quoteBgColor: "rgba(152, 1, 46, 0.3)",
+  quoteBgColor: "rgba(152, 1, 46, 0.4)",
   stats: [
     { label: "PTS", value: 23 },
     { label: "TRB", value: 5 },
@@ -393,7 +393,7 @@ const DAVIS_PRESET: FlyerPreset = {
   firstName: "GLEN",
   lastName: "DAVIS",
   quote: DAVIS_QUOTE,
-  quoteBgColor: "rgba(0, 122, 51, 0.3)",
+  quoteBgColor: "rgba(0, 122, 51, 0.4)",
   stats: [
     { label: "PTS", value: 21 },
     { label: "TRB", value: 6 },

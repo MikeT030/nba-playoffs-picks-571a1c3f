@@ -363,24 +363,23 @@ const FullPackFace = ({
 
       {/* Bottom-right: colored corner wedge behind the logo */}
       <div
-        className="absolute bottom-0 right-0 z-[5] pointer-events-none"
+        className="absolute bottom-0 right-0 z-[5]"
         style={{ width: "clamp(110px, 36cqw, 220px)", height: "clamp(110px, 36cqw, 220px)" }}
       >
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full block">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full block pointer-events-none">
           <polygon points="100,0 100,100 0,100" fill="hsl(var(--primary))" />
           <line x1="100" y1="0" x2="0" y2="100" stroke={INK} strokeWidth="2.5" vectorEffect="non-scaling-stroke" />
         </svg>
-      </div>
-
-      {/* Bottom-right: logo */}
-      <div className="absolute bottom-[7%] right-[5%] z-10 flex flex-col items-center">
+        {/* Logo centered on the triangle's centroid (2/3, 2/3 of wedge) */}
         <img
           src={flyerCouchClubLogo}
           alt={topBanner}
-          className="h-auto"
+          className="absolute h-auto -translate-x-1/2 -translate-y-1/2"
           style={{
+            left: "66.667%",
+            top: "66.667%",
             width: "clamp(64px, 26cqw, 160px)",
-            transform: "rotate(-25deg)",
+            transform: "translate(-50%, -50%) rotate(-25deg)",
             filter: `drop-shadow(2px 2px 0 ${PINK}) drop-shadow(0 2px 4px rgba(0,0,0,0.4))`,
           }}
         />

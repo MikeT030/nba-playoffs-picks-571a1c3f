@@ -325,28 +325,7 @@ const FullPackFace = ({
         </h1>
       </div>
 
-      {/* Basketball — only bottom-right quarter visible, anchored to the left */}
-      <div className="absolute left-[2%] w-[38.5%] aspect-square z-0 overflow-hidden" style={{ top: "calc(5% - 10px)" }}>
-        <div className="absolute" style={{ top: "-100%", left: "-100%", width: "200%", height: "200%" }}>
-          <div
-            className="absolute inset-0 rounded-full"
-            style={{
-              background: `radial-gradient(circle at 38% 35%, #fdba74 0%, ${CORAL} 50%, #9a3412 95%)`,
-              boxShadow: `inset -8px -10px 22px rgba(0,0,0,0.5), 6px 6px 0 ${INK}`,
-              border: `3px solid ${INK}`,
-            }}
-          />
-          {/* Seams */}
-          <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full" aria-hidden>
-            <g fill="none" stroke={INK} strokeWidth="2" strokeLinecap="round">
-              <line x1="50" y1="2" x2="50" y2="98" />
-              <line x1="2" y1="50" x2="98" y2="50" />
-              <path d="M 12 18 Q 50 50 12 82" />
-              <path d="M 88 18 Q 50 50 88 82" />
-            </g>
-          </svg>
-        </div>
-      </div>
+      {/* Big basketball hidden */}
 
 
       {/* Bottom-left: series banner */}

@@ -22,6 +22,8 @@ import { playerCards } from "@/data/playerCards";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import PlayerCard from "@/components/PlayerCard";
+import { FlyerCardForId } from "@/components/DemoFlyerCardVariants";
+import { FLYER_CARD_IDS, type FlyerCardId } from "@/lib/flyerState";
 import { ScoreRibbon } from "@/components/DemoVisualScoreboard";
 
 
@@ -473,6 +475,7 @@ const Scoreboard = () => {
   const [scoreboard, setScoreboard] = useState<ParticipantScore[]>([]);
   const [loading, setLoading] = useState(true);
   const [cardMap, setCardMap] = useState<Record<string, string>>({});
+  const [flyerMap, setFlyerMap] = useState<Record<string, FlyerCardId>>({});
   const [cardDialogOpen, setCardDialogOpen] = useState(false);
   const [selectedCardIndex, setSelectedCardIndex] = useState(0);
   const [allPicks, setAllPicks] = useState<PickRow[]>([]);
@@ -480,14 +483,20 @@ const Scoreboard = () => {
   const { data: resolvedBracket } = useBracketData();
   const seriesListForExport = resolvedBracket ?? bracketSeries;
 
-  // Build list of players with cards for navigation
-  const playersWithCards = scoreboard
-    .map((p) => {
-      const cardId = cardMap[p.name];
-      const card = cardId ? playerCards.find((c) => c.id === cardId) : null;
-      return card ? { name: p.name, card } : null;
-    })
-    .filter(Boolean) as { name: string; card: (typeof playerCards)[0] }[];
+  // Build list of players with cards for navigation. Each player can have a regular
+  // player card AND a flyer award card; both appear as separate slides.
+  type Slide =
+    | { kind: "player"; name: string; card: (typeof playerCards)[0] }
+    | { kind: "flyer"; name: string; flyerCardId: FlyerCardId };
+  const playersWithCards: Slide[] = scoreboard.flatMap((p) => {
+    const out: Slide[] = [];
+    const cardId = cardMap[p.name];
+    const card = cardId ? playerCards.find((c) => c.id === cardId) : null;
+    if (card) out.push({ kind: "player", name: p.name, card });
+    const flyerId = flyerMap[p.name];
+    if (flyerId) out.push({ kind: "flyer", name: p.name, flyerCardId: flyerId });
+    return out;
+  });
 
   const openCardDialog = (playerName: string) => {
     const idx = playersWithCards.findIndex((p) => p.name === playerName);
@@ -499,11 +508,12 @@ const Scoreboard = () => {
 
   useEffect(() => {
     const fetchScores = async () => {
-      const [picksRes, resultsRes, profilesRes, cardsRes] = await Promise.all([
+      const [picksRes, resultsRes, profilesRes, cardsRes, flyersRes] = await Promise.all([
         supabase.from("picks").select("profile_name, series_id, winner, games_in_series, user_id"),
         supabase.from("series_results").select("series_id, winner, games_played"),
         supabase.from("profiles").select("user_id, display_name"),
         supabase.from("player_card_assignments").select("user_id, card_id"),
+        supabase.from("flyer_card_assignments").select("user_id, card_id"),
       ]);
       const activeUserIds = new Set((profilesRes.data || []).map((p: any) => p.user_id));
       const picks = ((picksRes.data || []) as (PickRow & { user_id: string })[]).filter(p => activeUserIds.has(p.user_id));
@@ -521,6 +531,15 @@ const Scoreboard = () => {
         if (name) nameToCard[name] = c.card_id;
       }
       setCardMap(nameToCard);
+
+      const nameToFlyer: Record<string, FlyerCardId> = {};
+      for (const f of (flyersRes.data || [])) {
+        const name = userToName.get(f.user_id);
+        if (name && (FLYER_CARD_IDS as readonly string[]).includes(f.card_id)) {
+          nameToFlyer[name] = f.card_id as FlyerCardId;
+        }
+      }
+      setFlyerMap(nameToFlyer);
 
       setLoading(false);
     };
@@ -676,7 +695,20 @@ const Scoreboard = () => {
 
                 {/* Card */}
                 <div className="relative w-full">
-                  <PlayerCard player={playersWithCards[selectedCardIndex]?.card} />
+                  {(() => {
+                    const slide = playersWithCards[selectedCardIndex];
+                    if (!slide) return null;
+                    if (slide.kind === "flyer") {
+                      return (
+                        <FlyerCardForId
+                          cardId={slide.flyerCardId}
+                          defaultOpened
+                          hideHeading
+                        />
+                      );
+                    }
+                    return <PlayerCard player={slide.card} />;
+                  })()}
                 </div>
 
                 {/* Dots indicator */}

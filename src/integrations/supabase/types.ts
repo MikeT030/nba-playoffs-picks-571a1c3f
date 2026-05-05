@@ -18,19 +18,25 @@ export type Database = {
         Row: {
           assigned_at: string
           assigned_by: string | null
+          burned_at: string | null
           card_id: string
+          round: string
           user_id: string
         }
         Insert: {
           assigned_at?: string
           assigned_by?: string | null
+          burned_at?: string | null
           card_id: string
+          round?: string
           user_id: string
         }
         Update: {
           assigned_at?: string
           assigned_by?: string | null
+          burned_at?: string | null
           card_id?: string
+          round?: string
           user_id?: string
         }
         Relationships: []

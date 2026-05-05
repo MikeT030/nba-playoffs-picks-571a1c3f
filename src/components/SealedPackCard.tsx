@@ -301,9 +301,9 @@ const FullPackFace = ({
         </h1>
       </div>
 
-      {/* Basketball — scaled 1.5x, top half clipped (only bottom hemisphere visible) */}
-      <div className="absolute left-1/2 -translate-x-1/2 w-[69.6%] aspect-[2/1] z-0 overflow-hidden" style={{ top: "calc(5% - 10px)" }}>
-        <div className="absolute left-0 right-0 top-0 w-full aspect-square" style={{ transform: "translateY(-50%)" }}>
+      {/* Basketball — only bottom-right quarter visible, anchored to the left */}
+      <div className="absolute left-[2%] w-[35%] aspect-square z-0 overflow-hidden" style={{ top: "calc(5% - 10px)" }}>
+        <div className="absolute w-full h-full" style={{ top: "-50%", left: "-50%" }}>
           <div
             className="absolute inset-0 rounded-full"
             style={{

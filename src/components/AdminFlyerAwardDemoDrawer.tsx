@@ -397,7 +397,7 @@ const BroadcastCarousel = ({ winners, burned }: BroadcastCarouselProps) => {
                 <p className="font-display text-xs tracking-[0.25em] uppercase text-primary font-bold">
                   {w.name}
                 </p>
-                <div className="w-full">
+                <div className="w-full" style={{ pointerEvents: "none" }}>
                   <FlyerCardForId
                     cardId={w.cardId}
                     sealed={!cardBurned}

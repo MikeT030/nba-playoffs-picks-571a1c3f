@@ -22,6 +22,8 @@ import { playerCards } from "@/data/playerCards";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import PlayerCard from "@/components/PlayerCard";
+import { FlyerCardForId } from "@/components/DemoFlyerCardVariants";
+import { FLYER_CARD_IDS, type FlyerCardId } from "@/lib/flyerState";
 import { ScoreRibbon } from "@/components/DemoVisualScoreboard";
 
 

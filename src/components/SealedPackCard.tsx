@@ -284,7 +284,7 @@ const FullPackFace = ({
       <SerratedEdge position="top" />
 
       {/* Three mini basketballs above the headline */}
-      <div className="absolute left-0 right-0 z-10 flex justify-center items-center gap-3 px-4" style={{ top: "calc(12% - 6px)" }}>
+      <div className="absolute left-0 right-0 z-10 flex justify-start items-center gap-3 px-4" style={{ top: "calc(12% - 6px)" }}>
         {[0, 1, 2].map((i) => (
           <div key={i} className="relative w-[10%] aspect-square">
             <div

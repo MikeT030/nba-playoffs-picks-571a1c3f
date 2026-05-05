@@ -202,7 +202,7 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
 
       {/* Footer */}
       <div className="shrink-0 px-4 pb-8 pt-2 flex flex-col items-center gap-4">
-        <p className="text-center font-body text-xs sm:text-sm text-muted-foreground max-w-md">
+        <p className="text-center font-body text-xs sm:text-sm max-w-md text-[#ededed]">
           {subline}
         </p>
 

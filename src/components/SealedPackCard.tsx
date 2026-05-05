@@ -342,7 +342,7 @@ const FullPackFace = ({
             boxShadow: `4px 4px 0 ${YELLOW}`,
           }}
         >
-          <span className="inline-block leading-tight" style={{ transform: "skew(8deg)" }}>
+          <span className="inline-block leading-tight text-left" style={{ transform: "skew(8deg)" }}>
             {(() => {
               const lower = seriesLabel.toLowerCase();
               const idx = lower.indexOf("hot");

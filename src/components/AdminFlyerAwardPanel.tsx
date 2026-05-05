@@ -145,14 +145,14 @@ const AdminFlyerAwardPanel = () => {
   }, [standings, profiles]);
 
   const dirty = useMemo(
-    () => FLYER_CARDS.some((c) => assignments[c.id] !== initialAssignments[c.id]),
+    () => ASSIGNABLE_CARDS.some((c) => assignments[c.id] !== initialAssignments[c.id]),
     [assignments, initialAssignments]
   );
 
-  const resetToTop4 = () => {
-    const top = standings.slice(0, 4);
+  const resetToTop3 = () => {
+    const top = standings.slice(0, 3);
     const next: Record<CardId, string> = { chapman: "", paxson: "", miller: "", davis: "" };
-    FLYER_CARDS.forEach((c, i) => {
+    ASSIGNABLE_CARDS.forEach((c, i) => {
       if (top[i]) next[c.id] = top[i].user_id;
     });
     setAssignments(next);
@@ -160,7 +160,7 @@ const AdminFlyerAwardPanel = () => {
 
   const save = async () => {
     setSaving(true);
-    const rows = FLYER_CARDS.filter((c) => assignments[c.id]).map((c) => ({
+    const rows = ASSIGNABLE_CARDS.filter((c) => assignments[c.id]).map((c) => ({
       card_id: c.id,
       user_id: assignments[c.id],
       assigned_by: user?.id ?? null,

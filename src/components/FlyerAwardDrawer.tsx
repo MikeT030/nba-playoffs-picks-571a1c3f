@@ -66,7 +66,7 @@ const FlyerAwardDrawer = ({ open, onOpenChange, mode, viewerUserId, assignments 
         This is your new player card.
       </>
     ) : (
-      `It's official, ${formatNames(assignments.map((a) => a.display_name))} finished top 3 in the first round. Each won a new player card as a reward.`
+      `It's official, ${formatNames(assignments.map((a) => a.display_name))} finished top 3 in the first round. Each one got a new player card as a reward.`
     );
 
   const subline =

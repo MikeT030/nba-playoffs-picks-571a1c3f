@@ -115,7 +115,7 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-background flex flex-col animate-fade-in"
+      className="fixed inset-0 z-50 bg-background/80 backdrop-blur-md flex flex-col animate-fade-in"
       role="dialog"
       aria-modal="true"
       onClick={() => {

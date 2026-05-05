@@ -284,9 +284,9 @@ const FullPackFace = ({
       <SerratedEdge position="top" />
 
       {/* Big title — Memphis stacked shadow, words stacked into a block */}
-      <div className="absolute left-0 right-0 text-center px-2 z-10" style={{ top: "calc(12% - 6px)" }}>
+      <div className="absolute left-0 right-0 text-left px-2 z-10" style={{ top: "calc(12% - 6px)" }}>
         <h1
-          className="font-display italic leading-[0.95] tracking-tight flex flex-col items-center"
+          className="font-display italic leading-[0.95] tracking-tight flex flex-col items-start"
           style={{
             fontSize: "clamp(19px, 8.4cqw, 50px)",
             color: YELLOW,

@@ -302,7 +302,7 @@ const FullPackFace = ({
       </div>
 
       {/* Basketball — only bottom-right quarter visible, anchored to the left */}
-      <div className="absolute left-[2%] w-[35%] aspect-square z-0 overflow-hidden" style={{ top: "calc(5% - 10px)" }}>
+      <div className="absolute left-[2%] w-[38.5%] aspect-square z-0 overflow-hidden" style={{ top: "calc(5% - 10px)" }}>
         <div className="absolute" style={{ top: "-100%", left: "-100%", width: "200%", height: "200%" }}>
           <div
             className="absolute inset-0 rounded-full"

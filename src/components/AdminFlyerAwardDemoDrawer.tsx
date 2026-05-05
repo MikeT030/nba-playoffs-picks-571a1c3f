@@ -1,6 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
-import { X } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { FlyerCardForId } from "@/components/DemoFlyerCardVariants";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 import {
   FLYER_CARD_IDS,
   type FlyerCardId,

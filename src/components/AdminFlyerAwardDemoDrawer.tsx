@@ -94,7 +94,9 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
   const headline =
     mode === "receiver" ? (
       <>
-        <span className="text-primary font-bold">{viewer?.name ?? "You"}</span>, you finished the 1st round among the top 3!
+        <span className="text-primary font-bold">{viewer?.name ?? "You"}</span>,
+        <br />
+        you finished the 1st round among the top 3!
         <br />
         This is your new player card.
       </>

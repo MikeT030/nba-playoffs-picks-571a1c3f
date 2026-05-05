@@ -361,6 +361,17 @@ const FullPackFace = ({
         </div>
       </div>
 
+      {/* Bottom-right: colored corner wedge behind the logo */}
+      <div
+        className="absolute bottom-0 right-0 z-[5] pointer-events-none"
+        style={{ width: "clamp(110px, 36cqw, 220px)", height: "clamp(110px, 36cqw, 220px)" }}
+      >
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full block">
+          <polygon points="100,0 100,100 0,100" fill={PINK} />
+          <line x1="100" y1="0" x2="0" y2="100" stroke={INK} strokeWidth="2.5" vectorEffect="non-scaling-stroke" />
+        </svg>
+      </div>
+
       {/* Bottom-right: logo */}
       <div className="absolute bottom-[7%] right-[5%] z-10 flex flex-col items-center">
         <img

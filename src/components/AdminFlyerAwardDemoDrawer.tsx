@@ -101,7 +101,7 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
         This is your new player card.
       </>
     ) : (
-      `It's official, ${formatNames(winners.map((w) => w.name))} are worthy of receiving 1 of 4 FLYER – The Shot player cards.`
+      `It's official, ${formatNames(winners.map((w) => w.name))} finished top 3 in the first round. Each won a new player card as a reward.`
     );
 
   const subline =

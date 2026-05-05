@@ -20,6 +20,10 @@ const FLYER_CARDS = [
   { id: "davis", label: "Davis" },
 ] as const;
 
+// Only the top 3 finishers from the previous round get a card.
+// 3 of the 4 flyer cards can be assigned (one card per user).
+const ASSIGNABLE_CARDS = FLYER_CARDS.slice(0, 3);
+
 type CardId = FlyerCardId;
 
 interface ProfileRow {

@@ -234,15 +234,15 @@ const StackedCards = ({
   onSelect,
   onBurn,
 }: StackedCardsProps) => {
-  // Card width — sized so 4 stacked cards (with offsets) fit comfortably on mobile
-  const cardWidthClass = "w-[70vw] max-w-[260px]";
+  // Card width — full container so the card displays at its natural size
+  const cardWidthClass = "w-full";
 
   return (
     <div
-      className="relative"
+      className="relative w-full"
       style={{
-        width: `calc(min(70vw, 260px) + ${STACK_OFFSET_X * (FLYER_CARD_IDS.length - 1)}px)`,
-        height: `calc(min(70vw, 260px) * (4 / 3) + ${STACK_OFFSET_Y * (FLYER_CARD_IDS.length - 1)}px)`,
+        width: `calc(100% + ${STACK_OFFSET_X * (FLYER_CARD_IDS.length - 1)}px)`,
+        height: `calc(100% * (4 / 3) + ${STACK_OFFSET_Y * (FLYER_CARD_IDS.length - 1)}px)`,
       }}
     >
       {((): FlyerCardId[] => {

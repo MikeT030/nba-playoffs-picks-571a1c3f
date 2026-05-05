@@ -291,7 +291,7 @@ const FullPackFace = ({
               className="absolute inset-0 rounded-full"
               style={{
                 background: `radial-gradient(circle at 38% 35%, #fdba74 0%, ${CORAL} 50%, #9a3412 95%)`,
-                boxShadow: `inset -3px -4px 8px rgba(0,0,0,0.5), 2px 2px 0 ${PINK}, 4px 4px 0 ${CYAN}, 6px 6px 0 ${INK}`,
+                boxShadow: `inset -3px -4px 8px rgba(0,0,0,0.5), 2px 2px 0 ${INK}`,
                 border: `2px solid ${INK}`,
               }}
             />

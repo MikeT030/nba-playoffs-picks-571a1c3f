@@ -105,7 +105,9 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
       <>
         <span className="text-primary font-bold">{viewer?.name ?? "You"}</span>,
         <br />
-        you finished the first round in the top 3! Here is your reward.
+        you finished the first round in the top 3!
+        <br />
+        Here is your reward.
       </>
     ) : (
       <>

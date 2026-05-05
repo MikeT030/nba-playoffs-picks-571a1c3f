@@ -20,6 +20,10 @@ const FLYER_CARDS = [
   { id: "davis", label: "Davis" },
 ] as const;
 
+// Only the top 3 finishers from the previous round get a card.
+// 3 of the 4 flyer cards can be assigned (one card per user).
+const ASSIGNABLE_CARDS = FLYER_CARDS.slice(0, 3);
+
 type CardId = FlyerCardId;
 
 interface ProfileRow {
@@ -111,9 +115,9 @@ const AdminFlyerAwardPanel = () => {
     for (const a of assigns) {
       if (a.card_id in map) map[a.card_id as CardId] = a.user_id;
     }
-    // Default any unassigned card to current top-N
-    const top = computed.slice(0, 4);
-    FLYER_CARDS.forEach((c, i) => {
+    // Default any unassigned card to current top-3 (only 3 of 4 cards are assignable)
+    const top = computed.slice(0, 3);
+    FLYER_CARDS.slice(0, 3).forEach((c, i) => {
       if (!map[c.id] && top[i]) map[c.id] = top[i].user_id;
     });
     setAssignments(map);
@@ -141,14 +145,14 @@ const AdminFlyerAwardPanel = () => {
   }, [standings, profiles]);
 
   const dirty = useMemo(
-    () => FLYER_CARDS.some((c) => assignments[c.id] !== initialAssignments[c.id]),
+    () => ASSIGNABLE_CARDS.some((c) => assignments[c.id] !== initialAssignments[c.id]),
     [assignments, initialAssignments]
   );
 
-  const resetToTop4 = () => {
-    const top = standings.slice(0, 4);
+  const resetToTop3 = () => {
+    const top = standings.slice(0, 3);
     const next: Record<CardId, string> = { chapman: "", paxson: "", miller: "", davis: "" };
-    FLYER_CARDS.forEach((c, i) => {
+    ASSIGNABLE_CARDS.forEach((c, i) => {
       if (top[i]) next[c.id] = top[i].user_id;
     });
     setAssignments(next);
@@ -156,7 +160,7 @@ const AdminFlyerAwardPanel = () => {
 
   const save = async () => {
     setSaving(true);
-    const rows = FLYER_CARDS.filter((c) => assignments[c.id]).map((c) => ({
+    const rows = ASSIGNABLE_CARDS.filter((c) => assignments[c.id]).map((c) => ({
       card_id: c.id,
       user_id: assignments[c.id],
       assigned_by: user?.id ?? null,
@@ -206,16 +210,21 @@ const AdminFlyerAwardPanel = () => {
             Card Assignments
           </p>
           <button
-            onClick={resetToTop4}
+            onClick={resetToTop3}
             className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
             <RotateCcw size={12} />
-            Reset to top 4
+            Reset to top 3
           </button>
         </div>
         <ul className="space-y-2">
-          {FLYER_CARDS.map((card) => {
+          {ASSIGNABLE_CARDS.map((card) => {
             const persistedUid = initialAssignments[card.id];
+            const selectedElsewhere = new Set(
+              ASSIGNABLE_CARDS.filter((c) => c.id !== card.id)
+                .map((c) => assignments[c.id])
+                .filter(Boolean)
+            );
             return (
               <li
                 key={card.id}
@@ -241,11 +250,13 @@ const AdminFlyerAwardPanel = () => {
                   className="bg-background border border-border rounded-md text-xs font-body px-2 py-1 max-w-[140px]"
                 >
                   <option value="">— none —</option>
-                  {userOptions.map((u) => (
-                    <option key={u.user_id} value={u.user_id}>
-                      {u.display_name} ({u.points} pts)
-                    </option>
-                  ))}
+                  {userOptions
+                    .filter((u) => !selectedElsewhere.has(u.user_id))
+                    .map((u) => (
+                      <option key={u.user_id} value={u.user_id}>
+                        {u.display_name} ({u.points} pts)
+                      </option>
+                    ))}
                 </select>
               </li>
             );

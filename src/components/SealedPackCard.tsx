@@ -379,7 +379,7 @@ const FullPackFace = ({
           alt={topBanner}
           className="h-auto"
           style={{
-            width: "clamp(48px, 18cqw, 110px)",
+            width: "clamp(64px, 26cqw, 160px)",
             transform: "rotate(-25deg)",
             filter: `drop-shadow(2px 2px 0 ${PINK}) drop-shadow(0 2px 4px rgba(0,0,0,0.4))`,
           }}

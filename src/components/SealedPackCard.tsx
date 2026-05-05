@@ -295,12 +295,9 @@ const FullPackFace = ({
             transform: "skew(-6deg)",
           }}
         >
-          {title.split(" ").map((word, i) => (
-            <span key={i} className="block">{word}</span>
-          ))}
-          <span className="block">Premium</span>
-          <span className="block">BASKETBALL</span>
-          <span className="block">Cards</span>
+          <span className="block">SUPREME PLATINUM</span>
+          <span className="block">PREMIUM BASKETBALL</span>
+          <span className="block">CARDS</span>
         </h1>
       </div>
 

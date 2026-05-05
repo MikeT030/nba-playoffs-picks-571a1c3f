@@ -385,8 +385,8 @@ const FullPackFace = ({
         />
       </div>
 
-      {/* Card count — sits above the logo, shifted up 40px */}
-      <div className="absolute right-[5%] z-10" style={{ bottom: "calc(7% + 100px)" }}>
+      {/* Card count — aligned with the series banner */}
+      <div className="absolute right-[5%] bottom-[7%] z-10">
         <div
           className="text-center font-display italic tracking-[0.14em] px-3 py-1.5"
           style={{

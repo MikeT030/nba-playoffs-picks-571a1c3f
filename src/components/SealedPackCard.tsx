@@ -372,8 +372,11 @@ const FullPackFace = ({
         </svg>
       </div>
 
-      {/* Bottom-right: logo */}
-      <div className="absolute bottom-[7%] right-[5%] z-10 flex flex-col items-center">
+      {/* Bottom-right: logo (sits above the card-count badge) */}
+      <div
+        className="absolute right-[5%] z-10 flex flex-col items-center"
+        style={{ bottom: "calc(7% + 50px)" }}
+      >
         <img
           src={flyerCouchClubLogo}
           alt={topBanner}

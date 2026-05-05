@@ -159,20 +159,33 @@ const AdminFlyerAwardPanel = () => {
 
   const save = async () => {
     setSaving(true);
+    // Clear current round, then insert fresh assignments. This avoids unique-constraint
+    // collisions when admin reassigns a card to a different user.
+    const delRes = await supabase
+      .from("flyer_card_assignments")
+      .delete()
+      .eq("round", "first_round");
+    if (delRes.error) {
+      setSaving(false);
+      toast.error(delRes.error.message);
+      return;
+    }
     const rows = ASSIGNABLE_CARDS.filter((c) => assignments[c.id]).map((c) => ({
       card_id: c.id,
       user_id: assignments[c.id],
       assigned_by: user?.id ?? null,
       assigned_at: new Date().toISOString(),
+      round: "first_round",
     }));
-    const { error } = await supabase
-      .from("flyer_card_assignments")
-      .upsert(rows, { onConflict: "card_id" });
-    setSaving(false);
-    if (error) {
-      toast.error(error.message);
-      return;
+    if (rows.length > 0) {
+      const { error } = await supabase.from("flyer_card_assignments").insert(rows);
+      if (error) {
+        setSaving(false);
+        toast.error(error.message);
+        return;
+      }
     }
+    setSaving(false);
     toast.success("Flyer cards assigned");
     setInitialAssignments({ ...assignments });
   };

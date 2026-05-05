@@ -66,7 +66,7 @@ export const useFlyerState = () => {
   useEffect(() => {
     refresh();
     const channel = supabase
-      .channel("flyer-card-assignments")
+      .channel(`flyer-card-assignments-${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "flyer_card_assignments" },

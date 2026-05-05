@@ -110,7 +110,7 @@ export const ScoreRibbon = ({ row, rank, totalPlayers, displayRank }: { row: Row
           {row.name}
         </span>
         <div className="flex items-center gap-3 shrink-0">
-          <span className="font-display text-white text-lg tracking-wider tabular-nums drop-shadow">
+          <span className="font-display text-white text-xl tracking-wider tabular-nums drop-shadow">
             {row.totalPoints.toString().padStart(2, "0")}
           </span>
         </div>

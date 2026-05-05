@@ -29,7 +29,6 @@ const AwardDrawerHost = () => {
     user && typeof window !== "undefined" ? window.localStorage.getItem(seenKey(user.id)) ?? "" : "";
   const showBroadcast =
     !showReceiver &&
-    !!myAssignment &&
     !!latestBurn &&
     latestBurn !== lastSeen &&
     closed?.key !== latestBurn;

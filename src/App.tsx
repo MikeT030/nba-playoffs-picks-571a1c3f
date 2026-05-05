@@ -35,6 +35,7 @@ const App = () => (
         <BrowserRouter>
           <FloatingNav />
           <TopRightAuth />
+          <AwardDrawerHost />
           <Suspense fallback={null}>
             <Routes>
               <Route path="/" element={<Index />} />

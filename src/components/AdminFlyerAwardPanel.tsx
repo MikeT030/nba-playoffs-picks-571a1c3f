@@ -244,7 +244,10 @@ const AdminFlyerAwardPanel = () => {
               >
                 <Trophy size={16} className="text-primary shrink-0" />
                 <div className="min-w-0 flex-1">
-                  <p className="font-display tracking-wider text-sm">{card.label}</p>
+                  <p className="font-display tracking-wider text-sm flex items-center gap-1.5">
+                    {card.label}
+                    {burned[card.id] && <Check size={14} className="text-primary" />}
+                  </p>
                   {persistedUid && (
                     <p className="font-body text-[10px] text-muted-foreground truncate">
                       currently:{" "}

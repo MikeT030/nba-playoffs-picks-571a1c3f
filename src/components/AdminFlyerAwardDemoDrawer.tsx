@@ -299,7 +299,7 @@ const BroadcastCarousel = ({ winners, burned }: BroadcastCarouselProps) => {
             const cardBurned = burned[w.cardId] ?? isDemoCardBurned(w.cardId);
             return (
               <CarouselItem key={w.user_id} className="flex flex-col items-center gap-3">
-                <p className="font-display text-xs tracking-[0.25em] uppercase text-primary font-bold">
+                <p className="font-display tracking-[0.25em] uppercase text-primary font-bold text-lg">
                   {w.name}
                 </p>
                 <div className="w-full" style={{ pointerEvents: "none" }}>

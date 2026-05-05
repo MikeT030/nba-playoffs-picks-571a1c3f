@@ -121,6 +121,7 @@ const Admin = () => {
 
         <Accordion type="multiple" className="space-y-3">
           {[
+            { value: "visual-scoreboard", label: "DEMO VISUAL SCOREBOARD", content: <DemoVisualScoreboard /> },
             { value: "all-matchups", label: "DEMO ALL MATCHUPS INNOVATION", content: <DemoAllMatchupsInnovation /> },
             { value: "advanced-round", label: "DEMO ADVANCED ROUND VIEW", content: <DemoAdvancedRoundView /> },
             { value: "flyer-v3", label: "DEMO FLYER CARD — V3", content: <DemoFlyerCardV3 /> },

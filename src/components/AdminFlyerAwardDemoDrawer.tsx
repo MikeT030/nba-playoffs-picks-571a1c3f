@@ -261,7 +261,7 @@ const StackedCards = ({
   const burnHandler = !cardBurned ? () => onBurn(claimedId) : undefined;
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full" onClick={(e) => e.stopPropagation()}>
       <FlyerCardForId
         cardId={claimedId}
         sealed

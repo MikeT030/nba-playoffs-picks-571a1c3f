@@ -133,7 +133,7 @@ const FlyerAwardDrawer = ({ open, onOpenChange, mode, viewerUserId, assignments 
           <button
             type="button"
             onClick={() => onOpenChange(false)}
-            className="font-display text-[11px] sm:text-xs tracking-[0.3em] text-primary bg-transparent px-5 py-2.5 rounded-full border border-primary hover:bg-primary/10 transition-colors animate-fade-in"
+            className="font-display sm:text-xs tracking-[0.3em] text-primary bg-transparent px-5 py-2.5 rounded-full border border-primary hover:bg-primary/10 transition-colors animate-fade-in text-sm"
           >
             NICE, GOT IT
           </button>

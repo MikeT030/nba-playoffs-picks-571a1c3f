@@ -42,6 +42,7 @@ interface Standing {
 interface Assignment {
   card_id: string;
   user_id: string;
+  burned_at?: string | null;
 }
 
 const AdminFlyerAwardPanel = () => {
@@ -62,6 +63,12 @@ const AdminFlyerAwardPanel = () => {
     miller: "",
     davis: "",
   });
+  const [burnedMap, setBurnedMap] = useState<Record<CardId, boolean>>({
+    chapman: false,
+    paxson: false,
+    miller: false,
+    davis: false,
+  });
 
   // Demo drawer state (no DB)
   const { winners: demoWinners, burned } = useDemoFlyerState();
@@ -74,7 +81,7 @@ const AdminFlyerAwardPanel = () => {
       supabase.from("picks").select("user_id, series_id, winner, games_in_series, created_at"),
       supabase.from("series_results").select("series_id, winner, games_played"),
       supabase.from("profiles").select("user_id, display_name"),
-      supabase.from("flyer_card_assignments").select("card_id, user_id"),
+      supabase.from("flyer_card_assignments").select("card_id, user_id, burned_at"),
     ]);
 
     if (picksRes.error || resultsRes.error || profilesRes.error || assignsRes.error) {
@@ -126,6 +133,11 @@ const AdminFlyerAwardPanel = () => {
       if (a.card_id in persisted) persisted[a.card_id as CardId] = a.user_id;
     }
     setInitialAssignments(persisted);
+    const burnedNext: Record<CardId, boolean> = { chapman: false, paxson: false, miller: false, davis: false };
+    for (const a of assigns) {
+      if (a.card_id in burnedNext) burnedNext[a.card_id as CardId] = !!a.burned_at;
+    }
+    setBurnedMap(burnedNext);
     setLoading(false);
   };
 
@@ -246,7 +258,7 @@ const AdminFlyerAwardPanel = () => {
                 <div className="min-w-0 flex-1">
                   <p className="font-display tracking-wider text-sm flex items-center gap-1.5">
                     {card.label}
-                    {burned[card.id] && <Check size={14} className="text-primary" />}
+                    {burnedMap[card.id] && <Check size={14} className="text-primary" />}
                   </p>
                   {persistedUid && (
                     <p className="font-body text-[10px] text-muted-foreground truncate">

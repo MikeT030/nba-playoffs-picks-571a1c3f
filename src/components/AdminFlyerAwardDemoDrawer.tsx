@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { FlyerCardForId } from "@/components/DemoFlyerCardVariants";
 import {
   Carousel,
@@ -131,92 +132,88 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
       : "Cards stay sealed until each owner burns their pack.";
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-background flex flex-col animate-fade-in"
-      role="dialog"
-      aria-modal="true"
-      onClick={() => {
-        if (mode !== "receiver" || !viewer) return;
-        if (viewerHasBurned) return;
-        if (!selectedCardId) return;
-        unclaimDemoCard(viewer.user_id);
-        setSelectedCardId(null);
+    <Drawer
+      open={open}
+      onOpenChange={(o) => {
+        if (!o && !canClose) return;
+        onOpenChange(o);
       }}
+      dismissible={canClose}
     >
-      {/* Top bar */}
-      <div className="relative shrink-0 px-4 pt-6 pb-4 text-center">
-        <p className="hidden font-display text-xs sm:text-sm tracking-[0.25em] uppercase text-muted-foreground">
-          FLYER – The Shot · {mode === "receiver" ? "You're Worthy" : "It's Official"}
-        </p>
-        <h2 className="mt-2 font-body sm:text-lg text-foreground leading-snug max-w-2xl mx-auto font-medium text-lg pt-[12px]">
-          {headline}
-        </h2>
+      <DrawerContent
+        className="h-[92vh] border-none"
+        onClick={() => {
+          if (mode !== "receiver" || !viewer) return;
+          if (viewerHasBurned) return;
+          if (!selectedCardId) return;
+          unclaimDemoCard(viewer.user_id);
+          setSelectedCardId(null);
+        }}
+      >
+        {/* Top bar */}
+        <div className="relative shrink-0 px-4 pt-6 pb-4 text-center">
+          <p className="hidden font-display text-xs sm:text-sm tracking-[0.25em] uppercase text-muted-foreground">
+            FLYER – The Shot · {mode === "receiver" ? "You're Worthy" : "It's Official"}
+          </p>
+          <h2 className="mt-2 font-body sm:text-lg text-foreground leading-snug max-w-2xl mx-auto font-medium text-lg pt-[12px]">
+            {headline}
+          </h2>
+        </div>
 
-        {canClose && (
-          <button
-            type="button"
-            onClick={() => onOpenChange(false)}
-            aria-label="Close"
-            className="absolute top-4 right-4 p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-          >
-            <X className="lucide lucide-x w-5 h-5 text-[#ededed]" />
-          </button>
-        )}
-      </div>
-
-      {/* Stack stage */}
-      <div className="flex-1 min-h-0 overflow-y-auto px-4">
-        <div className="relative mx-auto w-full max-w-md flex items-center justify-center py-6">
-          {mode === "broadcast" ? (
-            <BroadcastCarousel winners={winners} burned={burned} />
-          ) : (
-            <StackedCards
-              mode={mode}
-              viewerUserId={viewer?.user_id}
-              claims={claims}
-              burned={burned}
-              selectedCardId={selectedCardId}
-              justBurnedId={justBurnedId}
-              viewerClaimedCard={viewerClaimedCard}
-              onSelect={(cardId) => {
-                if (mode !== "receiver" || !viewer) return;
-                if (viewerHasBurned) return;
-                if (viewerClaimedCard && cardId !== viewerClaimedCard) return;
-                if (!viewerClaimedCard) {
-                  const ok = claimDemoCard(cardId, viewer.user_id);
-                  if (!ok) {
-                    toast.error("That pack just got claimed.");
-                    return;
+        {/* Stack stage */}
+        <div className="flex-1 min-h-0 overflow-y-auto px-4">
+          <div className="relative mx-auto w-full max-w-md flex items-center justify-center py-6">
+            {mode === "broadcast" ? (
+              <BroadcastCarousel winners={winners} burned={burned} />
+            ) : (
+              <StackedCards
+                mode={mode}
+                viewerUserId={viewer?.user_id}
+                claims={claims}
+                burned={burned}
+                selectedCardId={selectedCardId}
+                justBurnedId={justBurnedId}
+                viewerClaimedCard={viewerClaimedCard}
+                onSelect={(cardId) => {
+                  if (mode !== "receiver" || !viewer) return;
+                  if (viewerHasBurned) return;
+                  if (viewerClaimedCard && cardId !== viewerClaimedCard) return;
+                  if (!viewerClaimedCard) {
+                    const ok = claimDemoCard(cardId, viewer.user_id);
+                    if (!ok) {
+                      toast.error("That pack just got claimed.");
+                      return;
+                    }
                   }
-                }
-                setSelectedCardId(cardId);
-              }}
-              onBurn={(cardId) => {
-                setJustBurnedId(cardId);
-                markDemoCardBurned(cardId);
-              }}
-            />
+                  setSelectedCardId(cardId);
+                }}
+                onBurn={(cardId) => {
+                  setJustBurnedId(cardId);
+                  markDemoCardBurned(cardId);
+                }}
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="shrink-0 px-4 pb-8 pt-2 flex flex-col items-center gap-4">
+          <p className="text-center font-body text-xs sm:text-sm max-w-md text-[#ededed]">
+            {subline}
+          </p>
+
+          {viewerHasBurned && (
+            <button
+              type="button"
+              onClick={() => onOpenChange(false)}
+              className="font-display sm:text-xs tracking-[0.3em] text-primary bg-transparent px-5 py-2.5 rounded-full border border-primary hover:bg-primary/10 transition-colors animate-fade-in text-sm"
+            >
+              NICE, GOT IT
+            </button>
           )}
         </div>
-      </div>
-
-      {/* Footer */}
-      <div className="shrink-0 px-4 pb-8 pt-2 flex flex-col items-center gap-4">
-        <p className="text-center font-body text-xs sm:text-sm max-w-md text-[#ededed]">
-          {subline}
-        </p>
-
-        {viewerHasBurned && (
-          <button
-            type="button"
-            onClick={() => onOpenChange(false)}
-            className="font-display sm:text-xs tracking-[0.3em] text-primary bg-transparent px-5 py-2.5 rounded-full border border-primary hover:bg-primary/10 transition-colors animate-fade-in text-sm"
-          >
-            NICE, GOT IT
-          </button>
-        )}
-      </div>
-    </div>
+      </DrawerContent>
+    </Drawer>
   );
 };
 

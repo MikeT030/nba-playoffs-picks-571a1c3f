@@ -118,7 +118,7 @@ const AdminFlyerAwardDemoDrawer = ({ open, onOpenChange, mode, viewerUserId }: P
             {i < winners.length - 2 ? ", " : i === winners.length - 2 ? ", and " : ""}
           </span>
         ))}{" "}
-        finished top 3 in the first round. Each won a new player card as a reward.
+        finished top 3 in the first round. They each received a new player card as a reward.
       </>
     );
 

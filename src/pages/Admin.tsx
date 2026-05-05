@@ -218,40 +218,6 @@ const Admin = () => {
             { value: "visual-scoreboard", label: "DEMO VISUAL SCOREBOARD", content: <DemoVisualScoreboard /> },
             { value: "all-matchups", label: "DEMO ALL MATCHUPS INNOVATION", content: <DemoAllMatchupsInnovation /> },
             { value: "advanced-round", label: "DEMO ADVANCED ROUND VIEW", content: <DemoAdvancedRoundView /> },
-            { value: "match-card", label: "DEMO MATCH CARD", content: <DemoMatchCard /> },
-            { value: "match-card-colored", label: "DEMO MATCH CARD — TEAM COLORS", content: <DemoMatchCardColored /> },
-            { value: "match-detail", label: "DEMO MATCH DETAIL DIALOG", content: <DemoMatchDetailDialog /> },
-            {
-              value: "match-detail-was-uta",
-              label: "DEMO MATCH DETAIL — WAS vs UTA",
-              content: (
-                <DemoMatchDetailDialog
-                  heading="DEMO MATCH DETAIL — WAS vs UTA"
-                  data={{
-                    away: { abbreviation: "WAS", name: "Wizards", seed: 7, color: "#002B5C" },
-                    home: { abbreviation: "UTA", name: "Jazz", seed: 2, color: "#F9A01B" },
-                    awayScore: 96,
-                    homeScore: 104,
-                    seriesAway: 1,
-                    seriesHome: 4,
-                    gameNumber: 5,
-                    date: "May 02",
-                    conference: "WEST",
-                    round: "First Round",
-                    yourPick: { winner: "UTA", games_in_series: 5 },
-                    yourPickResult: "Shiiiiit 3 Points",
-                  }}
-                  seriesResult={{ winner: "UTA", games_played: 5 }}
-                  picks={[
-                    { user_id: "w1", profile_name: "Erik", winner: "UTA", games_in_series: 5 },
-                    { user_id: "w2", profile_name: "Alexander", winner: "UTA", games_in_series: 6 },
-                    { user_id: "w3", profile_name: "David", winner: "WAS", games_in_series: 7 },
-                    { user_id: "w4", profile_name: "Fabian", winner: "UTA", games_in_series: 4 },
-                    { user_id: "w5", profile_name: "Hannes", winner: "UTA", games_in_series: 5 },
-                  ]}
-                />
-              ),
-            },
             { value: "match-card-fonts", label: "FONT VARIANTS", content: <DemoMatchCardFonts /> },
             { value: "bracket-played-out", label: "DEMO BRACKET — PLAYED OUT", content: <DemoBracketPlayedOut /> },
             { value: "all-picks-table", label: "DEMO ALL PICKS TABLE", content: <DemoAllPicksTable /> },

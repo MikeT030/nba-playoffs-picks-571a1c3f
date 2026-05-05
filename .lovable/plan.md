@@ -1,22 +1,8 @@
-## Add burned check mark next to card recipient name
+Make both award drawers fully opaque so the page content behind them is hidden.
 
-In `src/components/AdminFlyerAwardPanel.tsx`, the Card Assignments list shows each card label and the assigned user. Add a green check mark next to the card name when the assigned user has burned (opened) their pack.
+## Changes
 
-### Changes
+1. `src/components/AdminFlyerAwardDemoDrawer.tsx` (line 135): replace `bg-background/80 backdrop-blur-md` with `bg-background`.
+2. `src/components/FlyerAwardDrawer.tsx` (line 88): replace `bg-black/90 backdrop-blur-md` with `bg-black`.
 
-- Import `Check` from `lucide-react`.
-- Pull `burned` from `useDemoFlyerState()` (already used for `winners`).
-- In the `<li>` row, when `burned[card.id]` is true, render a small `Check` icon (text-primary) inline after the card label.
-
-### Snippet
-
-```tsx
-const { winners: demoWinners, burned } = useDemoFlyerState();
-
-<p className="font-display tracking-wider text-sm flex items-center gap-1.5">
-  {card.label}
-  {burned[card.id] && <Check size={14} className="text-primary" />}
-</p>
-```
-
-No other changes needed — `burned` already reflects the recipient burning their card via the receiver drawer.
+This affects both `receiver` and `broadcast` modes (shared backdrop in each component).

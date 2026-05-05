@@ -85,7 +85,7 @@ const FlyerAwardDrawer = ({ open, onOpenChange, mode, viewerUserId, assignments 
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col animate-fade-in"
+      className="fixed inset-0 z-50 bg-background flex flex-col animate-fade-in"
       role="dialog"
       aria-modal="true"
     >

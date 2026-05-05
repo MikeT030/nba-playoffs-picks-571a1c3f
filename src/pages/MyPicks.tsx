@@ -154,7 +154,7 @@ const PickCard = ({
 const MyPicks = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const { data: resolvedBracket } = useBracketData(2025, { mode: "picksOnly" });
+  const { data: resolvedBracket } = useBracketData();
   const { data: seriesResults = [] } = useAllSeriesResults();
   const { data: liveMatches = [] } = usePlayoffGames();
   const activeBracket = resolvedBracket ?? bracketSeries;

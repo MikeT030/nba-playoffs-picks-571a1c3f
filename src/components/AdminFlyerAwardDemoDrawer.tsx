@@ -255,16 +255,17 @@ const StackedCards = ({
   if (!claimedId) return null;
 
   const cardBurned = burned[claimedId] ?? isDemoCardBurned(claimedId);
-  const sealed = !cardBurned;
-  const defaultOpened = cardBurned;
+  // Keep the sealed wrapper mounted even after burning so the burn animation
+  // can play to completion. `defaultOpened` only matters for the initial mount
+  // (e.g. reopening the drawer after the card was already burned in a prior session).
   const burnHandler = !cardBurned ? () => onBurn(claimedId) : undefined;
 
   return (
     <div className="relative w-full">
       <FlyerCardForId
         cardId={claimedId}
-        sealed={sealed}
-        defaultOpened={defaultOpened}
+        sealed
+        defaultOpened={cardBurned}
         hideHeading
         onBurn={burnHandler}
       />

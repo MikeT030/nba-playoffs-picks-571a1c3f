@@ -64,7 +64,7 @@ const AdminFlyerAwardPanel = () => {
   });
 
   // Demo drawer state (no DB)
-  const { winners: demoWinners } = useDemoFlyerState();
+  const { winners: demoWinners, burned } = useDemoFlyerState();
   const [demoMode, setDemoMode] = useState<"receiver" | "broadcast" | null>(null);
   const [demoViewerId, setDemoViewerId] = useState<string>("");
 

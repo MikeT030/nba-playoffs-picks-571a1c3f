@@ -209,11 +209,11 @@ const AdminFlyerAwardPanel = () => {
             Card Assignments
           </p>
           <button
-            onClick={resetToTop3}
+            onClick={resetToTop}
             className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
             <RotateCcw size={12} />
-            Reset to top 3
+            Reset to top 4
           </button>
         </div>
         <ul className="space-y-2">

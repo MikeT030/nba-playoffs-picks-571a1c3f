@@ -148,8 +148,8 @@ const AdminFlyerAwardPanel = () => {
     [assignments, initialAssignments]
   );
 
-  const resetToTop3 = () => {
-    const top = standings.slice(0, 3);
+  const resetToTop = () => {
+    const top = standings.slice(0, ASSIGNABLE_CARDS.length);
     const next: Record<CardId, string> = { chapman: "", paxson: "", miller: "", davis: "" };
     ASSIGNABLE_CARDS.forEach((c, i) => {
       if (top[i]) next[c.id] = top[i].user_id;

@@ -120,14 +120,42 @@ const Admin = () => {
         </Accordion>
 
         <Accordion type="multiple" className="space-y-3">
+          <AccordionItem
+            value="player-cards"
+            className="bg-card border border-border rounded-lg px-4"
+          >
+            <AccordionTrigger className="font-display tracking-wider text-sm">
+              PLAYER CARDS
+            </AccordionTrigger>
+            <AccordionContent>
+              <Accordion type="multiple" className="space-y-3">
+                {[
+                  { value: "flyer-v3", label: "DEMO FLYER CARD — V3", content: <DemoFlyerCardV3 /> },
+                  { value: "flyer-paxson", label: "DEMO FLYER CARD — PAXSON", content: <DemoFlyerCardPaxson /> },
+                  { value: "flyer-davis", label: "DEMO FLYER CARD — DAVIS", content: <DemoFlyerCardDavis /> },
+                  { value: "flyer-miller", label: "DEMO FLYER CARD — MILLER", content: <DemoFlyerCardMiller /> },
+                ].map((item) => (
+                  <AccordionItem
+                    key={item.value}
+                    value={item.value}
+                    className="bg-background/40 border border-border rounded-lg px-4"
+                  >
+                    <AccordionTrigger className="font-display tracking-wider text-sm">
+                      {item.label}
+                    </AccordionTrigger>
+                    <AccordionContent>{item.content}</AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+
+        <Accordion type="multiple" className="space-y-3">
           {[
             { value: "visual-scoreboard", label: "DEMO VISUAL SCOREBOARD", content: <DemoVisualScoreboard /> },
             { value: "all-matchups", label: "DEMO ALL MATCHUPS INNOVATION", content: <DemoAllMatchupsInnovation /> },
             { value: "advanced-round", label: "DEMO ADVANCED ROUND VIEW", content: <DemoAdvancedRoundView /> },
-            { value: "flyer-v3", label: "DEMO FLYER CARD — V3", content: <DemoFlyerCardV3 /> },
-            { value: "flyer-paxson", label: "DEMO FLYER CARD — PAXSON", content: <DemoFlyerCardPaxson /> },
-            { value: "flyer-davis", label: "DEMO FLYER CARD — DAVIS", content: <DemoFlyerCardDavis /> },
-            { value: "flyer-miller", label: "DEMO FLYER CARD — MILLER", content: <DemoFlyerCardMiller /> },
             { value: "match-card", label: "DEMO MATCH CARD", content: <DemoMatchCard /> },
             { value: "match-card-colored", label: "DEMO MATCH CARD — TEAM COLORS", content: <DemoMatchCardColored /> },
             { value: "match-detail", label: "DEMO MATCH DETAIL DIALOG", content: <DemoMatchDetailDialog /> },

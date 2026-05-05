@@ -20,8 +20,8 @@ const FLYER_CARDS = [
   { id: "davis", label: "Davis" },
 ] as const;
 
-// All 4 flyer cards can be assigned (one card per user).
-const ASSIGNABLE_CARDS = FLYER_CARDS;
+// Chapman is reserved and not admin-assignable.
+const ASSIGNABLE_CARDS = FLYER_CARDS.filter((c) => c.id !== "chapman");
 
 type CardId = FlyerCardId;
 

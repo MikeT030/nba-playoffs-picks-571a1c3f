@@ -368,7 +368,7 @@ const FullPackFace = ({
           alt={topBanner}
           className="h-auto"
           style={{
-            width: "clamp(72px, 26cqw, 160px)",
+            width: "clamp(48px, 18cqw, 110px)",
             filter: `drop-shadow(2px 2px 0 ${PINK}) drop-shadow(0 2px 4px rgba(0,0,0,0.4))`,
           }}
         />

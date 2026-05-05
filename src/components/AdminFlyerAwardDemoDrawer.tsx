@@ -286,7 +286,7 @@ const BroadcastCarousel = ({ winners, burned }: BroadcastCarouselProps) => {
 
   return (
     <div className="w-full flex flex-col items-center gap-4">
-      <Carousel setApi={setApi} opts={{ loop: true }} className="w-[70vw] max-w-[260px]">
+      <Carousel setApi={setApi} opts={{ loop: true }} className="w-full">
         <CarouselContent>
           {winners.map((w) => {
             const cardBurned = burned[w.cardId] ?? isDemoCardBurned(w.cardId);

@@ -486,9 +486,9 @@ const MyPicks = () => {
 
               {/* Teaser preview — visible only when accordion is closed */}
               {(() => {
-                const firstRound = roundOrder.find((r) => activeBracket.some((s) => s.round === r));
+                const firstRound = roundOrder.find((r) => picksBracket.some((s) => s.round === r));
                 if (!firstRound) return null;
-                const previewSeries = activeBracket.filter((s) => s.round === firstRound).slice(0, 2);
+                const previewSeries = picksBracket.filter((s) => s.round === firstRound).slice(0, 2);
                 if (!previewSeries.length) return null;
                 return (
                   <div className="group-data-[state=open]:hidden relative rounded-lg overflow-hidden select-none">

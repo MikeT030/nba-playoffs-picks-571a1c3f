@@ -405,7 +405,10 @@ const MyPicks = () => {
             }));
             for (const r of seriesResults) {
               actualWinners[r.series_id] = r.winner;
-              const { topTeam, bottomTeam } = resolveSeriesTeams(r.series_id, picks, activeBracket);
+            }
+            const resolveCtx = { actualWinners, inProgressPairs };
+            for (const r of seriesResults) {
+              const { topTeam, bottomTeam } = resolveSeriesTeams(r.series_id, picks, activeBracket, resolveCtx);
               const wWins = 4;
               const lWins = Math.max(0, r.games_played - 4);
               if (topTeam?.abbreviation === r.winner) {

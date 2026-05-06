@@ -321,7 +321,10 @@ export function resolveSeriesTeams(
     if (!parentWinner) return undefined;
     const parentSeries = seriesList.find((s) => s.id === parentId);
     if (!parentSeries) return undefined;
-    const { topTeam: pTop, bottomTeam: pBottom } = resolveSeriesTeams(parentId, picks, seriesList, ctx);
+    // Resolve parent's predicted pair WITHOUT the freeze, so predictions
+    // chain forward through later rounds whose own parent hasn't started.
+    const lookupCtx: ResolveCtx = { actualWinners: ctx.actualWinners };
+    const { topTeam: pTop, bottomTeam: pBottom } = resolveSeriesTeams(parentId, picks, seriesList, lookupCtx);
 
     // Freeze rule: if the parent matchup has actually started but isn't
     // decided yet, do NOT propagate the user's predicted winner forward.

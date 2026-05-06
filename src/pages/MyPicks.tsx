@@ -154,7 +154,7 @@ const PickCard = ({
 const MyPicks = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const { data: resolvedBracket } = useBracketData(2025);
+  const { data: resolvedBracket, inProgressPairs } = useBracketData(2025);
   const { data: predictedBracket } = useBracketData(2025, { propagateRealWinners: false });
   const { data: seriesResults = [] } = useAllSeriesResults();
   const { data: liveMatches = [] } = usePlayoffGames();
@@ -405,7 +405,10 @@ const MyPicks = () => {
             }));
             for (const r of seriesResults) {
               actualWinners[r.series_id] = r.winner;
-              const { topTeam, bottomTeam } = resolveSeriesTeams(r.series_id, picks, activeBracket);
+            }
+            const resolveCtx = { actualWinners, inProgressPairs };
+            for (const r of seriesResults) {
+              const { topTeam, bottomTeam } = resolveSeriesTeams(r.series_id, picks, activeBracket, resolveCtx);
               const wWins = 4;
               const lWins = Math.max(0, r.games_played - 4);
               if (topTeam?.abbreviation === r.winner) {
@@ -427,7 +430,7 @@ const MyPicks = () => {
             }
             for (const series of activeBracket) {
               if (seriesScores[series.id]) continue;
-              const { topTeam, bottomTeam } = resolveSeriesTeams(series.id, picks, activeBracket);
+              const { topTeam, bottomTeam } = resolveSeriesTeams(series.id, picks, activeBracket, resolveCtx);
               if (!topTeam || !bottomTeam) continue;
               const key = [topTeam.abbreviation, bottomTeam.abbreviation].sort().join("-");
               const live = liveByPair.get(key);
@@ -456,6 +459,7 @@ const MyPicks = () => {
                   actualWinners={actualWinners}
                   pickPoints={pickPoints}
                   seriesScores={seriesScores}
+                  inProgressPairs={inProgressPairs}
                   variant="badge"
                 />
               </div>

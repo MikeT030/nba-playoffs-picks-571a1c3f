@@ -299,39 +299,35 @@ const BracketCard = ({
         totalGames={totalGames}
       />
 
-      {bet && (winnerTeam || (topTeam && bottomTeam)) ? (() => {
-        const broken = !winnerTeam;
-        const assumedOpp = getAssumedOpponentAbbr(seriesId, bet.winner, seriesList, allPicks);
-        const actualOpp = topTeam?.abbreviation === bet.winner
-          ? bottomTeam?.abbreviation
-          : bottomTeam?.abbreviation === bet.winner
-            ? topTeam?.abbreviation
-            : null;
-        const showAssumed = broken
-          ? !!assumedOpp
-          : !!assumedOpp && !!actualOpp && actualOpp !== assumedOpp;
-        const suffixOpp = assumedOpp ?? actualOpp;
+      {bet && (topTeam || bottomTeam) ? (() => {
+        const predictedOpp = getAssumedOpponentAbbr(seriesId, bet.winner, seriesList, allPicks);
+        const actualPair = [topTeam?.abbreviation, bottomTeam?.abbreviation].filter(Boolean) as string[];
+        const predictedPair = [bet.winner, predictedOpp].filter(Boolean) as string[];
+        const matchCount = predictedPair.filter((t) => actualPair.includes(t)).length;
+        const showSuffix = matchCount < 2 && !!predictedOpp;
+        const isBroken = matchCount === 0;
+        const textColorClass = isBroken
+          ? "text-rose-400"
+          : actualWinnerAbbr && isWrong
+            ? "text-rose-300/80"
+            : "text-primary";
         return (
           <div className="flex items-center justify-center gap-1.5 px-1" style={{ height: 24 }}>
-            {actualWinnerAbbr && !broken &&
+            {isBroken && <X size={11} className="text-rose-400 shrink-0" />}
+            {!isBroken && actualWinnerAbbr &&
               (isCorrect ? (
                 <Check size={11} className="text-emerald-400 shrink-0" />
               ) : (
                 <X size={11} className="text-rose-400 shrink-0" />
               ))}
-            {broken && <X size={11} className="text-rose-400 shrink-0" />}
-            <span
-              className={`text-sm font-body font-medium whitespace-nowrap ${
-                (actualWinnerAbbr && isWrong) || broken ? "text-rose-300/80" : "text-primary"
-              }`}
-            >
+            <span className={`text-sm font-body font-medium whitespace-nowrap ${textColorClass}`}>
               Your Pick:{" "}
-              <span className={broken ? "line-through opacity-70" : ""}>
+              <span>
                 {bet.winner} in {bet.gamesInSeries}
-                {showAssumed && suffixOpp ? ` (vs. ${suffixOpp})` : ""}
+                {showSuffix ? ` (vs. ${predictedOpp})` : ""}
               </span>
             </span>
-            {!broken && <PointsTag point={pickPoint} variant={variant} />}
+            {!isBroken && <PointsTag point={pickPoint} variant={variant} />}
           </div>
         );
       })() : (

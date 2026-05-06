@@ -154,10 +154,12 @@ const PickCard = ({
 const MyPicks = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const { data: resolvedBracket } = useBracketData(2025, { propagateRealWinners: false });
+  const { data: resolvedBracket } = useBracketData(2025);
+  const { data: predictedBracket } = useBracketData(2025, { propagateRealWinners: false });
   const { data: seriesResults = [] } = useAllSeriesResults();
   const { data: liveMatches = [] } = usePlayoffGames();
   const activeBracket = resolvedBracket ?? bracketSeries;
+  const picksBracket = predictedBracket ?? bracketSeries;
   const [betsOpen, setBetsOpen] = useState(false);
   const [profileName, setProfileName] = useState<string | null>(null);
   const [bets, setBets] = useState<BetSelection[]>([]);
@@ -484,16 +486,16 @@ const MyPicks = () => {
 
               {/* Teaser preview — visible only when accordion is closed */}
               {(() => {
-                const firstRound = roundOrder.find((r) => activeBracket.some((s) => s.round === r));
+                const firstRound = roundOrder.find((r) => picksBracket.some((s) => s.round === r));
                 if (!firstRound) return null;
-                const previewSeries = activeBracket.filter((s) => s.round === firstRound).slice(0, 2);
+                const previewSeries = picksBracket.filter((s) => s.round === firstRound).slice(0, 2);
                 if (!previewSeries.length) return null;
                 return (
                   <div className="group-data-[state=open]:hidden relative rounded-lg overflow-hidden select-none">
                     <div className="max-h-[110px] overflow-hidden pointer-events-none">
                       <div className="grid gap-4 md:grid-cols-2">
                         {previewSeries.map((series) => {
-                          const resolved = resolveSeriesTeams(series.id, picks, activeBracket);
+                          const resolved = resolveSeriesTeams(series.id, picks, picksBracket);
                           return (
                             <PickCard
                               key={series.id}
@@ -534,7 +536,7 @@ const MyPicks = () => {
               </Select>
 
               {(selectedRound === "all" ? roundOrder : [selectedRound]).map((round) => {
-                const roundSeries = activeBracket.filter((s) => s.round === round);
+                const roundSeries = picksBracket.filter((s) => s.round === round);
                 const conferences = round === "Finals" ? ["Finals"] : ["West", "East"];
 
                 return (
@@ -554,7 +556,7 @@ const MyPicks = () => {
                           )}
                           <div className="grid gap-4 md:grid-cols-2">
                             {confSeries.map((series) => {
-                              const resolved = resolveSeriesTeams(series.id, picks, activeBracket);
+                              const resolved = resolveSeriesTeams(series.id, picks, picksBracket);
                               return (
                                 <PickCard
                                   key={series.id}

@@ -154,10 +154,12 @@ const PickCard = ({
 const MyPicks = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const { data: resolvedBracket } = useBracketData(2025, { propagateRealWinners: false });
+  const { data: resolvedBracket } = useBracketData(2025);
+  const { data: predictedBracket } = useBracketData(2025, { propagateRealWinners: false });
   const { data: seriesResults = [] } = useAllSeriesResults();
   const { data: liveMatches = [] } = usePlayoffGames();
   const activeBracket = resolvedBracket ?? bracketSeries;
+  const picksBracket = predictedBracket ?? bracketSeries;
   const [betsOpen, setBetsOpen] = useState(false);
   const [profileName, setProfileName] = useState<string | null>(null);
   const [bets, setBets] = useState<BetSelection[]>([]);

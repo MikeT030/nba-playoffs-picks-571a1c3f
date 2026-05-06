@@ -154,7 +154,7 @@ const PickCard = ({
 const MyPicks = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const { data: resolvedBracket } = useBracketData(2025);
+  const { data: resolvedBracket, inProgressPairs } = useBracketData(2025);
   const { data: predictedBracket } = useBracketData(2025, { propagateRealWinners: false });
   const { data: seriesResults = [] } = useAllSeriesResults();
   const { data: liveMatches = [] } = usePlayoffGames();

@@ -430,7 +430,7 @@ const MyPicks = () => {
             }
             for (const series of activeBracket) {
               if (seriesScores[series.id]) continue;
-              const { topTeam, bottomTeam } = resolveSeriesTeams(series.id, picks, activeBracket);
+              const { topTeam, bottomTeam } = resolveSeriesTeams(series.id, picks, activeBracket, resolveCtx);
               if (!topTeam || !bottomTeam) continue;
               const key = [topTeam.abbreviation, bottomTeam.abbreviation].sort().join("-");
               const live = liveByPair.get(key);

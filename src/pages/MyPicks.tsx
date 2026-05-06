@@ -495,7 +495,7 @@ const MyPicks = () => {
                     <div className="max-h-[110px] overflow-hidden pointer-events-none">
                       <div className="grid gap-4 md:grid-cols-2">
                         {previewSeries.map((series) => {
-                          const resolved = resolveSeriesTeams(series.id, picks, activeBracket);
+                          const resolved = resolveSeriesTeams(series.id, picks, picksBracket);
                           return (
                             <PickCard
                               key={series.id}

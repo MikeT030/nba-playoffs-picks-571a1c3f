@@ -536,7 +536,7 @@ const MyPicks = () => {
               </Select>
 
               {(selectedRound === "all" ? roundOrder : [selectedRound]).map((round) => {
-                const roundSeries = activeBracket.filter((s) => s.round === round);
+                const roundSeries = picksBracket.filter((s) => s.round === round);
                 const conferences = round === "Finals" ? ["Finals"] : ["West", "East"];
 
                 return (
@@ -556,7 +556,7 @@ const MyPicks = () => {
                           )}
                           <div className="grid gap-4 md:grid-cols-2">
                             {confSeries.map((series) => {
-                              const resolved = resolveSeriesTeams(series.id, picks, activeBracket);
+                              const resolved = resolveSeriesTeams(series.id, picks, picksBracket);
                               return (
                                 <PickCard
                                   key={series.id}

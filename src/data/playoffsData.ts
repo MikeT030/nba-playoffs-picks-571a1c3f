@@ -337,6 +337,50 @@ type ApiGameLike = {
   status?: string;
 };
 
+/**
+ * Resolve only the Round 1 play-in TBD slots from live API data, WITHOUT
+ * propagating real-life series winners forward into later-round slots.
+ *
+ * Used by views (e.g. /my-picks) that need the bracket structure to reflect
+ * the user's predicted path through rounds 2+, while still showing the
+ * correct real-life 7/8 seeds in Round 1.
+ */
+export function resolvePlayInSlotsOnly(games: ApiGameLike[]): BracketSeries[] {
+  if (!games.length) return bracketSeries;
+
+  const knownSeeds: Record<string, { seriesId: string }> = {
+    OKC: { seriesId: "west-r1-1v8" },
+    SAS: { seriesId: "west-r1-2v7" },
+    DET: { seriesId: "east-r1-1v8" },
+    BOS: { seriesId: "east-r1-2v7" },
+  };
+
+  const resolved: Record<string, Team> = {};
+  for (const game of games) {
+    for (const knownAbbr of Object.keys(knownSeeds)) {
+      const info = knownSeeds[knownAbbr];
+      let opponentAbbr: string | null = null;
+      let opponentName: string | null = null;
+      if (game.home_team.abbreviation === knownAbbr) {
+        opponentAbbr = game.visitor_team.abbreviation;
+        opponentName = game.visitor_team.full_name;
+      } else if (game.visitor_team.abbreviation === knownAbbr) {
+        opponentAbbr = game.home_team.abbreviation;
+        opponentName = game.home_team.full_name;
+      }
+      if (opponentAbbr && opponentName && !resolved[info.seriesId]) {
+        const seed = info.seriesId.includes("1v8") ? 8 : 7;
+        resolved[info.seriesId] = makeTeam(opponentAbbr, opponentName, seed);
+      }
+    }
+  }
+
+  return bracketSeries.map((s) => {
+    if (resolved[s.id]) return { ...s, bottomTeam: resolved[s.id] };
+    return s;
+  });
+}
+
 export function resolveBracketWithApiGames(games: ApiGameLike[]): BracketSeries[] {
   if (!games.length) return bracketSeries;
 

@@ -459,6 +459,7 @@ const MyPicks = () => {
                   actualWinners={actualWinners}
                   pickPoints={pickPoints}
                   seriesScores={seriesScores}
+                  inProgressPairs={inProgressPairs}
                   variant="badge"
                 />
               </div>

@@ -1,53 +1,46 @@
-## Problem
+## Goal
 
-On `/my-picks`, PHI (a real Round 1 winner) is shown all the way up the bracket to the Finals — as if the user had picked PHI in every round. The user did not.
+On `/my-picks`, the **bracket** cards from Round 2 onward should show the actual real-life teams that have advanced (like Scoreboard/Home). The "Your Pick" tagline below each bracket card adapts based on how much the user's predicted matchup overlaps with the actual matchup.
 
-The "Your Pick: …" line below each card already handles the case where the user's pick is no longer in the live matchup (strikethrough + `(vs. ActualOpp)` suffix). That UX is correct and should stay.
+The **"That's what you've picked"** list further down the page (the `PickCard` accordion view) is **NOT touched** — it always shows the user's original predicted matchups exactly as saved, regardless of real-life results.
 
-The bug is in the **team slots** (the two team rows at the top of each bracket card) for rounds 2+, not in the pick line.
+## Tagline rules (bracket cards only)
 
-## Root cause
+| Overlap | Tagline behavior |
+|---|---|
+| **2/2 teams match** | Normal tagline, no suffix. ✓/✗ if decided. |
+| **1/2 teams match** | Normal tagline + ` (vs. <predictedOpp>)`. ✓/✗ if decided. |
+| **0/2 teams match** | Red text + ✗ prefix + ` (vs. <predictedOpp>)`. No strikethrough. No points tag. |
 
-`useBracketData()` returns a bracket where `resolveBracketWithApiGames` has already:
-1. Filled play-in TBD slots from live API data (correct, needed everywhere), AND
-2. Walked the bracket forward and **pre-filled future round slots with real-life series winners** (e.g. PHI lands in `east-semi-top`).
+## Changes
 
-In `PlayoffBracket.tsx`, `resolve(id)` only falls back to the user's predicted opponent when a slot is empty (`needsFill` in `resolveSeriesTeams`). Since the slot is already filled with PHI, the user's predicted bracket is overridden — and because PHI then becomes the "top team" of the semi card, the same propagation chains it forward into Conf Finals and the Finals.
+### 1. `src/pages/MyPicks.tsx`
+- Restore propagation in the bracket: `useBracketData(2025)` (drop `{ propagateRealWinners: false }`).
+- The "That's what you've picked" section continues to render `PickCard` from the user's saved `bets` against the **original** `bracketSeries` topTeam/bottomTeam (predicted matchups). Confirm it does not get switched to `activeBracket`.
 
-The Scoreboard / Home / Match views *want* the propagated bracket (they show real-life standings). My-Picks does not.
+### 2. `src/components/PlayoffBracket.tsx` — `BracketCard` tagline block
+Replace the current "broken / showAssumed" logic with explicit overlap counting:
 
-## Fix
+- `predictedOpp = getAssumedOpponentAbbr(seriesId, bet.winner, seriesList, allPicks)`
+- `actualPair = [topTeam, bottomTeam].map(t => t?.abbreviation).filter(Boolean)`
+- `predictedPair = [bet.winner, predictedOpp].filter(Boolean)`
+- `matchCount = predictedPair.filter(t => actualPair.includes(t)).length`
 
-Split the two responsibilities in `src/data/playoffsData.ts`:
-
-- Keep `resolveBracketWithApiGames(games)` as-is — used by Scoreboard, Home, MatchCard, MatchDetail (real-life view).
-- Add `resolvePlayInSlotsOnly(games)` — same play-in TBD resolution, but **does not** propagate later-round winners forward. Future-round `topTeam` / `bottomTeam` stay `undefined` so `resolveSeriesTeams` can fall back to the user's picks.
-
-Update `useBracketData` to accept an option:
-
-```ts
-useBracketData(season?: number, opts?: { propagateRealWinners?: boolean })
-// default: true (existing behavior, no other caller changes)
-```
-
-When `propagateRealWinners: false`, call `resolvePlayInSlotsOnly` instead.
-
-Update `src/pages/MyPicks.tsx` only:
-
-```ts
-const { data: resolvedBracket } = useBracketData(2025, { propagateRealWinners: false });
-```
-
-All other call sites stay on the default and keep their current behavior.
-
-## What stays the same
-
-- Play-in 7/8 seeds still resolve from live data on every page (no TBD on /my-picks).
-- "Your Pick: TEAM in N (vs. ActualOpp)" line, strikethrough on broken picks, ✓/✗ marks, ADV badges, and points tags all keep working — they're driven by `bets`, `actualWinners`, `seriesScores`, and `pickPoints`, not by the team slots.
-- Scoreboard, Home, Match cards, and Match detail dialogs continue to show the real-life propagated bracket.
+Render:
+- `matchCount === 2` → no suffix, primary (or rose if decided & wrong).
+- `matchCount === 1` → suffix `(vs. <predictedOpp>)`, primary (or rose if decided & wrong).
+- `matchCount === 0` → red text, ✗ icon prefix, suffix `(vs. <predictedOpp>)`, no strikethrough, hide points tag.
+- Decided ✓/✗ indicator keeps its current behavior when `matchCount >= 1`.
 
 ## Files
 
-- `src/data/playoffsData.ts` — add `resolvePlayInSlotsOnly`.
-- `src/hooks/useBracketData.ts` — add optional `propagateRealWinners` flag.
-- `src/pages/MyPicks.tsx` — pass `{ propagateRealWinners: false }`.
+- `src/pages/MyPicks.tsx` — drop the `propagateRealWinners: false` option (verify "That's what you've picked" section stays on the original `bracketSeries`).
+- `src/components/PlayoffBracket.tsx` — rewrite tagline block in `BracketCard` using 2/1/0 overlap rule.
+
+`useBracketData` flag and `resolvePlayInSlotsOnly` helper stay (harmless) for potential reuse.
+
+## Untouched
+
+- "That's what you've picked" `PickCard` list — always original predicted matchups.
+- Scoreboard, Home, Match views.
+- Scoring logic, ADV badges, series scores, championship section, play-in TBD resolution.

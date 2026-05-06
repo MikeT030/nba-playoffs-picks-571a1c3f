@@ -353,6 +353,8 @@ interface PlayoffBracketProps {
   variant?: BracketVariant;
   /** Map of seriesId → series score string (e.g. "4-2") shown as the actual matchup standing. */
   seriesScores?: Record<string, string>;
+  /** Set of "ABBR1|ABBR2" sorted pair keys for in-progress matchups. */
+  inProgressPairs?: Set<string>;
   /** Optional champion team name shown above the Finals card, aligned to the Finals column. */
   championName?: string;
   /** Optional champion team logo URL shown next to the champion name. */
@@ -367,18 +369,24 @@ const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
   pickPoints = {},
   variant = "badge",
   seriesScores = {},
+  inProgressPairs,
   championName,
   championLogoSrc,
 }, ref) => {
   const bracket = seriesList ?? defaultBracketSeries;
+  const ctx = { actualWinners, inProgressPairs };
 
   const resolve = (id: string) => {
     const series = bracket.find((s) => s.id === id);
     if (!series) return { topTeam: undefined, bottomTeam: undefined };
-    const resolved = resolveSeriesTeams(id, picks, bracket);
+    const resolved = resolveSeriesTeams(id, picks, bracket, ctx);
+    // For Round 1 (no parents) keep the static slot teams so the bracket
+    // never shows TBD where it shouldn't. For later rounds, prefer the
+    // resolved value (which may legitimately be undefined / TBD).
+    const isFirstRound = !series.topParentSeriesId && !series.bottomParentSeriesId;
     return {
-      topTeam: resolved.topTeam ?? series.topTeam,
-      bottomTeam: resolved.bottomTeam ?? series.bottomTeam,
+      topTeam: resolved.topTeam ?? (isFirstRound ? series.topTeam : undefined),
+      bottomTeam: resolved.bottomTeam ?? (isFirstRound ? series.bottomTeam : undefined),
     };
   };
 

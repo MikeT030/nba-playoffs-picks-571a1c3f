@@ -1,18 +1,10 @@
-import { useMemo } from "react";
 import { Ticket } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useFlyerState } from "@/lib/flyerState";
 
 const FlyerReopenButton = () => {
   const { user } = useAuth();
-  const { assignments } = useFlyerState();
 
-  const isWinner = useMemo(
-    () => (user ? assignments.some((a) => a.user_id === user.id) : false),
-    [user, assignments]
-  );
-
-  if (!user || !isWinner) return null;
+  if (!user) return null;
 
   const handleClick = () => {
     window.dispatchEvent(new Event("flyer:reopen"));

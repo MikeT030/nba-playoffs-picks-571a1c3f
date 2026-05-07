@@ -1,72 +1,85 @@
-# Make the bracket honor user picks consistently
+## What you want, in one sentence
 
-## What's wrong today
+The bracket should always preview the **user's predicted path** all the way to the Finals. Reality only overwrites a slot when the parent series of that slot is **actually decided** — and at that moment the pick gets evaluated and its tagline adapts accordingly.
 
-`resolveSeriesTeams` is asked, per slot: *"who fills you?"* It then looks at `picks[parentId]` directly. Two failure modes fall out of this:
+## Why it currently shows TBD in CF / Finals
 
-1. **Missing intermediate pick = TBD wall.** If you didn't pick a Conf-Semi winner but you *did* pick the Conf-Finals winner, the Conf-Finals slot can't find `picks[east-semi-top]` and shows TBD — even though it could derive the team from your R1 picks. Meanwhile the *Finals* slot, asking the same question one level up, happens to have your Conf-Finals pick, recurses through the missing semis with `lookupCtx`, and ends up filled. Result: East Conf Finals is TBD/TBD but the Finals shows PHI vs SAS.
-2. **The "freeze in-progress series" rule only freezes the *immediate* child** because the recursion intentionally drops `inProgressPairs` from `lookupCtx`. So PHI losing its R1 series can still appear in the Finals as long as you picked them at every later round.
+Today's model (`computeBracketState` in `src/data/playoffsData.ts`) has two override layers:
 
-These are both symptoms of the same root cause: we resolve each slot independently and re-derive the upstream chain on the fly, with different rules at different depths.
+1. `actualWinners[parent]` → real team (correct, keep this).
+2. `inProgressPairs.has(pair)` on the **parent's resolved pair** → forcibly sets that parent's `winnerTeam` to `undefined`, which cascades into every downstream slot.
 
-## Proposed model: one forward pass, one source of truth per series
+Rule 2 is the culprit. As soon as PHI's R1 series (or any earlier series) goes "in progress," its `winnerTeam` becomes undefined → East Semi top slot has no team → East CF slot has no team → Finals top slot has no team → "TBD vs TBD" up the chain. The freeze was meant to stop predictions from leapfrogging a live series, but it also kills the very preview you want to keep.
 
-Compute, exactly once, an `effectiveWinner: Record<seriesId, string | undefined>` for the whole bracket, walking rounds in order (R1 → Semis → CF → Finals). For each series:
+## The new model: predict-by-default, override-with-reality-when-decided
+
+Per series S with parents (P1, P2):
 
 ```text
-1. realWinner   = actualWinners[id]                     // series decided in real life
-2. realPair     = (top, bottom) once both are known     // computed from effectiveWinner of parents
-3. inProgress   = realPair && inProgressPairs.has(pairKey(realPair))
-4. effectiveWinner[id] =
-     realWinner                       if present
-   else undefined                     if inProgress     // freeze: don't predict over a live series
-   else picks[id]                     if user picked it AND that team is one of the (possibly predicted) parent teams
-   else undefined                     // genuinely unknown → TBD
+slotTop    = actualWinners[P1] ? team(actualWinners[P1])
+           : userPick[P1]      ? team(userPick[P1])
+           : undefined
+slotBottom = same with P2
 ```
 
-Slot teams for a series become:
-```text
-topTeam    = effectiveWinner[topParentSeriesId]    (or static topTeam for R1)
-bottomTeam = effectiveWinner[bottomParentSeriesId] (or static bottomTeam for R1)
-```
+For Round 1, slots stay the static seed teams (no parents). Real-life winner of S itself still drives `actualWinners[S]` and the green "ADV" / scoring overlay — that part is unchanged.
 
-Why this fixes both cases:
+Properties:
+- A live R1 series no longer blanks downstream rounds. Predictions keep flowing.
+- The moment a parent series finalizes, its slot in the child card flips from "your predicted team" to "the actual advancing team." That's the trigger point for tagline adaptation on the child card.
+- No leapfrogging: the slot for a series whose parent is undecided uses **the user's pick for that parent**, never a pick made two rounds upstream. So if you skipped a Semi pick, the CF slot is genuinely TBD — exactly what an empty slot in a chain *should* mean. Distinct from "TBD because something earlier is live", which we no longer do.
 
-- **Missing semi pick.** When deriving the East Conf Finals slot, we ask `effectiveWinner[east-semi-top]`. If you didn't pick that semi, the rule falls through to "predict from `picks[east-semi-top]`"... which is empty → undefined → TBD. **But** we still want your *Conf-Finals pick* to count once both CF slots resolve. The trick: we treat "no semi pick" as a soft block — the CF slot stays TBD until either (a) you make the semi pick or (b) reality fills it. The Finals can no longer leapfrog to PHI vs SAS because `effectiveWinner[east-conf-finals]` requires both CF slot teams to exist. So: **East CF TBD ⇒ Finals top slot also TBD.** Consistent.
-- **PHI losing R1.** `inProgressPairs` is checked at every level in the same pass. Once PHI's R1 pair is "in progress", `effectiveWinner[east-r1-2v7]` is `undefined`. That cascades: East Semi top slot loses its bottom team → its `effectiveWinner` is `undefined` → CF slot bottom is `undefined` → Finals top is `undefined`. Predictions only flow as far as the live front line allows. No more PHI in the Finals while losing R1.
+## Tagline adaptation — four cases unified
 
-The user's stated intent — *"predictions remain visible until a real series starts"* — is satisfied at every level, not just one.
+The card already computes `actualPair` (the slot teams as currently displayed) and `predictedPair = [bet.winner, predictedOpp]` via `getAssumedOpponentAbbr`. Once we apply the new model, `actualPair` is "real teams where decided, else predicted teams" — so `matchCount` already encodes the four cases we care about, with one tweak:
 
-## Optional nicety: "preview chain" mode
+| Case | Condition | Tagline | Color |
+|---|---|---|---|
+| 1. 100% true | `matchCount === 2` | `Your Pick: X in N` | primary (current) |
+| 2. 50% true, your team made it | `matchCount === 1` AND `actualPair.includes(bet.winner)` | `Your Pick: X in N (vs. predicted Y)` | primary |
+| 3. 50% true, your winner is the no-show | `matchCount === 1` AND `!actualPair.includes(bet.winner)` | same suffix pattern | **rose** (pick already dead) |
+| 4. 0% true | `matchCount === 0` | same suffix pattern | **rose** |
 
-If you want the Conf Finals card to *visually preview* "PHI vs your-other-pick" even when you skipped the semis, add a second pass that fills `undefined` slots from `picks[parentId]` purely for **display**, but never feeds back into `effectiveWinner` (so the Finals still doesn't auto-fill from a skipped chain). I'd default this **off** — it's exactly the kind of "magic backfill" that confused things in the first place. Better UX: show a small "make your pick" affordance on the empty slot.
+Trigger for cases 2–4: at least one parent of S is decided (so `actualPair` contains a real team that can disagree with the prediction). Until then the preview is purely your predictions and `matchCount` is 2 by construction.
+
+Detail: today's code only marks `isBroken` when `matchCount === 0`. Extend it to also mark broken (rose) when the user's winner isn't in `actualPair`. That's the only behavioral change to the card itself.
+
+## Edge cases to handle
+
+- **Skipped intermediate pick.** You picked R1 + CF but no Semis. The CF slot has no source (`userPick[semi]` undefined, parent undecided) → genuine TBD on that one slot. Show the existing "make your pick" empty state. The Finals card still resolves its own slot from your CF pick, so the Finals can preview even with a Semi gap. That matches your stated intent: predictions display wherever they exist; gaps stay gaps until you fill them.
+- **Champion bonus on a broken Finals.** If the Finals slot teams are now real and don't include your champion pick, show rose tagline; scoring/champion bonus already keys off `actualWinners["nba-finals"]`, unaffected.
+- **`getAssumedOpponentAbbr`** still walks the user's *own* picks for the predicted opponent — exactly right for "(vs. predicted Y)" even when reality differs.
+- **Match-detail / Scoreboard** views use `propagateRealWinners: true` and read `actualWinners` directly. They don't depend on the freeze rule, so unaffected.
+- **`useBracketData.inProgressPairs`** stops being consulted by `computeBracketState`. We keep computing it (other call sites may still want it, e.g. the live "in progress" badge), but remove it from `ResolveCtx`/`computeBracketState`. Safer than ripping out the producer.
+- **R1 play-in placeholders** (`PIW7`, etc.) keep their current resolve-from-API path via `resolvePlayInSlotsOnly` / `resolveBracketWithApiGames`. No change.
 
 ## Files to change
 
 - `src/data/playoffsData.ts`
-  - Replace the recursive `resolveSeriesTeams` with two functions:
-    - `computeEffectiveWinners(picks, seriesList, ctx) → Record<id, string|undefined>` (single forward pass, rounds in order).
-    - `resolveSeriesTeams(seriesId, effectiveWinners, seriesList) → { topTeam, bottomTeam }` (pure lookup, no recursion, no `picks` arg).
-  - Keep `ResolveCtx` (`actualWinners`, `inProgressPairs`).
-  - `getAssumedOpponentAbbr` stays as-is (it's about the user's *own* predicted opponent, not the live bracket).
-
+  - In `computeBracketState`: drop the `inProgressPairs` branch entirely. Keep: real-winner override, then user-pick fallback, then undefined.
+  - Leave `ResolveCtx.inProgressPairs` field in the type (still produced by `useBracketData`) but ignore it in resolution. Add a doc comment that resolution is prediction-first.
 - `src/components/PlayoffBracket.tsx`
-  - Compute `effectiveWinners` once at the top of the component, pass to `resolve`. Drop the special-case "fall back to static R1 teams" — it falls out of the new model naturally.
+  - Extend the broken-pick condition: `isBroken = matchCount === 0 || (matchCount === 1 && !actualPair.includes(bet.winner))`.
+  - Keep the existing rose color path; it already handles `isBroken`.
+  - Drop the special-case `isFirstRound` fallback in `resolve()` — with the new model, R1 slots already keep their static teams (no parents to override).
+- `src/pages/MyPicks.tsx` and `src/hooks/useBracketData.ts`
+  - No logic changes required. `inProgressPairs` keeps being passed through but is now a no-op for slot resolution.
 
-- `src/pages/MyPicks.tsx`, `src/hooks/useBracketData.ts`, anywhere else calling `resolveSeriesTeams(id, picks, list, ctx)`
-  - Compute `effectiveWinners` once per render, pass it instead of `picks`.
+## Tests (in `src/test/`)
 
-- Add a unit test in `src/test/` covering the three scenarios:
-  1. R1 in progress → that slot's children all TBD; siblings still predict.
-  2. R1 picks + Finals pick, no semi/CF picks → CF and Finals both TBD (no leapfrog).
-  3. Full pick chain, no real results → entire bracket previews user's path.
+Add a unit test file for `computeBracketState` covering:
+
+1. R1 in progress, no real winners yet → CF and Finals slots filled from user picks (regression vs current TBD behavior).
+2. One Semi parent decided, the other not → CF top slot is the actual advancing team, CF bottom is the user's pick for the other Semi.
+3. Both CF parents decided, user's Finalist not in either → Finals slot teams are the two actual conf champs (case 4: tagline should go rose). Assert via the bracket card snapshot or by checking `actualPair` membership in component test.
+4. Skipped Semi pick, CF pick exists → CF slot for that side is undefined; Finals slot still resolves from CF pick.
 
 ## Out of scope
 
-- No DB / picks-table changes.
-- No UI redesign — same cards, same layout.
-- Saved-picks list ("That's what you've picked") is unaffected; it reads `bets` directly.
+- No DB / picks-table schema changes.
+- No layout changes; only the tagline color/suffix rules adapt.
+- Saved-picks list and scoring rules unchanged.
 
 ## Summary
 
-Today's bug isn't really about the freeze rule — it's that each slot resolves itself in isolation, with different recursion rules. Replacing that with one deterministic forward pass keyed on `effectiveWinner[id]` gives you a single rule applied uniformly to every round, and both the "TBD wall" and "PHI in the Finals" symptoms disappear together.
+Today the freeze-on-in-progress rule is doing exactly the opposite of what you want: it blanks the future the moment the present starts. Removing it makes the bracket prediction-first and reality-overriding-per-slot, which lines up cleanly with your four-case tagline model and gets rid of every spurious TBD in CF and the Finals.

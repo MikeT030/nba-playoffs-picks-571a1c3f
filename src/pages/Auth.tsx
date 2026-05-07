@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import authHero from "@/assets/auth-hero.png";
+import GoldenGlitter from "@/components/GoldenGlitter";
 
 type Step = "email" | "password" | "forgot";
 
@@ -91,6 +92,7 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <GoldenGlitter />
       {/* Hero image */}
       <div className="relative w-full h-[40vh] min-h-[260px] max-h-[420px] overflow-hidden">
         <img

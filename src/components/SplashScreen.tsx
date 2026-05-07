@@ -34,7 +34,10 @@ const SplashScreen = () => {
   }, []);
 
   useEffect(() => {
-    if (!show) return;
+    if (!show) {
+      window.dispatchEvent(new Event("splash:done"));
+      return;
+    }
     sessionStorage.setItem(SESSION_KEY, "1");
 
     const reduced =

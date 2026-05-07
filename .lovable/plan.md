@@ -1,59 +1,21 @@
 ## Goal
+Sync the golden glitter so it starts falling exactly when the splash hands off to the auth page, instead of starting earlier (currently it begins as soon as `Auth` mounts, which happens during the splash's hero-morph phase, so the first ~400ms of glitter is hidden behind the splash overlay).
 
-Add an intro splash that plays once per session before the user lands on the app. It uses the uploaded logo (small, rounded-corner trophy image) and the same headline as `/auth`. Animation runs ~2s, then hands off to `/auth` (signed-out) or `/` Games (signed-in / locked playoffs).
+## Approach
+Gate `GoldenGlitter` rendering in `Auth.tsx` on a "splash finished" signal. If the splash never ran (already shown this session, or user navigated directly), show the glitter immediately.
 
-## Asset
+## Changes
 
-- Copy `user-uploads://Logo_rounded_corners.png` → `src/assets/splash-logo.png`. Imported in the splash component as an ES module.
+### 1. `src/components/SplashScreen.tsx`
+- When the splash unmounts at the end of its sequence (the existing 4000ms timeout, and also the reduced-motion path), dispatch a `window` event: `window.dispatchEvent(new Event("splash:done"))`.
+- Also dispatch `splash:done` immediately if `show` is `false` on first render (so consumers don't wait forever when no splash plays). Implement via a one-shot `useEffect` that fires `splash:done` on mount when `show === false`.
 
-## Animation timeline (~2000ms total)
+### 2. `src/pages/Auth.tsx`
+- Add local state `showGlitter`, initialized to `false` only when a splash is currently in progress, otherwise `true`. Detection: `sessionStorage.getItem("splash-shown") === "1"` AND no active splash element — simplest heuristic: initialize `showGlitter = sessionStorage.getItem("splash-shown") === "1"` so it's `true` on subsequent visits and `false` on the very first load (when splash is about to/just finished playing).
+  - Edge case: on first load, `SplashScreen`'s effect sets `splash-shown` to `"1"` immediately on mount, before `Auth` mounts. So that heuristic isn't reliable. Instead, gate purely on the event: initialize `showGlitter = false`, listen for `splash:done`, set to `true`. To cover the "no splash" case, `SplashScreen` always fires `splash:done` on mount when it decides not to show (per change #1). Auth will reliably hear it because `SplashScreen` is mounted at the app root before route children — confirm by reading `App.tsx` during implementation; if order is reversed, switch to a tiny `sessionStorage` flag `splash-done` that Auth checks synchronously.
+- Render `<GoldenGlitter />` only when `showGlitter` is `true`.
+- Also re-trigger when the user clicks the "App Loader" button: that already dispatches `splash:replay` which resets the splash; `showGlitter` should reset to `false` on `splash:replay` so the glitter re-syncs with the next handoff.
 
-```text
- 0ms   →  900ms : image gently pulses (scale 1 ↔ 1.06, ~1.4s ease-in-out loop)
-                  headline rendered with filter: blur(14px) + opacity 0.85 — milky glass
- 900ms → 1700ms : headline blur fades to 0 (600ms ease-out)
-                  image grows smoothly from scale 1 → 1.35 (800ms ease-out)
-1700ms → 2000ms : image zoom-burst to scale ~28 (320ms cubic-bezier(0.7,0,0.84,0))
-                  headline fades out (250ms)
-2000ms          : splash unmounts → user sees /auth or /
-```
-
-GPU-friendly: only `transform`, `filter`, `opacity`. `will-change: transform` on the image.
-
-## Routing & lifecycle
-
-- New component `src/components/SplashScreen.tsx` — fixed full-screen overlay (`z-[100]`, `bg-background`).
-- Mount once in `src/App.tsx` **inside** `<BrowserRouter>` (so it can call `useNavigate` / `useLocation`) and inside `<AuthProvider>`. Place it right after `<AwardDrawerHost />`.
-- Show-once-per-session via `sessionStorage["splash-shown"]`. Refreshes don't replay it; new tab does.
-- On unmount, decide target route:
-  - signed-in → `/` (Games)
-  - signed-out → `/auth`
-  - if already on a deep link the user opened intentionally (anything other than `/` or `/auth`), don't redirect — just unmount the overlay.
-- Skip the splash entirely on `/reset-password` (email-link landing must not be hijacked).
-- Respect `prefers-reduced-motion`: skip pulse/zoom-burst, just a 600ms fade out.
-
-## Visual details
-
-- Image: `src/assets/splash-logo.png` rendered at `w-40 h-40 md:w-48 md:h-48`, `rounded-2xl` (already rounded in source, but matches app style).
-- Headline: identical markup/fonts to `/auth`'s `<h1>`:
-  - `2026` — Barlow thin
-  - `Playoffs` / `Picks` — Claymale / Archivo Black, `text-5xl block leading-[1.15]`
-- Centered vertically + horizontally; image above headline with `mt-8` gap.
-- Background `bg-background` for seamless transition to `/auth` (same bg).
-- `aria-hidden="true"`, `pointer-events-none` while animating.
-
-## Files
-
-- **New** `src/components/SplashScreen.tsx` — self-contained component with inline `<style>` tag for the one pulse keyframe (no Tailwind config changes).
-- **New asset** `src/assets/splash-logo.png` — copied from upload.
-- **Edit** `src/App.tsx` — add lazy or eager `<SplashScreen />` inside `<BrowserRouter>` (eager is fine, component is tiny).
-
-## Out of scope
-
-- No changes to `/auth`, `/`, or routing config.
-- No new Tailwind keyframes — pulse keyframe lives inline in the component.
-- No persistence beyond `sessionStorage`.
-
-## Summary
-
-A single ~2s splash overlay (pulsing logo + de-blurring headline + zoom-burst), shown once per session, mounted in `App.tsx`, that hands the user off to `/auth` or `/` based on auth state.
+## Notes
+- No changes to glitter timing/visuals — it will still last ~3.5s; it just starts at the correct moment.
+- The existing splash overlay covers the auth page (z-100 vs glitter z-90), so the visible "early fall" is exactly the ~400ms between Auth mount and splash unmount; gating removes that.

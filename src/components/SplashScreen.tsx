@@ -7,10 +7,10 @@ const SESSION_KEY = "splash-shown";
 
 /**
  * Once-per-session intro splash.
- *  0–900ms  : logo gently pulses, headline blurred (milky glass)
- *  900ms    : headline blur clears, logo starts scaling up
- *  1700ms   : logo zoom-bursts to fill screen, headline fades
- *  2000ms   : splash unmounts → /auth (signed-out) or / (signed-in)
+ *  0–900ms   : logo (20% smaller) gently pulses, headline blurred (milky glass)
+ *  900ms     : headline blur clears, logo grows to natural size
+ *  1500ms    : logo morphs into /auth hero position (top, full-width, 40vh)
+ *  2000ms    : splash unmounts → /auth (signed-out) or / (signed-in)
  */
 const SplashScreen = () => {
   const navigate = useNavigate();
@@ -24,7 +24,6 @@ const SplashScreen = () => {
   });
   const [phase, setPhase] = useState<0 | 1 | 2>(0);
 
-  // Allow manual replay (e.g. dev "App Loader" button) via a window event.
   useEffect(() => {
     const handler = () => {
       setPhase(0);
@@ -33,7 +32,6 @@ const SplashScreen = () => {
     window.addEventListener("splash:replay", handler);
     return () => window.removeEventListener("splash:replay", handler);
   }, []);
-
 
   useEffect(() => {
     if (!show) return;
@@ -52,7 +50,7 @@ const SplashScreen = () => {
     }
 
     const t1 = window.setTimeout(() => setPhase(1), 900);
-    const t2 = window.setTimeout(() => setPhase(2), 1700);
+    const t2 = window.setTimeout(() => setPhase(2), 1500);
     const t3 = window.setTimeout(() => {
       finish();
       setShow(false);
@@ -64,7 +62,6 @@ const SplashScreen = () => {
     };
     function finish() {
       if (loading) return;
-      // Only redirect if the user landed on a "default" entry route.
       const onEntry =
         location.pathname === "/" || location.pathname === "/auth";
       if (!onEntry) return;
@@ -78,50 +75,67 @@ const SplashScreen = () => {
 
   if (!show) return null;
 
-  const imgTransform =
-    phase === 0 ? "scale(1)" : phase === 1 ? "scale(1.35)" : "scale(28)";
-  const imgTransition =
-    phase === 1
-      ? "transform 800ms cubic-bezier(0.45, 0, 0.55, 1)"
-      : phase === 2
-        ? "transform 320ms cubic-bezier(0.7, 0, 0.84, 0)"
-        : undefined;
+  // Phase 0: pulsing at 80% size, centered
+  // Phase 1: clear blur, scale to 100%, still centered
+  // Phase 2: morph to /auth hero position — fixed top, full-width, 40vh
+  const isHero = phase === 2;
 
   return (
     <div
       aria-hidden="true"
-      className="fixed inset-0 z-[100] bg-background flex flex-col items-center justify-center px-4 overflow-hidden pointer-events-none"
+      className="fixed inset-0 z-[100] bg-background overflow-hidden pointer-events-none"
     >
+      {/* Image wrapper — animates from centered small box to top hero strip */}
       <div
-        className={phase === 0 ? "splash-pulse" : ""}
         style={{
-          willChange: "transform",
-          transition: imgTransition,
-          transform: imgTransform,
+          position: "absolute",
+          left: isHero ? 0 : "50%",
+          top: isHero ? 0 : "calc(50% - 80px)",
+          width: isHero ? "100vw" : "10rem",
+          height: isHero ? "40vh" : "10rem",
+          transform: isHero ? "translate(0, 0)" : "translate(-50%, -50%)",
+          transition:
+            "left 600ms cubic-bezier(0.65, 0, 0.35, 1), top 600ms cubic-bezier(0.65, 0, 0.35, 1), width 600ms cubic-bezier(0.65, 0, 0.35, 1), height 600ms cubic-bezier(0.65, 0, 0.35, 1), transform 600ms cubic-bezier(0.65, 0, 0.35, 1)",
+          willChange: "left, top, width, height, transform",
         }}
       >
-        <img
-          src={splashLogo}
-          alt=""
-          draggable={false}
-          className="w-40 h-40 md:w-48 md:h-48 object-cover rounded-2xl"
-        />
+        <div
+          className={phase === 0 ? "splash-pulse" : ""}
+          style={{
+            width: "100%",
+            height: "100%",
+            transform: phase === 0 ? "scale(0.8)" : "scale(1)",
+            transition: "transform 600ms cubic-bezier(0.4, 0, 0.2, 1)",
+            willChange: "transform",
+          }}
+        >
+          <img
+            src={splashLogo}
+            alt=""
+            draggable={false}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              borderRadius: isHero ? 0 : "1rem",
+              transition: "border-radius 500ms ease-out",
+            }}
+          />
+        </div>
       </div>
 
+      {/* Headline — sits below where the centered image was */}
       <h1
-        className="md:text-4xl tracking-wider leading-tight text-center text-4xl mt-8"
+        className="md:text-4xl tracking-wider leading-tight text-center text-4xl absolute left-1/2 -translate-x-1/2"
         style={{
+          top: "calc(50% + 32px)",
           fontFamily: "'Archivo Black', sans-serif",
           filter: phase === 0 ? "blur(14px)" : "blur(0px)",
           opacity: phase === 2 ? 0 : phase === 0 ? 0.85 : 1,
-          transition:
-            "filter 600ms ease-out, opacity 250ms ease-out",
+          transition: "filter 600ms ease-out, opacity 400ms ease-out",
         }}
       >
-        <span
-          className="font-thin"
-          style={{ fontFamily: "'Barlow', sans-serif" }}
-        >
+        <span className="font-thin" style={{ fontFamily: "'Barlow', sans-serif" }}>
           2026
         </span>
         <br />
@@ -140,11 +154,13 @@ const SplashScreen = () => {
       </h1>
 
       <style>{`
-        @keyframes splashPulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.06); }
+        @keyframes splashPulseSmooth {
+          0%, 100% { transform: scale(0.8); }
+          50% { transform: scale(0.86); }
         }
-        .splash-pulse { animation: splashPulse 1.4s ease-in-out infinite; }
+        .splash-pulse {
+          animation: splashPulseSmooth 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
       `}</style>
     </div>
   );

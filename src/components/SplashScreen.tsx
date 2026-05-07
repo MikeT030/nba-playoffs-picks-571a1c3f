@@ -90,7 +90,7 @@ const SplashScreen = () => {
         style={{
           position: "absolute",
           left: "50%",
-          top: isHero ? "20vh" : "calc(50% - 80px)",
+          top: "20vh",
           width: isHero ? "100vw" : "10rem",
           height: isHero ? "40vh" : "10rem",
           transform: "translate(-50%, -50%)",

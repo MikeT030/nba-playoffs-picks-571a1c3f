@@ -7,10 +7,10 @@ const SESSION_KEY = "splash-shown";
 
 /**
  * Once-per-session intro splash.
- *  0–900ms   : logo (20% smaller) gently pulses, headline blurred (milky glass)
- *  900ms     : headline blur clears, logo grows to natural size
- *  1500ms    : logo morphs into /auth hero position (top, full-width, 40vh)
- *  2000ms    : splash unmounts → /auth (signed-out) or / (signed-in)
+ *  0–2100ms  : logo (20% smaller) gently pulses, headline blurred (milky glass)
+ *  2100ms    : headline blur clears, logo grows to natural size
+ *  2600ms    : logo morphs into /auth hero position (top, full-width, 40vh)
+ *  3000ms    : splash unmounts → /auth (signed-out) or / (signed-in)
  */
 const SplashScreen = () => {
   const navigate = useNavigate();

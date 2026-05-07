@@ -24,6 +24,7 @@ import DemoBracketPlayedOut from "@/components/DemoBracketPlayedOut";
 import DemoAllPicksTable from "@/components/DemoAllPicksTable";
 import DemoVisualScoreboard from "@/components/DemoVisualScoreboard";
 import { DemoFlyerCardV3, DemoFlyerCardPaxson, DemoFlyerCardDavis, DemoFlyerCardMiller } from "@/components/DemoFlyerCardVariants";
+import DemoFullWidthNav from "@/components/DemoFullWidthNav";
 
 interface AdminUser {
   id: string;
@@ -187,6 +188,23 @@ const Admin = () => {
             items: [
               { value: "visual-scoreboard", label: "DEMO VISUAL SCOREBOARD", content: <DemoVisualScoreboard /> },
               { value: "all-picks-table", label: "DEMO ALL PICKS TABLE", content: <DemoAllPicksTable /> },
+            ],
+          },
+          {
+            group: "NAVIGATION",
+            items: [
+              {
+                value: "full-width-nav",
+                label: "DEMO FULL-WIDTH NAV",
+                content: (
+                  <div className="space-y-3">
+                    <p className="font-body text-xs text-muted-foreground">
+                      Expand to preview — the nav docks to the bottom of the screen.
+                    </p>
+                    <DemoFullWidthNav />
+                  </div>
+                ),
+              },
             ],
           },
         ].map((section) => (

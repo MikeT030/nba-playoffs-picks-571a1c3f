@@ -100,12 +100,13 @@ const SplashScreen = () => {
         }}
       >
         <div
-          className={phase === 0 ? "splash-pulse" : ""}
           style={{
             width: "100%",
             height: "100%",
-            transform: phase === 0 ? "scale(0.8)" : "scale(1)",
-            transition: "transform 600ms cubic-bezier(0.4, 0, 0.2, 1)",
+            transform: phase === 0 ? "scale(0.7)" : "scale(1)",
+            transition: phase === 0
+              ? "transform 3200ms cubic-bezier(0.33, 0, 0.67, 1)"
+              : "transform 600ms cubic-bezier(0.4, 0, 0.2, 1)",
             willChange: "transform",
           }}
         >

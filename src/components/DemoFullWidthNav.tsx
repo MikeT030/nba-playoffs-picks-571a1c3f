@@ -40,11 +40,8 @@ const DemoFullWidthNav = () => {
                   : "text-[#F9F9FA] hover:text-foreground"
               )}
             >
-              <item.icon size={20} />
-              <span className={cn("text-sm font-semibold whitespace-nowrap leading-tight", item.to === "/my-picks" && "")}>
-                {item.label}
-              </span>
-              {item.to === "/my-picks" && <Network size={0} className="hidden" />}
+              <item.icon size={20} className={item.to === "/my-picks" ? "rotate-90" : ""} />
+              <span className="text-sm font-semibold whitespace-nowrap leading-tight">{item.label}</span>
             </Link>
           );
         })}

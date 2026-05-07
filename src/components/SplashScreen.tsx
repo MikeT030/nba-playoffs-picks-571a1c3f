@@ -24,6 +24,17 @@ const SplashScreen = () => {
   });
   const [phase, setPhase] = useState<0 | 1 | 2>(0);
 
+  // Allow manual replay (e.g. dev "App Loader" button) via a window event.
+  useEffect(() => {
+    const handler = () => {
+      setPhase(0);
+      setShow(true);
+    };
+    window.addEventListener("splash:replay", handler);
+    return () => window.removeEventListener("splash:replay", handler);
+  }, []);
+
+
   useEffect(() => {
     if (!show) return;
     sessionStorage.setItem(SESSION_KEY, "1");

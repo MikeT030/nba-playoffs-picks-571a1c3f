@@ -209,6 +209,19 @@ const Auth = () => {
           )}
         </div>
       </div>
+
+      <div className="px-4 pb-8 pt-4 flex justify-center">
+        <button
+          type="button"
+          onClick={() => {
+            sessionStorage.removeItem("splash-shown");
+            window.dispatchEvent(new Event("splash:replay"));
+          }}
+          className="text-xs font-body uppercase tracking-widest text-muted-foreground hover:text-primary border border-border/40 rounded-full px-4 py-2 transition-colors"
+        >
+          App Loader
+        </button>
+      </div>
     </div>
   );
 };

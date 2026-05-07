@@ -195,6 +195,18 @@ const Admin = () => {
             group: "NAVIGATION",
             items: [
               {
+                value: "regular-nav",
+                label: "REGULAR NAV BAR",
+                content: (
+                  <div className="space-y-3">
+                    <p className="font-body text-xs text-muted-foreground">
+                      Expand to preview — the pill-shaped nav floats above the bottom.
+                    </p>
+                    <FloatingNav />
+                  </div>
+                ),
+              },
+              {
                 value: "full-width-nav",
                 label: "DEMO FULL-WIDTH NAV",
                 content: (

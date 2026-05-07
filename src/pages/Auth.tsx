@@ -16,12 +16,24 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [isExistingUser, setIsExistingUser] = useState(false);
+  const [showGlitter, setShowGlitter] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (user) navigate("/", { replace: true });
   }, [user, navigate]);
+
+  useEffect(() => {
+    const onDone = () => setShowGlitter(true);
+    const onReplay = () => setShowGlitter(false);
+    window.addEventListener("splash:done", onDone);
+    window.addEventListener("splash:replay", onReplay);
+    return () => {
+      window.removeEventListener("splash:done", onDone);
+      window.removeEventListener("splash:replay", onReplay);
+    };
+  }, []);
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

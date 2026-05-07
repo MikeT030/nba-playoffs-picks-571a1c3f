@@ -154,17 +154,7 @@ const SplashScreen = () => {
         </span>
       </h1>
 
-      <style>{`
-        @keyframes heartbeat {
-          0%, 32%, 100% { transform: scale(0.8); }
-          8%  { transform: scale(0.92); }
-          16% { transform: scale(0.8); }
-          24% { transform: scale(0.92); }
-        }
-        .splash-pulse {
-          animation: heartbeat 1050ms ease-in-out 3;
-        }
-      `}</style>
+      <style>{``}</style>
     </div>
   );
 };

@@ -92,6 +92,7 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <GoldenGlitter />
       {/* Hero image */}
       <div className="relative w-full h-[40vh] min-h-[260px] max-h-[420px] overflow-hidden">
         <img

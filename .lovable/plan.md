@@ -1,85 +1,59 @@
-## What you want, in one sentence
+## Goal
 
-The bracket should always preview the **user's predicted path** all the way to the Finals. Reality only overwrites a slot when the parent series of that slot is **actually decided** — and at that moment the pick gets evaluated and its tagline adapts accordingly.
+Add an intro splash that plays once per session before the user lands on the app. It uses the uploaded logo (small, rounded-corner trophy image) and the same headline as `/auth`. Animation runs ~2s, then hands off to `/auth` (signed-out) or `/` Games (signed-in / locked playoffs).
 
-## Why it currently shows TBD in CF / Finals
+## Asset
 
-Today's model (`computeBracketState` in `src/data/playoffsData.ts`) has two override layers:
+- Copy `user-uploads://Logo_rounded_corners.png` → `src/assets/splash-logo.png`. Imported in the splash component as an ES module.
 
-1. `actualWinners[parent]` → real team (correct, keep this).
-2. `inProgressPairs.has(pair)` on the **parent's resolved pair** → forcibly sets that parent's `winnerTeam` to `undefined`, which cascades into every downstream slot.
-
-Rule 2 is the culprit. As soon as PHI's R1 series (or any earlier series) goes "in progress," its `winnerTeam` becomes undefined → East Semi top slot has no team → East CF slot has no team → Finals top slot has no team → "TBD vs TBD" up the chain. The freeze was meant to stop predictions from leapfrogging a live series, but it also kills the very preview you want to keep.
-
-## The new model: predict-by-default, override-with-reality-when-decided
-
-Per series S with parents (P1, P2):
+## Animation timeline (~2000ms total)
 
 ```text
-slotTop    = actualWinners[P1] ? team(actualWinners[P1])
-           : userPick[P1]      ? team(userPick[P1])
-           : undefined
-slotBottom = same with P2
+ 0ms   →  900ms : image gently pulses (scale 1 ↔ 1.06, ~1.4s ease-in-out loop)
+                  headline rendered with filter: blur(14px) + opacity 0.85 — milky glass
+ 900ms → 1700ms : headline blur fades to 0 (600ms ease-out)
+                  image grows smoothly from scale 1 → 1.35 (800ms ease-out)
+1700ms → 2000ms : image zoom-burst to scale ~28 (320ms cubic-bezier(0.7,0,0.84,0))
+                  headline fades out (250ms)
+2000ms          : splash unmounts → user sees /auth or /
 ```
 
-For Round 1, slots stay the static seed teams (no parents). Real-life winner of S itself still drives `actualWinners[S]` and the green "ADV" / scoring overlay — that part is unchanged.
+GPU-friendly: only `transform`, `filter`, `opacity`. `will-change: transform` on the image.
 
-Properties:
-- A live R1 series no longer blanks downstream rounds. Predictions keep flowing.
-- The moment a parent series finalizes, its slot in the child card flips from "your predicted team" to "the actual advancing team." That's the trigger point for tagline adaptation on the child card.
-- No leapfrogging: the slot for a series whose parent is undecided uses **the user's pick for that parent**, never a pick made two rounds upstream. So if you skipped a Semi pick, the CF slot is genuinely TBD — exactly what an empty slot in a chain *should* mean. Distinct from "TBD because something earlier is live", which we no longer do.
+## Routing & lifecycle
 
-## Tagline adaptation — four cases unified
+- New component `src/components/SplashScreen.tsx` — fixed full-screen overlay (`z-[100]`, `bg-background`).
+- Mount once in `src/App.tsx` **inside** `<BrowserRouter>` (so it can call `useNavigate` / `useLocation`) and inside `<AuthProvider>`. Place it right after `<AwardDrawerHost />`.
+- Show-once-per-session via `sessionStorage["splash-shown"]`. Refreshes don't replay it; new tab does.
+- On unmount, decide target route:
+  - signed-in → `/` (Games)
+  - signed-out → `/auth`
+  - if already on a deep link the user opened intentionally (anything other than `/` or `/auth`), don't redirect — just unmount the overlay.
+- Skip the splash entirely on `/reset-password` (email-link landing must not be hijacked).
+- Respect `prefers-reduced-motion`: skip pulse/zoom-burst, just a 600ms fade out.
 
-The card already computes `actualPair` (the slot teams as currently displayed) and `predictedPair = [bet.winner, predictedOpp]` via `getAssumedOpponentAbbr`. Once we apply the new model, `actualPair` is "real teams where decided, else predicted teams" — so `matchCount` already encodes the four cases we care about, with one tweak:
+## Visual details
 
-| Case | Condition | Tagline | Color |
-|---|---|---|---|
-| 1. 100% true | `matchCount === 2` | `Your Pick: X in N` | primary (current) |
-| 2. 50% true, your team made it | `matchCount === 1` AND `actualPair.includes(bet.winner)` | `Your Pick: X in N (vs. predicted Y)` | primary |
-| 3. 50% true, your winner is the no-show | `matchCount === 1` AND `!actualPair.includes(bet.winner)` | same suffix pattern | **rose** (pick already dead) |
-| 4. 0% true | `matchCount === 0` | same suffix pattern | **rose** |
+- Image: `src/assets/splash-logo.png` rendered at `w-40 h-40 md:w-48 md:h-48`, `rounded-2xl` (already rounded in source, but matches app style).
+- Headline: identical markup/fonts to `/auth`'s `<h1>`:
+  - `2026` — Barlow thin
+  - `Playoffs` / `Picks` — Claymale / Archivo Black, `text-5xl block leading-[1.15]`
+- Centered vertically + horizontally; image above headline with `mt-8` gap.
+- Background `bg-background` for seamless transition to `/auth` (same bg).
+- `aria-hidden="true"`, `pointer-events-none` while animating.
 
-Trigger for cases 2–4: at least one parent of S is decided (so `actualPair` contains a real team that can disagree with the prediction). Until then the preview is purely your predictions and `matchCount` is 2 by construction.
+## Files
 
-Detail: today's code only marks `isBroken` when `matchCount === 0`. Extend it to also mark broken (rose) when the user's winner isn't in `actualPair`. That's the only behavioral change to the card itself.
-
-## Edge cases to handle
-
-- **Skipped intermediate pick.** You picked R1 + CF but no Semis. The CF slot has no source (`userPick[semi]` undefined, parent undecided) → genuine TBD on that one slot. Show the existing "make your pick" empty state. The Finals card still resolves its own slot from your CF pick, so the Finals can preview even with a Semi gap. That matches your stated intent: predictions display wherever they exist; gaps stay gaps until you fill them.
-- **Champion bonus on a broken Finals.** If the Finals slot teams are now real and don't include your champion pick, show rose tagline; scoring/champion bonus already keys off `actualWinners["nba-finals"]`, unaffected.
-- **`getAssumedOpponentAbbr`** still walks the user's *own* picks for the predicted opponent — exactly right for "(vs. predicted Y)" even when reality differs.
-- **Match-detail / Scoreboard** views use `propagateRealWinners: true` and read `actualWinners` directly. They don't depend on the freeze rule, so unaffected.
-- **`useBracketData.inProgressPairs`** stops being consulted by `computeBracketState`. We keep computing it (other call sites may still want it, e.g. the live "in progress" badge), but remove it from `ResolveCtx`/`computeBracketState`. Safer than ripping out the producer.
-- **R1 play-in placeholders** (`PIW7`, etc.) keep their current resolve-from-API path via `resolvePlayInSlotsOnly` / `resolveBracketWithApiGames`. No change.
-
-## Files to change
-
-- `src/data/playoffsData.ts`
-  - In `computeBracketState`: drop the `inProgressPairs` branch entirely. Keep: real-winner override, then user-pick fallback, then undefined.
-  - Leave `ResolveCtx.inProgressPairs` field in the type (still produced by `useBracketData`) but ignore it in resolution. Add a doc comment that resolution is prediction-first.
-- `src/components/PlayoffBracket.tsx`
-  - Extend the broken-pick condition: `isBroken = matchCount === 0 || (matchCount === 1 && !actualPair.includes(bet.winner))`.
-  - Keep the existing rose color path; it already handles `isBroken`.
-  - Drop the special-case `isFirstRound` fallback in `resolve()` — with the new model, R1 slots already keep their static teams (no parents to override).
-- `src/pages/MyPicks.tsx` and `src/hooks/useBracketData.ts`
-  - No logic changes required. `inProgressPairs` keeps being passed through but is now a no-op for slot resolution.
-
-## Tests (in `src/test/`)
-
-Add a unit test file for `computeBracketState` covering:
-
-1. R1 in progress, no real winners yet → CF and Finals slots filled from user picks (regression vs current TBD behavior).
-2. One Semi parent decided, the other not → CF top slot is the actual advancing team, CF bottom is the user's pick for the other Semi.
-3. Both CF parents decided, user's Finalist not in either → Finals slot teams are the two actual conf champs (case 4: tagline should go rose). Assert via the bracket card snapshot or by checking `actualPair` membership in component test.
-4. Skipped Semi pick, CF pick exists → CF slot for that side is undefined; Finals slot still resolves from CF pick.
+- **New** `src/components/SplashScreen.tsx` — self-contained component with inline `<style>` tag for the one pulse keyframe (no Tailwind config changes).
+- **New asset** `src/assets/splash-logo.png` — copied from upload.
+- **Edit** `src/App.tsx` — add lazy or eager `<SplashScreen />` inside `<BrowserRouter>` (eager is fine, component is tiny).
 
 ## Out of scope
 
-- No DB / picks-table schema changes.
-- No layout changes; only the tagline color/suffix rules adapt.
-- Saved-picks list and scoring rules unchanged.
+- No changes to `/auth`, `/`, or routing config.
+- No new Tailwind keyframes — pulse keyframe lives inline in the component.
+- No persistence beyond `sessionStorage`.
 
 ## Summary
 
-Today the freeze-on-in-progress rule is doing exactly the opposite of what you want: it blanks the future the moment the present starts. Removing it makes the bracket prediction-first and reality-overriding-per-slot, which lines up cleanly with your four-case tagline model and gets rid of every spurious TBD in CF and the Finals.
+A single ~2s splash overlay (pulsing logo + de-blurring headline + zoom-burst), shown once per session, mounted in `App.tsx`, that hands the user off to `/auth` or `/` based on auth state.

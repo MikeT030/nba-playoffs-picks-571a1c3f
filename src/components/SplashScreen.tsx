@@ -128,7 +128,7 @@ const SplashScreen = () => {
       <h1
         className="md:text-4xl tracking-wider leading-tight text-center text-4xl absolute left-1/2 -translate-x-1/2"
         style={{
-          top: "calc(50% + 32px)",
+          top: "calc(40vh - 78px)",
           fontFamily: "'Archivo Black', sans-serif",
           filter: phase === 0 ? "blur(14px)" : "blur(0px)",
           opacity: phase === 2 ? 0 : phase === 0 ? 0.85 : 1,

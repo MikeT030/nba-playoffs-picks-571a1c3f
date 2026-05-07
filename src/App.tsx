@@ -37,6 +37,7 @@ const App = () => (
           <FloatingNav />
           <TopRightAuth />
           <AwardDrawerHost />
+          <SplashScreen />
           <Suspense fallback={null}>
             <Routes>
               <Route path="/" element={<Index />} />

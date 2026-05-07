@@ -16,12 +16,26 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [isExistingUser, setIsExistingUser] = useState(false);
+  const [showGlitter, setShowGlitter] = useState(
+    () => typeof window !== "undefined" && sessionStorage.getItem("splash-done") === "1"
+  );
   const { user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (user) navigate("/", { replace: true });
   }, [user, navigate]);
+
+  useEffect(() => {
+    const onDone = () => setShowGlitter(true);
+    const onReplay = () => setShowGlitter(false);
+    window.addEventListener("splash:done", onDone);
+    window.addEventListener("splash:replay", onReplay);
+    return () => {
+      window.removeEventListener("splash:done", onDone);
+      window.removeEventListener("splash:replay", onReplay);
+    };
+  }, []);
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,7 +106,7 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <GoldenGlitter />
+      {showGlitter && <GoldenGlitter />}
       {/* Hero image */}
       <div className="relative w-full h-[40vh] min-h-[260px] max-h-[420px] overflow-hidden">
         <img

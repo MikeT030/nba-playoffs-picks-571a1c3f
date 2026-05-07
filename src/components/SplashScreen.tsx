@@ -34,7 +34,12 @@ const SplashScreen = () => {
   }, []);
 
   useEffect(() => {
-    if (!show) return;
+    if (!show) {
+      sessionStorage.setItem("splash-done", "1");
+      window.dispatchEvent(new Event("splash:done"));
+      return;
+    }
+    sessionStorage.removeItem("splash-done");
     sessionStorage.setItem(SESSION_KEY, "1");
 
     const reduced =
@@ -45,6 +50,8 @@ const SplashScreen = () => {
       const t = window.setTimeout(() => {
         finish();
         setShow(false);
+        sessionStorage.setItem("splash-done", "1");
+        window.dispatchEvent(new Event("splash:done"));
       }, 600);
       return () => clearTimeout(t);
     }
@@ -54,6 +61,8 @@ const SplashScreen = () => {
     const t3 = window.setTimeout(() => {
       finish();
       setShow(false);
+      sessionStorage.setItem("splash-done", "1");
+      window.dispatchEvent(new Event("splash:done"));
     }, 4000);
     return () => {
       clearTimeout(t1);

@@ -298,59 +298,102 @@ function pairKey(a?: string, b?: string): string | null {
   return [a, b].sort().join("|");
 }
 
-// Helper: resolve teams for a series given a map of picks (seriesId -> winner abbreviation)
+/**
+ * Single forward pass through the bracket, computing for every series:
+ *   - `slotTeams[id]` : the (top, bottom) Team objects that fill the card.
+ *   - `winnerTeam[id]`: the team that *effectively* advances out of this
+ *     series — real winner if known, else the user's pick, else undefined.
+ *
+ * Rules applied uniformly at every round:
+ *   1. Static slot team (R1) wins over parent lookup unless it's a play-in
+ *      placeholder.
+ *   2. Otherwise the slot is filled by the parent's `winnerTeam`.
+ *   3. `actualWinners[id]` always wins.
+ *   4. If the resolved (top, bottom) pair is in `inProgressPairs`, freeze:
+ *      `winnerTeam[id] = undefined`. This cascades naturally to every
+ *      downstream round (their slot can't fill, so they're TBD too).
+ *   5. Otherwise, if `picks[id]` matches one of the slot teams, use it.
+ *   6. Else undefined (TBD).
+ */
+export function computeBracketState(
+  picks: Record<string, string>,
+  seriesList: BracketSeries[] = bracketSeries,
+  ctx: ResolveCtx = {},
+): {
+  slotTeams: Map<string, { top?: Team; bottom?: Team }>;
+  winnerTeam: Map<string, Team | undefined>;
+} {
+  const slotTeams = new Map<string, { top?: Team; bottom?: Team }>();
+  const winnerTeam = new Map<string, Team | undefined>();
+  const needsFill = (t?: Team) => !t || isPlayInPlaceholder(t.abbreviation);
+
+  // `bracketSeries` is declared in topological order (R1 → Semis → CF → Finals),
+  // and `seriesList` is derived from it (resolveBracketWithApiGames preserves
+  // order). Iterating once is enough.
+  for (const s of seriesList) {
+    let top = s.topTeam;
+    let bottom = s.bottomTeam;
+
+    if (needsFill(top) && s.topParentSeriesId) {
+      const parentWinner = winnerTeam.get(s.topParentSeriesId);
+      if (parentWinner) top = parentWinner;
+      else if (needsFill(top)) top = undefined;
+    }
+    if (needsFill(bottom) && s.bottomParentSeriesId) {
+      const parentWinner = winnerTeam.get(s.bottomParentSeriesId);
+      if (parentWinner) bottom = parentWinner;
+      else if (needsFill(bottom)) bottom = undefined;
+    }
+
+    slotTeams.set(s.id, { top, bottom });
+
+    // Effective winner.
+    const realWinner = ctx.actualWinners?.[s.id];
+    if (realWinner) {
+      const wt =
+        top?.abbreviation === realWinner ? top
+        : bottom?.abbreviation === realWinner ? bottom
+        : undefined;
+      winnerTeam.set(s.id, wt);
+      continue;
+    }
+
+    if (top && bottom && ctx.inProgressPairs) {
+      const k = pairKey(top.abbreviation, bottom.abbreviation);
+      if (k && ctx.inProgressPairs.has(k)) {
+        // Frozen — series in progress, don't predict over it.
+        winnerTeam.set(s.id, undefined);
+        continue;
+      }
+    }
+
+    const pick = picks[s.id];
+    if (pick && top && bottom) {
+      if (pick === top.abbreviation) winnerTeam.set(s.id, top);
+      else if (pick === bottom.abbreviation) winnerTeam.set(s.id, bottom);
+      else winnerTeam.set(s.id, undefined);
+    } else {
+      winnerTeam.set(s.id, undefined);
+    }
+  }
+
+  return { slotTeams, winnerTeam };
+}
+
+/**
+ * Resolve the (topTeam, bottomTeam) slot teams for a series.
+ * Backward-compatible wrapper around `computeBracketState` so existing call
+ * sites don't have to change.
+ */
 export function resolveSeriesTeams(
   seriesId: string,
   picks: Record<string, string>,
   seriesList: BracketSeries[] = bracketSeries,
-  ctx: ResolveCtx = {}
+  ctx: ResolveCtx = {},
 ): { topTeam?: Team; bottomTeam?: Team } {
-  const series = seriesList.find((s) => s.id === seriesId);
-  if (!series) return {};
-
-  let topTeam = series.topTeam;
-  let bottomTeam = series.bottomTeam;
-
-  // Only fall back to the user's predicted opponent when the slot has not
-  // already been filled with the real advancing team by
-  // `resolveBracketWithApiGames`. Play-in placeholders count as "not filled".
-  const needsFill = (t?: Team) => !t || isPlayInPlaceholder(t.abbreviation);
-
-  const fillFromParent = (parentId: string): Team | undefined => {
-    const parentWinner = picks[parentId];
-    if (!parentWinner) return undefined;
-    const parentSeries = seriesList.find((s) => s.id === parentId);
-    if (!parentSeries) return undefined;
-    // Resolve parent's predicted pair WITHOUT the freeze, so predictions
-    // chain forward through later rounds whose own parent hasn't started.
-    const lookupCtx: ResolveCtx = { actualWinners: ctx.actualWinners };
-    const { topTeam: pTop, bottomTeam: pBottom } = resolveSeriesTeams(parentId, picks, seriesList, lookupCtx);
-
-    // Freeze rule: if the parent matchup has actually started but isn't
-    // decided yet, do NOT propagate the user's predicted winner forward.
-    // Leave the slot empty (TBD) so downstream rounds don't auto-fill.
-    const parentDecided = !!ctx.actualWinners?.[parentId];
-    if (!parentDecided && ctx.inProgressPairs && pTop && pBottom) {
-      const key = pairKey(pTop.abbreviation, pBottom.abbreviation);
-      if (key && ctx.inProgressPairs.has(key)) return undefined;
-    }
-
-    return parentWinner === pTop?.abbreviation ? pTop : pBottom;
-  };
-
-  if (needsFill(topTeam) && series.topParentSeriesId) {
-    const filled = fillFromParent(series.topParentSeriesId);
-    if (filled) topTeam = filled;
-    else if (needsFill(topTeam)) topTeam = undefined;
-  }
-
-  if (needsFill(bottomTeam) && series.bottomParentSeriesId) {
-    const filled = fillFromParent(series.bottomParentSeriesId);
-    if (filled) bottomTeam = filled;
-    else if (needsFill(bottomTeam)) bottomTeam = undefined;
-  }
-
-  return { topTeam, bottomTeam };
+  const { slotTeams } = computeBracketState(picks, seriesList, ctx);
+  const t = slotTeams.get(seriesId);
+  return { topTeam: t?.top, bottomTeam: t?.bottom };
 }
 
 /**

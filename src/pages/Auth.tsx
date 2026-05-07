@@ -16,7 +16,9 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [isExistingUser, setIsExistingUser] = useState(false);
-  const [showGlitter, setShowGlitter] = useState(false);
+  const [showGlitter, setShowGlitter] = useState(
+    () => typeof window !== "undefined" && sessionStorage.getItem("splash-done") === "1"
+  );
   const { user } = useAuth();
   const navigate = useNavigate();
 

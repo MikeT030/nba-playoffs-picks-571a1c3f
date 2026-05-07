@@ -26,7 +26,7 @@ const DemoFullWidthNav = () => {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50">
-      <div className="flex items-center justify-around bg-white/5 backdrop-blur-2xl border-t border-white/10 shadow-[0_-8px_32px_rgba(0,0,0,0.4)] px-2 pt-1 pb-[max(0.25rem,env(safe-area-inset-bottom))]">
+      <div className="flex items-center justify-around bg-white/5 backdrop-blur-2xl border-t border-white/10 shadow-[0_-8px_32px_rgba(0,0,0,0.4)] px-2 pt-[16px] pb-[max(1rem,env(safe-area-inset-bottom))]">
         {navItems.map((item) => {
           const isActive = location.pathname === item.to;
           return (

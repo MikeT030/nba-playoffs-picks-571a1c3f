@@ -50,6 +50,7 @@ const SplashScreen = () => {
       const t = window.setTimeout(() => {
         finish();
         setShow(false);
+        sessionStorage.setItem("splash-done", "1");
         window.dispatchEvent(new Event("splash:done"));
       }, 600);
       return () => clearTimeout(t);

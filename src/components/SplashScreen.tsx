@@ -100,13 +100,12 @@ const SplashScreen = () => {
         }}
       >
         <div
+          className={phase === 0 ? "splash-hover" : ""}
           style={{
             width: "100%",
             height: "100%",
             transform: phase === 0 ? "scale(0.7)" : "scale(1)",
-            transition: phase === 0
-              ? "transform 3200ms cubic-bezier(0.33, 0, 0.67, 1)"
-              : "transform 600ms cubic-bezier(0.4, 0, 0.2, 1)",
+            transition: "transform 700ms cubic-bezier(0.4, 0, 0.2, 1)",
             willChange: "transform",
           }}
         >
@@ -131,9 +130,8 @@ const SplashScreen = () => {
         style={{
           top: "calc(40vh - 78px)",
           fontFamily: "'Archivo Black', sans-serif",
-          filter: phase === 0 ? "blur(14px)" : "blur(0px)",
-          opacity: phase === 0 ? 0.85 : 1,
-          transition: "filter 600ms ease-out, opacity 400ms ease-out",
+          opacity: 1,
+          transition: "opacity 400ms ease-out",
         }}
       >
         <span className="font-thin" style={{ fontFamily: "'Barlow', sans-serif" }}>
@@ -154,7 +152,15 @@ const SplashScreen = () => {
         </span>
       </h1>
 
-      <style>{``}</style>
+      <style>{`
+        @keyframes droneHover {
+          0%, 100% { translate: 0 -3px; }
+          50%      { translate: 0 3px; }
+        }
+        .splash-hover {
+          animation: droneHover 2400ms ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 };

@@ -17,6 +17,7 @@ import PullToRefreshIndicator from "@/components/PullToRefreshIndicator";
 import { ALL_MONOLOGUE_LINES, isPlayoffsStarted } from "@/data/buttonMonologue";
 import { isTodaySlateET, isSameLocalDay } from "@/lib/seriesUtils";
 import AdvancedRoundView from "@/components/AdvancedRoundView";
+import FlyerReopenButton from "@/components/FlyerReopenButton";
 
 const TOTAL_GAMES = 15;
 
@@ -188,6 +189,7 @@ const Index = () => {
         isRefreshing={isRefreshing}
         progress={progress}
       />
+      <FlyerReopenButton />
       <HeroBannerMinimal title="The Games" />
 
       <section className="container py-10 pt-0">

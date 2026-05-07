@@ -8,6 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import FloatingNav from "@/components/FloatingNav";
 import TopRightAuth from "@/components/TopRightAuth";
 import AwardDrawerHost from "@/components/AwardDrawerHost";
+import SplashScreen from "@/components/SplashScreen";
 
 // Eager: landing route users see first
 import Index from "./pages/Index.tsx";
@@ -36,6 +37,7 @@ const App = () => (
           <FloatingNav />
           <TopRightAuth />
           <AwardDrawerHost />
+          <SplashScreen />
           <Suspense fallback={null}>
             <Routes>
               <Route path="/" element={<Index />} />

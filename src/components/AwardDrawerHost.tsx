@@ -9,11 +9,13 @@ const AwardDrawerHost = () => {
   const { user } = useAuth();
   const { assignments } = useFlyerState();
   const [closed, setClosed] = useState<{ kind: "receiver" | "broadcast"; key: string } | null>(null);
+  const [forceOpen, setForceOpen] = useState(false);
 
   // Allow external "Flyer" button to re-open the drawer after dismissal.
   useEffect(() => {
     const onReopen = () => {
       setClosed(null);
+      setForceOpen(true);
       if (user) window.localStorage.removeItem(seenKey(user.id));
     };
     window.addEventListener("flyer:reopen", onReopen);
@@ -37,11 +39,12 @@ const AwardDrawerHost = () => {
   // Broadcast: user is a winner, there's a new burn since they last saw, receiver isn't showing.
   const lastSeen =
     user && typeof window !== "undefined" ? window.localStorage.getItem(seenKey(user.id)) ?? "" : "";
+  const hasAnyAssignment = assignments.length > 0;
   const showBroadcast =
     !showReceiver &&
-    !!latestBurn &&
-    latestBurn !== lastSeen &&
-    closed?.key !== latestBurn;
+    hasAnyAssignment &&
+    ((forceOpen && closed?.kind !== "broadcast") ||
+      (!!latestBurn && latestBurn !== lastSeen && closed?.key !== latestBurn));
 
   if (!user) return null;
   if (!showReceiver && !showBroadcast) return null;
@@ -56,8 +59,9 @@ const AwardDrawerHost = () => {
       assignments={assignments}
       onOpenChange={(o) => {
         if (o) return;
+        setForceOpen(false);
         if (mode === "broadcast") {
-          window.localStorage.setItem(seenKey(user.id), latestBurn);
+          if (latestBurn) window.localStorage.setItem(seenKey(user.id), latestBurn);
           setClosed({ kind: "broadcast", key: latestBurn });
         } else {
           setClosed({ kind: "receiver", key: "" });

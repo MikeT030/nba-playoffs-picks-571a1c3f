@@ -358,15 +358,10 @@ export function computeBracketState(
       continue;
     }
 
-    if (top && bottom && ctx.inProgressPairs) {
-      const k = pairKey(top.abbreviation, bottom.abbreviation);
-      if (k && ctx.inProgressPairs.has(k)) {
-        // Frozen — series in progress, don't predict over it.
-        winnerTeam.set(s.id, undefined);
-        continue;
-      }
-    }
-
+    // NOTE: `inProgressPairs` is intentionally NOT consulted here.
+    // The bracket is prediction-first: the user's picks always fill
+    // downstream slots until the parent series is actually decided
+    // (`actualWinners[parent]`), at which point reality overrides per slot.
     const pick = picks[s.id];
     if (pick && top && bottom) {
       if (pick === top.abbreviation) winnerTeam.set(s.id, top);

@@ -305,7 +305,12 @@ const BracketCard = ({
         const predictedPair = [bet.winner, predictedOpp].filter(Boolean) as string[];
         const matchCount = predictedPair.filter((t) => actualPair.includes(t)).length;
         const showSuffix = matchCount < 2 && !!predictedOpp;
-        const isBroken = matchCount === 0;
+        // Pick is "broken" (rose) when the user's winner is no longer in the
+        // resolved actual matchup — either both teams differ (0% true) or one
+        // team matches but it's not the user's predicted winner (50% true,
+        // winner missing).
+        const winnerInActual = actualPair.includes(bet.winner);
+        const isBroken = actualPair.length === 2 && !winnerInActual;
         const textColorClass = isBroken
           ? "text-rose-400"
           : actualWinnerAbbr && isWrong
@@ -377,17 +382,7 @@ const PlayoffBracket = forwardRef<HTMLDivElement, PlayoffBracketProps>(({
   const ctx = { actualWinners, inProgressPairs };
 
   const resolve = (id: string) => {
-    const series = bracket.find((s) => s.id === id);
-    if (!series) return { topTeam: undefined, bottomTeam: undefined };
-    const resolved = resolveSeriesTeams(id, picks, bracket, ctx);
-    // For Round 1 (no parents) keep the static slot teams so the bracket
-    // never shows TBD where it shouldn't. For later rounds, prefer the
-    // resolved value (which may legitimately be undefined / TBD).
-    const isFirstRound = !series.topParentSeriesId && !series.bottomParentSeriesId;
-    return {
-      topTeam: resolved.topTeam ?? (isFirstRound ? series.topTeam : undefined),
-      bottomTeam: resolved.bottomTeam ?? (isFirstRound ? series.bottomTeam : undefined),
-    };
+    return resolveSeriesTeams(id, picks, bracket, ctx);
   };
 
   const renderCard = (id: string, x: number, y: number, isChamp = false) => {

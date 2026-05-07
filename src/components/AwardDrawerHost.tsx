@@ -10,6 +10,16 @@ const AwardDrawerHost = () => {
   const { assignments } = useFlyerState();
   const [closed, setClosed] = useState<{ kind: "receiver" | "broadcast"; key: string } | null>(null);
 
+  // Allow external "Flyer" button to re-open the drawer after dismissal.
+  useEffect(() => {
+    const onReopen = () => {
+      setClosed(null);
+      if (user) window.localStorage.removeItem(seenKey(user.id));
+    };
+    window.addEventListener("flyer:reopen", onReopen);
+    return () => window.removeEventListener("flyer:reopen", onReopen);
+  }, [user]);
+
   const myAssignment = useMemo(
     () => (user ? assignments.find((a) => a.user_id === user.id) : undefined),
     [user, assignments]

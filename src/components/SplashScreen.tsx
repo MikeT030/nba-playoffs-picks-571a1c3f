@@ -131,7 +131,7 @@ const SplashScreen = () => {
           top: "calc(40vh - 78px)",
           fontFamily: "'Archivo Black', sans-serif",
           filter: phase === 0 ? "blur(14px)" : "blur(0px)",
-          opacity: phase === 2 ? 0 : phase === 0 ? 0.85 : 1,
+          opacity: phase === 0 ? 0.85 : 1,
           transition: "filter 600ms ease-out, opacity 400ms ease-out",
         }}
       >

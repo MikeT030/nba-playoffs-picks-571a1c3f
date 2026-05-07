@@ -89,14 +89,14 @@ const SplashScreen = () => {
       <div
         style={{
           position: "absolute",
-          left: isHero ? 0 : "50%",
-          top: isHero ? 0 : "calc(50% - 80px)",
+          left: "50%",
+          top: isHero ? "20vh" : "calc(50% - 80px)",
           width: isHero ? "100vw" : "10rem",
           height: isHero ? "40vh" : "10rem",
-          transform: isHero ? "translate(0, 0)" : "translate(-50%, -50%)",
+          transform: "translate(-50%, -50%)",
           transition:
-            "left 600ms cubic-bezier(0.65, 0, 0.35, 1), top 600ms cubic-bezier(0.65, 0, 0.35, 1), width 600ms cubic-bezier(0.65, 0, 0.35, 1), height 600ms cubic-bezier(0.65, 0, 0.35, 1), transform 600ms cubic-bezier(0.65, 0, 0.35, 1)",
-          willChange: "left, top, width, height, transform",
+            "top 700ms cubic-bezier(0.65, 0, 0.35, 1), width 700ms cubic-bezier(0.65, 0, 0.35, 1), height 700ms cubic-bezier(0.65, 0, 0.35, 1)",
+          willChange: "top, width, height",
         }}
       >
         <div

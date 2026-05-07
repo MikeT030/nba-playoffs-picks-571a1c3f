@@ -28,8 +28,8 @@ const FloatingNav = () => {
   if (location.pathname === "/auth") return null;
 
   return (
-    <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-      <div className="flex items-center justify-between rounded-full bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)] min-w-[240px] px-[4px] py-[4px]">
+    <nav className="fixed bottom-0 left-0 right-0 z-50">
+      <div className="flex items-center justify-around bg-white/5 backdrop-blur-2xl border-t border-white/10 shadow-[0_-8px_32px_rgba(0,0,0,0.4)] px-2 pt-[16px] pb-[28px]">
         {navItems.map((item) => {
           const isActive = location.pathname === item.to;
           return (
@@ -37,11 +37,10 @@ const FloatingNav = () => {
               key={item.to}
               to={item.to}
               className={cn(
-                "flex items-center gap-2 px-5 py-3.5 rounded-full text-[15px] font-body font-medium transition-colors duration-200 whitespace-nowrap pl-[12px] pr-[12px]",
+                "flex items-center gap-2 px-5 py-3.5 rounded-full text-[15px] font-body font-medium transition-colors duration-200 whitespace-nowrap pl-[12px] pr-[12px] pt-[16px] pb-[16px]",
                 isActive
                   ? "bg-primary/15 text-primary border border-primary/40"
-                  : "text-[#F9F9FA] hover:text-foreground",
-                "pt-[16px] pb-[16px]"
+                  : "text-[#F9F9FA] hover:text-foreground"
               )}
             >
               <item.icon size={20} className={item.to === "/my-picks" ? "rotate-90" : ""} />

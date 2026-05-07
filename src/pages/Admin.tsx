@@ -196,7 +196,7 @@ const Admin = () => {
             items: [
               {
                 value: "regular-nav",
-                label: "REGULAR NAV BAR",
+                label: "HOVERING NAV BAR",
                 content: (
                   <div className="space-y-3">
                     <p className="font-body text-xs text-muted-foreground">

@@ -48,6 +48,7 @@ const SplashScreen = () => {
       const t = window.setTimeout(() => {
         finish();
         setShow(false);
+        window.dispatchEvent(new Event("splash:done"));
       }, 600);
       return () => clearTimeout(t);
     }
@@ -57,6 +58,7 @@ const SplashScreen = () => {
     const t3 = window.setTimeout(() => {
       finish();
       setShow(false);
+      window.dispatchEvent(new Event("splash:done"));
     }, 4000);
     return () => {
       clearTimeout(t1);

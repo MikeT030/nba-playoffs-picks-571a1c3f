@@ -25,6 +25,7 @@ import DemoAllPicksTable from "@/components/DemoAllPicksTable";
 import DemoVisualScoreboard from "@/components/DemoVisualScoreboard";
 import { DemoFlyerCardV3, DemoFlyerCardPaxson, DemoFlyerCardDavis, DemoFlyerCardMiller } from "@/components/DemoFlyerCardVariants";
 import DemoFullWidthNav from "@/components/DemoFullWidthNav";
+import FloatingNav from "@/components/FloatingNav";
 
 interface AdminUser {
   id: string;

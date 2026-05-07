@@ -7,10 +7,10 @@ const SESSION_KEY = "splash-shown";
 
 /**
  * Once-per-session intro splash.
- *  0–2100ms  : logo (20% smaller) gently pulses, headline blurred (milky glass)
- *  2100ms    : headline blur clears, logo grows to natural size
- *  2600ms    : logo morphs into /auth hero position (top, full-width, 40vh)
- *  3000ms    : splash unmounts → /auth (signed-out) or / (signed-in)
+ *  0–3150ms  : logo (20% smaller) gently pulses, headline blurred (milky glass)
+ *  3200ms    : headline blur clears, logo grows to natural size
+ *  3600ms    : logo morphs into /auth hero position (top, full-width, 40vh)
+ *  4000ms    : splash unmounts → /auth (signed-out) or / (signed-in)
  */
 const SplashScreen = () => {
   const navigate = useNavigate();
@@ -49,12 +49,12 @@ const SplashScreen = () => {
       return () => clearTimeout(t);
     }
 
-    const t1 = window.setTimeout(() => setPhase(1), 2100);
-    const t2 = window.setTimeout(() => setPhase(2), 2600);
+    const t1 = window.setTimeout(() => setPhase(1), 3200);
+    const t2 = window.setTimeout(() => setPhase(2), 3600);
     const t3 = window.setTimeout(() => {
       finish();
       setShow(false);
-    }, 3000);
+    }, 4000);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
@@ -161,7 +161,7 @@ const SplashScreen = () => {
           24% { transform: scale(0.92); }
         }
         .splash-pulse {
-          animation: heartbeat 700ms ease-in-out 3;
+          animation: heartbeat 1050ms ease-in-out 3;
         }
       `}</style>
     </div>

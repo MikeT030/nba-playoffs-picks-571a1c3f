@@ -387,7 +387,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
           {recap && (
             <div>
               <h3 className="font-display text-xl tracking-wider mb-3">The gist of it</h3>
-              <div className="rounded-lg border border-white/10 bg-[#22272E]/80 p-4">
+              <div className="rounded-lg border p-4 bg-[#23282f]/0 border-white/0">
                 <p className="font-body text-sm text-white leading-relaxed whitespace-pre-wrap">
                   {recap}
                 </p>

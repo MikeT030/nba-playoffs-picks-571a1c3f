@@ -378,6 +378,23 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
                 const pickedTeam = teamForPick(pick.winner, match);
                 const isCurrentUser = user && pick.user_id === user.id;
                 const pts = computePts(pick);
+                const userPicks = picksByUserAll?.[pick.user_id] ?? [];
+                const assumedOpp = bracketSeriesId
+                  ? getAssumedOpponentAbbr(bracketSeriesId, pick.winner, bracketData, userPicks)
+                  : null;
+                const pickInMatch =
+                  match.homeTeam.abbreviation === pick.winner ||
+                  match.awayTeam.abbreviation === pick.winner;
+                const actualOpp = match.homeTeam.abbreviation === pick.winner
+                  ? match.awayTeam.abbreviation
+                  : match.awayTeam.abbreviation === pick.winner
+                    ? match.homeTeam.abbreviation
+                    : null;
+                const broken = !pickInMatch;
+                const showAssumed = broken
+                  ? !!assumedOpp
+                  : !!assumedOpp && !!actualOpp && actualOpp !== assumedOpp;
+                const suffixOpp = assumedOpp ?? actualOpp;
                 return (
                   <div
                     key={pick.user_id}
@@ -391,9 +408,12 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
                         {isCurrentUser && <span className="text-xs text-primary ml-2">(You)</span>}
                       </p>
                       <p className="text-xs text-muted-foreground font-body">
-                        Picks{" "}
-                        <span className="font-semibold text-white">{pickedTeam.abbreviation}</span>{" "}
-                        in <span className="font-bold text-white">{pick.games_in_series}</span>
+                        <span className={broken ? "line-through opacity-70" : ""}>
+                          Picks{" "}
+                          <span className="font-semibold text-white">{pickedTeam.abbreviation}</span>{" "}
+                          in <span className="font-bold text-white">{pick.games_in_series}</span>
+                          {showAssumed && suffixOpp ? ` (vs. ${suffixOpp})` : ""}
+                        </span>
                         {pts !== null && (
                           <span className="ml-2 text-primary font-bold">· {pts} pts</span>
                         )}

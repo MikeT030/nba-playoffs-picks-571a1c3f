@@ -167,6 +167,11 @@ const Admin = () => {
                   />
                 ),
               },
+              {
+                value: "wades-take",
+                label: "WADE'S TAKE — SUMMARY DRAWER",
+                content: <WadeTakeDemo />,
+              },
             ],
           },
           {

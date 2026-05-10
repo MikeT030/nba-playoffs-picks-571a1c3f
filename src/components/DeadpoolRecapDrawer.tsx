@@ -306,34 +306,50 @@ export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
               )}
             </div>
 
-            <div className="flex items-center justify-between text-xs text-muted-foreground font-body">
-              <span>{summary.length} / 400 chars</span>
-              <div className="flex items-center gap-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => generate()}
-                  disabled={loading}
-                  className="h-8"
-                >
-                  {loading ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin mr-1" />
-                  ) : (
-                    <RefreshCw className="h-3.5 w-3.5 mr-1" />
-                  )}
-                  Regenerate
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={copy}
-                  disabled={!summary}
-                  className="h-8"
-                >
-                  <Copy className="h-3.5 w-3.5 mr-1" />
-                  Copy
-                </Button>
+            <div className="space-y-2 text-xs text-muted-foreground font-body">
+              <div className="flex items-center justify-between">
+                <span>{summary.length} / 400 chars</span>
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => generate()}
+                    disabled={loading}
+                    className="h-8"
+                  >
+                    {loading ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin mr-1" />
+                    ) : (
+                      <RefreshCw className="h-3.5 w-3.5 mr-1" />
+                    )}
+                    Regenerate
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={copy}
+                    disabled={!summary}
+                    className="h-8"
+                  >
+                    <Copy className="h-3.5 w-3.5 mr-1" />
+                    Copy
+                  </Button>
+                </div>
               </div>
+              <Button
+                size="sm"
+                variant="default"
+                onClick={addToGame}
+                disabled={!summary || loading}
+                className="h-8 w-full"
+              >
+                {added ? (
+                  <Check className="h-3.5 w-3.5 mr-1" />
+                ) : (
+                  <Plus className="h-3.5 w-3.5 mr-1" />
+                )}
+                {added ? "Added" : "Add to game"}
+              </Button>
             </div>
 
             {/* Inputs panel */}

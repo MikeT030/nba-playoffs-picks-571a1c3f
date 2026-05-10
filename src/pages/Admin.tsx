@@ -17,7 +17,7 @@ import HeroBannerMinimal from "@/components/HeroBannerMinimal";
 import DemoAllMatchupsInnovation from "@/components/DemoAllMatchupsInnovation";
 import DemoAdvancedRoundView from "@/components/DemoAdvancedRoundView";
 import DemoMatchCard from "@/components/DemoMatchCard";
-import DemoMatchCardColored from "@/components/DemoMatchCardColored";
+import DemoMatchCardColoredWithRecap from "@/components/DemoMatchCardColoredWithRecap";
 import DemoMatchDetailDialog from "@/components/DemoMatchDetailDialog";
 import DemoMatchCardFonts from "@/components/DemoMatchCardFonts";
 import DemoBracketPlayedOut from "@/components/DemoBracketPlayedOut";
@@ -126,7 +126,7 @@ const Admin = () => {
             group: "MATCH CARDS",
             items: [
               { value: "match-card", label: "DEMO MATCH CARD", content: <DemoMatchCard /> },
-              { value: "match-card-colored", label: "DEMO MATCH CARD — TEAM COLORS", content: <DemoMatchCardColored /> },
+              { value: "match-card-colored", label: "DEMO MATCH CARD — TEAM COLORS", content: <DemoMatchCardColoredWithRecap /> },
               { value: "match-card-fonts", label: "FONT VARIANTS", content: <DemoMatchCardFonts /> },
             ],
           },

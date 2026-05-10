@@ -1,21 +1,76 @@
-## Goal
-Sync the golden glitter so it starts falling exactly when the splash hands off to the auth page, instead of starting earlier (currently it begins as soon as `Auth` mounts, which happens during the splash's hero-morph phase, so the first ~400ms of glitter is hidden behind the splash overlay).
+# Deadpool Recap — Admin Demo
 
-## Approach
-Gate `GoldenGlitter` rendering in `Auth.tsx` on a "splash finished" signal. If the splash never ran (already shown this session, or user navigated directly), show the glitter immediately.
+A self-contained demo on `/admin` that proves the Deadpool game-recap concept end-to-end. No production caching, cron, or drawer integration yet — just enough to compare AI models side-by-side and decide if the output is good enough to roll out.
 
-## Changes
+## Entry point
 
-### 1. `src/components/SplashScreen.tsx`
-- When the splash unmounts at the end of its sequence (the existing 4000ms timeout, and also the reduced-motion path), dispatch a `window` event: `window.dispatchEvent(new Event("splash:done"))`.
-- Also dispatch `splash:done` immediately if `show` is `false` on first render (so consumers don't wait forever when no splash plays). Implement via a one-shot `useEffect` that fires `splash:done` on mount when `show === false`.
+In `src/pages/Admin.tsx`, swap one accordion item:
+```ts
+{ value: "match-card-colored", label: "DEMO MATCH CARD — TEAM COLORS",
+  content: <DemoMatchCardColoredWithRecap /> }
+```
 
-### 2. `src/pages/Auth.tsx`
-- Add local state `showGlitter`, initialized to `false` only when a splash is currently in progress, otherwise `true`. Detection: `sessionStorage.getItem("splash-shown") === "1"` AND no active splash element — simplest heuristic: initialize `showGlitter = sessionStorage.getItem("splash-shown") === "1"` so it's `true` on subsequent visits and `false` on the very first load (when splash is about to/just finished playing).
-  - Edge case: on first load, `SplashScreen`'s effect sets `splash-shown` to `"1"` immediately on mount, before `Auth` mounts. So that heuristic isn't reliable. Instead, gate purely on the event: initialize `showGlitter = false`, listen for `splash:done`, set to `true`. To cover the "no splash" case, `SplashScreen` always fires `splash:done` on mount when it decides not to show (per change #1). Auth will reliably hear it because `SplashScreen` is mounted at the app root before route children — confirm by reading `App.tsx` during implementation; if order is reversed, switch to a tiny `sessionStorage` flag `splash-done` that Auth checks synchronously.
-- Render `<GoldenGlitter />` only when `showGlitter` is `true`.
-- Also re-trigger when the user clicks the "App Loader" button: that already dispatches `splash:replay` which resets the splash; `showGlitter` should reset to `false` on `splash:replay` so the glitter re-syncs with the next handoff.
+Behavior: the accordion expands as today and shows the existing colored match card. **Tapping the card** opens a bottom drawer that generates and shows the Deadpool recap. No new buttons on the card itself.
 
-## Notes
-- No changes to glitter timing/visuals — it will still last ~3.5s; it just starts at the correct moment.
-- The existing splash overlay covers the auth page (z-100 vs glitter z-90), so the visible "early fall" is exactly the ~400ms between Auth mount and splash unmount; gating removes that.
+## Drawer contents (`DeadpoolRecapDrawer`)
+
+```text
+┌─────────────────────────────────────┐
+│  WADE'S TAKE                        │
+│  Final · LAL 112 — 108 DEN · OT     │
+├─────────────────────────────────────┤
+│  Game source:  ◉ Sample  ○ Latest   │
+│  Model:        [ gemini-3-flash ▼ ] │
+│                                     │
+│  ┌─ skeleton ─┐  →  recap text...   │
+│                                     │
+│  327 / 400 chars                    │
+│                                     │
+│  [Regenerate]   [Copy]              │
+│                                     │
+│  ▸ Inputs sent to model             │
+└─────────────────────────────────────┘
+```
+
+- **Voice is fixed to Deadpool** — written text only, no audio/video.
+- **Model picker** — `google/gemini-3-flash-preview` (default), `google/gemini-2.5-flash`, `openai/gpt-5-mini`. Lets us A/B output quality.
+- **Game source** — *Sample* (a baked-in Final game so the demo never blanks out) or *Latest* (most recent finished playoff game pulled live via the existing `nba-api` function).
+- **Regenerate** — recalls the function, no caching.
+- **Copy** — copies the generated text.
+- **Char counter** — visible so we can judge whether 400 is the right cap.
+- **Collapsible "Inputs"** — shows the exact fact sheet sent to the model (teams, final score, quarter scores, OT, date) for transparency while we tune.
+
+## Edge function: `demo-game-recap`
+
+Single new function, **no DB writes**. Body:
+```json
+{ "game_id": 15908525, "model": "google/gemini-3-flash-preview" }
+```
+
+Logic:
+1. Fetch the game from balldontlie via the existing pattern (reuses `BALLDONTLIE_API_KEY`).
+2. Build a fact sheet (teams, final score, quarter scores, OT, date).
+3. Call Lovable AI Gateway with the **Deadpool system prompt** + fact sheet. Hard cap ~400 chars, no markdown, no emojis, no profanity, no future-game spoilers, max one chimichanga reference.
+4. Return `{ summary, factsheet, model }`. Surface 429/402 cleanly so the drawer can toast them.
+
+## What this deliberately skips
+
+- No `game_recaps` table, no caching.
+- No cron sweeper.
+- No changes to `MatchDetailDialog` or any user-facing route.
+- No admin-only RLS plumbing — the demo function is public like the existing `nba-api`.
+
+Once the output feels right, we lift the same edge-function logic into the cached + cron'd production version (the earlier full plan).
+
+## Technical details
+
+**Files to add**
+- `supabase/functions/demo-game-recap/index.ts` — fact sheet builder + Lovable AI call.
+- `src/components/DemoMatchCardColoredWithRecap.tsx` — wraps existing `DemoMatchCardColored`, adds tap handler that opens the drawer.
+- `src/components/DeadpoolRecapDrawer.tsx` — drawer UI (uses existing `ui/drawer`), model picker, game-source toggle, regenerate, copy, char counter, inputs panel.
+
+**Files to edit**
+- `src/pages/Admin.tsx` — point the one accordion item at `DemoMatchCardColoredWithRecap`.
+
+**Lovable AI**
+- Default model: `google/gemini-3-flash-preview`. Prompt lives only on the backend — easy to tune later without a frontend redeploy.

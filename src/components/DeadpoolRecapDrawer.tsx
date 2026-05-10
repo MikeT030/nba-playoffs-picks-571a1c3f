@@ -76,12 +76,15 @@ function gameToFactsheet(g: NbaGame): FactSheet {
   };
 }
 
+const GAMES_FROM_DATE = new Date("2026-05-10T00:00:00Z").getTime();
+
 async function fetchFinishedGames(): Promise<NbaGame[]> {
   const seasons = [2025, 2024];
   for (const season of seasons) {
     const games = await getPlayoffGames(season);
     const finals = games
       .filter((g) => g.status === "Final")
+      .filter((g) => new Date(g.date).getTime() >= GAMES_FROM_DATE)
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     if (finals.length > 0) return finals;
   }
@@ -219,26 +222,30 @@ export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
                     </p>
                   )}
 
-                  {finishedGames.map((g) => {
-                    const id = String(g.id);
-                    const date = new Date(g.date).toLocaleDateString(undefined, {
-                      month: "short",
-                      day: "numeric",
-                    });
-                    return (
-                      <div key={id} className="flex items-center gap-2">
-                        <RadioGroupItem value={id} id={`src-${id}`} />
-                        <Label
-                          htmlFor={`src-${id}`}
-                          className="font-body text-sm"
-                        >
-                          {g.visitor_team.abbreviation} {g.visitor_team_score} —{" "}
-                          {g.home_team_score} {g.home_team.abbreviation}
-                          <span className="text-muted-foreground"> · {date}</span>
-                        </Label>
-                      </div>
-                    );
-                  })}
+                  {finishedGames.length > 0 && (
+                    <div className="max-h-[260px] overflow-y-auto flex flex-col gap-2 pr-1">
+                      {finishedGames.map((g) => {
+                        const id = String(g.id);
+                        const date = new Date(g.date).toLocaleDateString(undefined, {
+                          month: "short",
+                          day: "numeric",
+                        });
+                        return (
+                          <div key={id} className="flex items-center gap-2">
+                            <RadioGroupItem value={id} id={`src-${id}`} />
+                            <Label
+                              htmlFor={`src-${id}`}
+                              className="font-body text-sm"
+                            >
+                              {g.visitor_team.abbreviation} {g.visitor_team_score} —{" "}
+                              {g.home_team_score} {g.home_team.abbreviation}
+                              <span className="text-muted-foreground"> · {date}</span>
+                            </Label>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </RadioGroup>
               </div>
 

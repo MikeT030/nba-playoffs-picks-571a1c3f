@@ -4,6 +4,7 @@ import DemoMatchCardColored, {
   DEFAULT_MATCH_DATA,
   type DemoMatchData,
 } from "@/components/DemoMatchCardColored";
+import { useDemoRecap, recapKey } from "@/lib/demoRecapStore";
 
 /**
  * Demo modal/layer matchup detail.
@@ -56,6 +57,10 @@ const DemoMatchDetailDialog = ({
     conference,
     round,
   } = data;
+
+  const recap = useDemoRecap(
+    recapKey(away.abbreviation, home.abbreviation, gameNumber),
+  );
 
   const computePts = (pick: { winner: string; games_in_series: number }) => {
     if (seriesResult.winner === pick.winner) {
@@ -159,43 +164,58 @@ const DemoMatchDetailDialog = ({
             </div>
           </div>
 
-          {/* All Picks */}
-          <div className="px-5 py-5 max-h-[calc(60vh+40px)] overflow-y-auto">
-            <h3 className="font-display text-xl tracking-wider mb-4">All Picks</h3>
-            <div className="rounded-lg border border-white/10 bg-[#22272E]/80 overflow-hidden">
-              {picks.map((pick, idx) => {
-                const pTeam = pick.winner === home.abbreviation ? home : away;
-                const pts = computePts(pick);
-                return (
-                  <div
-                    key={pick.user_id}
-                    className={`flex items-center gap-4 p-3 ${
-                      idx !== picks.length - 1
-                        ? "border-b border-[#2B2F37]"
-                        : ""
-                    }`}
-                  >
-                    <div className="flex-1 min-w-0">
-                      <p className="font-body font-semibold text-sm">
-                        {pick.profile_name}
-                      </p>
-                      <p className="text-xs text-muted-foreground font-body">
-                        Picks{" "}
-                        <span className="font-semibold text-white">
-                          {pTeam.abbreviation}
-                        </span>{" "}
-                        in{" "}
-                        <span className="font-bold text-white">
-                          {pick.games_in_series}
-                        </span>
-                        <span className="ml-2 text-primary font-bold">
-                          · {pts} pts
-                        </span>
-                      </p>
+          {/* Body */}
+          <div className="px-5 py-5 max-h-[calc(60vh+40px)] overflow-y-auto space-y-5">
+            {recap && (
+              <div>
+                <h3 className="font-display text-xl tracking-wider mb-3">
+                  The gist of it
+                </h3>
+                <div className="rounded-lg border border-white/10 bg-[#22272E]/80 p-4">
+                  <p className="font-body text-sm text-white leading-relaxed whitespace-pre-wrap">
+                    {recap}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div>
+              <h3 className="font-display text-xl tracking-wider mb-4">All Picks</h3>
+              <div className="rounded-lg border border-white/10 bg-[#22272E]/80 overflow-hidden">
+                {picks.map((pick, idx) => {
+                  const pTeam = pick.winner === home.abbreviation ? home : away;
+                  const pts = computePts(pick);
+                  return (
+                    <div
+                      key={pick.user_id}
+                      className={`flex items-center gap-4 p-3 ${
+                        idx !== picks.length - 1
+                          ? "border-b border-[#2B2F37]"
+                          : ""
+                      }`}
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="font-body font-semibold text-sm">
+                          {pick.profile_name}
+                        </p>
+                        <p className="text-xs text-muted-foreground font-body">
+                          Picks{" "}
+                          <span className="font-semibold text-white">
+                            {pTeam.abbreviation}
+                          </span>{" "}
+                          in{" "}
+                          <span className="font-bold text-white">
+                            {pick.games_in_series}
+                          </span>
+                          <span className="ml-2 text-primary font-bold">
+                            · {pts} pts
+                          </span>
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
         </DialogContent>

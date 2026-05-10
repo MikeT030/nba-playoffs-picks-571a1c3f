@@ -36,6 +36,21 @@ interface AdminUser {
   created_at: string;
 }
 
+const WadeTakeDemo = () => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="space-y-3">
+      <p className="font-body text-xs text-muted-foreground">
+        Expand to open the summary generation drawer.
+      </p>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Open Wade's Take
+      </Button>
+      <DeadpoolRecapDrawer open={open} onOpenChange={setOpen} />
+    </div>
+  );
+};
+
 const Admin = () => {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, loading: roleLoading } = useIsAdmin();

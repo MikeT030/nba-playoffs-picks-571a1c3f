@@ -10,6 +10,7 @@ import { useSeriesGames } from "@/hooks/useSeriesGames";
 import { isNextUp as checkIsNextUp, formatTipOff } from "@/lib/seriesUtils";
 import { getBracketSeriesIdForMatch, getAssumedOpponentAbbr, type Match, type Team } from "@/data/playoffsData";
 import { teamMeta } from "@/lib/nbaApi";
+import { useDemoRecap, recapKey } from "@/lib/demoRecapStore";
 
 /**
  * Resolve a Team-like object for *any* abbreviation, so picks made for a
@@ -111,6 +112,18 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
   }, []);
 
   const activeGame = allGames.length > 0 ? allGames[activeGameIdx] : null;
+
+  // "Wade's take" recap added to this game (matched by away/home; per-game key
+  // also tried so a game-specific recap takes precedence).
+  const awayAbbrForKey = activeGame?.awayTeam.abbreviation ?? match?.awayTeam.abbreviation ?? "";
+  const homeAbbrForKey = activeGame?.homeTeam.abbreviation ?? match?.homeTeam.abbreviation ?? "";
+  const recapByGame = useDemoRecap(
+    recapKey(awayAbbrForKey, homeAbbrForKey, activeGame?.gameNumber),
+  );
+  const recapBySeries = useDemoRecap(
+    recapKey(awayAbbrForKey, homeAbbrForKey, undefined),
+  );
+  const recap = recapByGame ?? recapBySeries;
 
   const bracketSeriesId = useMemo(() => {
     if (!match) return null;
@@ -370,7 +383,18 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
         </div>
 
         {/* All Picks */}
-        <div className="px-5 py-5 max-h-[calc(60vh+40px)] overflow-y-auto bg-black">
+        <div className="px-5 py-5 max-h-[calc(60vh+40px)] overflow-y-auto bg-black space-y-5">
+          {recap && (
+            <div>
+              <h3 className="font-display text-xl tracking-wider mb-3">The gist of it</h3>
+              <div className="rounded-lg border border-white/10 bg-[#22272E]/80 p-4">
+                <p className="font-body text-sm text-white leading-relaxed whitespace-pre-wrap">
+                  {recap}
+                </p>
+              </div>
+            </div>
+          )}
+          <div>
           <h3 className="font-display text-xl tracking-wider mb-4">All Picks</h3>
           {allPicks && allPicks.length > 0 ? (
             <div className="rounded-lg border border-white/10 bg-[#22272E]/80 overflow-hidden">
@@ -443,6 +467,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
           ) : (
             <p className="text-muted-foreground font-body text-sm">No picks yet for this series.</p>
           )}
+          </div>
         </div>
         </div>
       </DrawerContent>

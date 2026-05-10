@@ -58,6 +58,10 @@ const DemoMatchDetailDialog = ({
     round,
   } = data;
 
+  const recap = useDemoRecap(
+    recapKey(away.abbreviation, home.abbreviation, gameNumber),
+  );
+
   const computePts = (pick: { winner: string; games_in_series: number }) => {
     if (seriesResult.winner === pick.winner) {
       return seriesResult.games_played === pick.games_in_series ? 3 : 2;

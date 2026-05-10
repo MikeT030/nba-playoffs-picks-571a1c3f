@@ -10,6 +10,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import AdminSeriesConfirmPanel from "@/components/AdminSeriesConfirmPanel";
 import AdminFlyerAwardPanel from "@/components/AdminFlyerAwardPanel";
@@ -26,6 +27,7 @@ import DemoVisualScoreboard from "@/components/DemoVisualScoreboard";
 import { DemoFlyerCardV3, DemoFlyerCardPaxson, DemoFlyerCardDavis, DemoFlyerCardMiller } from "@/components/DemoFlyerCardVariants";
 import DemoFullWidthNav from "@/components/DemoFullWidthNav";
 import FloatingNav from "@/components/FloatingNav";
+import DeadpoolRecapDrawer from "@/components/DeadpoolRecapDrawer";
 
 interface AdminUser {
   id: string;
@@ -33,6 +35,21 @@ interface AdminUser {
   email: string;
   created_at: string;
 }
+
+const WadeTakeDemo = () => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="space-y-3">
+      <p className="font-body text-xs text-muted-foreground">
+        Expand to open the summary generation drawer.
+      </p>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Open Wade's Take
+      </Button>
+      <DeadpoolRecapDrawer open={open} onOpenChange={setOpen} />
+    </div>
+  );
+};
 
 const Admin = () => {
   const { user, loading: authLoading } = useAuth();
@@ -164,6 +181,11 @@ const Admin = () => {
                     ]}
                   />
                 ),
+              },
+              {
+                value: "wades-take",
+                label: "WADE'S TAKE — SUMMARY DRAWER",
+                content: <WadeTakeDemo />,
               },
             ],
           },

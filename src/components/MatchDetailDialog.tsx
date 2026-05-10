@@ -383,7 +383,18 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
         </div>
 
         {/* All Picks */}
-        <div className="px-5 py-5 max-h-[calc(60vh+40px)] overflow-y-auto bg-black">
+        <div className="px-5 py-5 max-h-[calc(60vh+40px)] overflow-y-auto bg-black space-y-5">
+          {recap && (
+            <div>
+              <h3 className="font-display text-xl tracking-wider mb-3">The gist of it</h3>
+              <div className="rounded-lg border border-white/10 bg-[#22272E]/80 p-4">
+                <p className="font-body text-sm text-white leading-relaxed whitespace-pre-wrap">
+                  {recap}
+                </p>
+              </div>
+            </div>
+          )}
+          <div>
           <h3 className="font-display text-xl tracking-wider mb-4">All Picks</h3>
           {allPicks && allPicks.length > 0 ? (
             <div className="rounded-lg border border-white/10 bg-[#22272E]/80 overflow-hidden">

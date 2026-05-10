@@ -10,6 +10,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import AdminSeriesConfirmPanel from "@/components/AdminSeriesConfirmPanel";
 import AdminFlyerAwardPanel from "@/components/AdminFlyerAwardPanel";
@@ -26,6 +27,7 @@ import DemoVisualScoreboard from "@/components/DemoVisualScoreboard";
 import { DemoFlyerCardV3, DemoFlyerCardPaxson, DemoFlyerCardDavis, DemoFlyerCardMiller } from "@/components/DemoFlyerCardVariants";
 import DemoFullWidthNav from "@/components/DemoFullWidthNav";
 import FloatingNav from "@/components/FloatingNav";
+import DeadpoolRecapDrawer from "@/components/DeadpoolRecapDrawer";
 
 interface AdminUser {
   id: string;

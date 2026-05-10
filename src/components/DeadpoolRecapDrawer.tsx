@@ -76,19 +76,23 @@ function gameToFactsheet(g: NbaGame): FactSheet {
   };
 }
 
-const GAMES_FROM_DATE = new Date("2026-05-10T00:00:00Z").getTime();
+const GAMES_FROM_DATE = "2026-05-10"; // inclusive, YYYY-MM-DD
 
 async function fetchFinishedGames(): Promise<NbaGame[]> {
   const seasons = [2025, 2024];
+  const all: NbaGame[] = [];
   for (const season of seasons) {
-    const games = await getPlayoffGames(season);
-    const finals = games
-      .filter((g) => g.status === "Final")
-      .filter((g) => new Date(g.date).getTime() >= GAMES_FROM_DATE)
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    if (finals.length > 0) return finals;
+    try {
+      const games = await getPlayoffGames(season);
+      all.push(...games);
+    } catch {
+      /* skip */
+    }
   }
-  return [];
+  return all
+    .filter((g) => g.status === "Final")
+    .filter((g) => (g.date ?? "").slice(0, 10) >= GAMES_FROM_DATE)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 interface Props {

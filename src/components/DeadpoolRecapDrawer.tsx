@@ -16,11 +16,12 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Loader2, Copy, RefreshCw, ChevronDown, ChevronRight } from "lucide-react";
+import { Loader2, Copy, RefreshCw, ChevronDown, ChevronRight, Plus, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { getPlayoffGames, type NbaGame } from "@/lib/nbaApi";
 import { DEFAULT_MATCH_DATA } from "@/components/DemoMatchCardColored";
+import { recapKey, setDemoRecap } from "@/lib/demoRecapStore";
 
 interface FactSheet {
   awayAbbr: string;

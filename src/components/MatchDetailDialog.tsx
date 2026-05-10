@@ -144,6 +144,29 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
     enabled: !!bracketSeriesId && open,
   });
 
+  // Fetch every pick by users that have picked this series, so we can derive
+  // per-user assumed opponents for later-round series.
+  const pickerUserIds = useMemo(
+    () => Array.from(new Set((allPicks ?? []).map((p) => p.user_id))),
+    [allPicks],
+  );
+  const { data: picksByUserAll } = useQuery({
+    queryKey: ["series-picks-bypicker", bracketSeriesId, pickerUserIds],
+    queryFn: async () => {
+      if (pickerUserIds.length === 0) return {} as Record<string, { series_id: string; winner: string }[]>;
+      const { data } = await supabase
+        .from("picks")
+        .select("user_id, series_id, winner")
+        .in("user_id", pickerUserIds);
+      const map: Record<string, { series_id: string; winner: string }[]> = {};
+      (data ?? []).forEach((p) => {
+        (map[p.user_id] ||= []).push({ series_id: p.series_id, winner: p.winner });
+      });
+      return map;
+    },
+    enabled: open && pickerUserIds.length > 0,
+  });
+
   if (!match) return null;
 
   const displayHome = activeGame ? activeGame.homeTeam : match.homeTeam;

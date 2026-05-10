@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Drawer,
   DrawerContent,
@@ -19,7 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2, Copy, RefreshCw, ChevronDown, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { getPlayoffGames } from "@/lib/nbaApi";
+import { getPlayoffGames, type NbaGame } from "@/lib/nbaApi";
 import { DEFAULT_MATCH_DATA } from "@/components/DemoMatchCardColored";
 
 interface FactSheet {
@@ -61,30 +61,31 @@ const SAMPLE_FACTSHEET: FactSheet = {
   ],
 };
 
-async function buildLatestFactsheet(): Promise<FactSheet> {
-  // Try the current season; fall back to previous if no Final game found.
+function gameToFactsheet(g: NbaGame): FactSheet {
+  return {
+    awayAbbr: g.visitor_team.abbreviation,
+    awayName: g.visitor_team.name,
+    homeAbbr: g.home_team.abbreviation,
+    homeName: g.home_team.name,
+    awayScore: g.visitor_team_score,
+    homeScore: g.home_team_score,
+    date: new Date(g.date).toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+    }),
+  };
+}
+
+async function fetchFinishedGames(): Promise<NbaGame[]> {
   const seasons = [2025, 2024];
   for (const season of seasons) {
     const games = await getPlayoffGames(season);
     const finals = games
       .filter((g) => g.status === "Final")
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    if (finals.length === 0) continue;
-    const g = finals[0];
-    return {
-      awayAbbr: g.visitor_team.abbreviation,
-      awayName: g.visitor_team.name,
-      homeAbbr: g.home_team.abbreviation,
-      homeName: g.home_team.name,
-      awayScore: g.visitor_team_score,
-      homeScore: g.home_team_score,
-      date: new Date(g.date).toLocaleDateString(undefined, {
-        month: "short",
-        day: "numeric",
-      }),
-    };
+    if (finals.length > 0) return finals;
   }
-  throw new Error("No finished playoff games found");
+  return [];
 }
 
 interface Props {
@@ -94,19 +95,40 @@ interface Props {
 
 export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
   const { toast } = useToast();
-  const [source, setSource] = useState<"sample" | "latest">("sample");
+  // source = "sample" or a stringified game id
+  const [source, setSource] = useState<string>("sample");
   const [model, setModel] = useState(MODELS[0].value);
   const [loading, setLoading] = useState(false);
   const [summary, setSummary] = useState<string>("");
   const [factsheet, setFactsheet] = useState<FactSheet | null>(null);
   const [showInputs, setShowInputs] = useState(false);
+  const [finishedGames, setFinishedGames] = useState<NbaGame[]>([]);
+  const [gamesLoading, setGamesLoading] = useState(false);
 
-  const generate = async () => {
+  useEffect(() => {
+    if (!open || finishedGames.length > 0 || gamesLoading) return;
+    setGamesLoading(true);
+    fetchFinishedGames()
+      .then(setFinishedGames)
+      .catch(() => {
+        /* silent — list just stays empty */
+      })
+      .finally(() => setGamesLoading(false));
+  }, [open, finishedGames.length, gamesLoading]);
+
+  const generate = async (overrideSource?: string) => {
+    const src = overrideSource ?? source;
     setLoading(true);
     setSummary("");
     try {
-      const fs =
-        source === "sample" ? SAMPLE_FACTSHEET : await buildLatestFactsheet();
+      let fs: FactSheet;
+      if (src === "sample") {
+        fs = SAMPLE_FACTSHEET;
+      } else {
+        const game = finishedGames.find((g) => String(g.id) === src);
+        if (!game) throw new Error("Game not found");
+        fs = gameToFactsheet(game);
+      }
       setFactsheet(fs);
 
       const { data, error } = await supabase.functions.invoke("demo-game-recap", {
@@ -121,6 +143,11 @@ export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSourceChange = (v: string) => {
+    setSource(v);
+    generate(v);
   };
 
   const copy = async () => {
@@ -145,8 +172,7 @@ export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
       onOpenChange={(o) => {
         onOpenChange(o);
         if (o && !summary && !loading) {
-          // Auto-generate on first open
-          setTimeout(generate, 0);
+          setTimeout(() => generate(), 0);
         }
       }}
     >
@@ -171,8 +197,8 @@ export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
                 </Label>
                 <RadioGroup
                   value={source}
-                  onValueChange={(v) => setSource(v as "sample" | "latest")}
-                  className="flex gap-4 mt-1"
+                  onValueChange={handleSourceChange}
+                  className="flex flex-col gap-2 mt-1"
                 >
                   <div className="flex items-center gap-2">
                     <RadioGroupItem value="sample" id="src-sample" />
@@ -180,12 +206,39 @@ export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
                       Sample
                     </Label>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <RadioGroupItem value="latest" id="src-latest" />
-                    <Label htmlFor="src-latest" className="font-body text-sm">
-                      Latest finished
-                    </Label>
-                  </div>
+
+                  {gamesLoading && (
+                    <p className="text-xs text-muted-foreground font-body pl-6">
+                      Loading finished games…
+                    </p>
+                  )}
+
+                  {!gamesLoading && finishedGames.length === 0 && (
+                    <p className="text-xs text-muted-foreground font-body pl-6">
+                      No finished games yet.
+                    </p>
+                  )}
+
+                  {finishedGames.map((g) => {
+                    const id = String(g.id);
+                    const date = new Date(g.date).toLocaleDateString(undefined, {
+                      month: "short",
+                      day: "numeric",
+                    });
+                    return (
+                      <div key={id} className="flex items-center gap-2">
+                        <RadioGroupItem value={id} id={`src-${id}`} />
+                        <Label
+                          htmlFor={`src-${id}`}
+                          className="font-body text-sm"
+                        >
+                          {g.visitor_team.abbreviation} {g.visitor_team_score} —{" "}
+                          {g.home_team_score} {g.home_team.abbreviation}
+                          <span className="text-muted-foreground"> · {date}</span>
+                        </Label>
+                      </div>
+                    );
+                  })}
                 </RadioGroup>
               </div>
 
@@ -229,14 +282,12 @@ export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
             </div>
 
             <div className="flex items-center justify-between text-xs text-muted-foreground font-body">
-              <span>
-                {summary.length} / 400 chars
-              </span>
+              <span>{summary.length} / 400 chars</span>
               <div className="flex items-center gap-2">
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={generate}
+                  onClick={() => generate()}
                   disabled={loading}
                   className="h-8"
                 >

@@ -168,6 +168,19 @@ export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
     }
   };
 
+  const [added, setAdded] = useState(false);
+  const addToGame = () => {
+    if (!summary || !factsheet) return;
+    const key = recapKey(factsheet.awayAbbr, factsheet.homeAbbr, factsheet.gameNumber);
+    setDemoRecap(key, summary);
+    setAdded(true);
+    toast({
+      title: "Added to game",
+      description: "Wade's take now shows on the matchup detail.",
+    });
+    setTimeout(() => setAdded(false), 2500);
+  };
+
   const headerLine = factsheet
     ? `Final · ${factsheet.awayAbbr} ${factsheet.awayScore} — ${factsheet.homeScore} ${factsheet.homeAbbr}${
         factsheet.ot ? ` · ${factsheet.ot}OT` : ""

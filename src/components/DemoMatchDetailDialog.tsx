@@ -4,6 +4,7 @@ import DemoMatchCardColored, {
   DEFAULT_MATCH_DATA,
   type DemoMatchData,
 } from "@/components/DemoMatchCardColored";
+import { useDemoRecap, recapKey } from "@/lib/demoRecapStore";
 
 /**
  * Demo modal/layer matchup detail.

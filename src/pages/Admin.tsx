@@ -18,6 +18,7 @@ import DemoAllMatchupsInnovation from "@/components/DemoAllMatchupsInnovation";
 import DemoAdvancedRoundView from "@/components/DemoAdvancedRoundView";
 import DemoMatchCard from "@/components/DemoMatchCard";
 import DemoMatchCardColored from "@/components/DemoMatchCardColored";
+import DemoMatchCardColoredWithRecap from "@/components/DemoMatchCardColoredWithRecap";
 import DemoMatchDetailDialog from "@/components/DemoMatchDetailDialog";
 import DemoMatchCardFonts from "@/components/DemoMatchCardFonts";
 import DemoBracketPlayedOut from "@/components/DemoBracketPlayedOut";

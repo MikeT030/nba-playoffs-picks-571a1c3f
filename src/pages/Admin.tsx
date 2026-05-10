@@ -127,7 +127,7 @@ const Admin = () => {
             group: "MATCH CARDS",
             items: [
               { value: "match-card", label: "DEMO MATCH CARD", content: <DemoMatchCard /> },
-              { value: "match-card-colored", label: "DEMO MATCH CARD — TEAM COLORS", content: <DemoMatchCardColored /> },
+              { value: "match-card-colored", label: "DEMO MATCH CARD — TEAM COLORS", content: <DemoMatchCardColoredWithRecap /> },
               { value: "match-card-fonts", label: "FONT VARIANTS", content: <DemoMatchCardFonts /> },
             ],
           },

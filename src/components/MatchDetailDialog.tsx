@@ -144,6 +144,29 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
     enabled: !!bracketSeriesId && open,
   });
 
+  // Fetch every pick by users that have picked this series, so we can derive
+  // per-user assumed opponents for later-round series.
+  const pickerUserIds = useMemo(
+    () => Array.from(new Set((allPicks ?? []).map((p) => p.user_id))),
+    [allPicks],
+  );
+  const { data: picksByUserAll } = useQuery({
+    queryKey: ["series-picks-bypicker", bracketSeriesId, pickerUserIds],
+    queryFn: async () => {
+      if (pickerUserIds.length === 0) return {} as Record<string, { series_id: string; winner: string }[]>;
+      const { data } = await supabase
+        .from("picks")
+        .select("user_id, series_id, winner")
+        .in("user_id", pickerUserIds);
+      const map: Record<string, { series_id: string; winner: string }[]> = {};
+      (data ?? []).forEach((p) => {
+        (map[p.user_id] ||= []).push({ series_id: p.series_id, winner: p.winner });
+      });
+      return map;
+    },
+    enabled: open && pickerUserIds.length > 0,
+  });
+
   if (!match) return null;
 
   const displayHome = activeGame ? activeGame.homeTeam : match.homeTeam;
@@ -355,6 +378,23 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
                 const pickedTeam = teamForPick(pick.winner, match);
                 const isCurrentUser = user && pick.user_id === user.id;
                 const pts = computePts(pick);
+                const userPicks = picksByUserAll?.[pick.user_id] ?? [];
+                const assumedOpp = bracketSeriesId
+                  ? getAssumedOpponentAbbr(bracketSeriesId, pick.winner, bracketData, userPicks)
+                  : null;
+                const pickInMatch =
+                  match.homeTeam.abbreviation === pick.winner ||
+                  match.awayTeam.abbreviation === pick.winner;
+                const actualOpp = match.homeTeam.abbreviation === pick.winner
+                  ? match.awayTeam.abbreviation
+                  : match.awayTeam.abbreviation === pick.winner
+                    ? match.homeTeam.abbreviation
+                    : null;
+                const broken = !pickInMatch;
+                const showAssumed = broken
+                  ? !!assumedOpp
+                  : !!assumedOpp && !!actualOpp && actualOpp !== assumedOpp;
+                const suffixOpp = assumedOpp ?? actualOpp;
                 return (
                   <div
                     key={pick.user_id}
@@ -368,9 +408,12 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
                         {isCurrentUser && <span className="text-xs text-primary ml-2">(You)</span>}
                       </p>
                       <p className="text-xs text-muted-foreground font-body">
-                        Picks{" "}
-                        <span className="font-semibold text-white">{pickedTeam.abbreviation}</span>{" "}
-                        in <span className="font-bold text-white">{pick.games_in_series}</span>
+                        <span className={broken ? "line-through opacity-70" : ""}>
+                          Picks{" "}
+                          <span className="font-semibold text-white">{pickedTeam.abbreviation}</span>{" "}
+                          in <span className="font-bold text-white">{pick.games_in_series}</span>
+                          {showAssumed && suffixOpp ? ` (vs. ${suffixOpp})` : ""}
+                        </span>
                         {pts !== null && (
                           <span className="ml-2 text-primary font-bold">· {pts} pts</span>
                         )}

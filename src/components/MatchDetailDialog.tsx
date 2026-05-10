@@ -467,6 +467,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
           ) : (
             <p className="text-muted-foreground font-body text-sm">No picks yet for this series.</p>
           )}
+          </div>
         </div>
         </div>
       </DrawerContent>

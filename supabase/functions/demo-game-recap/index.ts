@@ -92,20 +92,39 @@ Deno.serve(async (req) => {
 
     const userPrompt = buildUserPrompt(factsheet as FactSheet);
 
-    const aiResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: chosenModel,
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: userPrompt },
-        ],
-      }),
-    });
+    let aiResp: Response | null = null;
+    let lastErrText = "";
+    for (let attempt = 0; attempt < 3; attempt++) {
+      aiResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: chosenModel,
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: userPrompt },
+          ],
+        }),
+      });
+
+      // Don't retry rate limit / payment / client errors
+      if (aiResp.status === 429 || aiResp.status === 402 || aiResp.status < 500) break;
+
+      lastErrText = await aiResp.text().catch(() => "");
+      console.error(`AI gateway ${aiResp.status} (attempt ${attempt + 1})`, lastErrText.slice(0, 200));
+      // Backoff before next try
+      if (attempt < 2) await new Promise((r) => setTimeout(r, 600 * (attempt + 1)));
+    }
+
+    if (!aiResp) {
+      return new Response(
+        JSON.stringify({ error: "AI gateway unreachable" }),
+        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
 
     if (aiResp.status === 429) {
       return new Response(
@@ -120,11 +139,11 @@ Deno.serve(async (req) => {
       );
     }
     if (!aiResp.ok) {
-      const t = await aiResp.text();
-      console.error("AI gateway error", aiResp.status, t);
       return new Response(
-        JSON.stringify({ error: `AI gateway error: ${aiResp.status}` }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        JSON.stringify({
+          error: `Wade's stuck in traffic (AI gateway ${aiResp.status}). Try Regenerate in a few seconds.`,
+        }),
+        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 

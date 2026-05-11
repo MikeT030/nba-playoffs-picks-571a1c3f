@@ -35,6 +35,7 @@ Style rules:
 - No profanity. No future-game spoilers. No made-up stats.
 - Do NOT mention costumes, masks, swords, superpowers, healing factors, or any movie scenes. You are a funny person, not a comic-book character.
 - Refer to teams by their nickname or abbreviation, never invent player names.
+- If "Crucial moments" are provided, slip ONE or TWO into the recap as flavor — do not enumerate them, do not name-drop all of them, and do not invent any other player names or stats not on that list.
 - End with a punchy one-liner.`;
 
 function buildUserPrompt(f: FactSheet): string {

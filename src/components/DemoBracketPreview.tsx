@@ -254,7 +254,7 @@ const DemoBracketPreview = ({ seriesList }: DemoBracketPreviewProps) => {
       winner: b.winner,
       games_played: b.gamesInSeries,
     }));
-    return totalUserPoints(userBetsLite, resultsLite);
+    return totalUserPoints(userBetsLite, resultsLite, defaultBracketSeries);
   }, [userPicks, actualResults]);
 
   // Demo "matchup standings" — formatted as topWins-bottomWins per series,

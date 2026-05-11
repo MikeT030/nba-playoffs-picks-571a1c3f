@@ -396,7 +396,9 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
                           ? "Shiiiiit 3 Points"
                           : effectivePts === 2
                             ? "That's 2 Points"
-                            : "0 Points, Bro"}
+                            : effectivePts === 1
+                              ? "1 Point — right winner, wrong matchup"
+                              : "0 Points, Bro"}
                         {match.id === "nba-finals" && effectivePts! > 0 && " And 4 for the Champ"}
                       </span>
                     )}

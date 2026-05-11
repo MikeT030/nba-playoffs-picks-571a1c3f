@@ -270,7 +270,7 @@ const FlyerCardV3 = ({
         <SealedPackCard
           {...sealedConfig}
           defaultOpened={defaultOpened}
-          onOpen={onBurn}
+          onOpen={handleOpen}
         >
           {cardArticle}
         </SealedPackCard>

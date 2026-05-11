@@ -64,11 +64,23 @@ Deno.serve(async (req) => {
     try {
       data = JSON.parse(text);
     } catch {
-      console.error("Non-JSON response:", text);
-      const isFallbackable = response.status === 429 || response.status >= 500;
+      console.error("Non-JSON response:", response.status, text.slice(0, 200));
+      const isFallbackable =
+        response.status === 401 ||
+        response.status === 403 ||
+        response.status === 429 ||
+        response.status >= 500;
       if (isFallbackable) {
         return new Response(
-          JSON.stringify({ error: "API_RATE_LIMITED", fallback: true, data: [], meta: { per_page: 100 } }),
+          JSON.stringify({
+            error:
+              response.status === 401 || response.status === 403
+                ? "API_UNAUTHORIZED"
+                : "API_RATE_LIMITED",
+            fallback: true,
+            data: [],
+            meta: { per_page: 100 },
+          }),
           { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
@@ -80,10 +92,18 @@ Deno.serve(async (req) => {
 
     if (!response.ok) {
       console.error("BallDontLie API error:", response.status, data);
-      const isFallbackable = response.status === 429 || response.status >= 500;
+      const isFallbackable =
+        response.status === 401 ||
+        response.status === 403 ||
+        response.status === 429 ||
+        response.status >= 500;
       return new Response(
         JSON.stringify({
-          error: isFallbackable ? "API_RATE_LIMITED" : `API error: ${response.status}`,
+          error: isFallbackable
+            ? response.status === 401 || response.status === 403
+              ? "API_UNAUTHORIZED"
+              : "API_RATE_LIMITED"
+            : `API error: ${response.status}`,
           fallback: isFallbackable,
           data: [],
           meta: { per_page: 100 },

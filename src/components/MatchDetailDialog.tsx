@@ -363,7 +363,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
             {(() => {
               const userPick = user && allPicks ? allPicks.find((p) => p.user_id === user.id) : null;
               if (!userPick) return null;
-              const pts = computePts(userPick);
+              const pts = computePts(userPick, currentUserAllPicks ?? []);
               const pickInMatch =
                 match.homeTeam.abbreviation === userPick.winner ||
                 match.awayTeam.abbreviation === userPick.winner;

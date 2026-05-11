@@ -143,6 +143,8 @@ const Admin = () => {
 
         <AdminSeriesConfirmPanel />
 
+        <WadeTakeAccordion />
+
         <Accordion type="single" collapsible className="bg-[#181C23] rounded-lg px-5">
           <AccordionItem value="flyer-award" className="border-b-0">
             <AccordionTrigger className="hover:no-underline">

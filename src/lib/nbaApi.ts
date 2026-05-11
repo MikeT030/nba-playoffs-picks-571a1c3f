@@ -135,6 +135,29 @@ export async function getPlayoffGames(season: number = 2024): Promise<NbaGame[]>
   return result.data;
 }
 
+export interface NbaPlayerStat {
+  player: { id: number; first_name: string; last_name: string };
+  team: { id: number; abbreviation: string };
+  pts: number;
+  reb: number;
+  ast: number;
+  stl?: number;
+  blk?: number;
+  fg3m?: number;
+  fg3a?: number;
+  min?: string;
+}
+
+export async function getGameStats(gameId: number): Promise<NbaPlayerStat[]> {
+  const params = {
+    endpoint: "stats",
+    "game_ids[]": String(gameId),
+    per_page: "100",
+  };
+  const result = await callNbaApi<NbaPlayerStat>(params);
+  return result.data;
+}
+
 export async function getTeams(): Promise<NbaTeam[]> {
   const result = await callNbaApi<NbaTeam>({
     endpoint: "teams",

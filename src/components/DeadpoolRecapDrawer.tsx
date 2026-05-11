@@ -19,7 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2, Copy, RefreshCw, ChevronDown, ChevronRight, Plus, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { getPlayoffGames, type NbaGame } from "@/lib/nbaApi";
+import { getPlayoffGames, getGameStats, type NbaGame, type NbaPlayerStat } from "@/lib/nbaApi";
 import { DEFAULT_MATCH_DATA } from "@/components/DemoMatchCardColored";
 import { recapKey, setDemoRecap } from "@/lib/demoRecapStore";
 import { useBracketData } from "@/hooks/useBracketData";
@@ -36,6 +36,68 @@ interface FactSheet {
   gameNumber?: number;
   ot?: number;
   quarters?: { q: number; away: number; home: number }[];
+  highlights?: string[];
+}
+
+const SAMPLE_HIGHLIGHTS = [
+  "Edwards 31pts/8reb/6ast",
+  "Castle 6/9 from deep",
+];
+
+function deriveQuarterSwing(fs: FactSheet): string | null {
+  if (!fs.quarters || fs.quarters.length === 0) return null;
+  let best: { q: number; abbr: string; net: number; a: number; h: number } | null = null;
+  for (const q of fs.quarters) {
+    const net = Math.abs(q.away - q.home);
+    if (!best || net > best.net) {
+      best = {
+        q: q.q,
+        abbr: q.away > q.home ? fs.awayAbbr : fs.homeAbbr,
+        net,
+        a: q.away,
+        h: q.home,
+      };
+    }
+  }
+  if (!best || best.net < 6) return null;
+  const ord = ["", "first", "second", "third", "fourth"][best.q] ?? `Q${best.q}`;
+  return `${best.abbr} ran a ${Math.max(best.a, best.h)}-${Math.min(best.a, best.h)} ${ord}`;
+}
+
+function deriveHighlightsFromStats(
+  stats: NbaPlayerStat[],
+  fs: FactSheet,
+): string[] {
+  const out: string[] = [];
+  if (!stats.length) return out;
+  const sorted = [...stats].sort((a, b) => (b.pts ?? 0) - (a.pts ?? 0));
+  const top = sorted[0];
+  if (top && top.pts >= 10) {
+    out.push(
+      `${top.player.last_name} ${top.pts}pts/${top.reb ?? 0}reb/${top.ast ?? 0}ast`,
+    );
+  }
+  const hotShooter = stats.find(
+    (s) => (s.fg3m ?? 0) >= 6 && s.player.id !== top?.player.id,
+  );
+  if (hotShooter) {
+    out.push(
+      `${hotShooter.player.last_name} ${hotShooter.fg3m}/${hotShooter.fg3a ?? "?"} from deep`,
+    );
+  } else {
+    const loserAbbr = fs.awayScore > fs.homeScore ? fs.homeAbbr : fs.awayAbbr;
+    const topLoser = sorted.find(
+      (s) => s.team.abbreviation === loserAbbr && s.player.id !== top?.player.id,
+    );
+    if (topLoser && topLoser.pts >= 15) {
+      out.push(
+        `${topLoser.player.last_name} ${topLoser.pts}/${topLoser.reb ?? 0}/${topLoser.ast ?? 0} in the loss`,
+      );
+    }
+  }
+  const swing = deriveQuarterSwing(fs);
+  if (swing) out.push(swing);
+  return Array.from(new Set(out.filter(Boolean))).slice(0, 3);
 }
 
 const MODELS = [
@@ -133,11 +195,20 @@ export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
     try {
       let fs: FactSheet;
       if (src === "sample") {
-        fs = SAMPLE_FACTSHEET;
+        fs = { ...SAMPLE_FACTSHEET };
+        const swing = deriveQuarterSwing(fs);
+        fs.highlights = [...SAMPLE_HIGHLIGHTS, ...(swing ? [swing] : [])].slice(0, 3);
       } else {
         const game = finishedGames.find((g) => String(g.id) === src);
         if (!game) throw new Error("Game not found");
         fs = gameToFactsheet(game);
+        try {
+          const stats = await getGameStats(game.id);
+          const highlights = deriveHighlightsFromStats(stats, fs);
+          if (highlights.length) fs.highlights = highlights;
+        } catch {
+          /* stats optional — fall back to plain recap */
+        }
       }
       setFactsheet(fs);
 
@@ -303,6 +374,25 @@ export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
                 </Select>
               </div>
             </div>
+
+            {/* Key moments fed to the model */}
+            {factsheet?.highlights && factsheet.highlights.length > 0 && (
+              <div className="rounded-md bg-[#0F1216] border border-[#2B2F37] p-3">
+                <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5">
+                  Key moments fed to Wade
+                </p>
+                <ul className="space-y-0.5">
+                  {factsheet.highlights.map((h, i) => (
+                    <li
+                      key={i}
+                      className="font-body text-xs text-white/90 leading-snug"
+                    >
+                      · {h}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {/* Recap output */}
             <div className="rounded-md bg-[#0F1216] border border-[#2B2F37] p-3 min-h-[120px]">

@@ -1,72 +1,73 @@
-# Persist Wade's recaps + key by series_id
 
-## Goal
+# Enrich Wade's recap with crucial game moments
 
-Two small, related fixes to the "Add to game" flow in `DeadpoolRecapDrawer`:
-
-1. **Robust key** — the recap is currently looked up by `${awayAbbr}-${homeAbbr}-G${gameNumber}`. Home/away can flip per game in a series, so a recap added from one orientation can silently fail to display on the matchup detail. Key by **bracket `series_id` + `gameNumber`** instead.
-2. **Persistence** — the in-memory `Map` resets on page reload. Mirror it to **`localStorage`** so added recaps survive refresh.
-
-No DB schema changes. No scoring changes. No visible UI redesign — the "The gist of it" section behaves the same, just more reliably.
+Right now Wade only sees the final score, quarter scores (sample only), date, round, and game number. The recaps end up generic ("they remembered to play in the 4th"). Goal: feed Wade 2–3 concrete moments per game so he can drop one or two into the snark naturally — top scorer, a hot shooter, or a quarter swing — without losing the 400-char cap or the voice.
 
 ## Scope
 
-Three files:
+Three files. No DB schema. No scoring. Drawer UI gets one new collapsible row.
 
-- `src/lib/demoRecapStore.ts` — change `recapKey` signature, add localStorage hydration + write-through.
-- `src/components/DeadpoolRecapDrawer.tsx` — resolve `series_id` for the chosen game (sample or NBA-API game) and pass it to `recapKey`.
-- `src/components/MatchDetailDialog.tsx` — use the already-computed `bracketSeriesId` for the lookup; drop the away/home-abbr key.
-- `src/components/DemoMatchDetailDialog.tsx` — pure-demo screen with hardcoded data; pass a stable demo series id (e.g. `"demo-pac-sac"`) so it keeps working.
+- `supabase/functions/demo-game-recap/index.ts` — accept `highlights: string[]` on the factsheet and add prompt instructions to weave 1–2 in.
+- `src/components/DeadpoolRecapDrawer.tsx` — when a real NBA game is picked, fetch player box scores via the existing `nba-api` proxy (`endpoint=stats&game_ids[]=<id>`) and derive highlight strings. For the sample, hardcode 2 highlights. Show them in a small collapsible "Key moments" block above the recap so the user can see what Wade was given. Pass them into the function call.
+- `src/lib/nbaApi.ts` — add a thin `getGameStats(gameId)` helper + a minimal `NbaPlayerStat` type. No other changes.
 
-## Technical details
+## How highlights are derived
 
-### `demoRecapStore.ts`
+From `stats?game_ids[]=<id>&per_page=100`:
 
-```ts
-const STORAGE_KEY = "demoRecapStore.v2";
+1. **Top scorer overall** — `LastName Xpts/Yreb/Zast` (e.g. `"Edwards 31pts/8reb/6ast"`).
+2. **Best second story** — pick whichever is most newsworthy:
+   - A teammate or opponent with ≥6 made threes → `"Castle 6/9 from deep"`.
+   - Otherwise the next highest scorer on the losing team → `"Wembanyama 24/12/4 in the loss"`.
+3. **Quarter swing** *(only when `factsheet.quarters` is present — sample only for now)* — find the quarter with the largest single-team net (e.g. `+13`) → `"MIN ran a 31-18 third"`.
 
-function recapKey(seriesId: string, gameNumber?: number): string {
-  return `${seriesId}::G${gameNumber ?? "x"}`;
-}
+Cap at 3 strings, dedupe, drop empties. If stats fetch fails, send no highlights — Wade falls back to the current behavior.
 
-// On module load: try JSON.parse(localStorage[STORAGE_KEY]) into the Map.
-// On setDemoRecap: write the serialized Map back to localStorage (wrapped in try/catch).
+## Prompt change (edge function)
+
+Append to the user prompt only when highlights exist:
+
+```
+Crucial moments (use 1 or 2, naturally — do NOT list them, do NOT name-drop all of them, do NOT invent stats not on this list):
+- {highlight 1}
+- {highlight 2}
+- {highlight 3}
 ```
 
-The `v2` suffix avoids colliding with stale `away-home-Gn` entries from the old key shape — they simply won't be read.
+Add one line to the system prompt's style rules:
 
-### `DeadpoolRecapDrawer.tsx`
-
-The drawer currently builds a `FactSheet` from either the sample constant or an `NbaGame`. To produce a series id:
-
-- Pull `useBracketData()` (already used elsewhere) once at the top of the drawer.
-- Add a small helper that, given two team abbreviations, finds the matching bracket series via the existing `getBracketSeriesIdForMatch`-style lookup (orientation-independent set match on `topTeam`/`bottomTeam` abbreviations).
-- For the sample factsheet, use a fixed string like `"sample-demo"` — the existing demo dialog will use the same constant.
-
-Pass `recapKey(seriesId, factsheet.gameNumber)` into `setDemoRecap`.
-
-### `MatchDetailDialog.tsx`
-
-`bracketSeriesId` is already computed (line 129). Replace the two `useDemoRecap(recapKey(awayAbbr, homeAbbr, …))` calls with:
-
-```ts
-const recapByGame   = useDemoRecap(recapKey(bracketSeriesId ?? "", activeGame?.gameNumber));
-const recapBySeries = useDemoRecap(recapKey(bracketSeriesId ?? "", undefined));
+```
+- If "Crucial moments" are provided, slip ONE or TWO into the recap as flavor — do not enumerate, do not invent any other player names or stats.
 ```
 
-### `DemoMatchDetailDialog.tsx`
+The 400-char cap and one-paragraph rules stay.
 
-It's a static demo screen. Use the same `"sample-demo"` constant the drawer uses for its sample factsheet, so the demo dialog still picks up a recap added against the sample.
+## Drawer UI
+
+Above the existing recap output box, add:
+
+```
+Key moments  ▼
+  · Edwards 31pts/8reb/6ast
+  · Castle 6/9 from deep
+  · MIN ran a 31-18 third
+```
+
+Collapsed by default on mobile, expanded on desktop. No edit field in v1 — keep it minimal. (If the user later wants to type in their own moment, that's a follow-up.)
+
+The moments are recomputed any time `source` changes; the same array is sent to the edge function and surfaced in the existing "Inputs sent to model" JSON dump.
 
 ## Out of scope
 
-- Server-side persistence (Supabase table) — not needed for a demo feature.
-- Cleanup of old localStorage keys — there were none under v1 (in-memory only).
-- Any change to scoring, picks, or matchup layout.
+- Letting the user type custom moments (easy follow-up if asked).
+- Persisting highlights with the recap in localStorage — Wade only needs them at generation time.
+- Play-by-play / shot chart data — balldontlie's free tier doesn't expose it, and stats are enough for color.
+- Quarter scores for fetched NBA games — balldontlie's basic `games` endpoint doesn't return per-period scores, so the swing line stays sample-only for now.
 
 ## Verification
 
-1. Open the recap drawer, pick the sample, click **Add to game**, open the demo matchup detail → "The gist of it" appears.
-2. Hard-refresh the page → "The gist of it" still appears.
-3. Pick a real finished game (e.g. one where home/away differs from how the matchup card lists them), add to game, open the matchup detail for that series → recap appears regardless of orientation.
-4. `npm run test` — existing tests untouched and still pass.
+1. Open drawer with the sample → see 3 moments listed → generated recap mentions one (e.g. a player line) without listing all three. Char count still ≤ 400.
+2. Pick a real finished game → moments populate from box score → Wade weaves one in.
+3. Force the stats fetch to fail (offline) → no moments shown, recap still generates as before.
+4. `npm run test` — existing tests untouched.
+

@@ -22,6 +22,7 @@ interface FactSheet {
   gameNumber?: number;
   ot?: number; // number of OTs (0 = none)
   quarters?: QuarterScore[];
+  highlights?: string[];
 }
 
 const SYSTEM_PROMPT = `You are a sarcastic, witty sports writer who happens to be named Wade. You write snarky, relatable NBA playoff game recaps — the kind of take an ordinary fan would have at the bar, not a superhero caricature.
@@ -34,6 +35,7 @@ Style rules:
 - No profanity. No future-game spoilers. No made-up stats.
 - Do NOT mention costumes, masks, swords, superpowers, healing factors, or any movie scenes. You are a funny person, not a comic-book character.
 - Refer to teams by their nickname or abbreviation, never invent player names.
+- If "Crucial moments" are provided, slip ONE or TWO into the recap as flavor — do not enumerate them, do not name-drop all of them, and do not invent any other player names or stats not on that list.
 - End with a punchy one-liner.`;
 
 function buildUserPrompt(f: FactSheet): string {
@@ -56,6 +58,13 @@ function buildUserPrompt(f: FactSheet): string {
           .map((q) => `Q${q.q} ${f.awayAbbr} ${q.away}-${q.home} ${f.homeAbbr}`)
           .join(", "),
     );
+  }
+  if (f.highlights && f.highlights.length) {
+    lines.push("");
+    lines.push(
+      "Crucial moments (use 1 or 2, naturally — do NOT list them, do NOT name-drop all of them, do NOT invent stats not on this list):",
+    );
+    for (const h of f.highlights) lines.push(`- ${h}`);
   }
   lines.push("");
   lines.push("Write the recap now. Remember: max 400 characters, one paragraph.");

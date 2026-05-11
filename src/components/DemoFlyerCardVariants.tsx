@@ -195,7 +195,7 @@ const FlyerCardV3 = ({
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/10 to-black/95" />
 
         {/* Vertical stat line on right edge */}
-        {!sealed && !sealedToppsStyle && stats && stats.length > 0 && (
+        {opened && stats && stats.length > 0 && (
           <div className="absolute top-0 bottom-0 right-0 w-10 flex items-center justify-center pointer-events-none">
             {/* Dark gradient highlight strip behind stats for legibility on any image */}
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/10 to-black/80" />

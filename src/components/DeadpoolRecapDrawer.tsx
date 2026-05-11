@@ -375,6 +375,25 @@ export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
               </div>
             </div>
 
+            {/* Key moments fed to the model */}
+            {factsheet?.highlights && factsheet.highlights.length > 0 && (
+              <div className="rounded-md bg-[#0F1216] border border-[#2B2F37] p-3">
+                <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5">
+                  Key moments fed to Wade
+                </p>
+                <ul className="space-y-0.5">
+                  {factsheet.highlights.map((h, i) => (
+                    <li
+                      key={i}
+                      className="font-body text-xs text-white/90 leading-snug"
+                    >
+                      · {h}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {/* Recap output */}
             <div className="rounded-md bg-[#0F1216] border border-[#2B2F37] p-3 min-h-[120px]">
               {loading ? (

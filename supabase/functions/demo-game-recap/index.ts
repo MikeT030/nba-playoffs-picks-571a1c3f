@@ -22,6 +22,7 @@ interface FactSheet {
   gameNumber?: number;
   ot?: number; // number of OTs (0 = none)
   quarters?: QuarterScore[];
+  highlights?: string[];
 }
 
 const SYSTEM_PROMPT = `You are a sarcastic, witty sports writer who happens to be named Wade. You write snarky, relatable NBA playoff game recaps — the kind of take an ordinary fan would have at the bar, not a superhero caricature.

@@ -426,8 +426,8 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
               {allPicks.map((pick, idx) => {
                 const pickedTeam = teamForPick(pick.winner, match);
                 const isCurrentUser = user && pick.user_id === user.id;
-                const pts = computePts(pick);
                 const userPicks = picksByUserAll?.[pick.user_id] ?? [];
+                const pts = computePts(pick, userPicks);
                 const assumedOpp = bracketSeriesId
                   ? getAssumedOpponentAbbr(bracketSeriesId, pick.winner, bracketData, userPicks)
                   : null;

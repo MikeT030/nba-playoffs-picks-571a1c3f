@@ -262,7 +262,7 @@ const FlyerCardV3 = ({
         <SealedPackCardToppsStyle
           {...sealedToppsConfig}
           defaultOpened={defaultOpened}
-          onOpen={onBurn}
+          onOpen={handleOpen}
         >
           {cardArticle}
         </SealedPackCardToppsStyle>

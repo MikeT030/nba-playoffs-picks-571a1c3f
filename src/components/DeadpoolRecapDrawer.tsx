@@ -36,6 +36,68 @@ interface FactSheet {
   gameNumber?: number;
   ot?: number;
   quarters?: { q: number; away: number; home: number }[];
+  highlights?: string[];
+}
+
+const SAMPLE_HIGHLIGHTS = [
+  "Edwards 31pts/8reb/6ast",
+  "Castle 6/9 from deep",
+];
+
+function deriveQuarterSwing(fs: FactSheet): string | null {
+  if (!fs.quarters || fs.quarters.length === 0) return null;
+  let best: { q: number; abbr: string; net: number; a: number; h: number } | null = null;
+  for (const q of fs.quarters) {
+    const net = Math.abs(q.away - q.home);
+    if (!best || net > best.net) {
+      best = {
+        q: q.q,
+        abbr: q.away > q.home ? fs.awayAbbr : fs.homeAbbr,
+        net,
+        a: q.away,
+        h: q.home,
+      };
+    }
+  }
+  if (!best || best.net < 6) return null;
+  const ord = ["", "first", "second", "third", "fourth"][best.q] ?? `Q${best.q}`;
+  return `${best.abbr} ran a ${Math.max(best.a, best.h)}-${Math.min(best.a, best.h)} ${ord}`;
+}
+
+function deriveHighlightsFromStats(
+  stats: NbaPlayerStat[],
+  fs: FactSheet,
+): string[] {
+  const out: string[] = [];
+  if (!stats.length) return out;
+  const sorted = [...stats].sort((a, b) => (b.pts ?? 0) - (a.pts ?? 0));
+  const top = sorted[0];
+  if (top && top.pts >= 10) {
+    out.push(
+      `${top.player.last_name} ${top.pts}pts/${top.reb ?? 0}reb/${top.ast ?? 0}ast`,
+    );
+  }
+  const hotShooter = stats.find(
+    (s) => (s.fg3m ?? 0) >= 6 && s.player.id !== top?.player.id,
+  );
+  if (hotShooter) {
+    out.push(
+      `${hotShooter.player.last_name} ${hotShooter.fg3m}/${hotShooter.fg3a ?? "?"} from deep`,
+    );
+  } else {
+    const loserAbbr = fs.awayScore > fs.homeScore ? fs.homeAbbr : fs.awayAbbr;
+    const topLoser = sorted.find(
+      (s) => s.team.abbreviation === loserAbbr && s.player.id !== top?.player.id,
+    );
+    if (topLoser && topLoser.pts >= 15) {
+      out.push(
+        `${topLoser.player.last_name} ${topLoser.pts}/${topLoser.reb ?? 0}/${topLoser.ast ?? 0} in the loss`,
+      );
+    }
+  }
+  const swing = deriveQuarterSwing(fs);
+  if (swing) out.push(swing);
+  return Array.from(new Set(out.filter(Boolean))).slice(0, 3);
 }
 
 const MODELS = [

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { totalUserPoints, type PickLite, type SeriesResultLite } from "@/lib/pickScoring";
+import { bracketSeries } from "@/data/playoffsData";
 import { toast } from "sonner";
 import { Trophy, Save, RotateCcw, Shuffle, Eye, Radio, Trash2, Check } from "lucide-react";
 import AdminFlyerAwardDemoDrawer from "@/components/AdminFlyerAwardDemoDrawer";

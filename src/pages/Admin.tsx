@@ -36,18 +36,34 @@ interface AdminUser {
   created_at: string;
 }
 
-const WadeTakeDemo = () => {
-  const [open, setOpen] = useState(false);
+const WadeTakeAccordion = () => {
+  const [value, setValue] = useState<string>("");
+  const isOpen = value === "wades-take";
   return (
-    <div className="space-y-3">
-      <p className="font-body text-xs text-muted-foreground">
-        Expand to open the summary generation drawer.
-      </p>
-      <Button variant="outline" onClick={() => setOpen(true)}>
-        Open Wade's Take
-      </Button>
-      <DeadpoolRecapDrawer open={open} onOpenChange={setOpen} />
-    </div>
+    <Accordion
+      type="single"
+      collapsible
+      value={value}
+      onValueChange={setValue}
+      className="bg-[#181C23] rounded-lg px-5"
+    >
+      <AccordionItem value="wades-take" className="border-b-0">
+        <AccordionTrigger className="hover:no-underline">
+          <h2 className="font-display text-lg tracking-wider text-left">
+            WADE'S TAKE — SUMMARY DRAWER
+          </h2>
+        </AccordionTrigger>
+        <AccordionContent>
+          <p className="font-body text-xs text-muted-foreground">
+            Drawer opens automatically.
+          </p>
+        </AccordionContent>
+      </AccordionItem>
+      <DeadpoolRecapDrawer
+        open={isOpen}
+        onOpenChange={(o) => setValue(o ? "wades-take" : "")}
+      />
+    </Accordion>
   );
 };
 

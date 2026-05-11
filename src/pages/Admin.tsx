@@ -50,19 +50,13 @@ const WadeTakeAccordion = () => {
       <AccordionItem value="wades-take" className="border-b-0">
         <AccordionTrigger className="hover:no-underline">
           <h2 className="font-display text-lg tracking-wider text-left">
-            WADE'S TAKE — SUMMARY DRAWER
+            WADE'S TAKE — SUMMARY
           </h2>
         </AccordionTrigger>
         <AccordionContent>
-          <p className="font-body text-xs text-muted-foreground">
-            Drawer opens automatically.
-          </p>
+          <DeadpoolRecapPanel active={isOpen} />
         </AccordionContent>
       </AccordionItem>
-      <DeadpoolRecapDrawer
-        open={isOpen}
-        onOpenChange={(o) => setValue(o ? "wades-take" : "")}
-      />
     </Accordion>
   );
 };

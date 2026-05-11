@@ -1,76 +1,63 @@
-# Deadpool Recap — Admin Demo
+# Redefine the 1-point rule
 
-A self-contained demo on `/admin` that proves the Deadpool game-recap concept end-to-end. No production caching, cron, or drawer integration yet — just enough to compare AI models side-by-side and decide if the output is good enough to roll out.
+## New scoring rules
 
-## Entry point
+For every pick, compare it against (a) the actual series result and (b) the **assumed matchup** — the opponent the user implicitly predicted, derived from their own picks in the two feeder series.
 
-In `src/pages/Admin.tsx`, swap one accordion item:
-```ts
-{ value: "match-card-colored", label: "DEMO MATCH CARD — TEAM COLORS",
-  content: <DemoMatchCardColoredWithRecap /> }
-```
+| Outcome | Points |
+|---|---|
+| Right winner + right assumed opponent + right games-in-series | **3** |
+| Right winner + right assumed opponent + wrong games-in-series | **2** |
+| Right winner + wrong assumed opponent (any game count) | **1** |
+| Wrong winner | **0** |
 
-Behavior: the accordion expands as today and shows the existing colored match card. **Tapping the card** opens a bottom drawer that generates and shows the Deadpool recap. No new buttons on the card itself.
+Champion bonus (+4 for correct `nba-finals` winner) stays unchanged.
 
-## Drawer contents (`DeadpoolRecapDrawer`)
+The current "right team won some other series" loose rule is **removed** and replaced by the rule above.
 
-```text
-┌─────────────────────────────────────┐
-│  WADE'S TAKE                        │
-│  Final · LAL 112 — 108 DEN · OT     │
-├─────────────────────────────────────┤
-│  Game source:  ◉ Sample  ○ Latest   │
-│  Model:        [ gemini-3-flash ▼ ] │
-│                                     │
-│  ┌─ skeleton ─┐  →  recap text...   │
-│                                     │
-│  327 / 400 chars                    │
-│                                     │
-│  [Regenerate]   [Copy]              │
-│                                     │
-│  ▸ Inputs sent to model             │
-└─────────────────────────────────────┘
-```
+## Worked example (E, east-semi-bottom)
 
-- **Voice is fixed to Deadpool** — written text only, no audio/video.
-- **Model picker** — `google/gemini-3-flash-preview` (default), `google/gemini-2.5-flash`, `openai/gpt-5-mini`. Lets us A/B output quality.
-- **Game source** — *Sample* (a baked-in Final game so the demo never blanks out) or *Latest* (most recent finished playoff game pulled live via the existing `nba-api` function).
-- **Regenerate** — recalls the function, no caching.
-- **Copy** — copies the generated text.
-- **Char counter** — visible so we can judge whether 400 is the right cap.
-- **Collapsible "Inputs"** — shows the exact fact sheet sent to the model (teams, final score, quarter scores, OT, date) for transparency while we tune.
+- E's picks: `east-r1-2v7 → BOS`, `east-r1-3v6 → NYK`, `east-semi-bottom → NYK in 6`
+- E's assumed matchup for east-semi-bottom: **BOS vs NYK**
+- Actual: PHI beat BOS in r1; semi was **PHI vs NYK**, NYK in 4
+- Right winner (NYK), wrong assumed opponent (BOS vs actual PHI) → **1 pt** (was 2 before)
 
-## Edge function: `demo-game-recap`
+## Series with no feeders (First Round)
 
-Single new function, **no DB writes**. Body:
-```json
-{ "game_id": 15908525, "model": "google/gemini-3-flash-preview" }
-```
+- The "assumed opponent" is the other fixed team in the slot, so it always equals the actual opponent.
+- First Round picks therefore can only score 0 / 2 / 3 — never 1.
 
-Logic:
-1. Fetch the game from balldontlie via the existing pattern (reuses `BALLDONTLIE_API_KEY`).
-2. Build a fact sheet (teams, final score, quarter scores, OT, date).
-3. Call Lovable AI Gateway with the **Deadpool system prompt** + fact sheet. Hard cap ~400 chars, no markdown, no emojis, no profanity, no future-game spoilers, max one chimichanga reference.
-4. Return `{ summary, factsheet, model }`. Surface 429/402 cleanly so the drawer can toast them.
+## Edge cases
 
-## What this deliberately skips
+- **Missing parent pick:** if the user never picked one of the two feeder series, fall back to treating the assumed opponent as the actual opponent (so they can still earn 2/3 pts and never get downgraded to 1 because of an empty slot).
+- **Series not yet decided:** 0 pts, same as today.
+- **Wrong winner:** always 0. We are not keeping any "but they won elsewhere" credit.
 
-- No `game_recaps` table, no caching.
-- No cron sweeper.
-- No changes to `MatchDetailDialog` or any user-facing route.
-- No admin-only RLS plumbing — the demo function is public like the existing `nba-api`.
+## Technical implementation
 
-Once the output feels right, we lift the same edge-function logic into the cached + cron'd production version (the earlier full plan).
+Files to touch:
 
-## Technical details
+1. **`src/lib/pickScoring.ts`** — rewrite `scorePick`:
+   - Add params for the bracket series list and the picker's full pick set (already passed for loose detection).
+   - Add the actual results map so we can resolve the actual opponent (winners of `topParentSeriesId` / `bottomParentSeriesId`).
+   - Use existing `getAssumedOpponentAbbr(seriesId, pickedWinner, bracketSeries, userPicks)` from `src/data/playoffsData.ts` to get the assumed opponent.
+   - Compute actual opponent from `series_results` of the two parent series (or the static slot teams for First Round).
+   - Apply the new 3/2/1/0 table above. Drop the `actualWinners`/`alreadyScored` block.
+   - Update `PickPointKind` semantics: `loose` now means "right winner, wrong assumed opponent."
 
-**Files to add**
-- `supabase/functions/demo-game-recap/index.ts` — fact sheet builder + Lovable AI call.
-- `src/components/DemoMatchCardColoredWithRecap.tsx` — wraps existing `DemoMatchCardColored`, adds tap handler that opens the drawer.
-- `src/components/DeadpoolRecapDrawer.tsx` — drawer UI (uses existing `ui/drawer`), model picker, game-source toggle, regenerate, copy, char counter, inputs panel.
+2. **`src/pages/Scoreboard.tsx`** — its inline `computeScoreboard` mirrors the same logic; rewrite the loose-pick pass to use assumed-vs-actual opponent (importing `bracketSeries` + `getAssumedOpponentAbbr`). Per-user totals will shift; verify against E (expected: still 13 pts since none of E's loose picks under the old rule survive, but east-semi-bottom drops 2 → 1, while a previously-zero loose pick may now score 1 — re-tally during implementation).
 
-**Files to edit**
-- `src/pages/Admin.tsx` — point the one accordion item at `DemoMatchCardColoredWithRecap`.
+3. **`src/components/MatchDetailDialog.tsx`** — replace the local `computePts` / `effectivePts` with a call to the updated `scorePick`, passing the picker's full picks + all series_results + bracketSeries (already available via existing hooks). This finally aligns the drawer with the Scoreboard, as discussed.
 
-**Lovable AI**
-- Default model: `google/gemini-3-flash-preview`. Prompt lives only on the backend — easy to tune later without a frontend redeploy.
+4. **`src/test/computeScoreboard.test.ts`** — update existing loose-pick test ("right team, wrong series") and add new cases:
+   - Right winner, wrong assumed opponent → 1
+   - Right winner, right assumed opponent, wrong games → 2
+   - Right winner, right assumed opponent, right games → 3
+   - Wrong winner whose team won elsewhere → 0 (regression of removed rule)
+   - Missing parent pick → falls back to actual opponent (no downgrade)
+
+## What will NOT change
+
+- DB schema (no new "predicted opponent" column — we derive it from the user's bracket).
+- UI of the drawer beyond the corrected number/label.
+- Champion bonus rule.

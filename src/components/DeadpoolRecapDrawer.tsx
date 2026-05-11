@@ -479,16 +479,34 @@ export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
                 size="sm"
                 variant="default"
                 onClick={addToGame}
-                disabled={!summary || loading}
+                disabled={!summary || loading || saveStatus === "saving"}
                 className="h-8 w-full"
               >
                 {added ? (
                   <Check className="h-3.5 w-3.5 mr-1" />
+                ) : saveStatus === "saving" ? (
+                  <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" />
                 ) : (
                   <Plus className="h-3.5 w-3.5 mr-1" />
                 )}
-                {added ? "Added" : "Add to game"}
+                {saveStatus === "saving"
+                  ? "Publishing…"
+                  : added
+                  ? "Added"
+                  : isAdmin
+                  ? "Publish to all visitors"
+                  : "Add to game (local only)"}
               </Button>
+              {saveStatus === "remote" && (
+                <p className="text-[11px] text-emerald-400">
+                  Saved · visible to everyone.
+                </p>
+              )}
+              {saveStatus === "local" && (
+                <p className="text-[11px] text-amber-400">
+                  Saved locally only — {isAdmin ? "couldn't reach backend." : "admin required to publish."}
+                </p>
+              )}
             </div>
 
             {/* Inputs panel */}

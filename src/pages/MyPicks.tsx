@@ -382,7 +382,7 @@ const MyPicks = () => {
               winner: b.winner,
               games_in_series: b.gamesInSeries,
             }));
-            const totalPoints = totalUserPoints(userBetsLite, seriesResults);
+            const totalPoints = totalUserPoints(userBetsLite, seriesResults, activeBracket);
             return (
               <div className="mb-2">
                 <p className="font-body font-medium text-white flex items-baseline gap-3 text-lg">
@@ -440,7 +440,7 @@ const MyPicks = () => {
               seriesScores[series.id] = `${topWins}-${bottomWins}`;
             }
             for (const p of userPicksLite) {
-              pickPoints[p.series_id] = scorePick(p, userPicksLite, seriesResults);
+              pickPoints[p.series_id] = scorePick(p, userPicksLite, seriesResults, activeBracket);
             }
             return (
               <div

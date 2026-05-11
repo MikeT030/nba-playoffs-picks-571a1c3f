@@ -238,7 +238,7 @@ const DemoBracketPreview = ({ seriesList }: DemoBracketPreviewProps) => {
     }));
     for (const b of userPicks.bets) {
       const pick = { series_id: b.seriesId, winner: b.winner, games_in_series: b.gamesInSeries };
-      map[b.seriesId] = scorePick(pick, userBetsLite, resultsLite);
+      map[b.seriesId] = scorePick(pick, userBetsLite, resultsLite, defaultBracketSeries);
     }
     return map;
   }, [userPicks, actualResults]);
@@ -254,7 +254,7 @@ const DemoBracketPreview = ({ seriesList }: DemoBracketPreviewProps) => {
       winner: b.winner,
       games_played: b.gamesInSeries,
     }));
-    return totalUserPoints(userBetsLite, resultsLite);
+    return totalUserPoints(userBetsLite, resultsLite, defaultBracketSeries);
   }, [userPicks, actualResults]);
 
   // Demo "matchup standings" — formatted as topWins-bottomWins per series,

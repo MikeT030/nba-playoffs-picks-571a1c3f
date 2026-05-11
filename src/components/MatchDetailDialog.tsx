@@ -8,9 +8,10 @@ import { useAllSeriesResults } from "@/hooks/useAllSeriesResults";
 import { useAllUserPicks } from "@/hooks/useAllUserPicks";
 import { useSeriesGames } from "@/hooks/useSeriesGames";
 import { isNextUp as checkIsNextUp, formatTipOff } from "@/lib/seriesUtils";
-import { getBracketSeriesIdForMatch, getAssumedOpponentAbbr, type Match, type Team } from "@/data/playoffsData";
+import { getBracketSeriesIdForMatch, getAssumedOpponentAbbr, bracketSeries as defaultBracketSeries, type Match, type Team } from "@/data/playoffsData";
 import { teamMeta } from "@/lib/nbaApi";
 import { useDemoRecap, recapKey } from "@/lib/demoRecapStore";
+import { scorePick as scorePickShared } from "@/lib/pickScoring";
 
 /**
  * Resolve a Team-like object for *any* abbreviation, so picks made for a
@@ -195,12 +196,36 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
   const isUpcoming = displayStatus === "upcoming";
   const isNextUp = isUpcoming && checkIsNextUp(activeGame?.startsAt);
 
-  const computePts = (pick: { winner: string; games_in_series: number }) => {
-    if (!seriesResult) return null;
-    if (seriesResult.winner === pick.winner) {
-      return seriesResult.games_played === pick.games_in_series ? 3 : 2;
-    }
-    return 0;
+  const seriesListForScoring = bracketData ?? defaultBracketSeries;
+
+  /**
+   * Score a pick using the shared scoring rule, given the picker's full
+   * pick set (used for assumed-opponent resolution).
+   */
+  const computePts = (
+    pick: { winner: string; games_in_series: number },
+    pickerPicks: { series_id: string; winner: string }[] | undefined,
+  ): number | null => {
+    if (!bracketSeriesId) return null;
+    if (!allResults) return null;
+    const userPicksLite = (pickerPicks ?? []).map((p) => ({
+      series_id: p.series_id,
+      winner: p.winner,
+      // games_in_series doesn't matter for assumed-opponent lookup; default 0
+      games_in_series: 0,
+    }));
+    // Make sure the pick itself is in the list (it may not be if pickerPicks
+    // came from a different fetch). Replace or append the canonical entry.
+    const idx = userPicksLite.findIndex((p) => p.series_id === bracketSeriesId);
+    const self = {
+      series_id: bracketSeriesId,
+      winner: pick.winner,
+      games_in_series: pick.games_in_series,
+    };
+    if (idx >= 0) userPicksLite[idx] = self;
+    else userPicksLite.push(self);
+    const info = scorePickShared(self, userPicksLite, allResults, seriesListForScoring);
+    return info.points;
   };
 
   const headerLabel = `${match.conference !== "Finals" ? `${match.conference === "East" ? "EAST" : "WEST"}  ` : ""}${match.round === "Conference Semifinals" ? "Conf. Semifinals" : match.round === "Conference Finals" ? "Conf. Finals" : match.round} · Game ${displayGameNum} · ${displayDate}`;
@@ -338,7 +363,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
             {(() => {
               const userPick = user && allPicks ? allPicks.find((p) => p.user_id === user.id) : null;
               if (!userPick) return null;
-              const pts = computePts(userPick);
+              const pts = computePts(userPick, currentUserAllPicks ?? []);
               const pickInMatch =
                 match.homeTeam.abbreviation === userPick.winner ||
                 match.awayTeam.abbreviation === userPick.winner;
@@ -371,7 +396,9 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
                           ? "Shiiiiit 3 Points"
                           : effectivePts === 2
                             ? "That's 2 Points"
-                            : "0 Points, Bro"}
+                            : effectivePts === 1
+                              ? "1 Point — right winner, wrong matchup"
+                              : "0 Points, Bro"}
                         {match.id === "nba-finals" && effectivePts! > 0 && " And 4 for the Champ"}
                       </span>
                     )}
@@ -401,8 +428,8 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
               {allPicks.map((pick, idx) => {
                 const pickedTeam = teamForPick(pick.winner, match);
                 const isCurrentUser = user && pick.user_id === user.id;
-                const pts = computePts(pick);
                 const userPicks = picksByUserAll?.[pick.user_id] ?? [];
+                const pts = computePts(pick, userPicks);
                 const assumedOpp = bracketSeriesId
                   ? getAssumedOpponentAbbr(bracketSeriesId, pick.winner, bracketData, userPicks)
                   : null;

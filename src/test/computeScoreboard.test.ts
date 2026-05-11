@@ -1,200 +1,145 @@
 import { describe, it, expect } from "vitest";
+import { scorePick, totalUserPoints, type PickLite, type SeriesResultLite } from "@/lib/pickScoring";
+import type { BracketSeries } from "@/data/playoffsData";
 
-// Re-implement computeScoreboard here to test the scoring logic in isolation
-interface PickRow {
-  profile_name: string;
-  series_id: string;
-  winner: string;
-  games_in_series: number;
-}
+// Minimal bracket fixture for tests. Two First Round series feeding one semi.
+const fixtureBracket: BracketSeries[] = [
+  {
+    id: "r1-top",
+    round: "First Round",
+    conference: "East",
+    topTeam: { name: "A", abbreviation: "A", color: "#000", logo: "🏀", seed: 1 },
+    bottomTeam: { name: "H", abbreviation: "H", color: "#000", logo: "🏀", seed: 8 },
+  },
+  {
+    id: "r1-bot",
+    round: "First Round",
+    conference: "East",
+    topTeam: { name: "D", abbreviation: "D", color: "#000", logo: "🏀", seed: 4 },
+    bottomTeam: { name: "E", abbreviation: "E", color: "#000", logo: "🏀", seed: 5 },
+  },
+  {
+    id: "semi",
+    round: "Conference Semifinals",
+    conference: "East",
+    topParentSeriesId: "r1-top",
+    bottomParentSeriesId: "r1-bot",
+  },
+  {
+    id: "nba-finals",
+    round: "Finals",
+    conference: "Finals",
+    topParentSeriesId: "semi",
+    bottomParentSeriesId: "semi",
+  },
+];
 
-interface SeriesResult {
-  series_id: string;
-  winner: string;
-  games_played: number;
-}
-
-interface ParticipantScore {
-  name: string;
-  perfectPicks: number;
-  winnerPicks: number;
-  loosePicks: number;
-  championBonus: boolean;
-  totalPoints: number;
-}
-
-function computeScoreboard(
-  allPicks: PickRow[],
-  results: SeriesResult[]
-): ParticipantScore[] {
-  const playerPicks = new Map<string, PickRow[]>();
-  for (const p of allPicks) {
-    const list = playerPicks.get(p.profile_name) || [];
-    list.push(p);
-    playerPicks.set(p.profile_name, list);
-  }
-
-  const resultMap = new Map<string, SeriesResult>();
-  for (const r of results) resultMap.set(r.series_id, r);
-
-  const actualWinners = new Set(results.map((r) => r.winner));
-
-  const scores: ParticipantScore[] = [];
-
-  for (const [name, picks] of playerPicks) {
-    let perfectPicks = 0;
-    let winnerPicks = 0;
-    let loosePicks = 0;
-    let championBonus = false;
-
-    const scoredPicks = new Set<number>();
-
-    for (let i = 0; i < picks.length; i++) {
-      const pick = picks[i];
-      const result = resultMap.get(pick.series_id);
-      if (!result) continue;
-
-      if (result.winner === pick.winner) {
-        if (result.games_played === pick.games_in_series) {
-          perfectPicks++;
-        } else {
-          winnerPicks++;
-        }
-        scoredPicks.add(i);
-      }
-    }
-
-    for (let i = 0; i < picks.length; i++) {
-      if (scoredPicks.has(i)) continue;
-      const pick = picks[i];
-      const result = resultMap.get(pick.series_id);
-      if (result && result.winner !== pick.winner && actualWinners.has(pick.winner)) {
-        loosePicks++;
-        scoredPicks.add(i);
-      }
-    }
-
-    const finalsResult = resultMap.get("nba-finals");
-    const finalsPick = picks.find((p) => p.series_id === "nba-finals");
-    if (finalsResult && finalsPick && finalsResult.winner === finalsPick.winner) {
-      championBonus = true;
-    }
-
-    const totalPoints =
-      perfectPicks * 3 + winnerPicks * 2 + loosePicks * 1 + (championBonus ? 4 : 0);
-
-    scores.push({ name, perfectPicks, winnerPicks, loosePicks, championBonus, totalPoints });
-  }
-
-  return scores.sort((a, b) => b.totalPoints - a.totalPoints || a.name.localeCompare(b.name));
-}
-
-describe("computeScoreboard", () => {
-  it("returns empty array when no picks", () => {
-    expect(computeScoreboard([], [])).toEqual([]);
+describe("scorePick (new rules)", () => {
+  it("3 pts: right winner + right assumed opponent + right games", () => {
+    const userPicks: PickLite[] = [
+      { series_id: "r1-top", winner: "A", games_in_series: 5 },
+      { series_id: "r1-bot", winner: "D", games_in_series: 6 },
+      { series_id: "semi", winner: "A", games_in_series: 7 },
+    ];
+    const results: SeriesResultLite[] = [
+      { series_id: "r1-top", winner: "A", games_played: 5 },
+      { series_id: "r1-bot", winner: "D", games_played: 6 },
+      { series_id: "semi", winner: "A", games_played: 7 },
+    ];
+    const info = scorePick(userPicks[2], userPicks, results, fixtureBracket);
+    expect(info).toEqual({ points: 3, kind: "perfect" });
   });
 
-  it("scores a perfect pick as 3 points", () => {
-    const picks: PickRow[] = [
-      { profile_name: "Alice", series_id: "s1", winner: "OKC", games_in_series: 5 },
+  it("2 pts: right winner + right assumed opponent + wrong games", () => {
+    const userPicks: PickLite[] = [
+      { series_id: "r1-top", winner: "A", games_in_series: 5 },
+      { series_id: "r1-bot", winner: "D", games_in_series: 6 },
+      { series_id: "semi", winner: "A", games_in_series: 6 },
     ];
-    const results: SeriesResult[] = [
-      { series_id: "s1", winner: "OKC", games_played: 5 },
+    const results: SeriesResultLite[] = [
+      { series_id: "r1-top", winner: "A", games_played: 5 },
+      { series_id: "r1-bot", winner: "D", games_played: 6 },
+      { series_id: "semi", winner: "A", games_played: 7 },
     ];
-    const scores = computeScoreboard(picks, results);
-    expect(scores).toHaveLength(1);
-    expect(scores[0].perfectPicks).toBe(1);
-    expect(scores[0].totalPoints).toBe(3);
+    const info = scorePick(userPicks[2], userPicks, results, fixtureBracket);
+    expect(info).toEqual({ points: 2, kind: "winner" });
   });
 
-  it("scores correct winner with wrong game count as 2 points", () => {
-    const picks: PickRow[] = [
-      { profile_name: "Bob", series_id: "s1", winner: "OKC", games_in_series: 6 },
+  it("1 pt: right winner but wrong assumed opponent (E's NYK-vs-BOS scenario)", () => {
+    // User predicted r1-bot winner = D, but E actually advanced.
+    // Their semi pick (A in 6) still has the right winner but the opponent is wrong.
+    const userPicks: PickLite[] = [
+      { series_id: "r1-top", winner: "A", games_in_series: 5 },
+      { series_id: "r1-bot", winner: "D", games_in_series: 6 },
+      { series_id: "semi", winner: "A", games_in_series: 6 },
     ];
-    const results: SeriesResult[] = [
-      { series_id: "s1", winner: "OKC", games_played: 5 },
+    const results: SeriesResultLite[] = [
+      { series_id: "r1-top", winner: "A", games_played: 5 },
+      { series_id: "r1-bot", winner: "E", games_played: 7 },
+      { series_id: "semi", winner: "A", games_played: 4 },
     ];
-    const scores = computeScoreboard(picks, results);
-    expect(scores[0].winnerPicks).toBe(1);
-    expect(scores[0].totalPoints).toBe(2);
+    const info = scorePick(userPicks[2], userPicks, results, fixtureBracket);
+    expect(info).toEqual({ points: 1, kind: "loose" });
   });
 
-  it("scores a loose pick as 1 point (right team, wrong series)", () => {
-    const picks: PickRow[] = [
-      { profile_name: "Carol", series_id: "s1", winner: "OKC", games_in_series: 5 },
+  it("0 pts: wrong winner — even if that team won a different series", () => {
+    const userPicks: PickLite[] = [
+      { series_id: "r1-top", winner: "H", games_in_series: 5 }, // wrong, A won
     ];
-    const results: SeriesResult[] = [
-      { series_id: "s1", winner: "HOU", games_played: 6 },
-      { series_id: "s2", winner: "OKC", games_played: 5 },
+    const results: SeriesResultLite[] = [
+      { series_id: "r1-top", winner: "A", games_played: 5 },
+      { series_id: "r1-bot", winner: "H", games_played: 6 }, // H won elsewhere
     ];
-    const scores = computeScoreboard(picks, results);
-    expect(scores[0].loosePicks).toBe(1);
-    expect(scores[0].totalPoints).toBe(1);
+    const info = scorePick(userPicks[0], userPicks, results, fixtureBracket);
+    expect(info).toEqual({ points: 0, kind: "none" });
   });
 
-  it("awards 4 bonus points for correct Supreme Finals champion", () => {
-    const picks: PickRow[] = [
-      { profile_name: "Dan", series_id: "nba-finals", winner: "BOS", games_in_series: 6 },
+  it("First Round picks never score 1 pt (assumed opp = actual opp)", () => {
+    const userPicks: PickLite[] = [
+      { series_id: "r1-top", winner: "A", games_in_series: 7 },
     ];
-    const results: SeriesResult[] = [
-      { series_id: "nba-finals", winner: "BOS", games_played: 7 },
+    const results: SeriesResultLite[] = [
+      { series_id: "r1-top", winner: "A", games_played: 5 },
     ];
-    const scores = computeScoreboard(picks, results);
-    expect(scores[0].championBonus).toBe(true);
-    // 2 (winner correct, wrong games) + 4 (champion bonus) = 6
-    expect(scores[0].totalPoints).toBe(6);
+    const info = scorePick(userPicks[0], userPicks, results, fixtureBracket);
+    expect(info.kind).toBe("winner");
+    expect(info.points).toBe(2);
   });
 
-  it("does not award champion bonus for wrong finals pick", () => {
-    const picks: PickRow[] = [
-      { profile_name: "Eve", series_id: "nba-finals", winner: "LAL", games_in_series: 6 },
+  it("Missing parent pick falls back to actual opponent (no downgrade)", () => {
+    // No r1-bot pick at all → assumed opponent unresolved → don't downgrade.
+    const userPicks: PickLite[] = [
+      { series_id: "r1-top", winner: "A", games_in_series: 5 },
+      { series_id: "semi", winner: "A", games_in_series: 7 },
     ];
-    const results: SeriesResult[] = [
-      { series_id: "nba-finals", winner: "BOS", games_played: 6 },
+    const results: SeriesResultLite[] = [
+      { series_id: "r1-top", winner: "A", games_played: 5 },
+      { series_id: "r1-bot", winner: "E", games_played: 7 },
+      { series_id: "semi", winner: "A", games_played: 7 },
     ];
-    const scores = computeScoreboard(picks, results);
-    expect(scores[0].championBonus).toBe(false);
+    const info = scorePick(userPicks[1], userPicks, results, fixtureBracket);
+    expect(info).toEqual({ points: 3, kind: "perfect" });
   });
 
-  it("sorts players by total points descending, then by name", () => {
-    const picks: PickRow[] = [
-      { profile_name: "Zara", series_id: "s1", winner: "OKC", games_in_series: 5 },
-      { profile_name: "Alice", series_id: "s1", winner: "OKC", games_in_series: 5 },
-      { profile_name: "Bob", series_id: "s1", winner: "HOU", games_in_series: 6 },
+  it("Series not yet decided → 0 / none", () => {
+    const userPicks: PickLite[] = [
+      { series_id: "semi", winner: "A", games_in_series: 6 },
     ];
-    const results: SeriesResult[] = [
-      { series_id: "s1", winner: "OKC", games_played: 5 },
-    ];
-    const scores = computeScoreboard(picks, results);
-    // Alice and Zara both have 3 pts, Bob has 0
-    expect(scores[0].name).toBe("Alice");
-    expect(scores[1].name).toBe("Zara");
-    expect(scores[2].name).toBe("Bob");
+    const info = scorePick(userPicks[0], userPicks, [], fixtureBracket);
+    expect(info).toEqual({ points: 0, kind: "none" });
   });
+});
 
-  it("ignores picks for undecided series", () => {
-    const picks: PickRow[] = [
-      { profile_name: "Frank", series_id: "s1", winner: "OKC", games_in_series: 5 },
+describe("totalUserPoints", () => {
+  it("includes +4 champion bonus when nba-finals pick is correct", () => {
+    const picks: PickLite[] = [
+      { series_id: "nba-finals", winner: "A", games_in_series: 6 },
     ];
-    const scores = computeScoreboard(picks, []);
-    expect(scores[0].totalPoints).toBe(0);
-  });
-
-  it("handles multiple picks per player correctly", () => {
-    const picks: PickRow[] = [
-      { profile_name: "Grace", series_id: "s1", winner: "OKC", games_in_series: 5 },
-      { profile_name: "Grace", series_id: "s2", winner: "BOS", games_in_series: 6 },
-      { profile_name: "Grace", series_id: "nba-finals", winner: "OKC", games_in_series: 7 },
+    const results: SeriesResultLite[] = [
+      { series_id: "nba-finals", winner: "A", games_played: 6 },
     ];
-    const results: SeriesResult[] = [
-      { series_id: "s1", winner: "OKC", games_played: 5 },
-      { series_id: "s2", winner: "MIA", games_played: 7 },
-      { series_id: "nba-finals", winner: "OKC", games_played: 7 },
-    ];
-    const scores = computeScoreboard(picks, results);
-    // s1: perfect (3), s2: wrong (0), finals: perfect (3) + champion bonus (4) = 10
-    expect(scores[0].perfectPicks).toBe(2);
-    expect(scores[0].championBonus).toBe(true);
-    expect(scores[0].totalPoints).toBe(10);
+    // No parent picks → fallback path → 3 pts (perfect) + 4 champion = 7
+    const total = totalUserPoints(picks, results, fixtureBracket);
+    expect(total).toBe(7);
   });
 });

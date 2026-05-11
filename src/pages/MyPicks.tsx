@@ -440,7 +440,7 @@ const MyPicks = () => {
               seriesScores[series.id] = `${topWins}-${bottomWins}`;
             }
             for (const p of userPicksLite) {
-              pickPoints[p.series_id] = scorePick(p, userPicksLite, seriesResults);
+              pickPoints[p.series_id] = scorePick(p, userPicksLite, seriesResults, activeBracket);
             }
             return (
               <div

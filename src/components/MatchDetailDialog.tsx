@@ -114,15 +114,14 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
 
   const activeGame = allGames.length > 0 ? allGames[activeGameIdx] : null;
 
-  const bracketSeriesId_decl_marker = null; // (replaced below)
-
   const bracketSeriesId = useMemo(() => {
     if (!match) return null;
     return getBracketSeriesIdForMatch(match, bracketData, allResults);
   }, [match, bracketData, allResults]);
 
   // "Wade's take" recap added to this game — keyed by bracket series_id so
-  // home/away orientation flips between games can't break the lookup.
+  // home/away orientation flips between games can't break the lookup. A
+  // per-game recap takes precedence over a series-wide one.
   const recapByGame = useDemoRecap(
     recapKey(bracketSeriesId ?? "", activeGame?.gameNumber),
   );

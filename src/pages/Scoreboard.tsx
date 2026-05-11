@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
 import { bracketSeries, getAssumedOpponentAbbr, type BracketSeries } from "@/data/playoffsData";
+import { scorePick as scorePickShared } from "@/lib/pickScoring";
 import { useBracketData } from "@/hooks/useBracketData";
 import { useDetectedSeriesResults } from "@/hooks/useDetectedSeriesResults";
 import { playerImages } from "@/lib/playerImages";

@@ -1,63 +1,72 @@
-# Redefine the 1-point rule
+# Persist Wade's recaps + key by series_id
 
-## New scoring rules
+## Goal
 
-For every pick, compare it against (a) the actual series result and (b) the **assumed matchup** — the opponent the user implicitly predicted, derived from their own picks in the two feeder series.
+Two small, related fixes to the "Add to game" flow in `DeadpoolRecapDrawer`:
 
-| Outcome | Points |
-|---|---|
-| Right winner + right assumed opponent + right games-in-series | **3** |
-| Right winner + right assumed opponent + wrong games-in-series | **2** |
-| Right winner + wrong assumed opponent (any game count) | **1** |
-| Wrong winner | **0** |
+1. **Robust key** — the recap is currently looked up by `${awayAbbr}-${homeAbbr}-G${gameNumber}`. Home/away can flip per game in a series, so a recap added from one orientation can silently fail to display on the matchup detail. Key by **bracket `series_id` + `gameNumber`** instead.
+2. **Persistence** — the in-memory `Map` resets on page reload. Mirror it to **`localStorage`** so added recaps survive refresh.
 
-Champion bonus (+4 for correct `nba-finals` winner) stays unchanged.
+No DB schema changes. No scoring changes. No visible UI redesign — the "The gist of it" section behaves the same, just more reliably.
 
-The current "right team won some other series" loose rule is **removed** and replaced by the rule above.
+## Scope
 
-## Worked example (E, east-semi-bottom)
+Three files:
 
-- E's picks: `east-r1-2v7 → BOS`, `east-r1-3v6 → NYK`, `east-semi-bottom → NYK in 6`
-- E's assumed matchup for east-semi-bottom: **BOS vs NYK**
-- Actual: PHI beat BOS in r1; semi was **PHI vs NYK**, NYK in 4
-- Right winner (NYK), wrong assumed opponent (BOS vs actual PHI) → **1 pt** (was 2 before)
+- `src/lib/demoRecapStore.ts` — change `recapKey` signature, add localStorage hydration + write-through.
+- `src/components/DeadpoolRecapDrawer.tsx` — resolve `series_id` for the chosen game (sample or NBA-API game) and pass it to `recapKey`.
+- `src/components/MatchDetailDialog.tsx` — use the already-computed `bracketSeriesId` for the lookup; drop the away/home-abbr key.
+- `src/components/DemoMatchDetailDialog.tsx` — pure-demo screen with hardcoded data; pass a stable demo series id (e.g. `"demo-pac-sac"`) so it keeps working.
 
-## Series with no feeders (First Round)
+## Technical details
 
-- The "assumed opponent" is the other fixed team in the slot, so it always equals the actual opponent.
-- First Round picks therefore can only score 0 / 2 / 3 — never 1.
+### `demoRecapStore.ts`
 
-## Edge cases
+```ts
+const STORAGE_KEY = "demoRecapStore.v2";
 
-- **Missing parent pick:** if the user never picked one of the two feeder series, fall back to treating the assumed opponent as the actual opponent (so they can still earn 2/3 pts and never get downgraded to 1 because of an empty slot).
-- **Series not yet decided:** 0 pts, same as today.
-- **Wrong winner:** always 0. We are not keeping any "but they won elsewhere" credit.
+function recapKey(seriesId: string, gameNumber?: number): string {
+  return `${seriesId}::G${gameNumber ?? "x"}`;
+}
 
-## Technical implementation
+// On module load: try JSON.parse(localStorage[STORAGE_KEY]) into the Map.
+// On setDemoRecap: write the serialized Map back to localStorage (wrapped in try/catch).
+```
 
-Files to touch:
+The `v2` suffix avoids colliding with stale `away-home-Gn` entries from the old key shape — they simply won't be read.
 
-1. **`src/lib/pickScoring.ts`** — rewrite `scorePick`:
-   - Add params for the bracket series list and the picker's full pick set (already passed for loose detection).
-   - Add the actual results map so we can resolve the actual opponent (winners of `topParentSeriesId` / `bottomParentSeriesId`).
-   - Use existing `getAssumedOpponentAbbr(seriesId, pickedWinner, bracketSeries, userPicks)` from `src/data/playoffsData.ts` to get the assumed opponent.
-   - Compute actual opponent from `series_results` of the two parent series (or the static slot teams for First Round).
-   - Apply the new 3/2/1/0 table above. Drop the `actualWinners`/`alreadyScored` block.
-   - Update `PickPointKind` semantics: `loose` now means "right winner, wrong assumed opponent."
+### `DeadpoolRecapDrawer.tsx`
 
-2. **`src/pages/Scoreboard.tsx`** — its inline `computeScoreboard` mirrors the same logic; rewrite the loose-pick pass to use assumed-vs-actual opponent (importing `bracketSeries` + `getAssumedOpponentAbbr`). Per-user totals will shift; verify against E (expected: still 13 pts since none of E's loose picks under the old rule survive, but east-semi-bottom drops 2 → 1, while a previously-zero loose pick may now score 1 — re-tally during implementation).
+The drawer currently builds a `FactSheet` from either the sample constant or an `NbaGame`. To produce a series id:
 
-3. **`src/components/MatchDetailDialog.tsx`** — replace the local `computePts` / `effectivePts` with a call to the updated `scorePick`, passing the picker's full picks + all series_results + bracketSeries (already available via existing hooks). This finally aligns the drawer with the Scoreboard, as discussed.
+- Pull `useBracketData()` (already used elsewhere) once at the top of the drawer.
+- Add a small helper that, given two team abbreviations, finds the matching bracket series via the existing `getBracketSeriesIdForMatch`-style lookup (orientation-independent set match on `topTeam`/`bottomTeam` abbreviations).
+- For the sample factsheet, use a fixed string like `"sample-demo"` — the existing demo dialog will use the same constant.
 
-4. **`src/test/computeScoreboard.test.ts`** — update existing loose-pick test ("right team, wrong series") and add new cases:
-   - Right winner, wrong assumed opponent → 1
-   - Right winner, right assumed opponent, wrong games → 2
-   - Right winner, right assumed opponent, right games → 3
-   - Wrong winner whose team won elsewhere → 0 (regression of removed rule)
-   - Missing parent pick → falls back to actual opponent (no downgrade)
+Pass `recapKey(seriesId, factsheet.gameNumber)` into `setDemoRecap`.
 
-## What will NOT change
+### `MatchDetailDialog.tsx`
 
-- DB schema (no new "predicted opponent" column — we derive it from the user's bracket).
-- UI of the drawer beyond the corrected number/label.
-- Champion bonus rule.
+`bracketSeriesId` is already computed (line 129). Replace the two `useDemoRecap(recapKey(awayAbbr, homeAbbr, …))` calls with:
+
+```ts
+const recapByGame   = useDemoRecap(recapKey(bracketSeriesId ?? "", activeGame?.gameNumber));
+const recapBySeries = useDemoRecap(recapKey(bracketSeriesId ?? "", undefined));
+```
+
+### `DemoMatchDetailDialog.tsx`
+
+It's a static demo screen. Use the same `"sample-demo"` constant the drawer uses for its sample factsheet, so the demo dialog still picks up a recap added against the sample.
+
+## Out of scope
+
+- Server-side persistence (Supabase table) — not needed for a demo feature.
+- Cleanup of old localStorage keys — there were none under v1 (in-memory only).
+- Any change to scoring, picks, or matchup layout.
+
+## Verification
+
+1. Open the recap drawer, pick the sample, click **Add to game**, open the demo matchup detail → "The gist of it" appears.
+2. Hard-refresh the page → "The gist of it" still appears.
+3. Pick a real finished game (e.g. one where home/away differs from how the matchup card lists them), add to game, open the matchup detail for that series → recap appears regardless of orientation.
+4. `npm run test` — existing tests untouched and still pass.

@@ -182,7 +182,7 @@ const DemoBracketPlayedOut = () => {
       winner: b.winner,
       games_in_series: b.gamesInSeries,
     }));
-    const totalPoints = totalUserPoints(userPicksLite, seriesResultsLite);
+    const totalPoints = totalUserPoints(userPicksLite, seriesResultsLite, bracketSeries);
 
     return { winners, champion, championLogo, seriesScores, picks, bets, totalPoints };
   }, [bracket]);

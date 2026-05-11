@@ -22,6 +22,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getPlayoffGames, type NbaGame } from "@/lib/nbaApi";
 import { DEFAULT_MATCH_DATA } from "@/components/DemoMatchCardColored";
 import { recapKey, setDemoRecap } from "@/lib/demoRecapStore";
+import { useBracketData } from "@/hooks/useBracketData";
 
 interface FactSheet {
   awayAbbr: string;

@@ -27,7 +27,7 @@ import DemoVisualScoreboard from "@/components/DemoVisualScoreboard";
 import { DemoFlyerCardV3, DemoFlyerCardPaxson, DemoFlyerCardDavis, DemoFlyerCardMiller } from "@/components/DemoFlyerCardVariants";
 import DemoFullWidthNav from "@/components/DemoFullWidthNav";
 import FloatingNav from "@/components/FloatingNav";
-import DeadpoolRecapDrawer from "@/components/DeadpoolRecapDrawer";
+import { DeadpoolRecapPanel } from "@/components/DeadpoolRecapDrawer";
 
 interface AdminUser {
   id: string;

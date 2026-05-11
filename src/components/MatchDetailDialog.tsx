@@ -196,12 +196,36 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
   const isUpcoming = displayStatus === "upcoming";
   const isNextUp = isUpcoming && checkIsNextUp(activeGame?.startsAt);
 
-  const computePts = (pick: { winner: string; games_in_series: number }) => {
-    if (!seriesResult) return null;
-    if (seriesResult.winner === pick.winner) {
-      return seriesResult.games_played === pick.games_in_series ? 3 : 2;
-    }
-    return 0;
+  const seriesListForScoring = bracketData ?? defaultBracketSeries;
+
+  /**
+   * Score a pick using the shared scoring rule, given the picker's full
+   * pick set (used for assumed-opponent resolution).
+   */
+  const computePts = (
+    pick: { winner: string; games_in_series: number },
+    pickerPicks: { series_id: string; winner: string }[] | undefined,
+  ): number | null => {
+    if (!bracketSeriesId) return null;
+    if (!allResults) return null;
+    const userPicksLite = (pickerPicks ?? []).map((p) => ({
+      series_id: p.series_id,
+      winner: p.winner,
+      // games_in_series doesn't matter for assumed-opponent lookup; default 0
+      games_in_series: 0,
+    }));
+    // Make sure the pick itself is in the list (it may not be if pickerPicks
+    // came from a different fetch). Replace or append the canonical entry.
+    const idx = userPicksLite.findIndex((p) => p.series_id === bracketSeriesId);
+    const self = {
+      series_id: bracketSeriesId,
+      winner: pick.winner,
+      games_in_series: pick.games_in_series,
+    };
+    if (idx >= 0) userPicksLite[idx] = self;
+    else userPicksLite.push(self);
+    const info = scorePickShared(self, userPicksLite, allResults, seriesListForScoring);
+    return info.points;
   };
 
   const headerLabel = `${match.conference !== "Finals" ? `${match.conference === "East" ? "EAST" : "WEST"}  ` : ""}${match.round === "Conference Semifinals" ? "Conf. Semifinals" : match.round === "Conference Finals" ? "Conf. Finals" : match.round} · Game ${displayGameNum} · ${displayDate}`;

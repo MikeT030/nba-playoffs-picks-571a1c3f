@@ -22,6 +22,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getPlayoffGames, type NbaGame } from "@/lib/nbaApi";
 import { DEFAULT_MATCH_DATA } from "@/components/DemoMatchCardColored";
 import { recapKey, setDemoRecap } from "@/lib/demoRecapStore";
+import { useBracketData } from "@/hooks/useBracketData";
 
 interface FactSheet {
   awayAbbr: string;
@@ -103,6 +104,7 @@ interface Props {
 
 export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
   const { toast } = useToast();
+  const { data: bracketData } = useBracketData();
   // source = "sample" or a stringified game id
   const [source, setSource] = useState<string>("sample");
   const [model, setModel] = useState(MODELS[0].value);
@@ -169,9 +171,25 @@ export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
   };
 
   const [added, setAdded] = useState(false);
+  const resolveSeriesId = (away: string, home: string): string => {
+    if (!bracketData) return "sample-demo";
+    const pair = [away, home].sort().join("|");
+    const found = bracketData.find(
+      (s) =>
+        s.topTeam &&
+        s.bottomTeam &&
+        [s.topTeam.abbreviation, s.bottomTeam.abbreviation].sort().join("|") === pair,
+    );
+    return found?.id ?? `${pair}`;
+  };
+
   const addToGame = () => {
     if (!summary || !factsheet) return;
-    const key = recapKey(factsheet.awayAbbr, factsheet.homeAbbr, factsheet.gameNumber);
+    const seriesId =
+      source === "sample"
+        ? "sample-demo"
+        : resolveSeriesId(factsheet.awayAbbr, factsheet.homeAbbr);
+    const key = recapKey(seriesId, factsheet.gameNumber);
     setDemoRecap(key, summary);
     setAdded(true);
     toast({

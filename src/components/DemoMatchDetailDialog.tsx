@@ -58,9 +58,7 @@ const DemoMatchDetailDialog = ({
     round,
   } = data;
 
-  const recap = useDemoRecap(
-    recapKey(away.abbreviation, home.abbreviation, gameNumber),
-  );
+  const recap = useDemoRecap(recapKey("sample-demo", gameNumber));
 
   const computePts = (pick: { winner: string; games_in_series: number }) => {
     if (seriesResult.winner === pick.winner) {

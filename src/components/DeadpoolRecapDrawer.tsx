@@ -19,7 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2, Copy, RefreshCw, ChevronDown, ChevronRight, Plus, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { getPlayoffGames, type NbaGame } from "@/lib/nbaApi";
+import { getPlayoffGames, getGameStats, type NbaGame, type NbaPlayerStat } from "@/lib/nbaApi";
 import { DEFAULT_MATCH_DATA } from "@/components/DemoMatchCardColored";
 import { recapKey, setDemoRecap } from "@/lib/demoRecapStore";
 import { useBracketData } from "@/hooks/useBracketData";

@@ -1,13 +1,13 @@
 ## Goal
-Restore the vertical stat line for Chapman and Paxson without making it bleed through the closed sealed-pack art.
+Hide the vertical stat line until the sealed pack's burn animation finishes, so it stops peeking through the foil.
 
 ## Change
-In `src/components/DemoFlyerCardVariants.tsx`:
+In `src/components/DemoFlyerCardVariants.tsx`, inside `FlyerCardV3`:
 
-1. Add local `opened` state inside `FlyerCardV3`, initialized to `defaultOpened ?? (!sealed && !sealedToppsStyle)`.
-2. Wrap the `onBurn` callback so the `onOpen` handlers passed to `SealedPackCard` and `SealedPackCardToppsStyle` set `opened = true` and still invoke the original `onBurn`.
-3. Change the stat-line render guard from `!sealed && !sealedToppsStyle && stats…` to `opened && stats && stats.length > 0`.
+- Replace the immediate `setOpened(true)` in `handleOpen` with a `setTimeout(() => setOpened(true), 4400)` that matches the 4390ms burn duration in `SealedPackCard`.
+- Still call `onBurn?.()` synchronously on tap so parent side-effects fire immediately.
+- `defaultOpened` initialization stays as-is (already-burned demo state shows stats instantly).
 
 ## Result
-- Miller / Davis (unsealed): stats visible immediately.
-- Chapman / Paxson (sealed): stats appear after the pack burns open, hidden while the pack is sealed.
+- Sealed Chapman / Paxson packs: tapping kicks off the full burn; the amber stat line only renders once the foil is gone.
+- Unsealed Miller / Davis cards: stats still render immediately.

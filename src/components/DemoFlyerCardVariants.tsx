@@ -173,8 +173,8 @@ const FlyerCardV3 = ({
     defaultOpened ?? (!sealed && !sealedToppsStyle),
   );
   const handleOpen = () => {
-    setOpened(true);
     onBurn?.();
+    window.setTimeout(() => setOpened(true), 4400);
   };
   const cardArticle = (
     <article

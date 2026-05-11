@@ -195,11 +195,20 @@ export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
     try {
       let fs: FactSheet;
       if (src === "sample") {
-        fs = SAMPLE_FACTSHEET;
+        fs = { ...SAMPLE_FACTSHEET };
+        const swing = deriveQuarterSwing(fs);
+        fs.highlights = [...SAMPLE_HIGHLIGHTS, ...(swing ? [swing] : [])].slice(0, 3);
       } else {
         const game = finishedGames.find((g) => String(g.id) === src);
         if (!game) throw new Error("Game not found");
         fs = gameToFactsheet(game);
+        try {
+          const stats = await getGameStats(game.id);
+          const highlights = deriveHighlightsFromStats(stats, fs);
+          if (highlights.length) fs.highlights = highlights;
+        } catch {
+          /* stats optional — fall back to plain recap */
+        }
       }
       setFactsheet(fs);
 

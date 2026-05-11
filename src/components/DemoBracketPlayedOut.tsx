@@ -7,6 +7,7 @@ import { totalUserPoints } from "@/lib/pickScoring";
 import {
   resolveSeriesTeams,
   isPlayInPlaceholder,
+  bracketSeries,
   type BracketSeries,
 } from "@/data/playoffsData";
 

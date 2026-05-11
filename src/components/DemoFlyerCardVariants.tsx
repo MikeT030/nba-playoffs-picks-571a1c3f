@@ -188,9 +188,11 @@ const FlyerCardV3 = ({
 
         {/* Vertical stat line on right edge */}
         {stats && stats.length > 0 && (
-          <div className="absolute top-0 bottom-0 right-0 w-6 flex items-center justify-center pointer-events-none">
+          <div className="absolute top-0 bottom-0 right-0 w-10 flex items-center justify-center pointer-events-none">
+            {/* Dark gradient highlight strip behind stats for legibility on any image */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/55 to-black/85" />
             <div
-              className="flex items-center gap-3 font-display text-xs tracking-[0.25em] text-amber-400 whitespace-nowrap"
+              className="relative z-10 flex items-center gap-3 font-display text-xs tracking-[0.25em] text-amber-400 whitespace-nowrap"
               style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
             >
               {stats.map((s) => (

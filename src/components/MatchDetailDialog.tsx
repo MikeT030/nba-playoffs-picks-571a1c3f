@@ -8,9 +8,10 @@ import { useAllSeriesResults } from "@/hooks/useAllSeriesResults";
 import { useAllUserPicks } from "@/hooks/useAllUserPicks";
 import { useSeriesGames } from "@/hooks/useSeriesGames";
 import { isNextUp as checkIsNextUp, formatTipOff } from "@/lib/seriesUtils";
-import { getBracketSeriesIdForMatch, getAssumedOpponentAbbr, type Match, type Team } from "@/data/playoffsData";
+import { getBracketSeriesIdForMatch, getAssumedOpponentAbbr, bracketSeries as defaultBracketSeries, type Match, type Team } from "@/data/playoffsData";
 import { teamMeta } from "@/lib/nbaApi";
 import { useDemoRecap, recapKey } from "@/lib/demoRecapStore";
+import { scorePick as scorePickShared } from "@/lib/pickScoring";
 
 /**
  * Resolve a Team-like object for *any* abbreviation, so picks made for a

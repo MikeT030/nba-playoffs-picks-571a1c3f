@@ -104,6 +104,7 @@ interface Props {
 
 export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
   const { toast } = useToast();
+  const { data: bracketData } = useBracketData();
   // source = "sample" or a stringified game id
   const [source, setSource] = useState<string>("sample");
   const [model, setModel] = useState(MODELS[0].value);

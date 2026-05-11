@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      demo_game_recaps: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          game_number: number
+          series_id: string
+          source: string
+          summary: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          game_number: number
+          series_id: string
+          source?: string
+          summary: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          game_number?: number
+          series_id?: string
+          source?: string
+          summary?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       flyer_card_assignments: {
         Row: {
           assigned_at: string

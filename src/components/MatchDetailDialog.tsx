@@ -124,6 +124,9 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
   // per-game recap takes precedence over a series-wide one.
   const recapByGame = useDemoRecap(
     recapKey(bracketSeriesId ?? "", activeGame?.gameNumber),
+    bracketSeriesId
+      ? { seriesId: bracketSeriesId, gameNumber: activeGame?.gameNumber }
+      : undefined,
   );
   const recapBySeries = useDemoRecap(
     recapKey(bracketSeriesId ?? "", undefined),

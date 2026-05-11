@@ -21,8 +21,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { getPlayoffGames, getGameStats, type NbaGame, type NbaPlayerStat } from "@/lib/nbaApi";
 import { DEFAULT_MATCH_DATA } from "@/components/DemoMatchCardColored";
-import { recapKey, setDemoRecap } from "@/lib/demoRecapStore";
+import { recapKey, setDemoRecap, saveDemoRecapRemote } from "@/lib/demoRecapStore";
 import { useBracketData } from "@/hooks/useBracketData";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 
 interface FactSheet {
   awayAbbr: string;
@@ -167,6 +168,8 @@ interface Props {
 export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
   const { toast } = useToast();
   const { data: bracketData } = useBracketData();
+  const { isAdmin } = useIsAdmin();
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "remote" | "local">("idle");
   // source = "sample" or a stringified game id
   const [source, setSource] = useState<string>("sample");
   const [model, setModel] = useState(MODELS[0].value);
@@ -254,20 +257,48 @@ export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
     return found?.id ?? `${pair}`;
   };
 
-  const addToGame = () => {
+  const addToGame = async () => {
     if (!summary || !factsheet) return;
     const seriesId =
       source === "sample"
         ? "sample-demo"
         : resolveSeriesId(factsheet.awayAbbr, factsheet.homeAbbr);
-    const key = recapKey(seriesId, factsheet.gameNumber);
+    const gameNumber = factsheet.gameNumber ?? 0;
+    const key = recapKey(seriesId, gameNumber);
     setDemoRecap(key, summary);
     setAdded(true);
-    toast({
-      title: "Added to game",
-      description: "Wade's take now shows on the matchup detail.",
-    });
     setTimeout(() => setAdded(false), 2500);
+
+    if (!isAdmin) {
+      setSaveStatus("local");
+      toast({
+        title: "Saved locally",
+        description: "Only admins can publish recaps to all visitors.",
+      });
+      return;
+    }
+
+    setSaveStatus("saving");
+    const result = await saveDemoRecapRemote(key, {
+      seriesId,
+      gameNumber,
+      source: "demo",
+      summary,
+    });
+    if (result.ok) {
+      setSaveStatus("remote");
+      toast({
+        title: "Published",
+        description: "Wade's take is now visible to everyone.",
+      });
+    } else {
+      setSaveStatus("local");
+      toast({
+        title: "Saved locally only",
+        description: result.error ?? "Couldn't reach the backend.",
+        variant: "destructive",
+      });
+    }
   };
 
   const headerLine = factsheet
@@ -448,16 +479,34 @@ export default function DeadpoolRecapDrawer({ open, onOpenChange }: Props) {
                 size="sm"
                 variant="default"
                 onClick={addToGame}
-                disabled={!summary || loading}
+                disabled={!summary || loading || saveStatus === "saving"}
                 className="h-8 w-full"
               >
                 {added ? (
                   <Check className="h-3.5 w-3.5 mr-1" />
+                ) : saveStatus === "saving" ? (
+                  <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" />
                 ) : (
                   <Plus className="h-3.5 w-3.5 mr-1" />
                 )}
-                {added ? "Added" : "Add to game"}
+                {saveStatus === "saving"
+                  ? "Publishing…"
+                  : added
+                  ? "Added"
+                  : isAdmin
+                  ? "Publish to all visitors"
+                  : "Add to game (local only)"}
               </Button>
+              {saveStatus === "remote" && (
+                <p className="text-[11px] text-emerald-400">
+                  Saved · visible to everyone.
+                </p>
+              )}
+              {saveStatus === "local" && (
+                <p className="text-[11px] text-amber-400">
+                  Saved locally only — {isAdmin ? "couldn't reach backend." : "admin required to publish."}
+                </p>
+              )}
             </div>
 
             {/* Inputs panel */}

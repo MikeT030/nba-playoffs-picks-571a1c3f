@@ -114,10 +114,8 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
 
   const activeGame = allGames.length > 0 ? allGames[activeGameIdx] : null;
 
-  // "Wade's take" recap added to this game (matched by away/home; per-game key
-  // also tried so a game-specific recap takes precedence).
-  const awayAbbrForKey = activeGame?.awayTeam.abbreviation ?? match?.awayTeam.abbreviation ?? "";
-  const homeAbbrForKey = activeGame?.homeTeam.abbreviation ?? match?.homeTeam.abbreviation ?? "";
+  const bracketSeriesId_decl_marker = null; // (replaced below)
+
   const bracketSeriesId = useMemo(() => {
     if (!match) return null;
     return getBracketSeriesIdForMatch(match, bracketData, allResults);

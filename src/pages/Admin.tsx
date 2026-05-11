@@ -27,7 +27,7 @@ import DemoVisualScoreboard from "@/components/DemoVisualScoreboard";
 import { DemoFlyerCardV3, DemoFlyerCardPaxson, DemoFlyerCardDavis, DemoFlyerCardMiller } from "@/components/DemoFlyerCardVariants";
 import DemoFullWidthNav from "@/components/DemoFullWidthNav";
 import FloatingNav from "@/components/FloatingNav";
-import DeadpoolRecapDrawer from "@/components/DeadpoolRecapDrawer";
+import { DeadpoolRecapPanel } from "@/components/DeadpoolRecapDrawer";
 
 interface AdminUser {
   id: string;
@@ -50,19 +50,13 @@ const WadeTakeAccordion = () => {
       <AccordionItem value="wades-take" className="border-b-0">
         <AccordionTrigger className="hover:no-underline">
           <h2 className="font-display text-lg tracking-wider text-left">
-            WADE'S TAKE — SUMMARY DRAWER
+            WADE'S TAKE — SUMMARY
           </h2>
         </AccordionTrigger>
         <AccordionContent>
-          <p className="font-body text-xs text-muted-foreground">
-            Drawer opens automatically.
-          </p>
+          <DeadpoolRecapPanel active={isOpen} />
         </AccordionContent>
       </AccordionItem>
-      <DeadpoolRecapDrawer
-        open={isOpen}
-        onOpenChange={(o) => setValue(o ? "wades-take" : "")}
-      />
     </Accordion>
   );
 };

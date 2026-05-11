@@ -236,7 +236,7 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
 
   // Compute per-player scores
   const playerScores = new Map<string, number>();
-  const scoreboardData = computeScoreboard(picks, results);
+  const scoreboardData = computeScoreboard(picks, results, seriesList);
   for (const s of scoreboardData) {
     playerScores.set(s.name, s.totalPoints);
   }
@@ -248,10 +248,10 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
   }
 
   // Per-player picks list for assumed-opponent resolution
-  const picksByPlayer = new Map<string, { series_id: string; winner: string }[]>();
+  const picksByPlayer = new Map<string, { series_id: string; winner: string; games_in_series: number }[]>();
   for (const p of picks) {
     const arr = picksByPlayer.get(p.profile_name) ?? [];
-    arr.push({ series_id: p.series_id, winner: p.winner });
+    arr.push({ series_id: p.series_id, winner: p.winner, games_in_series: p.games_in_series });
     picksByPlayer.set(p.profile_name, arr);
   }
 
@@ -259,10 +259,9 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
   const seriesMap = new Map<string, BracketSeries>();
   for (const s of seriesList) seriesMap.set(s.id, s);
 
-  // Result lookup + actual-winner set for per-cell point scoring
+  // Result lookup for per-cell point scoring
   const resultMap = new Map<string, SeriesResult>();
   for (const r of results) resultMap.set(r.series_id, r);
-  const actualWinnerSet = new Set(results.map((r) => r.winner));
 
   const POINTS_COLOR: Record<number, string> = {
     3: "text-emerald-400",
@@ -274,15 +273,16 @@ const AllPicksMatrix = ({ picks, results, loading }: AllPicksMatrixProps) => {
   function scorePick(pick: PickRow): { basePoints: number; championBonus: boolean } | null {
     const result = resultMap.get(pick.series_id);
     if (!result) return null; // series not decided yet
-    let basePoints = 0;
-    if (result.winner === pick.winner) {
-      basePoints = result.games_played === pick.games_in_series ? 3 : 2;
-    } else if (actualWinnerSet.has(pick.winner)) {
-      basePoints = 1;
-    }
+    const userPicks = picksByPlayer.get(pick.profile_name) ?? [];
+    const info = scorePickShared(
+      { series_id: pick.series_id, winner: pick.winner, games_in_series: pick.games_in_series },
+      userPicks,
+      results,
+      seriesList,
+    );
     const championBonus =
       pick.series_id === "nba-finals" && result.winner === pick.winner;
-    return { basePoints, championBonus };
+    return { basePoints: info.points, championBonus };
   }
 
   // Group series by round for row headers

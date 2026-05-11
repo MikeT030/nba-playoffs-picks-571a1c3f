@@ -170,7 +170,7 @@ const DemoMatchDetailDialog = ({
             {recap && (
               <div>
                 <h3 className="font-display text-xl tracking-wider mb-3">
-                  The gist of it
+                  The blurb
                 </h3>
                 <div className="rounded-lg border border-white/10 bg-[#22272E]/80 p-4">
                   <p className="font-body text-sm text-white leading-relaxed whitespace-pre-wrap">

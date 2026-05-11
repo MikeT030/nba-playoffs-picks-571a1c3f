@@ -415,7 +415,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
         <div className="px-5 py-5 max-h-[calc(60vh+40px)] overflow-y-auto bg-black space-y-5">
           {recap && (
             <div>
-              <h3 className="font-display text-xl tracking-wider mb-3">The gist of it</h3>
+              <h3 className="font-display text-xl tracking-wider mb-3">The blurb</h3>
               <div className="rounded-lg border p-4 bg-[#23282f]/0 border-white/0">
                 <p className="font-body text-sm text-white leading-relaxed whitespace-pre-wrap">
                   {recap}

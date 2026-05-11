@@ -59,6 +59,13 @@ function buildUserPrompt(f: FactSheet): string {
           .join(", "),
     );
   }
+  if (f.highlights && f.highlights.length) {
+    lines.push("");
+    lines.push(
+      "Crucial moments (use 1 or 2, naturally — do NOT list them, do NOT name-drop all of them, do NOT invent stats not on this list):",
+    );
+    for (const h of f.highlights) lines.push(`- ${h}`);
+  }
   lines.push("");
   lines.push("Write the recap now. Remember: max 400 characters, one paragraph.");
   return lines.join("\n");

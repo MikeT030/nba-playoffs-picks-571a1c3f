@@ -169,6 +169,13 @@ const FlyerCardV3 = ({
   sealedToppsStyle,
   sealedToppsConfig,
 }: FlyerCardV3Props) => {
+  const [opened, setOpened] = useState<boolean>(
+    defaultOpened ?? (!sealed && !sealedToppsStyle),
+  );
+  const handleOpen = () => {
+    setOpened(true);
+    onBurn?.();
+  };
   const cardArticle = (
     <article
       className="relative overflow-hidden rounded-xl bg-black border shadow-xl h-full"

@@ -30,9 +30,10 @@ import { ScoreRibbon } from "@/components/DemoVisualScoreboard";
 
 
 // Scoring system:
-// 3 pts - correct winner + correct score from correct match
-// 2 pts - correct winner from correct match (wrong score)
-// 1 pt  - correct winner from wrong match (picked the right team but assigned to wrong series)
+// 3 pts - correct winner from correct (assumed) match + correct games-in-series
+// 2 pts - correct winner from correct (assumed) match, wrong games-in-series
+// 1 pt  - correct winner but wrong assumed opponent (right team won the
+//         series, but the user predicted them facing a different opponent)
 // 4 pts - correct champion bonus (nba-finals winner)
 
 interface ParticipantScore {
@@ -61,7 +62,8 @@ const roundOrder = ["First Round", "Conference Semifinals", "Conference Finals",
 
 function computeScoreboard(
   allPicks: PickRow[],
-  results: SeriesResult[]
+  results: SeriesResult[],
+  seriesList: BracketSeries[] = bracketSeries,
 ): ParticipantScore[] {
   // Group picks by player
   const playerPicks = new Map<string, PickRow[]>();
@@ -71,12 +73,8 @@ function computeScoreboard(
     playerPicks.set(p.profile_name, list);
   }
 
-  // Build result lookup
   const resultMap = new Map<string, SeriesResult>();
   for (const r of results) resultMap.set(r.series_id, r);
-
-  // Set of all actual winners (for loose pick matching)
-  const actualWinners = new Set(results.map((r) => r.winner));
 
   const scores: ParticipantScore[] = [];
 
@@ -86,35 +84,26 @@ function computeScoreboard(
     let loosePicks = 0;
     let championBonus = false;
 
-    // Track which picks have been scored to avoid double-counting for loose picks
-    const scoredPicks = new Set<number>();
+    const userPicksLite = picks.map((p) => ({
+      series_id: p.series_id,
+      winner: p.winner,
+      games_in_series: p.games_in_series,
+    }));
 
-    for (let i = 0; i < picks.length; i++) {
-      const pick = picks[i];
-      const result = resultMap.get(pick.series_id);
-      if (!result) continue; // series not decided yet
-
-      if (result.winner === pick.winner) {
-        // Correct match, correct winner
-        if (result.games_played === pick.games_in_series) {
-          perfectPicks++; // 3 pts
-        } else {
-          winnerPicks++; // 2 pts
-        }
-        scoredPicks.add(i);
-      }
-    }
-
-    // Loose picks: picked the right winner but assigned to wrong series
-    for (let i = 0; i < picks.length; i++) {
-      if (scoredPicks.has(i)) continue;
-      const pick = picks[i];
-      const result = resultMap.get(pick.series_id);
-      // Only count if the series IS decided and the pick was wrong for that series
-      if (result && result.winner !== pick.winner && actualWinners.has(pick.winner)) {
-        loosePicks++; // 1 pt
-        scoredPicks.add(i);
-      }
+    for (const pick of picks) {
+      const info = scorePickShared(
+        {
+          series_id: pick.series_id,
+          winner: pick.winner,
+          games_in_series: pick.games_in_series,
+        },
+        userPicksLite,
+        results,
+        seriesList,
+      );
+      if (info.kind === "perfect") perfectPicks++;
+      else if (info.kind === "winner") winnerPicks++;
+      else if (info.kind === "loose") loosePicks++;
     }
 
     // Champion bonus

@@ -174,7 +174,7 @@ const FlyerCardV3 = ({
   );
   const handleOpen = () => {
     onBurn?.();
-    window.setTimeout(() => setOpened(true), 4400);
+    window.setTimeout(() => setOpened(true), 2000);
   };
   const cardArticle = (
     <article

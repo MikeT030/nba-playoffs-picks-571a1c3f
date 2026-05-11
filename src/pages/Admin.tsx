@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import AdminSeriesConfirmPanel from "@/components/AdminSeriesConfirmPanel";
 import AdminFlyerAwardPanel from "@/components/AdminFlyerAwardPanel";
+import AdminPointsByRoundPanel from "@/components/AdminPointsByRoundPanel";
 import HeroBannerMinimal from "@/components/HeroBannerMinimal";
 import DemoAllMatchupsInnovation from "@/components/DemoAllMatchupsInnovation";
 import DemoAdvancedRoundView from "@/components/DemoAdvancedRoundView";
@@ -146,6 +147,17 @@ const Admin = () => {
             </AccordionTrigger>
             <AccordionContent>
               <AdminFlyerAwardPanel />
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+
+        <Accordion type="single" collapsible className="bg-[#181C23] rounded-lg px-5">
+          <AccordionItem value="points-by-round" className="border-b-0">
+            <AccordionTrigger className="hover:no-underline">
+              <h2 className="font-display text-lg tracking-wider text-left">POINTS BY ROUND</h2>
+            </AccordionTrigger>
+            <AccordionContent>
+              <AdminPointsByRoundPanel />
             </AccordionContent>
           </AccordionItem>
         </Accordion>

@@ -467,7 +467,7 @@ const MatchDetailDialog = ({ match, open, onOpenChange, initialGameIdx }: MatchD
                           in <span className="font-bold text-white">{pick.games_in_series}</span>
                           {showAssumed && suffixOpp ? ` (vs. ${suffixOpp})` : ""}
                         </span>
-                        {pts !== null && (
+                        {pts !== null && seriesResult && (
                           <span className="ml-2 text-primary font-bold">· {pts} pts</span>
                         )}
                       </p>

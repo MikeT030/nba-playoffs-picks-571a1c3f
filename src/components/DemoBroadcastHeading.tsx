@@ -17,8 +17,19 @@ const DemoBroadcastHeading = () => {
           text-transform: uppercase;
           text-align: center;
           margin: 0;
-          /* Solid white letters; dark text-shadow shows the inner shadow from top */
+          /* Mostly white letters with a very subtle (10%) gloss gradient */
           color: #ffffff;
+          background: linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #f2f4f7 30%,
+            #e8eaef 55%,
+            #f4f5f8 75%,
+            #ededf1 100%
+          );
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
           text-shadow:
             0 12px 16px rgba(0, 0, 0, 0.4),
             0 24px 32px rgba(0, 0, 0, 0.4);

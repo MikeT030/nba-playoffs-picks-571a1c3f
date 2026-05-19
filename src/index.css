@@ -89,10 +89,8 @@
     text-transform: uppercase;
     margin: 0;
     color: #ffffff;
-    -webkit-text-stroke: 1px #ffffff;
-    text-stroke: 1px #ffffff;
-    paint-order: stroke fill;
     filter:
+      url(#broadcast-inner-stroke)
       url(#broadcast-inner-shadow)
       drop-shadow(0 2px 0 rgba(0, 0, 0, 0.55))
       drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5));

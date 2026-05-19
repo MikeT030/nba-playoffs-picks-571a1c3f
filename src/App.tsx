@@ -43,6 +43,15 @@ const App = () => (
                   <feMergeNode in="innerShadowColored" />
                 </feMerge>
               </filter>
+              <filter id="broadcast-inner-stroke" x="-10%" y="-10%" width="120%" height="120%">
+                <feMorphology in="SourceAlpha" operator="erode" radius="1" result="eroded" />
+                <feComposite in="SourceAlpha" in2="eroded" operator="out" result="ring" />
+                <feColorMatrix in="ring" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0" result="ringWhite" />
+                <feMerge>
+                  <feMergeNode in="SourceGraphic" />
+                  <feMergeNode in="ringWhite" />
+                </feMerge>
+              </filter>
             </defs>
           </svg>
           <FloatingNav />

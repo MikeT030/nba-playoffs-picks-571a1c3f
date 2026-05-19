@@ -18,8 +18,14 @@ const DemoBroadcastHeading = () => {
           text-align: center;
           margin: 0;
           /* Inner-shadow trick: transparent text over white background-clip, then a dark text-shadow shows through from the top */
-          color: transparent;
-          background-color: #ffffff;
+          background: linear-gradient(
+            to bottom,
+            #d8dce4 0%,
+            #eef0f3 30%,
+            #c2c6cf 55%,
+            #e4e7ec 80%,
+            #cfd3da 100%
+          );
           -webkit-background-clip: text;
           background-clip: text;
           text-shadow:

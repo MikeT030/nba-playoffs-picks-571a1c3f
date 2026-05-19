@@ -17,14 +17,16 @@ const DemoBroadcastHeading = () => {
           text-transform: uppercase;
           text-align: center;
           margin: 0;
-          /* Inner-shadow trick: transparent text over white background-clip, dark text-shadow shows through from the top */
-          color: transparent;
-          background-color: #ffffff;
-          -webkit-background-clip: text;
-          background-clip: text;
-          text-shadow: 0 3px 2px rgba(0, 0, 0, 0.4);
-          /* Outer shadow below the letters */
+          /* Solid white letters; dark text-shadow shows the inner shadow from top */
+          color: #ffffff;
+          text-shadow:
+            0 12px 16px rgba(0, 0, 0, 0.4),
+            0 24px 32px rgba(0, 0, 0, 0.4);
+          /* Outer shadows below the letters + subtle upward glow */
           filter:
+            drop-shadow(0 -1px 0 rgba(255,255,255,0.5))
+            drop-shadow(0 -8px 12px rgba(170,195,255,0.22))
+            drop-shadow(0 -16px 24px rgba(120,160,230,0.16))
             drop-shadow(0 2px 0 rgba(0,0,0,0.55))
             drop-shadow(0 6px 14px rgba(0,0,0,0.65));
         }

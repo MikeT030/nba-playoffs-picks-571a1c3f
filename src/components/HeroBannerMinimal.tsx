@@ -64,11 +64,14 @@ const HeroBannerMinimal = ({ title, showDemoAvatar = false }: HeroBannerMinimalP
           )}
         </div>
       )}
-      <div className="container pt-20 pb-6">
-        <h1 className="broadcast-heading text-left text-5xl md:text-6xl">
-          {title}
-        </h1>
+      <div className="container pt-4 pb-6">
+        <div className="h-10 flex items-center">
+          <h1 className="broadcast-heading text-left text-4xl md:text-5xl leading-none">
+            {title}
+          </h1>
+        </div>
       </div>
+
 
     </div>
   );

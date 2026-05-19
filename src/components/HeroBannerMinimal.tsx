@@ -66,7 +66,7 @@ const HeroBannerMinimal = ({ title, showDemoAvatar = false }: HeroBannerMinimalP
       )}
       <div className="container pt-4 pb-6">
         <div className="h-10 flex items-center">
-          <h1 className="broadcast-heading text-left text-4xl md:text-5xl leading-none">
+          <h1 className="broadcast-heading text-left md:text-5xl leading-none text-5xl">
             {title}
           </h1>
         </div>

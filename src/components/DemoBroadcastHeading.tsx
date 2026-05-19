@@ -1,6 +1,6 @@
 const DemoBroadcastHeading = () => {
   return (
-    <div className="py-12 px-4 flex items-center justify-center bg-gradient-to-b from-[#05070d] via-[#0a1226] to-[#020308] rounded-md">
+    <div className="py-12 px-4 flex items-center justify-center bg-[#0a0a0c] rounded-md">
       <h1 className="broadcast-heading">
         WESTERN<br />CONFERENCE<br />FINALS
       </h1>

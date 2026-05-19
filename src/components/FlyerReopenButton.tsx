@@ -14,7 +14,7 @@ const FlyerReopenButton = () => {
     <button
       type="button"
       onClick={handleClick}
-      className="absolute top-4 right-16 z-50 flex items-center justify-center h-10 w-10 rounded-full border border-solid border-[#ededed] bg-[#22272E]/80 backdrop-blur-md hover:shadow-lg hover:shadow-primary/5 transition-all duration-200"
+      className="absolute top-4 right-16 z-50 flex items-center justify-center h-10 w-10 rounded-full border-solid border-[#ededed] backdrop-blur-md hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 border-0 bg-[#23282f]/0"
       aria-label="Open flyer card"
     >
       <img src={flyerLogo} alt="Flyer" className="h-5 w-auto object-contain" />

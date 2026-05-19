@@ -16,11 +16,11 @@ const DemoBroadcastHeading = () => {
           margin: 0;
           background: linear-gradient(
             to bottom,
-            #f4f6fa 0%,
-            #ffffff 28%,
-            #b8bdc7 52%,
-            #ffffff 78%,
-            #e8ebf0 100%
+            #d8dce4 0%,
+            #e8ebf0 28%,
+            #9aa0ad 52%,
+            #e0e3e9 78%,
+            #c8ccd4 100%
           );
           -webkit-background-clip: text;
           background-clip: text;

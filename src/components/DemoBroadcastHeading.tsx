@@ -17,17 +17,8 @@ const DemoBroadcastHeading = () => {
           text-transform: uppercase;
           text-align: center;
           margin: 0;
-          /* Inner-shadow trick: transparent text over white background-clip, then a dark text-shadow shows through from the top */
-          background: linear-gradient(
-            to bottom,
-            #b8bcc4 0%,
-            #cccfd5 30%,
-            #9ea2aa 55%,
-            #c0c3c9 80%,
-            #a8acb3 100%
-          );
-          -webkit-background-clip: text;
-          background-clip: text;
+          /* Solid white letters; dark text-shadow shows the inner shadow from top */
+          color: #ffffff;
           text-shadow:
             0 12px 16px rgba(0, 0, 0, 0.4),
             0 24px 32px rgba(0, 0, 0, 0.4);

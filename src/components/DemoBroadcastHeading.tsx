@@ -7,6 +7,42 @@ const DemoBroadcastHeading = () => {
       <h1 className="broadcast-heading">GAMES</h1>
       <h1 className="broadcast-heading">LEADERBOARD</h1>
       <h1 className="broadcast-heading">MY PICKS</h1>
+
+      <svg
+        aria-hidden="true"
+        width="0"
+        height="0"
+        style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}
+      >
+        <defs>
+          <filter id="broadcast-inner-shadow" x="-20%" y="-20%" width="140%" height="160%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur" />
+            <feOffset in="blur" dy="4" result="offsetBlur" />
+            <feComposite
+              in="offsetBlur"
+              in2="SourceAlpha"
+              operator="arithmetic"
+              k2="-1"
+              k3="1"
+              result="innerShadow"
+            />
+            <feColorMatrix
+              in="innerShadow"
+              type="matrix"
+              values="0 0 0 0 0
+                      0 0 0 0 0
+                      0 0 0 0 0
+                      0 0 0 0.55 0"
+              result="innerShadowColored"
+            />
+            <feMerge>
+              <feMergeNode in="SourceGraphic" />
+              <feMergeNode in="innerShadowColored" />
+            </feMerge>
+          </filter>
+        </defs>
+      </svg>
+
       <style>{`
         .broadcast-heading {
           font-family: 'Saira Extra Condensed', sans-serif;
@@ -17,29 +53,11 @@ const DemoBroadcastHeading = () => {
           text-transform: uppercase;
           text-align: center;
           margin: 0;
-          /* Mostly white letters with a very subtle (10%) gloss gradient */
           color: #ffffff;
-          background: linear-gradient(
-            180deg,
-            #ffffff 0%,
-            #f2f4f7 30%,
-            #e8eaef 55%,
-            #f4f5f8 75%,
-            #ededf1 100%
-          );
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          text-shadow:
-            0 12px 16px rgba(0, 0, 0, 0.4),
-            0 24px 32px rgba(0, 0, 0, 0.4);
-          /* Outer shadows below the letters + subtle upward glow */
           filter:
-            drop-shadow(0 -1px 0 rgba(255,255,255,0.5))
-            drop-shadow(0 -8px 12px rgba(170,195,255,0.22))
-            drop-shadow(0 -16px 24px rgba(120,160,230,0.16))
-            drop-shadow(0 2px 0 rgba(0,0,0,0.55))
-            drop-shadow(0 6px 14px rgba(0,0,0,0.65));
+            url(#broadcast-inner-shadow)
+            drop-shadow(0 2px 0 rgba(0, 0, 0, 0.55))
+            drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5));
         }
       `}</style>
     </div>

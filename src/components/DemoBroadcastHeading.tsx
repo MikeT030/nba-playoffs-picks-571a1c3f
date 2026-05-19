@@ -22,7 +22,7 @@ const DemoBroadcastHeading = () => {
           background-color: #ffffff;
           -webkit-background-clip: text;
           background-clip: text;
-          text-shadow: 0 5px 6px rgba(0, 0, 0, 0.4);
+          text-shadow: 0 3px 2px rgba(0, 0, 0, 0.4);
           /* Outer shadow below the letters */
           filter:
             drop-shadow(0 2px 0 rgba(0,0,0,0.55))

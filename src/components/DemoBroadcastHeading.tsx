@@ -17,7 +17,7 @@ const DemoBroadcastHeading = () => {
         <defs>
           <filter id="broadcast-inner-shadow" x="-20%" y="-20%" width="140%" height="160%">
             <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur" />
-            <feOffset in="blur" dy="8" result="offsetBlur" />
+            <feOffset in="blur" dy="6" result="offsetBlur" />
             <feComposite
               in="offsetBlur"
               in2="SourceAlpha"

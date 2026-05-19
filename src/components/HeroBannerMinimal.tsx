@@ -65,13 +65,11 @@ const HeroBannerMinimal = ({ title, showDemoAvatar = false }: HeroBannerMinimalP
         </div>
       )}
       <div className="container pt-20 pb-6">
-        <h1
-          className="md:text-6xl tracking-wider leading-[1.05] whitespace-nowrap text-5xl font-medium text-left"
-          style={{ fontFamily: "'Claymale', 'Archivo Black', sans-serif" }}
-        >
+        <h1 className="broadcast-heading text-left text-5xl md:text-6xl">
           {title}
         </h1>
       </div>
+
     </div>
   );
 };

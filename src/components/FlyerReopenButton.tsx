@@ -1,5 +1,5 @@
+import { Ticket } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import flyerLogo from "@/assets/flyer-logo.png";
 
 const FlyerReopenButton = () => {
   const { user } = useAuth();
@@ -14,10 +14,11 @@ const FlyerReopenButton = () => {
     <button
       type="button"
       onClick={handleClick}
-      className="absolute top-4 right-16 z-50 flex items-center justify-center h-10 w-10 rounded-full border-solid border-[#ededed] backdrop-blur-md hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 border-0 bg-[#23282f]/0"
+      className="absolute top-4 right-16 z-50 flex items-center gap-1.5 h-10 px-3 rounded-full border border-solid border-[#ededed] bg-[#22272E]/80 backdrop-blur-md hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 font-display tracking-[0.2em] text-[10px] text-white uppercase"
       aria-label="Open flyer card"
     >
-      <img src={flyerLogo} alt="Flyer" className="h-5 w-auto object-contain" />
+      <Ticket size={14} className="text-primary" />
+      Flyer
     </button>
   );
 };

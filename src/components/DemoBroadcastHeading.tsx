@@ -17,21 +17,7 @@ const DemoBroadcastHeading = () => {
           text-transform: uppercase;
           text-align: center;
           margin: 0;
-          background: linear-gradient(
-            to bottom,
-            #2a2d35 0%,
-            #4a4e58 4%,
-            #8a8f9a 10%,
-            #c4c8d0 18%,
-            #e8ebf0 32%,
-            #9aa0ad 55%,
-            #e0e3e9 80%,
-            #c8ccd4 100%
-          );
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          color: transparent;
+          color: #ffffff;
           /* Glow/shadow emanates UPWARD from the top of the letters (light source below) */
           filter:
             drop-shadow(0 -1px 0 rgba(255,255,255,0.6))

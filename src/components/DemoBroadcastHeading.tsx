@@ -17,8 +17,11 @@ const DemoBroadcastHeading = () => {
           text-transform: uppercase;
           text-align: center;
           margin: 0;
-          /* Solid white letters; dark text-shadow shows the inner shadow from top */
-          color: #ffffff;
+          /* Inner-shadow trick: transparent text over white background-clip, dark text-shadow shows through from the top */
+          color: transparent;
+          background-color: #ffffff;
+          -webkit-background-clip: text;
+          background-clip: text;
           text-shadow:
             0 12px 16px rgba(0, 0, 0, 0.4),
             0 24px 32px rgba(0, 0, 0, 0.4);

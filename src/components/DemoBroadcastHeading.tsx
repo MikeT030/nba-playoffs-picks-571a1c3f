@@ -29,8 +29,8 @@ const DemoBroadcastHeading = () => {
           -webkit-background-clip: text;
           background-clip: text;
           text-shadow:
-            0 6px 10px rgba(0, 0, 0, 0.28),
-            0 14px 22px rgba(0, 0, 0, 0.18);
+            0 12px 16px rgba(0, 0, 0, 0.4),
+            0 24px 32px rgba(0, 0, 0, 0.4);
           /* Outer shadows below the letters + subtle upward glow */
           filter:
             drop-shadow(0 -1px 0 rgba(255,255,255,0.5))

@@ -35,7 +35,7 @@ const App = () => (
             <defs>
               <filter id="broadcast-inner-shadow" x="-20%" y="-20%" width="140%" height="160%">
                 <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur" />
-                <feOffset in="blur" dy="3" result="offsetBlur" />
+                <feOffset in="blur" dy="2" result="offsetBlur" />
                 <feComposite in="offsetBlur" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="innerShadow" />
                 <feColorMatrix in="innerShadow" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.8 0" result="innerShadowColored" />
                 <feMerge>

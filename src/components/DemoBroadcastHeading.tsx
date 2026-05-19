@@ -19,10 +19,13 @@ const DemoBroadcastHeading = () => {
           margin: 0;
           background: linear-gradient(
             to bottom,
-            #d8dce4 0%,
-            #e8ebf0 28%,
-            #9aa0ad 52%,
-            #e0e3e9 78%,
+            #2a2d35 0%,
+            #4a4e58 4%,
+            #8a8f9a 10%,
+            #c4c8d0 18%,
+            #e8ebf0 32%,
+            #9aa0ad 55%,
+            #e0e3e9 80%,
             #c8ccd4 100%
           );
           -webkit-background-clip: text;

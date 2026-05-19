@@ -1,9 +1,12 @@
 const DemoBroadcastHeading = () => {
   return (
-    <div className="py-12 px-4 flex items-center justify-center bg-[#0a0a0c] rounded-md">
+    <div className="py-12 px-4 flex flex-col items-center justify-center gap-10 bg-[#0a0a0c] rounded-md">
       <h1 className="broadcast-heading">
         WESTERN<br />CONFERENCE<br />FINALS
       </h1>
+      <h1 className="broadcast-heading">GAMES</h1>
+      <h1 className="broadcast-heading">LEADERBOARD</h1>
+      <h1 className="broadcast-heading">MY PICKS</h1>
       <style>{`
         .broadcast-heading {
           font-family: 'Saira Extra Condensed', sans-serif;

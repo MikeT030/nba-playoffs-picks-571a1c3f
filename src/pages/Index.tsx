@@ -189,7 +189,7 @@ const Index = () => {
         isRefreshing={isRefreshing}
         progress={progress}
       />
-      <FlyerReopenButton />
+      
       <HeroBannerMinimal title="The Games" />
 
       <section className="container py-10 pt-0">

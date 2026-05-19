@@ -27,6 +27,7 @@ import DemoAllPicksTable from "@/components/DemoAllPicksTable";
 import DemoVisualScoreboard from "@/components/DemoVisualScoreboard";
 import { DemoFlyerCardV3, DemoFlyerCardPaxson, DemoFlyerCardDavis, DemoFlyerCardMiller } from "@/components/DemoFlyerCardVariants";
 import DemoFullWidthNav from "@/components/DemoFullWidthNav";
+import DemoBroadcastHeading from "@/components/DemoBroadcastHeading";
 import FloatingNav from "@/components/FloatingNav";
 import { DeadpoolRecapPanel } from "@/components/DeadpoolRecapDrawer";
 
@@ -163,6 +164,12 @@ const Admin = () => {
         </Accordion>
 
         {[
+          {
+            group: "HEADERS & FONTS",
+            items: [
+              { value: "broadcast-heading", label: "3D BROADCAST HEADING", content: <DemoBroadcastHeading /> },
+            ],
+          },
           {
             group: "MATCH CARDS",
             items: [

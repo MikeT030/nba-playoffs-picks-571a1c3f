@@ -20,11 +20,11 @@ const DemoBroadcastHeading = () => {
           /* Inner-shadow trick: transparent text over white background-clip, then a dark text-shadow shows through from the top */
           background: linear-gradient(
             to bottom,
-            #d8dce4 0%,
-            #eef0f3 30%,
-            #c2c6cf 55%,
-            #e4e7ec 80%,
-            #cfd3da 100%
+            #b8bcc4 0%,
+            #cccfd5 30%,
+            #9ea2aa 55%,
+            #c0c3c9 80%,
+            #a8acb3 100%
           );
           -webkit-background-clip: text;
           background-clip: text;

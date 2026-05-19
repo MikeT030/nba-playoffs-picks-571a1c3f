@@ -165,6 +165,12 @@ const Admin = () => {
 
         {[
           {
+            group: "HEADERS & FONTS",
+            items: [
+              { value: "broadcast-heading", label: "3D BROADCAST HEADING", content: <DemoBroadcastHeading /> },
+            ],
+          },
+          {
             group: "MATCH CARDS",
             items: [
               { value: "match-card", label: "DEMO MATCH CARD", content: <DemoMatchCard /> },

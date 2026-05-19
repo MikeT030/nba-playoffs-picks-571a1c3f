@@ -17,13 +17,19 @@ const DemoBroadcastHeading = () => {
           text-transform: uppercase;
           text-align: center;
           margin: 0;
-          color: #ffffff;
-          /* Glow/shadow emanates UPWARD from the top of the letters (light source below) */
+          /* Inner-shadow trick: transparent text over white background-clip, then a dark text-shadow shows through from the top */
+          color: transparent;
+          background-color: #ffffff;
+          -webkit-background-clip: text;
+          background-clip: text;
+          text-shadow:
+            0 6px 10px rgba(0, 0, 0, 0.28),
+            0 14px 22px rgba(0, 0, 0, 0.18);
+          /* Outer shadows below the letters + subtle upward glow */
           filter:
-            drop-shadow(0 -1px 0 rgba(255,255,255,0.6))
-            drop-shadow(0 -3px 2px rgba(220,230,255,0.4))
-            drop-shadow(0 -8px 12px rgba(170,195,255,0.32))
-            drop-shadow(0 -16px 24px rgba(120,160,230,0.22))
+            drop-shadow(0 -1px 0 rgba(255,255,255,0.5))
+            drop-shadow(0 -8px 12px rgba(170,195,255,0.22))
+            drop-shadow(0 -16px 24px rgba(120,160,230,0.16))
             drop-shadow(0 2px 0 rgba(0,0,0,0.55))
             drop-shadow(0 6px 14px rgba(0,0,0,0.65));
         }

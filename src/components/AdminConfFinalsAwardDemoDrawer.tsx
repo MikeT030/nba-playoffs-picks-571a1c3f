@@ -59,11 +59,9 @@ const AdminConfFinalsAwardDemoDrawer = ({ open, onOpenChange, mode }: Props) => 
       <>
         <span className="text-primary font-bold">{winner?.name ?? "You"}</span>,
         <br />
-        you scored the most points in the.
+        you won the Conference Finals.
         <br />
-        Conference Finals
-        <br />
-        Here is your one-of-a-kind reward.
+        Here is your unique reward.
       </>
     ) : (
       <>

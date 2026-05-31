@@ -354,7 +354,7 @@ const AdminFlyerAwardPanel = () => {
           Picks 3 random users and lets you preview both award drawers. Demo state lives only in your browser — the live assignments above are not affected.
         </p>
 
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2 pb-[20px]">
           <button
             onClick={() => {
               const pool = [...standings];

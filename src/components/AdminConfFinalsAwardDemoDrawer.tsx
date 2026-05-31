@@ -94,7 +94,7 @@ const AdminConfFinalsAwardDemoDrawer = ({ open, onOpenChange, mode }: Props) => 
       dismissible={canClose}
     >
       <DrawerContent className="h-screen border-none">
-        <div className="relative shrink-0 px-4 pt-6 pb-4 text-center">
+        <div className="relative shrink-0 px-4 pb-4 text-center pt-[18px]">
           <h2 className="mt-2 font-body sm:text-lg text-foreground leading-snug max-w-2xl mx-auto font-medium text-lg pt-[12px]">
             {headline}
           </h2>

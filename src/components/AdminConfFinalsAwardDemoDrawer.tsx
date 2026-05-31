@@ -123,10 +123,6 @@ const AdminConfFinalsAwardDemoDrawer = ({ open, onOpenChange, mode }: Props) => 
         </div>
 
         <div className="shrink-0 px-4 pb-8 pt-2 flex flex-col items-center justify-end gap-4 bg-gradient-to-t from-background from-50% to-transparent">
-          <p className="text-center font-body text-xs sm:text-sm max-w-md text-[#ededed]">
-            {subline}
-          </p>
-
           {viewerHasBurned && (
             <button
               type="button"
@@ -136,6 +132,10 @@ const AdminConfFinalsAwardDemoDrawer = ({ open, onOpenChange, mode }: Props) => 
               NICE, GOT IT
             </button>
           )}
+
+          <p className="text-center font-body text-xs sm:text-sm max-w-md text-[#ededed]">
+            {subline}
+          </p>
         </div>
       </DrawerContent>
     </Drawer>

@@ -86,6 +86,39 @@ const AdminFlyerAwardPanel = () => {
   const { winner: confWinner } = useConfDemoState();
   const [confDemoMode, setConfDemoMode] = useState<"receiver" | "broadcast" | null>(null);
   const [confSelectedUserId, setConfSelectedUserId] = useState<string>("");
+  const [confSaving, setConfSaving] = useState(false);
+
+  const saveConfAssignment = async () => {
+    if (!confWinner) {
+      toast.error("Set a winner first");
+      return;
+    }
+    setConfSaving(true);
+    // Remove any existing chapman assignment, then insert the new one under
+    // the live round so the real FlyerAwardDrawer flow picks it up for all users.
+    const delRes = await supabase
+      .from("flyer_card_assignments")
+      .delete()
+      .eq("card_id", "chapman");
+    if (delRes.error) {
+      setConfSaving(false);
+      toast.error(delRes.error.message);
+      return;
+    }
+    const { error } = await supabase.from("flyer_card_assignments").insert({
+      card_id: "chapman",
+      user_id: confWinner.user_id,
+      assigned_by: user?.id ?? null,
+      assigned_at: new Date().toISOString(),
+      round: "first_round",
+    });
+    setConfSaving(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success(`Chapman card awarded to ${confWinner.name} — live for all users`);
+  };
 
   const load = async () => {
     setLoading(true);

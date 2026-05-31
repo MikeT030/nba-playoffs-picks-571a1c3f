@@ -122,7 +122,7 @@ const AdminConfFinalsAwardDemoDrawer = ({ open, onOpenChange, mode }: Props) => 
           </div>
         </div>
 
-        <div className="shrink-0 px-4 pb-8 pt-2 flex flex-col items-center justify-end gap-4 bg-gradient-to-t from-background from-50% to-transparent">
+        <div className="shrink-0 px-4 pt-2 flex flex-col items-center justify-end gap-4 bg-gradient-to-t from-background from-50% to-transparent pb-[12px]">
           {viewerHasBurned && (
             <button
               type="button"

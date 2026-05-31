@@ -424,7 +424,7 @@ const AdminFlyerAwardPanel = () => {
       {/* ─── Conference Finals — last unique card ─────── */}
       <div className="border-t border-border pt-4 space-y-3">
         <p className="font-body text-xs uppercase tracking-widest text-muted-foreground">
-          Demo · Conference Finals — last unique card
+          Demo · Conference Finals
         </p>
         <p className="font-body text-[11px] text-muted-foreground -mt-1">
           Hands the Rex Chapman card to the conference-finals top scorer you pick. Demo state lives only in your browser.

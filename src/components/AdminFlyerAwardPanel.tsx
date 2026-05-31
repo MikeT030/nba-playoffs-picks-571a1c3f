@@ -531,6 +531,14 @@ const AdminFlyerAwardPanel = () => {
                 Broadcast drawer
               </button>
             </div>
+            <button
+              onClick={saveConfAssignment}
+              disabled={confSaving}
+              className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground font-body text-sm py-2 rounded-md disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Save size={14} />
+              {confSaving ? "Saving…" : "Save assignment (go live for all users)"}
+            </button>
           </div>
         )}
       </div>

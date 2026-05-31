@@ -515,7 +515,7 @@ const AdminFlyerAwardPanel = () => {
               Current winner:{" "}
               <span className="text-primary font-bold">{confWinner.name}</span>
             </p>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2 pb-[20px]">
               <button
                 onClick={() => setConfDemoMode("receiver")}
                 className="flex items-center justify-center gap-2 bg-primary/15 text-primary border border-primary/40 font-body text-xs py-2 rounded-md"

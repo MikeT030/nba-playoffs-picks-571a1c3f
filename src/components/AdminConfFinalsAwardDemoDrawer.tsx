@@ -80,8 +80,12 @@ const AdminConfFinalsAwardDemoDrawer = ({ open, onOpenChange, mode }: Props) => 
 
   const handleBurn = () => {
     if (viewerHasBurned) return;
-    setJustBurned(true);
-    markConfDemoBurned();
+    // Let SealedPackCard play its burn animation first (~1930ms),
+    // then flip the state so the revealed card + CTA appear.
+    window.setTimeout(() => {
+      setJustBurned(true);
+      markConfDemoBurned();
+    }, 1930);
   };
 
   return (

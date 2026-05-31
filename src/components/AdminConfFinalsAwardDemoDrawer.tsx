@@ -101,7 +101,7 @@ const AdminConfFinalsAwardDemoDrawer = ({ open, onOpenChange, mode }: Props) => 
         </div>
 
         <div className="flex-1 min-h-0 overflow-y-auto px-4">
-          <div className="relative mx-auto w-full max-w-md flex flex-col items-center justify-center py-6 gap-3">
+          <div className="relative mx-auto w-full max-w-md flex flex-col items-center justify-center py-6 gap-3 pt-[10px]">
             {mode === "broadcast" && winner && (
               <p className="font-display tracking-[0.25em] uppercase text-primary font-bold text-lg">
                 {winner.name}

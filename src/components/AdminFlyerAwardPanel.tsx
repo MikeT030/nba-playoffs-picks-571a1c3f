@@ -4,8 +4,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { totalUserPoints, type PickLite, type SeriesResultLite } from "@/lib/pickScoring";
 import { bracketSeries } from "@/data/playoffsData";
 import { toast } from "sonner";
-import { Trophy, Save, RotateCcw, Shuffle, Eye, Radio, Trash2, Check } from "lucide-react";
+import { Trophy, Save, RotateCcw, Shuffle, Eye, Radio, Trash2, Check, Crown } from "lucide-react";
 import AdminFlyerAwardDemoDrawer from "@/components/AdminFlyerAwardDemoDrawer";
+import AdminConfFinalsAwardDemoDrawer from "@/components/AdminConfFinalsAwardDemoDrawer";
 import {
   FLYER_CARD_IDS,
   type FlyerCardId,
@@ -13,6 +14,11 @@ import {
   clearDemo,
   useDemoFlyerState,
 } from "@/lib/flyerDemo";
+import {
+  useConfDemoState,
+  setConfDemoWinner,
+  clearConfDemo,
+} from "@/lib/flyerConfDemo";
 
 const FLYER_CARDS = [
   { id: "chapman", label: "Chapman" },
@@ -75,6 +81,11 @@ const AdminFlyerAwardPanel = () => {
   const { winners: demoWinners, burned } = useDemoFlyerState();
   const [demoMode, setDemoMode] = useState<"receiver" | "broadcast" | null>(null);
   const [demoViewerId, setDemoViewerId] = useState<string>("");
+
+  // Conference Finals demo (single winner, Rex Chapman card)
+  const { winner: confWinner } = useConfDemoState();
+  const [confDemoMode, setConfDemoMode] = useState<"receiver" | "broadcast" | null>(null);
+  const [confSelectedUserId, setConfSelectedUserId] = useState<string>("");
 
   const load = async () => {
     setLoading(true);
@@ -408,6 +419,93 @@ const AdminFlyerAwardPanel = () => {
         onOpenChange={(o) => !o && setDemoMode(null)}
         mode={demoMode ?? "broadcast"}
         viewerUserId={demoViewerId || demoWinners[0]?.user_id}
+      />
+
+      {/* ─── Conference Finals — last unique card ─────── */}
+      <div className="border-t border-border pt-4 space-y-3">
+        <p className="font-body text-xs uppercase tracking-widest text-muted-foreground">
+          Demo · Conference Finals — last unique card
+        </p>
+        <p className="font-body text-[11px] text-muted-foreground -mt-1">
+          Hands the Rex Chapman card to the conference-finals top scorer you pick. Demo state lives only in your browser.
+        </p>
+
+        <div className="flex items-center gap-2">
+          <Crown size={14} className="text-primary shrink-0" />
+          <select
+            value={confSelectedUserId || confWinner?.user_id || ""}
+            onChange={(e) => setConfSelectedUserId(e.target.value)}
+            className="flex-1 bg-background border border-border rounded-md text-xs font-body px-2 py-1"
+          >
+            <option value="">— select winner —</option>
+            {userOptions.map((u) => (
+              <option key={u.user_id} value={u.user_id}>
+                {u.display_name} ({u.points} pts)
+              </option>
+            ))}
+          </select>
+          <button
+            onClick={() => {
+              const uid = confSelectedUserId || confWinner?.user_id;
+              if (!uid) {
+                toast.error("Pick a winner first");
+                return;
+              }
+              const u = userOptions.find((x) => x.user_id === uid);
+              if (!u) return;
+              setConfDemoWinner({ user_id: u.user_id, name: u.display_name });
+              toast.success(`${u.display_name} set as Conf Finals winner`);
+            }}
+            className="flex items-center gap-1 bg-secondary text-secondary-foreground font-body text-xs px-2.5 py-1.5 rounded-md"
+          >
+            <Save size={12} />
+            Set
+          </button>
+          <button
+            onClick={() => {
+              clearConfDemo();
+              setConfSelectedUserId("");
+              setConfDemoMode(null);
+              toast.success("Conf demo reset");
+            }}
+            disabled={!confWinner}
+            className="flex items-center gap-1 bg-background border border-border text-foreground font-body text-xs px-2.5 py-1.5 rounded-md disabled:opacity-40"
+            title="Reset conference finals demo"
+          >
+            <Trash2 size={12} />
+          </button>
+        </div>
+
+        {confWinner && (
+          <div className="rounded-md bg-background/40 p-3 space-y-2">
+            <p className="text-xs font-body">
+              Current winner:{" "}
+              <span className="text-primary font-bold">{confWinner.name}</span>
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => setConfDemoMode("receiver")}
+                className="flex items-center justify-center gap-2 bg-primary/15 text-primary border border-primary/40 font-body text-xs py-2 rounded-md"
+              >
+                <Eye size={14} />
+                Receiver drawer
+              </button>
+              <button
+                onClick={() => setConfDemoMode("broadcast")}
+                className="flex items-center justify-center gap-2 bg-primary/15 text-primary border border-primary/40 font-body text-xs py-2 rounded-md"
+              >
+                <Radio size={14} />
+                Broadcast drawer
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <AdminConfFinalsAwardDemoDrawer
+        open={confDemoMode !== null}
+        onOpenChange={(o) => !o && setConfDemoMode(null)}
+        mode={confDemoMode ?? "broadcast"}
       />
     </div>
   );

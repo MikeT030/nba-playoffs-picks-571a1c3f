@@ -67,7 +67,7 @@ const AdminConfFinalsAwardDemoDrawer = ({ open, onOpenChange, mode }: Props) => 
       <>
         It's official,{" "}
         <span className="text-primary font-bold">{winner?.name ?? "Someone"}</span> won the
-        Conference Finals and unlocked the last unique player card.
+        Conference Finals and unlocked a unique player card.
       </>
     );
 

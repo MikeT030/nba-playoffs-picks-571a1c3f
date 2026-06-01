@@ -564,7 +564,7 @@ export const DemoFlyerCardChampNYK = () => {
         />
 
         {/* Top section — logo + title + stats */}
-        <div className="relative px-4 pt-14 pb-3 flex flex-col items-center text-center">
+        <div className="relative px-4 pt-[26px] pb-3 flex flex-col items-center text-center">
           <img
             src={knicksLogo.url}
             alt="New York Knicks logo"

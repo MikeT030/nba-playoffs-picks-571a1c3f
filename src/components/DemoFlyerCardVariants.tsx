@@ -552,7 +552,7 @@ export const DemoFlyerCardChampNYK = () => {
       </h2>
 
       <article
-        className="relative overflow-hidden rounded-xl shadow-2xl border border-white/5 aspect-[3/4]"
+        className="relative overflow-hidden rounded-xl shadow-2xl border border-white/5 aspect-[3/4] flex flex-col"
         style={{ backgroundColor: NYK_BLUE }}
       >
         {/* FLYER logo, top-left */}

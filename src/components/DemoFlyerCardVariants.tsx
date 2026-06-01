@@ -591,7 +591,7 @@ export const DemoFlyerCardChampNYK = () => {
           <img
             src={knicksChampBg.url}
             alt="New York Knicks lifting the Larry O'Brien trophy"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover object-top"
             loading="lazy"
           />
           <div

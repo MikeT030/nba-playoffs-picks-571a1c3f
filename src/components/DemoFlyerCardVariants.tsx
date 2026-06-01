@@ -534,3 +534,86 @@ export const DemoFlyerCardV4 = () => {
     </div>
   );
 };
+
+/* ──────────────────────────────────────────────────────────────
+   CHAMP — New York Knicks 2026 NBA Champion winner card
+   ────────────────────────────────────────────────────────────── */
+import knicksChampBg from "@/assets/knicks-champion-bg.avif.asset.json";
+import knicksLogo from "@/assets/knicks-logo.avif.asset.json";
+
+const NYK_BLUE = "#1D428A";
+const NYK_CYAN = "#5BC0EB";
+
+export const DemoFlyerCardChampNYK = () => {
+  return (
+    <div className="space-y-2">
+      <h2 className="font-display text-lg tracking-wider text-muted-foreground">
+        CHAMPION — NEW YORK KNICKS
+      </h2>
+
+      <article
+        className="relative overflow-hidden rounded-xl shadow-2xl border border-white/5"
+        style={{ backgroundColor: NYK_BLUE }}
+      >
+        {/* FLYER logo, top-left */}
+        <img
+          src={flyerLogo}
+          alt="FLYER The Shot logo"
+          className="absolute top-3 left-3 w-24 z-20 drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
+          loading="lazy"
+        />
+
+        {/* Top section — logo + title + stats */}
+        <div className="relative px-5 pt-16 pb-5 flex flex-col items-center text-center">
+          <img
+            src={knicksLogo.url}
+            alt="New York Knicks logo"
+            className="w-40 h-40 object-contain drop-shadow-[0_6px_16px_rgba(0,0,0,0.4)]"
+            loading="lazy"
+          />
+
+          <h3
+            className="font-display text-4xl tracking-wider leading-none mt-3"
+            style={{ color: NYK_CYAN }}
+          >
+            2026 NBA
+            <br />
+            CHAMPION
+          </h3>
+
+          <p className="mt-4 font-body text-xs tracking-wide" style={{ color: "#F58426" }}>
+            Playoff Stats — 16W / 5L — Stat — Stat — Stat — Stat — Stat — Stat — Stat
+          </p>
+        </div>
+
+        {/* Bottom hero image with story overlay */}
+        <div className="relative aspect-[4/5] w-full overflow-hidden">
+          <img
+            src={knicksChampBg.url}
+            alt="New York Knicks lifting the Larry O'Brien trophy"
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(to bottom, ${NYK_BLUE} 0%, transparent 18%, transparent 60%, rgba(0,0,0,0.55) 100%)`,
+            }}
+          />
+
+          {/* Story panel */}
+          <div className="absolute left-3 right-3 bottom-3 rounded-md bg-[#1D428A]/85 backdrop-blur-sm border border-white/10 px-3 py-3">
+            <p className="font-body text-[13px] leading-relaxed text-white/95">
+              Ending a fifty-three-year drought dating back to 1973, the New York
+              Knicks captured the 2026 NBA title, sending a shockwave of pure
+              catharsis through Madison Square Garden and finally rewarding a
+              generation of suffering fans. Rich in basketball lore, the iconic
+              franchise actually won the very first game in NBA history on
+              November 1, 1946, defeating the Toronto Huskies.
+            </p>
+          </div>
+        </div>
+      </article>
+    </div>
+  );
+};

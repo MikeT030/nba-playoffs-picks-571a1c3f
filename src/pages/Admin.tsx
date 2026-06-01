@@ -25,7 +25,7 @@ import DemoMatchCardFonts from "@/components/DemoMatchCardFonts";
 import DemoBracketPlayedOut from "@/components/DemoBracketPlayedOut";
 import DemoAllPicksTable from "@/components/DemoAllPicksTable";
 import DemoVisualScoreboard from "@/components/DemoVisualScoreboard";
-import { DemoFlyerCardV3, DemoFlyerCardPaxson, DemoFlyerCardDavis, DemoFlyerCardMiller } from "@/components/DemoFlyerCardVariants";
+import { DemoFlyerCardV3, DemoFlyerCardPaxson, DemoFlyerCardDavis, DemoFlyerCardMiller, DemoFlyerCardChampNYK } from "@/components/DemoFlyerCardVariants";
 import DemoFullWidthNav from "@/components/DemoFullWidthNav";
 import DemoBroadcastHeading from "@/components/DemoBroadcastHeading";
 import FloatingNav from "@/components/FloatingNav";
@@ -222,6 +222,7 @@ const Admin = () => {
               { value: "flyer-paxson", label: "DEMO FLYER CARD — PAXSON", content: <DemoFlyerCardPaxson /> },
               { value: "flyer-davis", label: "DEMO FLYER CARD — DAVIS", content: <DemoFlyerCardDavis /> },
               { value: "flyer-miller", label: "DEMO FLYER CARD — MILLER", content: <DemoFlyerCardMiller /> },
+              { value: "flyer-champ-nyk", label: "DEMO FLYER CARD — CHAMP NYK", content: <DemoFlyerCardChampNYK /> },
             ],
           },
           {

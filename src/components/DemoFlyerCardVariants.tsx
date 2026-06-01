@@ -604,12 +604,11 @@ export const DemoFlyerCardChampNYK = () => {
           {/* Story panel */}
           <div className="absolute left-3 right-3 bottom-3 rounded-md bg-[#1D428A]/85 backdrop-blur-sm border border-white/10 px-3 py-2">
             <p className="font-body text-[11px] leading-relaxed text-white/95">
-              Ending a fifty-three-year drought dating back to 1973, the New York
-              Knicks captured the 2026 NBA title, sending a shockwave of pure
-              catharsis through Madison Square Garden and finally rewarding a
-              generation of suffering fans. Rich in basketball lore, the iconic
+              Ending a 53-year drought dating back to 1973, the New York Knicks
+              captured the 2026 NBA title, sending a shockwave of through
+              Madison Square Garden. Adding to their lore, the historic
               franchise actually won the very first game in NBA history on
-              November 1, 1946, defeating the Toronto Huskies.
+              November 1, 1946, by defeating the Toronto Huskies.
             </p>
           </div>
         </div>
